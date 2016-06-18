@@ -1,6 +1,10 @@
 Showdown ChatBot
 ====================
 
+[![Build Status](https://travis-ci.org/asanrom/Showdown-ChatBot.svg)](https://travis-ci.org/asanrom/Showdown-ChatBot)
+[![Dependency Status](https://david-dm.org/asanrom/Showdown-ChatBot.svg)](https://david-dm.org/asanrom/Showdown-ChatBot)
+[![devDependency Status](https://david-dm.org/asanrom/Showdown-ChatBot/dev-status.svg)](https://david-dm.org/asanrom/Showdown-ChatBot#info=devDependencies)
+
 **WARNING:** Project in developement. If you want a complete Pokemon Showdown bot try https://github.com/Ecuacion/Pokemon-Showdown-Node-Bot
 
 Differences
