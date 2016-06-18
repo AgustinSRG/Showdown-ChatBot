@@ -672,7 +672,7 @@ class BotUser {
 			this.alts.push(alt);
 			for (let i = 0; i < this.alts.length; i++) {
 				if (users[this.alts[i]]) {
-					users[this.alts[i]].markAlt(alt);
+					users[this.alts[i]].markAlt(alt, users);
 				}
 			}
 		}
