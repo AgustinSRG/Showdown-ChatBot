@@ -1,0 +1,13 @@
+{
+  "id": "core",
+  "name": "Core",
+  "version": "1.0",
+  "main": "core.js",
+  "commands": [
+    "commands/exec-cmd.js",
+	"commands/seen.js",
+	"commands/control.js",
+	"commands/cmd-admin.js"
+  ],
+  "description": "Essential Module"
+}

@@ -1,0 +1,77 @@
+# Translations File
+
+%english
+
+$0 = The command
+$1 = does not exists
+$2 = The alias
+$3 = now references the command
+$4 = was removed sucessfully
+$5 = was not found
+$6 = This command is only available for chat rooms
+$7 = Language for room
+$8 = was set to 
+$9 = Language
+$10 = is not available. Available languages
+$11 = You must set the temporal variable before doing this. Use the command
+$12 = already exists as an index command
+$13 = has been set
+$14 = already exists
+$15 = has been set as an index command
+$16 = is not an index command
+$17 = has been deleted
+$18 = Permission
+$19 = is now available for all users
+$20 = is now available only for excepted users
+$21 = is now available for users with rank
+$22 = and above
+$23 = Invalid rank. Available ranks
+$24 = Access denied for setting the permission
+$25 = to rank
+$26 = in room
+$27 = User
+$28 = was already ignored
+$29 = has been ingnored by the command parser
+$30 = is not ignored
+$31 = has been uningnored by the command parser
+$32 = The room
+$33 = has been set as a control room for
+$34 = The control room
+
+%spanish
+
+$0 = El comando
+$1 = no existe
+$2 = El alias
+$3 = ha pasado a referenciar el comando
+$4 = ha sido eliminado correctamente
+$5 = no se encuentra disponible
+$6 = Este comando solo está disponible para las salas de chat
+$7 = El idioma para la sala
+$8 = ha sido establecido a 
+$9 = Idioma
+$10 = no disponible. Idiomas disponibles
+$11 = Debes especificar el valor de la variable temporal antes de hacer esto. Usa el comando
+$12 = ya existe como un comando indizado
+$13 = ha sido configurado
+$14 = ya existe
+$15 = ha sido configurado como un comando indizado
+$16 = no es un comando indizado
+$17 = ha sido eliminado
+$18 = Permiso
+$19 = está disponible para todos los usuarios
+$20 = está disponible solo para los administradores del bot
+$21 = está disponible para los usuarios con rango
+$22 = y por encima
+$23 = Rango no válido. Rangos disponibles
+$24 = Acceso denegado para configurar el permiso
+$25 = para el rango
+$26 = en la sala
+$27 = Usuario
+$28 = ya estaba ignorado
+$29 = ha sido ignorado por el gestor de comandos
+$30 = no estaba ignorado
+$31 = he dejado de ser ignorado por el gestor de comandos
+$32 = La sala
+$33 = ha sido configurada como la sala de control para
+$34 = La sala de control

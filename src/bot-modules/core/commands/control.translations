@@ -1,0 +1,33 @@
+# Translations file
+
+%english
+
+$0 = Commands hotpatched
+
+$1 = Bot Time
+
+$2 = second
+$3 = seconds
+$4 = minute
+$5 = minutes
+$6 = hour
+$7 = hours
+$8 = day
+$9 = days
+$10 = Bot Uptime
+
+%spanish
+
+$0 = Comandos actualizados
+
+$1 = Hora del Bot
+
+$2 = segundo
+$3 = segundos
+$4 = minuto
+$5 = minutos
+$6 = hora
+$7 = horas
+$8 = día
+$9 = días
+$10 = Tiempo de Actividad del Bot

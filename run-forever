@@ -1,0 +1,15 @@
+#!/bin/env node
+
+'use strict';
+
+const ChildProcess = require('child_process');
+
+console.log('This is a forever loop to mantain the bot running. Use CTRL + C to exit.\n');
+
+let status = 0;
+
+do {
+	console.log('Running "node showdown-chatbot"...');
+	status = ChildProcess.spawnSync('sh', ['-c', 'node showdown-chatbot'], {stdio: 'inherit'}).status;
+	console.log('Process exited with code ' + status);
+} while (status === 0);

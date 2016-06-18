@@ -1,0 +1,8 @@
+{
+  "id": "chatlogger",
+  "name": "Chat Logger",
+  "version": "1.0",
+  "main": "chat-logger.js",
+  "commands": [],
+  "description": "Logs Chat Rooms"
+}

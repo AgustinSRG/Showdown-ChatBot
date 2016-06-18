@@ -1,7 +1,17 @@
+# Config and data
+config
+data
+
 # Logs
 logs
 *.log
 npm-debug.log*
+
+# eslint
+.eslintcache
+
+# bat
+*.bat
 
 # Runtime data
 pids

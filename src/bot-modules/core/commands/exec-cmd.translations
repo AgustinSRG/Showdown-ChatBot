@@ -1,0 +1,11 @@
+﻿# Translations file
+
+%english
+
+$0 = Command
+$1 = not found
+
+%spanish
+
+$0 = El Comando
+$1 = no existe

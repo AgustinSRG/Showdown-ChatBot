@@ -1,0 +1,13 @@
+#!/bin/env node
+
+'use strict';
+
+const Util = require("util");
+global.Package = require('./package.json');
+
+console.log(Util.format('Showdown-ChatBot %s', Package.version));
+
+require('./src/dependencies.js');
+
+console.log('Initializing...');
+require('./src/index.js');

@@ -1,0 +1,65 @@
+﻿# Translations file
+
+%english
+
+$0 = Have you looked in the mirror lately?
+$1 = You might be either blind or illiterate. I am right here.
+
+$2 = second
+$3 = seconds
+$4 = minute
+$5 = minutes
+$6 = hour
+$7 = hours
+$8 = day
+$9 = days
+
+$seen = was last seen
+$ago = ago
+
+$10 = joining
+$11 = leaving
+$12 = chatting in
+$13 = changing nick to
+
+$14 = a private room
+
+$15 = User
+$16 = has never been seen, at least since the last bot restart
+
+$17 = Known alts for user
+$18 = No known alts found for user
+
+$inv = Invalid username
+
+%spanish
+
+$0 = ¿Te has mirado en el espejo últimamente?
+$1 = Debes estar ciego o no sabes leer. Estoy justo aquí.
+
+$2 = segundo
+$3 = segundos
+$4 = minuto
+$5 = minutos
+$6 = hora
+$7 = horas
+$8 = día
+$9 = días
+
+$seen = fue visto por última vez hace
+$ago = 
+
+$10 = entrando en
+$11 = saliendo de
+$12 = chateando en
+$13 = cambiando su nick a
+
+$14 = una sala privada
+
+$15 = El usuario
+$16 = no ha sido visto, al menos desde el último reinicio del bot
+
+$17 = Cuentas alternas conocidas de
+$18 = No se encontraron cuentas alternas conocidas para el usuario
+
+$inv = Nombre de usuario no válido

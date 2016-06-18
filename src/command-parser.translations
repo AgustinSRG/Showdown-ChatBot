@@ -1,0 +1,29 @@
+# Command Parser translations
+
+%english
+
+# Access Denied
+$0 = Access denied
+$1 = You need the permission
+$2 = to use this command
+
+# Usage
+$3 = Usage
+
+# Dyn Cmd Options
+$4 = Command
+$5 = Options
+
+%spanish
+
+# Access Denied
+$0 = Acceso Denegado
+$1 = Necesitas el permiso
+$2 = para usar este comando
+
+# Usage
+$3 = Uso del Comando
+
+# Dyn Cmd Options
+$4 = Comando
+$5 = Opciones

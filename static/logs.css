@@ -1,0 +1,61 @@
+/* Html Logs styles */
+
+body {
+	background-color:#FFFFFF;
+}
+
+.main-div {
+	padding:5px;
+	margin:10px;
+	background-color:#F8FBFD;
+	border: 1px solid #BBCCDD;
+}
+
+.status-div {
+	padding:10px;
+}
+
+.chat-div {
+	padding:5px;
+	word-wrap: break-word;
+}
+
+.join-msg {
+	color:#666666;
+}
+
+.broadcast-green {
+	background-color: #559955;
+	color: white;
+	padding: 2px 4px;
+}
+.broadcast-blue {
+	background-color: #6688AA;
+	color: white;
+	padding: 2px 4px;
+}
+.infobox {
+	border: 1px solid #6688AA;
+	padding: 2px 4px;
+}
+.infobox-limited {
+	max-height: 200px;
+	overflow: auto;
+	overflow-x: hidden;
+}
+.broadcast-red {
+	background-color: #AA5544;
+	color: white;
+	padding: 2px 4px;
+}
+
+.announce {
+	background: #6688AA;
+	color: white;
+	padding: 1px 4px 2px;
+}
+
+.pm {
+	color:#666666;
+	font-style:italic;
+}
