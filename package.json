@@ -7,7 +7,7 @@
 	"url": "https://github.com/asanrom"
   },
   "scripts": {
-    "start": "node showdown-chatbot",
+    "start": "node run-forever",
 	"test": "eslint --cache showdown-chatbot src/"
   },
   "main": "showdown-chatbot",
