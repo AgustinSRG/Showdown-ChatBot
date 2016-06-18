@@ -68,16 +68,17 @@ class ChatBotApp {
 				https: false,
 				httpsPort: 5000,
 			};
-			if (process.env['PORT']) {
-				this.config.server.port = process.env['PORT'];
-			} else if (process.env['OPENSHIFT_NODEJS_PORT']) {
-				this.config.server.port = process.env['OPENSHIFT_NODEJS_PORT'];
-			}
-			if (process.env['BIND_IP']) {
-				this.config.server.bindaddress = process.env['BIND_IP'];
-			} else if (process.env['OPENSHIFT_NODEJS_IP']) {
-				this.config.server.bindaddress = process.env['OPENSHIFT_NODEJS_IP'];
-			}
+		}
+
+		if (process.env['PORT']) {
+			this.config.server.port = process.env['PORT'];
+		} else if (process.env['OPENSHIFT_NODEJS_PORT']) {
+			this.config.server.port = process.env['OPENSHIFT_NODEJS_PORT'];
+		}
+		if (process.env['BIND_IP']) {
+			this.config.server.bindaddress = process.env['BIND_IP'];
+		} else if (process.env['OPENSHIFT_NODEJS_IP']) {
+			this.config.server.bindaddress = process.env['OPENSHIFT_NODEJS_IP'];
 		}
 
 		/* Languages */
