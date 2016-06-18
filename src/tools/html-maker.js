@@ -103,7 +103,7 @@ exports.generate = function (body, loginData, menu, options) {
 	buf += '<div align="center" class="copyright">';
 	buf += '<i>This is a Pokemon Showdown Bot for Node JS - ';
 	if (Package.homepage) {
-		buf += '<a href="' + Package.homepage + '">Showdown-ChatBot' + '</a> v' + Package.version;
+		buf += '<a href="' + Package.homepage + '" target="_blank">Showdown-ChatBot' + '</a> v' + Package.version;
 	} else {
 		buf += 'Showdown-ChatBot v' + Package.version;
 	}
