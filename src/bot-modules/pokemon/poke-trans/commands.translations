@@ -1,0 +1,33 @@
+﻿# Translations file 
+
+%english
+
+$0 = Pokemon, ability, item, move or nature called
+$1 = is not available in the translations
+$2 = (English - Spanish)
+$3 = Translations of
+
+$english = English
+$spanish = Spanish
+
+$pokemon = Pokemon
+$abilities = Ability
+$items = Item
+$moves = Move
+$natures = Nature
+
+%spanish
+
+$0 = Pokemon, habilidad, objeto, movimineto o naturaleza llamado
+$1 = no está disponible en las traducciones
+$2 = (Inglés - Español)
+$3 = Traducciones de
+
+$english = Inglés
+$spanish = Español
+
+$pokemon = Pokemon
+$abilities = Habilidad
+$items = Objeto
+$moves = Movimiento
+$natures = Naturaleza

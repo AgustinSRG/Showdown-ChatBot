@@ -1,0 +1,10 @@
+{
+  "id": "pokemon",
+  "name": "Pokemon",
+  "version": "1.0",
+  "commands": [
+    "poke-trans/commands.js",
+	"poke-data/commands.js"
+  ],
+  "description": "Pokemon help commands"
+}
