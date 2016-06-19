@@ -63,7 +63,7 @@
 			var time;
 			switch (spl[0]) {
 				case 'c:':
-					time = new Date(parseInt(spl[1]));
+					time = new Date(parseInt(spl[1]) * 1000);
 					time = '['+ addLeftZero(time.getHours(), 2) + ':' +
 						addLeftZero(time.getMinutes(), 2) + ':' + addLeftZero(time.getSeconds(), 2) + ']';
 					if (isIntro) {
