@@ -4,7 +4,8 @@
   "version": "1.0",
   "commands": [
     "poke-trans/commands.js",
-	"poke-data/commands.js"
+	"poke-data/commands.js",
+	"usage/commands.js"
   ],
   "description": "Pokemon help commands"
 }
