@@ -132,6 +132,14 @@ class WebCache {
 			delete this.data[url];
 		}
 	}
+
+	uncacheAll(mark) {
+		for (let url in this.data) {
+			if (this.data[url].marks && this.data[url].marks[mark]) {
+				this.uncache(url);
+			}
+		}
+	}
 }
 
 exports.BufferCache = BufferCache;

@@ -173,7 +173,7 @@ class DataManager {
 		if (this.cache.has(url)) {
 			let cache = this.cache.get(url);
 			if (cache) {
-				return cache.data;
+				return callback(cache.data);
 			} else {
 				wget(url, callback);
 			}

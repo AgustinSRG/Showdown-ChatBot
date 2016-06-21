@@ -1,0 +1,55 @@
+﻿# Translations file
+
+%english
+
+$error = An error ocurred, try again later
+
+$in = in
+$stats = Usage stats
+$data = Usage data
+$usage = Usage
+$tiererr1 = Tier or format
+$tiererr2 = not found
+$tiererr3 = not available
+$err = Could not get usage data from
+$busy = Downloading the usage data. Try again in a few seconds
+$pokeerr1 = Pokemon
+$pokeerr2 = not available in
+$pokeerr3 = (Usage Stats)
+$pokeerr4 = (Usage Data)
+$notfound = Data not found for
+$usagedata1 = 
+$usagedata2 = 's #NAME
+$pokeusage = Usage
+$pokeraw = Raw
+$abilities = Abilities
+$items = Items
+$moves = Moves
+$spreads = Spreads
+$teammates = Teammates
+
+%spanish
+
+$in = en
+$stats = Estadísticas de uso
+$data = Datos de uso
+$usage = Uso correcto
+$tiererr1 = Tier o formato
+$tiererr2 = no encontrado
+$tiererr3 = no disponible
+$err = No se pudieron descargar datos desde
+$busy = Descargando los datos. Intenta este comando de nuevo en unos minutos
+$pokeerr1 = Pokemon
+$pokeerr2 = no disponible en
+$pokeerr3 =  (Estadísticas de uso)
+$pokeerr4 =  (Datos de uso)
+$notfound = No se encontraron datos para
+$usagedata1 = #NAME de 
+$usagedata2 = 
+$pokeusage = Uso
+$pokeraw = Raw
+$abilities = Habilidades
+$items = Objetos
+$moves = Movimientos
+$spreads = Spreads
+$teammates = Compañeros

@@ -1,0 +1,55 @@
+﻿# Translations file
+
+%english
+
+$error = An error ocurred, try again later
+
+$0 = Generation of __Metronome__: Move: Generation 1; Item: Generation 4
+$1 = Pokemon, item, ability or move called
+$2 = was not found
+$3 = Generation of
+$4 = Generation
+
+$5 = Pokemon
+$6 = No random battle moves found for pokemon
+$7 = Random Doubles Battle moves for
+$8 = Random Battle moves for
+
+$9 = No priority moves found for pokemon
+$10 = Priority moves for
+
+$11 = No boosting moves found for pokemon
+$12 = Boosting moves for
+
+$13 = No recovery moves found for pokemon
+$14 = Recovery moves for
+
+$15 = No hazards moves found for pokemon
+$16 = Hazards moves for
+
+%spanish
+
+$error = Se ha producido un error, inténtalo de nuevo más tarde
+
+$0 = Generación de __Metronome__: Movimiento: Generación 1; Objeto: Generación 4
+$1 = Pokemon, objeto, habilidad o movimiento llamado
+$2 = no encontrado
+$3 = Generación de
+$4 = Generación
+
+$5 = Pokemon
+$6 = No se han encontrado movimientos para Random Battle para el pokemon
+$7 = Movimientos para Random Doubles Battle de
+$8 = Movimientos para Random Battle de
+
+$9 = No se han encontrado movimientos de prioridad para el pokemon
+$10 = Movimientos de prioridad de
+
+$11 = No se han encontrado movimientos de boosting para el pokemon
+$12 = Movimientos de boosting de
+
+$13 = No se han encontrado movimientos de recuperación para el pokemon
+$14 = Movimientos de recuperación de
+
+$15 = No se han encontrado movimientos de hazards para el pokemon
+$16 = Movimientos de hazards de
