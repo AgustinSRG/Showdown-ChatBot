@@ -1,0 +1,9 @@
+{
+  "id": "misc",
+  "name": "Misc",
+  "version": "1.0",
+  "commands": [
+    "misc.js"
+  ],
+  "description": "Misc Commands Plugins"
+}

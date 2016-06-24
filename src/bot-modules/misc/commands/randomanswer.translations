@@ -1,0 +1,54 @@
+﻿# Translations file
+
+%english
+
+$num = 20
+
+$0 = Signs point to yes.
+$1 = Yes.
+$2 = Reply hazy, try again.
+$3 = Without a doubt.
+$4 = My sources say no.
+$5 = As I see it, yes.
+$6 = You may rely on it.
+$7 = Concentrate and ask again.
+$8 = Outlook not so good.
+$9 = It is decidedly so.
+$10 = Better not tell you now.
+$11 = Very doubtful.
+$12 = Yes - definitely.
+$13 = It is certain.
+$14 = Cannot predict now.
+$15 = Most likely.
+$16 = Ask again later.
+$17 = My reply is no.
+$18 = Outlook good.
+$19 = Don't count on it.
+
+%spanish
+
+$num = 23
+
+$0 = Todo apunta a que sí.
+$1 = Sí.
+$2 = Hay mucha niebla. Inténtalo de nuevo.
+$3 = Respuesta poco clara, pregunta de nuevo.
+$4 = Sin ninguna duda.
+$5 = Mis fuentes dicen que no.
+$6 = Tal y como lo veo, sí.
+$7 = Cuenta con ello.
+$8 = Concéntrate y pregunta de nuevo.
+$9 = No parece buena idea.
+$10 = No entiendo la pregunta.
+$11 = Mejor no decírtelo ahora.
+$12 = Muy dudable.
+$13 = Sí - definitivamente.
+$14 = Es cierto.
+$15 = No es cierto.
+$16 = No puedo predecir eso.
+$17 = Más o menos.
+$18 = Pregunta más tarde.
+$19 = Mi respuesta es no.
+$20 = Parece buena idea.
+$21 = Quizás.
+$22 = No cuentes con ello.

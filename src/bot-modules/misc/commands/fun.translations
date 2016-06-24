@@ -1,0 +1,11 @@
+﻿# Translations file
+
+%english
+
+$pick = Pick
+$error = An error ocurred, try again later
+
+%spanish
+
+$pick = Elección
+$error = Se ha produido un error, inténtalo de nuevo más tarde
