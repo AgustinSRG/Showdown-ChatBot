@@ -1,0 +1,10 @@
+{
+  "id": "quote",
+  "name": "Quotes & Jokes",
+  "version": "1.0",
+  "main": "main.js",
+  "commands": [
+    "commands.js"
+  ],
+  "description": "A database of quotes an jokes"
+}

@@ -1,0 +1,27 @@
+﻿# Translations File
+
+%english
+
+$0 = There are no quotes in the database
+$1 = There are no jokes in the database
+$2 = Quote added to the database
+$3 = Quote already exists
+$4 = Quote removed from the database
+$5 = Quote not found
+$6 = Joke added to the database
+$7 = Joke already exists
+$8 = Joke removed from the database
+$9 = Joke not found
+
+%spanish
+
+$0 = No hay ninguna cita en la base de datos
+$1 = No hay ningún chiste en la base de datos
+$2 = Cita agregada a la base de datos
+$3 = La cita ya existía
+$4 = Cita eliminada de la base de datos
+$5 = Cita no encontrada
+$6 = Chiste agregado a la base de datos
+$7 = El chiste ya existía
+$8 = Chiste eliminado de la base de datos
+$9 = Chiste no encontrado
