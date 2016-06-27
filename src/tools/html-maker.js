@@ -23,7 +23,6 @@ exports.generate = function (body, loginData, menu, options) {
 		}
 	}
 
-	buf += Util.format("<script type=\"text/javascript\" src=\"%s\"></script>", '/static/jquery-3.0.0.min.js');
 	if (options.scripts) {
 		for (let i = 0; i < options.scripts.length; i++) {
 			buf += Util.format("<script type=\"text/javascript\" src=\"%s\"></script>", options.scripts[i]);
