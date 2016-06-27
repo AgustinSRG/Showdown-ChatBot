@@ -630,6 +630,17 @@ class CommandContext {
 		}
 	}
 
+	parseArguments() {
+		let parsedArgs = {};
+		for (let i = 0; i < this.args.length; i++) {
+			let spl = this.args[i].split('=');
+			let id = Text.toId(spl[0]);
+			let val = (spl[1] || "").trim();
+			parsedArgs[id] = val || true;
+		}
+		return parsedArgs;
+	}
+
 	toString() {
 		return Util.format("[Room: %s] [By: %s] [Target: %s] [Token: %s] [Cmd: %s] [Arg: %s]",
 			this.room, this.by, this.targetRoom, this.token, this.cmd, this.arg);
