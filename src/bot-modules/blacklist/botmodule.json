@@ -1,0 +1,10 @@
+{
+  "id": "blacklist",
+  "name": "BlackList",
+  "version": "1.0",
+  "main": "main.js",
+  "commands": [
+    "commands.js"
+  ],
+  "description": "An user blacklist for chat rooms"
+}

@@ -1,0 +1,9 @@
+﻿# Translations file
+
+%english
+
+$ban = Blacklisted User
+
+%spanish
+
+$ban = Usuario de la lista negra
