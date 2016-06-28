@@ -31,7 +31,7 @@ function parseAliases(format) {
 module.exports = {
 	newtour: 'tour',
 	tour: function () {
-		if (!this.can('tour')) return this.replyAccessDenied('tour');
+		if (!this.can('tour', this.room)) return this.replyAccessDenied('tour');
 		const Mod = App.modules.tourcmd.system;
 		const Config = App.config.modules.tourcmd;
 		if (this.getRoomType(this.room) !== 'chat') {
