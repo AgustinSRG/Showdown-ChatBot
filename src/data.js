@@ -8,6 +8,8 @@
 
 'use strict';
 
+const Temp_Size = 50;
+
 const Path = require('path');
 const Https = require('https');
 const Http = require('http');
@@ -15,6 +17,7 @@ const Url = require('url');
 const FileSystem = require('fs');
 
 const WebCache = Tools.get('cache.js').WebCache;
+const TempManager = Tools.get('temp.js');
 const uncacheTree = Tools.get('uncachetree.js');
 const checkDir = Tools.get('checkdir.js');
 
@@ -91,6 +94,9 @@ class DataManager {
 
 		checkDir(Path.resolve(path, 'cache/'));
 		this.cache = new WebCache(Path.resolve(path, 'cache/'));
+
+		checkDir(Path.resolve(path, 'temp/'));
+		this.temp = new TempManager(Path.resolve(path, 'temp/'), Temp_Size);
 	}
 
 	/**
