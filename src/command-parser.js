@@ -411,7 +411,7 @@ class DynamicCommand {
 				context.cmd += " " + arg;
 				if (conf[arg]) {
 					this.execNext(conf[arg], context);
-				} else {
+				} else if (Object.keys(conf).length) {
 					context.errorReply(translator.get(4, context.lang) + ": __" + cmd + "__ | " +
 						translator.get(5, context.lang) + ": __" + Object.keys(conf).join(', ') + "__");
 				}
