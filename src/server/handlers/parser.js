@@ -199,7 +199,14 @@ function parserAliasesHandler(context, html) {
 	html += '<form method="post" action="">';
 	html += '<table border="0">';
 	html += '<tr><td>Alias: </td><td><label><input name="alias" type="text" size="40" /></label></td></tr>';
-	html += '<tr><td>Command: </td><td><label><input name="cmd" type="text" size="40" /></label></td></tr>';
+
+	html += '<tr><td>Command: </td><td><select name="cmd">';
+	let cmds = App.parser.getCommadsArray().sort();
+	for (let i = 0; i < cmds.length; i++) {
+		html += '<option value="' + cmds[i] + '">' + cmds[i] + '</option>';
+	}
+	html += '</select></td></tr>';
+
 	html += '</table>';
 	html += '<p><label><input type="submit" name="set" value="Set Alias" /></label></p>';
 	html += '</form>';

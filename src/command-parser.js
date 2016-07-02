@@ -356,6 +356,15 @@ class CommandParser {
 		if (!this.can(ident, perm, room)) return false;
 		return this.equalOrHigherGroup(ident, tarGroup);
 	}
+
+	/**
+	 * Returns an array with all commands ids
+	 */
+	getCommadsArray() {
+		let commands = Object.keys(this.commands);
+		commands = commands.concat(Object.keys(this.data.dyncmds));
+		return commands;
+	}
 }
 
 class Command {
