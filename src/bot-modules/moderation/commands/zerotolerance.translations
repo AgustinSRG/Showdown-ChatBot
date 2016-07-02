@@ -1,0 +1,45 @@
+﻿# Translations File
+
+%english
+
+$nochat = This command is only available for chat rooms
+
+$0 = Invalid Username
+$1 = User
+$2 = is now on zero tolerance status
+$3 = level
+$4 = in room
+
+$5 = is not in zero tolerance status in room
+$6 = is no longer on zero tolerance status in room
+
+$7 = Feature not available
+$8 = Zero tolerance list for room
+$9 = is empty
+
+$10 = Room
+$11 = not found
+$12 = **is not** on zero tolerance status
+$13 = **is** on zero tolerance status
+
+%spanish
+
+$nochat = Este comando solo está disponible para las salas de chat
+
+$0 = Nombre de usuario no válido
+$1 = El usuario
+$2 = ha pasado a estar en estado de tolerancia cero
+$3 = nivel
+$4 = en la sala
+
+$5 = no se encuentra en estado de tolerancia cero en la sala
+$6 = ha dejado de estar en estado de tolerancia cero en la sala
+
+$7 = Funcionalidad no disponible
+$8 = La lista de tolerancia cero de la sala
+$9 = está vacía
+
+$10 = Sala
+$11 = no encontrada
+$12 = **no está** en estado de tolerancia cero
+$13 = **está** en estado de tolerancia cero

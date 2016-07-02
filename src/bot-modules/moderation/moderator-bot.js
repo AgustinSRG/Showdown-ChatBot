@@ -1,0 +1,290 @@
+/**
+ * Moderator Bot
+ */
+
+'use strict';
+
+const MAX_MODTIME_DURATION = 24 * 60 * 60 * 1000;
+const MAX_MODTIME_RELEVANCE = 60 * 60 * 1000;
+
+const Path = require('path');
+const FileSystem = require('fs');
+
+const Text = Tools.get('text.js');
+const Translator = Tools.get('translate.js');
+
+const translator = new Translator(Path.resolve(__dirname, 'mod.translations'));
+
+class ModeratorBot {
+	constructor(path) {
+		this.chatLog = {};
+		this.chatData = {};
+		this.filters = {};
+
+		let dir = FileSystem.readdirSync(path);
+		for (let i = 0; i < dir.length; i++) {
+			if ((/.*\.js/).test(dir[i])) {
+				let filter = require(Path.resolve(path, dir[i]));
+				if (filter.id && typeof filter.parse === 'function') {
+					this.filters[filter.id] = filter.parse;
+				} else {
+					console.log("Warning: Invalid filter: " + dir[i]);
+				}
+			}
+		}
+
+		this.cleanInterval = setInterval(this.clean.bind(this), MAX_MODTIME_RELEVANCE);
+	}
+
+	clean() {
+		for (let room in this.chatData) {
+			for (let user in this.chatData[room]) {
+				let now = Date.now();
+				if (!this.chatData[room][user] || !this.chatData[room][user].times.length) {
+					delete this.chatData[room][user];
+					continue;
+				}
+				if (now - this.chatData[room][user].times[this.chatData[room][user].times.length - 1] > MAX_MODTIME_DURATION) {
+					delete this.chatData[room][user];
+					continue;
+				}
+				let newTimes = [];
+				for (let j = 0; j < this.chatData[room][user].times.length; j++) {
+					if (now - this.chatData[room][user].times[j] < MAX_MODTIME_RELEVANCE) {
+						newTimes.push(this.chatData[room][user].times[j]);
+					}
+				}
+				delete this.chatData[room][user].times;
+				this.chatData[room][user].times = newTimes;
+				if (this.chatData[room][user].points) {
+					this.chatData[room][user].points--;
+				}
+			}
+		}
+	}
+
+	isExcepted(ident, room) {
+		let config = App.modules.moderation.system.data;
+		if (config.modexception.rooms[room]) {
+			return App.parser.equalOrHigherGroup(ident, config.modexception.rooms[room]);
+		} else {
+			return App.parser.equalOrHigherGroup(ident, config.modexception.global);
+		}
+	}
+
+	applyZeroTolerance(context) {
+		let config = App.modules.moderation.system.data;
+		if (!config.zeroTolerance[context.room] || !config.zeroTolerance[context.room][context.byIdent.id]) return;
+		let val = config.zeroTolerance[context.room][context.byIdent.id];
+		if (val === 'min' || val === 'low') {
+			context.pointVal += 1;
+		} else if (val === 'normal') {
+			context.pointVal += 1;
+		} else if (val === 'high') {
+			context.pointVal += 2;
+		} else if (val === 'max') {
+			context.pointVal += 3;
+		}
+		context.muteMessage += ' (' + translator.get('0tol', this.getLanguage(context.room)) + ')';
+	}
+
+	botCanModerate(room) {
+		let roomData = App.bot.rooms[room];
+		let botid = Text.toId(App.bot.getBotNick());
+		return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({group: roomData.users[botid]}, 'driver'));
+	}
+
+	botCanBan(room) {
+		let roomData = App.bot.rooms[room];
+		let botid = Text.toId(App.bot.getBotNick());
+		return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({group: roomData.users[botid]}, 'mod'));
+	}
+
+	modEnabled(modType, room) {
+		let config = App.modules.moderation.system.data;
+		if (config.roomSettings[room] && config.roomSettings[room][modType] === true) {
+			return true;
+		} else if (config.roomSettings[room] && config.roomSettings[room][modType] === false) {
+			return false;
+		} else {
+			return !!config.settings[modType];
+		}
+	}
+
+	getLanguage(room) {
+		return App.config.language.rooms[room] || App.config.language['default'];
+	}
+
+	getRulesLink(room) {
+		let config = App.modules.moderation.system.data;
+		if (config.rulesLink[room]) {
+			return '. ' + config.rulesLink[room];
+		} else {
+			return '';
+		}
+	}
+
+	getPunishment(val) {
+		let config = App.modules.moderation.system.data;
+		let punishments = config.punishments;
+		if (val <= 0) return null;
+		if (val > punishments.length) {
+			return punishments[punishments.length - 1];
+		} else {
+			return punishments[val - 1];
+		}
+	}
+
+	getModTypeValue(modType, defaultVal) {
+		let config = App.modules.moderation.system.data;
+		return config.values[modType] || defaultVal;
+	}
+
+	parse(room, time, by, msg) {
+		let context = new ModerationContext(room, time, by, msg);
+		let user = context.byIdent.id;
+
+		if (!this.chatLog[room]) {
+			this.chatLog[room] = {
+				times: [0, 0, 0, 0],
+				users: ['', '', '', ''],
+				msgs: ['', '', '', ''],
+			};
+		}
+
+		this.chatLog[room].times.push(time);
+		this.chatLog[room].users.push(user);
+		this.chatLog[room].msgs.push(msg);
+
+		this.chatLog[room].times.shift();
+		this.chatLog[room].users.shift();
+		this.chatLog[room].msgs.shift();
+
+		/* Exception */
+		if (this.isExcepted(context.byIdent, room)) return;
+		if (!this.botCanModerate(room)) return;
+
+
+		/* User Data */
+		if (!this.chatData[room]) this.chatData[room] = {};
+
+		if (!this.chatData[room][user]) {
+			this.chatData[room][user] = {times:[], lastMsgs: ['', '', ''], points:0, lastAction:0};
+		}
+
+		this.chatData[room][user].lastMsgs.push(context.msgLow);
+		this.chatData[room][user].lastMsgs.shift();
+
+		this.chatData[room][user].times.push(time);
+
+		/* Filters */
+		for (let f in this.filters) {
+			if (f === 'spam') continue;
+			if (!this.modEnabled(f, room)) continue;
+			this.filters[f].call(this, context);
+		}
+
+		/* Spam */
+		if (this.filters['spam'] && this.modEnabled('spam', room)) {
+			this.filters['spam'].call(this, context);
+		}
+
+		/* Zero Tolerance */
+		this.applyZeroTolerance(context);
+
+		/* Punishment */
+		if (context.pointVal > 0) {
+			context.pointVal += this.chatData[room][user].points;
+			this.chatData[room][user].points++;
+
+			let cmd = this.getPunishment(context.pointVal);
+			if (cmd === 'roomban' && !this.botCanBan(room)) cmd = 'hourmute'; // Bot cannot ban
+			if (App.config.modules.core.privaterooms.indexOf(room) >= 0 && cmd === 'warn') cmd = 'mute'; // Cannot warn in private rooms
+
+			App.bot.sendTo(room, '/' + cmd + ' ' + user + ', ' + translator.get('mod', this.getLanguage(room)) +
+				': ' + context.muteMessage + this.getRulesLink(room));
+		}
+	}
+
+	parseRaw(room, raw) {
+		let by = '', val = 0;
+		let indexwarn = raw.indexOf(" was warned by ");
+		let indexmute = raw.indexOf(" was muted by ");
+		if (indexmute !== -1) {
+			let mutemsg = raw.split(" was muted by ");
+			if (mutemsg.length > 1 && mutemsg[1].indexOf(App.bot.getBotNick()) === -1) {
+				by = Text.toId(mutemsg[0]);
+				if (raw.indexOf("for 7 minutes") !== -1) {
+					val = 2;
+				} else {
+					val = 3;
+				}
+			}
+		} else if (indexwarn !== -1) {
+			let warnmsg = raw.split(" was warned by ");
+			if (warnmsg.length > 1 && warnmsg[1].indexOf(App.bot.getBotNick()) === -1) {
+				by = Text.toId(warnmsg[0]);
+				val = 1;
+			}
+		}
+		if (by && val > 0) {
+			let config = App.modules.moderation.system.data;
+			if (!config.zeroTolerance[room] || !config.zeroTolerance[room][by]) return;
+			let zt = config.zeroTolerance[room][by];
+			if (zt === 'normal') {
+				val += 1;
+			} else if (zt === 'high') {
+				val += 2;
+			} else if (zt === 'max') {
+				val += 3;
+			} else {
+				return;
+			}
+			let cmd = this.getPunishment(val);
+			if (cmd === 'roomban' && !this.botCanBan(room)) cmd = 'hourmute'; // Bot cannot ban
+			if (App.config.modules.core.privaterooms.indexOf(room) >= 0 && cmd === 'warn') cmd = 'mute'; // Cannot warn in private rooms
+
+			App.bot.sendTo(room, '/' + cmd + ' ' + by + ', ' + translator.get('mod', this.getLanguage(room)) +
+				': ' + translator.get('ztmsg', this.getLanguage(room)));
+		}
+	}
+
+	destroy() {
+		clearInterval(this.cleanInterval);
+	}
+}
+
+class ModerationContext {
+	constructor(room, time, by, msg) {
+		this.room = room;
+		this.time = time;
+		this.by = by;
+		this.byIdent = Text.parseUserIdent(by);
+		this.originalMessage = msg;
+		this.msg = msg.trim().replace(/[ \u0000\u200B-\u200F]+/g, " ");
+		this.msgLow = this.msg.toLowerCase();
+
+		this.infractions = [];
+		this.muteMessage = '';
+		this.pointVal = 0;
+		this.totalPointVal = 0;
+
+		/* No-Nicks Msg */
+		this.noNicksMsg = " " + this.msg + " ";
+		if (App.bot.rooms[room]) {
+			let usernum = 0;
+			for (let userid in App.bot.rooms[room].users) {
+				usernum++;
+				if (!App.bot.users[userid]) continue;
+				let name = App.bot.users[userid].name.replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&");
+				let regex = new RegExp("[^a-z0-9A-Z]" + name + "[^a-z0-9A-Z]", 'g');
+				this.noNicksMsg = this.noNicksMsg.replace(regex, " %" + usernum + "% ");
+			}
+		}
+		this.noNicksMsg = this.noNicksMsg.trim();
+		this.noNicksMsgLow = this.noNicksMsg.toLowerCase();
+	}
+}
+
+exports.ModeratorBot = ModeratorBot;
+exports.ModerationContext = ModerationContext;

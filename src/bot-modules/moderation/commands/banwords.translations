@@ -1,0 +1,31 @@
+﻿# Translations File
+
+%english
+
+$nochat = This command is only available for chat rooms
+
+$0 = Invalid punishment type. Availables
+$1 = Phrase
+$2 = was already banned in room
+$3 = is now banned in room
+
+$4 = is not banned in room
+$5 = is no longer banned in room
+
+$6 = There are not banned words in room
+$7 = This feature is not available
+
+%spanish
+
+$nochat = Este comando solo está disponible para las salas de chat
+
+$0 = Tipo de castigo no válido. Disponibles
+$1 = La frase
+$2 = ya estaba prohibida en la sala
+$3 = ha pasado a estar prohibida en la sala
+
+$4 = no estaba prohibida en la sala
+$5 = ha dejado de estar prohibida en la sala
+
+$6 = No hay ninguna frase prohibida en la sala
+$7 = Funcionalidad no disponible

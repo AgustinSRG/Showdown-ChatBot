@@ -1,0 +1,13 @@
+﻿# Translations file
+
+%english
+
+$mod = Automated Moderation
+$0tol = zero tolerance user
+$ztmsg = Zero Tolerance User
+
+%spanish
+
+$mod = Moderación Automática
+$0tol = tolerancia cero
+$ztmsg = Tolerancia Cero

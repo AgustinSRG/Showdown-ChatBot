@@ -1,0 +1,37 @@
+﻿# Translations File
+
+%english
+
+$nochat = This command is only available for chat rooms
+
+$0 = Moderation for
+$1 = was
+$2 = enabled
+$3 = disabled
+$4 = for room
+$5 = Invalid moderation type. Available
+
+$6 = Automated moderation was disabled for room
+$7 = Moderation exception was set for excepted users for room
+$8 = Moderation exception was set for users with rank
+$9 = and above
+$10 = for room
+$11 = Invalid rank. Available ranks
+
+%spanish
+
+$nochat = Este comando solo está disponible para las salas de chat
+
+$0 = Moderación para
+$1 = ha sido
+$2 = activada
+$3 = desactivada
+$4 = para la sala
+$5 = Typo de moderación no disponible. Disponibles
+
+$6 = La moderación automática ha sido desactivada para la sala
+$7 = La excepción a la moderación automática fue establecida para los usuarios en la lista de excepción para la sala
+$8 = La excepción a la moderación automática fue establecida para los usuarios con rango
+$9 = y por encima
+$10 = para la sala
+$11 = Rango no válido. Rangos disponibles

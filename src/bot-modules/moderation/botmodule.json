@@ -1,0 +1,10 @@
+{
+  "id": "moderation",
+  "name": "Moderation",
+  "version": "1.0",
+  "main": "main.js",
+  "commands": [
+     "commands.js"
+  ],
+  "description": "Automated moderation for chat rooms"
+}

@@ -1,0 +1,13 @@
+﻿# Translations File
+
+%english
+
+$banword = Your message contained a banned phrase
+$inap = Your message contained inappropriate language
+$offense = Your message contained insults or offensive expressions
+
+%spanish
+
+$banword = Su mensaje contiene una frase prohibida
+$inap = Su mensaje contiene una frase inapropiada
+$offense = Su mensaje contiene insultos o expresiones ofensivas
