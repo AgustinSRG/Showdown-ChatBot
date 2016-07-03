@@ -96,6 +96,7 @@ function parserConfigurationHandler(context, html) {
 				App.config.parser[defGroups[i]] = context.post[defGroups[i]];
 			}
 			App.parser.data.helpmsg = context.post.helpmsg;
+			App.parser.data.antispam = !!context.post.antispam;
 			let rooms = {};
 			aux = (context.post.sleep || "").split(',');
 			for (let i = 0; i < aux.length; i++) {
@@ -133,6 +134,8 @@ function parserConfigurationHandler(context, html) {
 		'placeholder="Hi $USER, I am a bot for Pokemon Showdown." value="' + App.parser.data.helpmsg + '"/></label></td></tr>';
 	html += '<tr><td>Sleeping Rooms: </td><td><label><input name="sleep" type="text" size="80" value="' +
 		Object.keys(App.parser.data.sleep).join(', ') + '"/> (Separated by commas) </label></td></tr>';
+	html += '<tr><td colspan="2"><input name="antispam" type="checkbox" value="checkbox"' +
+		(App.parser.data.antispam ? ' checked="checked"' : '') + ' />&nbsp;Use Anti-Spam system for private commands</td></tr>';
 	html += '</table>';
 	html += '<p><label><input type="submit" name="edit" value="Save Changes" /></label></p>';
 	html += '</form>';

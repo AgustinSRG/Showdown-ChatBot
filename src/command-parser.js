@@ -7,6 +7,7 @@
 const Max_Cmd_Flood = 30;
 const Flood_Interval = 45 * 1000;
 const Help_Msg_Interval = 2 * 60 * 1000;
+const Command_Wait_Interval = 1500;
 
 const Util = require('util');
 const Path = require('path');
@@ -32,6 +33,7 @@ class CommandParser {
 			after: {},
 		};
 		this.lastHelpCommand = {};
+		this.lastPrivateCommand = {};
 
 		/* Configuration DataBase */
 		this.db = new DataBase(Path.resolve(path, 'cmd-parser.json'));
@@ -45,6 +47,7 @@ class CommandParser {
 		if (!this.data.sleep) this.data.sleep = {}; /* Sleeping rooms */
 		if (!this.data.roomctrl) this.data.roomctrl = {}; /* Control rooms */
 		if (!this.data.helpmsg) this.data.helpmsg = ""; /* Help Message */
+		if (!this.data.antispam) this.data.antispam = false; /* Anti-Spam System */
 
 		/* Permissions */
 		this.modPermissions = {
@@ -164,6 +167,35 @@ class CommandParser {
 	}
 
 	/**
+	 * Anti Spam System (check method)
+	 *
+	 * @param userid User ID
+	 * @param room Room where the command is used
+	 */
+	checkAntiSpamSystem(userid, room) {
+		if (!this.data.antispam) return false;
+		if (room && this.bot.rooms[room] && this.bot.rooms[room].type === 'chat') return false; // Public command
+		for (let user in this.lastPrivateCommand) {
+			if (Date.now() - this.lastPrivateCommand[user] >= Command_Wait_Interval) {
+				delete this.lastPrivateCommand[user];
+			}
+		}
+		return !!this.lastPrivateCommand[userid];
+	}
+
+	/**
+	 * Anti Spam System (set method)
+	 *
+	 * @param userid User ID
+	 * @param room Room where the command is used
+	 */
+	markPrivateCommand(userid, room) {
+		if (!this.data.antispam) return;
+		if (room && this.bot.rooms[room] && this.bot.rooms[room].type === 'chat') return false; // Public command
+		this.lastPrivateCommand[userid] = Date.now();
+	}
+
+	/**
 	 * Runs a dynamic command if it exists
 	 *
 	 * @param context An instance of CommandContext
@@ -214,6 +246,7 @@ class CommandParser {
 		let userid = Text.toId(by);
 		if (room && this.data.sleep[room]) return; /* Sleeping room */
 		if (!this.data.exceptions[userid] && this.monitor.isLocked(userid)) return; /* User locked */
+		if (!this.data.exceptions[userid] && this.checkAntiSpamSystem(userid, room)) return;
 
 		/* Target Room */
 		let tarRoom = room;
@@ -269,9 +302,11 @@ class CommandParser {
 			if (!this.exec(context)) { /* Static commands have preference */
 				if (this.execDyn(context)) {
 					this.monitor.count(userid);
+					if (!this.data.exceptions[userid]) this.markPrivateCommand(userid, room);
 				}
 			} else {
 				this.monitor.count(userid);
+				if (!this.data.exceptions[userid]) this.markPrivateCommand(userid, room);
 			}
 		} catch (err) {
 			App.log("[COMMAND CRASH] " + err.code + ":" + err.message + " | " + context.toString() + "\n" + err.stack);
