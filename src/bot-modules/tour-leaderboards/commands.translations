@@ -1,0 +1,57 @@
+﻿# Translations file
+
+%english
+
+$nochat = This command is only available for chat rooms
+$in = in
+
+$0 = Leaderboards are not enabled for room
+$1 = Invalid username
+$2 = Ranking of
+$3 = Points
+$4 = Tours Won
+$5 = Finalist
+$6 = Semi-Finalist
+$7 = Total
+$8 = tours played
+$9 = battles won
+
+$10 = Leaderboards for room
+$11 = are empty
+
+$12 = There is not a tournament running in this room
+$13 = Feature not available
+
+$14 = The tournament has been set as **official**, so it will count for tournaments leaderboards
+$15 = The tournament was already official
+
+$16 = The tournament is no longer official
+$17 = The tournament is not official
+
+%spanish
+
+$nochat = Este comando solo está disponible para las salas de chat
+$in = en
+
+$0 = El sistema de clasificaciones de torneos no está activado en la sala
+$1 = Nombre de usuario no válido
+$2 = Ranking de
+$3 = Puntos
+$4 = Torneos ganados
+$5 = Finalista
+$6 = Semi-Finalista
+$7 = Total
+$8 = torneos jugados
+$9 = batallas ganadas
+
+$10 = Las clasificaciones de torneos para la sala
+$11 = están vacías
+
+$12 = No hay ningún torneo en esta sala
+$13 = Funcionalidad no disponible
+
+$14 = El torneo ha sido configurado como **oficial**, por lo que contará para las clasificaciones
+$15 = El torneo ya era oficial
+
+$16 = El torneo ha dejado de ser oficial
+$17 = El torneo no es oficial
