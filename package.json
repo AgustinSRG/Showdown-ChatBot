@@ -3,12 +3,12 @@
   "version": "0.1.0-alpha",
   "author": {
     "name": "Agustin San Roman",
-	"email": "agustinsanromanguzman@gmail.com",
-	"url": "https://github.com/asanrom"
+    "email": "agustinsanromanguzman@gmail.com",
+    "url": "https://github.com/asanrom"
   },
   "scripts": {
     "start": "node run-forever",
-	"test": "eslint --cache showdown-chatbot src/"
+    "test": "eslint --cache showdown-chatbot src/"
   },
   "main": "showdown-chatbot",
   "bin": "showdown-chatbot",
