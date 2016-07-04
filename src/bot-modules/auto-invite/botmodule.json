@@ -1,0 +1,8 @@
+{
+  "id": "autoinvite",
+  "name": "Auto-Invite",
+  "version": "1.0",
+  "main": "main.js",
+  "commands": [],
+  "description": "Automatically sends /invite to auth of a private room"
+}
