@@ -1,6 +1,7 @@
 # Config and data
 config
 data
+!src/bot-modules/battle/data
 
 # Logs
 logs
