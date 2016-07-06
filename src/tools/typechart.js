@@ -1,6 +1,6 @@
 'use strict';
 
-exports.BattleTypeChart = {
+module.exports = {
 	"Bug": {
 		damageTaken: {
 			"Bug": 0,
