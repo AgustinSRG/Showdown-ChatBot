@@ -11,6 +11,10 @@ const BattleData = require(Path.resolve(__dirname, "battle-data.js"));
 const Move = BattleData.Move;
 
 module.exports = {
+	rated: function (args, kwargs) {
+		this.rated = true;
+	},
+
 	request: function (args, kwargs) {
 		args.shift();
 		this.request = JSON.parse(args.join("|"));
