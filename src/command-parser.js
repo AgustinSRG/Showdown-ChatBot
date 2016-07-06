@@ -619,7 +619,7 @@ class CommandContext {
 	 * @param perm Permission required to use the command
 	 */
 	replyAccessDenied(perm) {
-		return this.errorReply(translator.get(0, this.lang) + '. ' +
+		return this.pmReply(translator.get(0, this.lang) + '. ' +
 			translator.get(1, this.lang) + ' __' + perm + '__ ' + translator.get(2, this.lang) + '.');
 	}
 
