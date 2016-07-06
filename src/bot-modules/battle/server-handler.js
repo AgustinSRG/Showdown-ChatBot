@@ -37,7 +37,7 @@ App.server.setHandler('battle', (context, parts) => {
 		let ladderBattles = parseInt(context.post.maxladder);
 		try {
 			check(!isNaN(maxBattles) && maxBattles >= 0, "Invalid max battles value");
-			check(!isNaN(ladderBattles) && maxBattles > 0, "Invalid max ladder battles value");
+			check(!isNaN(ladderBattles) && ladderBattles > 0, "Invalid max ladder battles value");
 		} catch (err) {
 			error = err.message;
 		}
