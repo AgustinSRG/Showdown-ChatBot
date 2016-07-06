@@ -13,6 +13,7 @@ const Text = Tools.get('text.js');
 if (!App.config.modules.autoinvite) {
 	App.config.modules.autoinvite = {
 		room: '',
+		"public": '',
 		rank: 'voice',
 	};
 }
@@ -62,6 +63,7 @@ exports.checkRoomAuth = function () {
 };
 
 exports.userCanBeInvited = function (room, ident) {
+	if (room !== App.config.modules.autoinvite.public) return;
 	let tarRoom = App.config.modules.autoinvite.room;
 	if (!tarRoom) return false;
 	if (tarRoom === room) return false;

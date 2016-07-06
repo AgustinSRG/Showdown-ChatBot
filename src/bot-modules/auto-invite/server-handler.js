@@ -28,12 +28,14 @@ App.server.setHandler('autoinvite', (context, parts) => {
 
 	if (context.post.edit) {
 		let room = Text.toRoomid(context.post.room);
+		let publicRoom = Text.toRoomid(context.post.public);
 		let rank = context.post.rank || "excepted";
 		if (rank.length > 1 && App.config.parser[rank]) {
 			rank = App.config.parser[rank];
 		}
 		if (rank === 'user' || rank === 'excepted' || App.config.parser.groups.indexOf(rank) >= 0) {
 			App.config.modules.autoinvite.room = room;
+			App.config.modules.autoinvite.public = publicRoom;
 			App.config.modules.autoinvite.rank = rank;
 			App.db.write();
 			App.modules.autoinvite.system.roomAuth = {};
@@ -50,8 +52,10 @@ App.server.setHandler('autoinvite', (context, parts) => {
 	html += '<h2>Auto-Invite Configuration</h2>';
 	html += '<form method="post" action="">';
 	html += '<table border="0">';
-	html += '<tr><td><strong>Room</strong>:&nbsp;</td><td><input name="room" type="text" size="40" value="' +
+	html += '<tr><td><strong>Private Room</strong>:&nbsp;</td><td><input name="room" type="text" size="40" value="' +
 		(App.config.modules.autoinvite.room || "") + '" /></td></tr>';
+	html += '<tr><td><strong>Public Room</strong>:&nbsp;</td><td><input name="public" type="text" size="40" value="' +
+		(App.config.modules.autoinvite.public || "") + '" /></td></tr>';
 	html += '<tr><td><strong>Rank</strong>:&nbsp;</td><td>' +
 		getRankSelect('rank', App.config.modules.autoinvite.rank) + '</td></tr>';
 	html += '</table>';
