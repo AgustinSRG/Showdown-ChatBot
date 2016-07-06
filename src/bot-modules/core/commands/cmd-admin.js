@@ -235,7 +235,7 @@ module.exports = {
 		}
 	},
 
-	ignore: function () {
+	parserignore: function () {
 		if (!this.isExcepted()) return;
 		if (!this.arg) return this.errorReply(this.usage({desc: 'userid'}));
 		let user = Text.toId(this.arg);
@@ -249,7 +249,7 @@ module.exports = {
 		}
 	},
 
-	unignore: function () {
+	parserunignore: function () {
 		if (!this.isExcepted()) return;
 		if (!this.arg) return this.errorReply(this.usage({desc: 'userid'}));
 		let user = Text.toId(this.arg);
