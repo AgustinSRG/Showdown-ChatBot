@@ -1,0 +1,10 @@
+{
+  "id": "battle",
+  "name": "Battle",
+  "version": "1.0",
+  "main": "main.js",
+  "commands": [
+     "commands.js"
+  ],
+  "description": "Automated battle bot for ladder, challenges and tournaments"
+}

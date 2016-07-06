@@ -472,6 +472,18 @@ class RequestContext {
 	}
 
 	/**
+	 * Sends a plain text to the client
+	 *
+	 * @param text String to be sent
+	 * @param code Response code (200 by default)
+	 */
+	endWithText(text, code) {
+		this.headers['Content-Type'] = 'text/plain; charset=utf-8';
+		this.response.writeHead(code || 200, this.headers);
+		this.response.end(text);
+	}
+
+	/**
 	 * Sends a pre-formated html page to the client
 	 *
 	 * @param html body string to send

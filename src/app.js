@@ -278,6 +278,12 @@ class ChatBotApp {
 		}
 	}
 
+	debug(text) {
+		if (this.config.debug) {
+			this.log("DEBUG: " + text);
+		}
+	}
+
 	/**
 	 * Reports a crash to the logger
 	 *

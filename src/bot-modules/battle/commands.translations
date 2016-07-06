@@ -1,0 +1,19 @@
+﻿# Translations file
+
+%english
+
+$0 = Format
+$1 = is not available for challenges
+$2 = Not available teams for format
+$3 = Team
+$4 = not found
+$5 = is not available for ladder
+
+%spanish
+
+$0 = El formato
+$1 = no está disponible para retos
+$2 = No poseo equipos para jugar el formato
+$3 = El equipo
+$4 = no existe
+$5 = no está disponible para ladder
