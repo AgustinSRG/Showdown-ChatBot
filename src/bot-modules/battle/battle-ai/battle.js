@@ -62,6 +62,7 @@ class Battle {
 		};
 		this.lock = false;
 		this.leaveInterval = null;
+		this.nextIsRequest = false;
 	}
 
 	send(data) {
@@ -246,6 +247,10 @@ class Battle {
 
 	run(str, isIntro) {
 		if (!str) return;
+		if (this.nextIsRequest) {
+			str = '|request|' + str;
+			this.nextIsRequest = false;
+		}
 		if (str.charAt(0) !== '|' || str.substr(0, 2) === '||') {
 			return;
 		} else {

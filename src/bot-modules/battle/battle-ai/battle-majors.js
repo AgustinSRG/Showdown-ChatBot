@@ -17,7 +17,12 @@ module.exports = {
 
 	request: function (args, kwargs) {
 		args.shift();
-		this.request = JSON.parse(args.join("|"));
+		let data = args.join("|");
+		if (!isNaN(data.substr(0, 1)) && data.substr(1, 1) === '|') {
+			this.nextIsRequest = true;
+			return;
+		}
+		this.request = JSON.parse(data);
 		this.rqid = this.request ? this.request.rqid : -1;
 	},
 
