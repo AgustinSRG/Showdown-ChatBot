@@ -616,6 +616,9 @@ module.exports = {
 		if (args[1] && args[1].indexOf("NOTE: This is an Inverse Battle") >= 0) {
 			this.conditions["inversebattle"] = true;
 			this.debug(this.id + ": Changed to inverse Battle");
+		} else if (args[1] && args[1].trim() === (App.bot.getBotNick() + ' lost due to inactivity.')) {
+			App.log("Bot lost due to inactivity. Battle system error. Room: " +
+				this.id + " | " + JSON.stringify(this.lastSend));
 		}
 	},
 };
