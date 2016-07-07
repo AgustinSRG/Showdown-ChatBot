@@ -156,6 +156,7 @@ App.server.setHandler('teams', (context, parts) => {
 		if (id && mod.TeamBuilder.dynTeams[id]) {
 			delete mod.TeamBuilder.dynTeams[id];
 			mod.TeamBuilder.saveTeams();
+			mod.TeamBuilder.mergeTeams();
 			App.logServerAction(context.user.id, "Delete Team: " + id);
 			ok = 'Team <strong>' + id + '</strong> deleted sucessfully';
 		} else {
@@ -184,6 +185,7 @@ App.server.setHandler('teams', (context, parts) => {
 				packed: packed,
 			};
 			mod.TeamBuilder.saveTeams();
+			mod.TeamBuilder.mergeTeams();
 			App.logServerAction(context.user.id, "Add Team: " + id);
 			ok = 'Team <strong>' + id + '</strong> added sucessfully';
 		}
