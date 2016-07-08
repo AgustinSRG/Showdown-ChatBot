@@ -1,0 +1,49 @@
+﻿# Translations File
+
+%english
+
+$0 = A new **Trivia** game was created
+$1 = It will be a max of
+$2 = questions
+$3 = If someone gets
+$4 = points, he/she wins
+$5 = You have
+$6 = seconds to answer each question
+$7 = Use
+$8 = ta <answer>
+$9 = to play
+
+$10 = **Time is out!** Answers
+
+$11 = **Correct!**
+$12 = answered the question correctly. Answer
+$13 = Current points
+
+$14 = **The game of trivia ended!**
+$15 = Congratulations to
+$16 = for winning the game with
+$17 = points
+
+%spanish
+
+$0 = Se ha creado un juego de **Trivia**
+$1 = Serán un total de
+$2 = preguntas
+$3 = Si alguien consigue
+$4 = puntos, gana
+$5 = Teneis
+$6 = segundos para responder cada pregunta
+$7 = Usa
+$8 = ta <respuesta>
+$9 = para jugar
+
+$10 = **El tiempo ha terminado!** Respuestas
+
+$11 = **Correcto!**
+$12 = respondió a la pregunta correctamente. Respuesta
+$13 = Puntos
+
+$14 = **El juego de trivia ha terminado**
+$15 = Felicidades a
+$16 = por ganar el juego con
+$17 = puntos

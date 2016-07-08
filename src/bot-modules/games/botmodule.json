@@ -1,0 +1,10 @@
+{
+  "id": "games",
+  "name": "Games",
+  "version": "1.0",
+  "main": "main.js",
+  "commands": [
+     "commands.js"
+  ],
+  "description": "A collection of chat games for a PS bot"
+}

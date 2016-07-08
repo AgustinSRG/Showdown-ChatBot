@@ -1,0 +1,13 @@
+﻿# Translations File
+
+%english
+
+$nochat = This command is only available for chat rooms
+$end = The game was terminated
+$nogame = There is no game in this room
+
+%spanish
+
+$nochat = Este comando solo está disponible para las salas de chat
+$end = El juego ha sido finalizado
+$nogame = No había ningún juego activo en esta sala

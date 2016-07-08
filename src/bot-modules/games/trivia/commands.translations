@@ -1,0 +1,17 @@
+﻿# Translations File
+
+%english
+
+$nochat = This command is only available for chat rooms
+
+$0 = Invalid answer time
+$1 = There is already a game in this room
+$2 = Trivia questions database is empty
+
+%spanish
+
+$nochat = Este comando solo está disponible para las salas de chat
+
+$0 = Tiempo de respuesta no válido
+$1 = Ya hay un juego activo en esta sala
+$2 = La base de datos de preguntas para el juego de trivia está vacía
