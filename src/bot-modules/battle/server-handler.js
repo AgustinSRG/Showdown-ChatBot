@@ -118,6 +118,9 @@ App.server.setHandler('battle', (context, parts) => {
 
 	html += '<form method="post" action="">';
 	if (mod.LadderManager.laddering) {
+		let format = mod.LadderManager.format;
+		if (App.bot.formats[format]) format = App.bot.formats[format].name;
+		html += '<p><strong>Laddering in format ' + format + '</strong></p>';
 		html += '<p><input type="submit" name="stopladder" value="Stop Laddering" /></p>';
 	} else {
 		html += '<p><strong>Format</strong>:&nbsp;' + getLadderFormatsMenu() + '</p>';

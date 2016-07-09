@@ -32,6 +32,8 @@ exports.reportBattle = function (room) {
 };
 
 exports.laddering = false;
+exports.format = '';
+exports.interv = 0;
 exports.ladderTimer = null;
 
 exports.start = function (format, checkInterv) {
@@ -59,6 +61,8 @@ exports.start = function (format, checkInterv) {
 		App.bot.send(cmds);
 	};
 	exports.laddering = true;
+	exports.format = format;
+	exports.interv = checkInterv;
 	exports.ladderTimer = setInterval(check, checkInterv || Ladder_Check_Interval);
 	check();
 	return true;
@@ -69,6 +73,8 @@ exports.stop = function () {
 	exports.laddering = false;
 	if (exports.ladderTimer) clearTimeout(exports.ladderTimer);
 	exports.ladderTimer = null;
+	exports.format = '';
+	exports.interv = 0;
 	return true;
 };
 
