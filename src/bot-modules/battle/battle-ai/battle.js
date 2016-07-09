@@ -66,6 +66,7 @@ class Battle {
 	}
 
 	send(data) {
+		this.log("SENT: " + data);
 		App.bot.sendTo(this.id, data);
 	}
 
