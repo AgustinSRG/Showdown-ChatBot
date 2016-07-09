@@ -103,7 +103,12 @@ App.server.setHandler('trivia', (context, parts) => {
 	let html = '';
 	html += '<h2>Trivia Answers</h2>';
 
+	html += '<form method="post" action=""><p><strong>Question</strong>:&nbsp;<input name="clue" type="text" size="80" /></p>' +
+		'<p><strong>Answers</strong>:&nbsp;<input name="answers" type="text" size="80" /></p>' +
+		'<p><input type="submit" name="add" value="Add" /></p></form>';
+
 	for (let id in mod.data) {
+		html += '<hr />';
 		html += '<form method="post" action="">';
 		html += '<input type="hidden" name="id" value="' + id + '" />';
 		html += '<p><strong>Question</strong>:&nbsp;<input name="clue" type="text" size="80" value="' +
@@ -113,12 +118,7 @@ App.server.setHandler('trivia', (context, parts) => {
 		html += '<p><input type="submit" name="edit" value="Edit" />&nbsp;&nbsp;' +
 			'<input type="submit" name="del" value="Delete" /></p>';
 		html += '</form>';
-		html += '<hr />';
 	}
-
-	html += '<form method="post" action=""><p><strong>Question</strong>:&nbsp;<input name="clue" type="text" size="80" /></p>' +
-		'<p><strong>Answers</strong>:&nbsp;<input name="answers" type="text" size="80" /></p>' +
-		'<p><input type="submit" name="add" value="Add" /></p></form>';
 
 	if (error) {
 		html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
