@@ -53,10 +53,13 @@ App.server.setHandler('battle', (context, parts) => {
 					aux[room] = true;
 				}
 			}
+			let msgFilter = function (msg) {
+				return (msg.trim().length > 0);
+			};
 			Config.joinTours = aux;
-			Config.initBattleMsg = (context.post.initmsg || "").split('\n');
-			Config.winmsg = (context.post.winmsg || "").split('\n');
-			Config.losemsg = (context.post.losemsg || "").split('\n');
+			Config.initBattleMsg = (context.post.initmsg || "").split('\n').filter(msgFilter);
+			Config.winmsg = (context.post.winmsg || "").split('\n').filter(msgFilter);
+			Config.losemsg = (context.post.losemsg || "").split('\n').filter(msgFilter);
 			App.db.write();
 			App.logServerAction(context.user.id, "Edit battle bot configuration");
 			ok = 'Battle bot configuration saved';

@@ -66,8 +66,9 @@ class Battle {
 	}
 
 	send(data) {
-		this.log("SENT: " + data);
+		if (!data) return;
 		App.bot.sendTo(this.id, data);
+		this.log("SENT: " + JSON.stringify(data));
 	}
 
 	log(txt) {
@@ -79,7 +80,7 @@ class Battle {
 		this.log('DEBUG: ' + txt);
 	}
 
-	sendDecision(decision) {
+	sendDecision(decision, retry) {
 		if (!decision || !decision.length) return;
 		this.debug("Send Decision: " + JSON.stringify(decision));
 		let str = "/choose ";
@@ -115,7 +116,11 @@ class Battle {
 			time: Date.now(),
 			decision: decision,
 		};
-		this.send(str + "|" + this.rqid);
+		if (retry) {
+			this.send(['/undo', str + "|" + this.rqid]);
+		} else {
+			this.send(str + "|" + this.rqid);
+		}
 	}
 
 	checkTimer() {
@@ -200,7 +205,7 @@ class Battle {
 		if (!forced && this.lastSend.rqid >= 0 && this.lastSend.rqid === this.rqid) {
 			if (Date.now() - this.lastSend.time < MIN_TIME_LOCK) return;
 			if (this.lastSend.decision) {
-				this.sendDecision(this.lastSend.decision);
+				this.sendDecision(this.lastSend.decision, true);
 				return;
 			}
 		}
