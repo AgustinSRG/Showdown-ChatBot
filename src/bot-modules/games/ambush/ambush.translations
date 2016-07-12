@@ -1,0 +1,41 @@
+﻿# Translations File
+
+%english
+
+$0 = A new **Ambush** game was created
+$1 = Use
+$2 = to join the game
+$3 = This game consists on removing other players using 
+$4 = /me fires <user>
+$5 = the game ends when only one user remains
+$6 = to start the game
+
+$7 = Fire
+$8 = to play
+
+$9 = gets a shot of
+$10 = and gets eliminated
+
+$11 = **The Ambush game ended!**
+$12 = Congratulations to
+$13 = for winning the game
+
+%spanish
+
+$0 = Se ha creado un nuevo juego de **Ambush**
+$1 = Usa
+$2 = para entrar al juego
+$3 = Este juego consiste en eliminar a otros jugadores usando 
+$4 = /me fires <usuario>
+$5 = el juego termina cuando solo quede uno
+$6 = para iniciar el juego
+
+$7 = Fuego
+$8 = para eliminar a otros jugadores
+
+$9 = recibe un disparo de
+$10 = y queda eliminado
+
+$11 = **El juego de Ambush ha terminado!**
+$12 = Felicidades a
+$13 = por ganar el juego
