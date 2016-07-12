@@ -67,8 +67,8 @@ class Battle {
 
 	send(data) {
 		if (!data) return;
-		App.bot.sendTo(this.id, data);
 		this.log("SENT: " + JSON.stringify(data));
+		App.bot.sendTo(this.id, data);
 	}
 
 	log(txt) {
@@ -116,11 +116,12 @@ class Battle {
 			time: Date.now(),
 			decision: decision,
 		};
+		let cmds = [];
 		if (retry) {
-			this.send(['/undo', str + "|" + this.rqid]);
-		} else {
-			this.send(str + "|" + this.rqid);
+			cmds.push("/undo");
 		}
+		cmds.push(str + "|" + this.rqid);
+		this.send(cmds);
 	}
 
 	checkTimer() {
