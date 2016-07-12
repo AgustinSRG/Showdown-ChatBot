@@ -1,0 +1,49 @@
+﻿# Translations File
+
+%english
+
+$0 = A new **Poke-Anagrams** game was created
+$1 = It will be a max of
+$2 = words
+$3 = If someone gets
+$4 = points, he/she wins
+$5 = You have
+$6 = seconds to guess each word
+$7 = Use
+$8 = g <word>
+$9 = to play
+
+$10 = **Time is out!** The word was
+
+$11 = **Correct!**
+$12 = guessed the word. The word was
+$13 = Current points
+
+$14 = **The game of Poke-Anagrams ended!**
+$15 = Congratulations to
+$16 = for winning the game with
+$17 = points
+
+%spanish
+
+$0 = Se ha creado un juego de **Poke-Anagrams**
+$1 = Serán un total de
+$2 = palabras
+$3 = Si alguien consigue
+$4 = puntos, gana
+$5 = Teneis
+$6 = segundos para adivinar cada palabra
+$7 = Usa
+$8 = g <palabra>
+$9 = para jugar
+
+$10 = **El tiempo ha terminado!** La palabra era
+
+$11 = **Correcto!**
+$12 = adivinó la palabra. La palabra era
+$13 = Puntos
+
+$14 = **El juego de Poke-Anagrams ha terminado**
+$15 = Felicidades a
+$16 = por ganar el juego con
+$17 = puntos
