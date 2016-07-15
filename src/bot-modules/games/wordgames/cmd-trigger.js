@@ -1,5 +1,5 @@
 /**
- * Trigger: Poke-Games
+ * Trigger: Anagrams / Hangman
  */
 
 'use strict';
@@ -11,7 +11,7 @@ exports.anagrams = {
 	},
 
 	show: function (game) {
-		this.restrictReply("**Poke-Anagrams:** " + game.system.randomizedChars.join(', ') +
+		this.restrictReply("**Anagrams:** " + game.system.randomizedChars.join(', ') +
 			' | **' + game.system.clue + '**', 'games');
 	},
 
@@ -30,7 +30,7 @@ exports.hangman = {
 
 	show: function (game) {
 		let txt = '';
-		txt += '**Poke-Hangman:** ';
+		txt += '**Hangman:** ';
 		txt += game.system.generateHangman();
 		txt += ' | ';
 		txt += '**' + game.system.clue + '** | ';
