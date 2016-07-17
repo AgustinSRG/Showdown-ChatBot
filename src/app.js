@@ -205,7 +205,7 @@ class ChatBotApp {
 						let mod = new BotMod(Path.resolve(path, file), conf);
 						this.modules[mod.id] = mod;
 						this.parser.addCommands(mod.commands);
-						console.log('NEW MODULE: ' + mod.name + ' (' + mod.description + ') v' + mod.version);
+						console.log('NEW MODULE: ' + mod.name + ' (v' + mod.version + ')');
 					} catch (err) {
 						console.log('Error: Cannot load module "' + file + '" - ' + err.message);
 					}
