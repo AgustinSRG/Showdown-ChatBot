@@ -15,14 +15,19 @@ $9 = to play
 
 $10 = **Time is out!** The word was
 
-$11 = **Correct!**
+$11 = Correct!
 $12 = guessed the word. The word was
 $13 = Current points
 
-$14 = **The game of Poke-Anagrams ended!**
-$15 = Congratulations to
-$16 = for winning the game with
-$17 = points
+$lose = **The Poke-Anagrams game ended!** But no one got any points so there are no winners
+$end = The Poke-Anagrams game ended!
+$grats1 = Congratulations to
+$grats2 = for winning the game with
+$points = points
+$tie1 = The result is a draw at
+$tie2 = between
+
+$and = and
 
 %spanish
 
@@ -39,11 +44,16 @@ $9 = para jugar
 
 $10 = **El tiempo ha terminado!** La palabra era
 
-$11 = **Correcto!**
+$11 = Correcto!
 $12 = adivinó la palabra. La palabra era
 $13 = Puntos
 
-$14 = **El juego de Poke-Anagrams ha terminado**
-$15 = Felicidades a
-$16 = por ganar el juego con
-$17 = puntos
+$lose = **El juego de Poke-Anagrams ha terminado!** Sin embargo nadie ha conseguido ningún punto, por lo que no hay ganadores
+$end = El juego de Poke-Anagrams ha terminado!
+$grats1 = Felicidades a
+$grats2 = por ganar el juego con
+$points = puntos
+$tie1 = El resultado es un empate a
+$tie2 = entre
+
+$and = y

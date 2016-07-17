@@ -26,6 +26,20 @@ function getLanguage(room) {
 	return App.config.language.rooms[room] || App.config.language['default'];
 }
 
+function parseWinners(winners, lang) {
+	let res = {
+		type: 'win',
+		text: "**" + winners[0] + "**",
+	};
+	if (winners.length < 2) return res;
+	res.type = 'tie';
+	for (let i = 1; i < winners.length - 1; i++) {
+		res.text += ", **" + winners[i] + "**";
+	}
+	res.text += " " + translator.get('and', lang) + " **" + winners[winners.length - 1] + "**";
+	return res;
+}
+
 class PokeAnagrams {
 	constructor(room, games, maxpoints, ansTime) {
 		this.room = room;
@@ -116,7 +130,7 @@ class PokeAnagrams {
 			if (!this.points[ident.id]) this.points[ident.id] = 0;
 			this.points[ident.id]++;
 			this.names[ident.id] = ident.name;
-			this.send(translator.get(11, this.lang) + "! **" + ident.name + "** " + translator.get(12, this.lang) + ": __" +
+			this.send(translator.get(11, this.lang) + " **" + ident.name + "** " + translator.get(12, this.lang) + ": __" +
 				this.word + "__. " + translator.get(13, this.lang) + ": " + this.points[ident.id]);
 			this.wait();
 		}
@@ -128,20 +142,35 @@ class PokeAnagrams {
 			clearTimeout(this.timer);
 			this.timer = null;
 		}
-		let m = 0, winner = null;
-		for (let user in this.points) {
-			if (this.points[user] > m) {
-				m = this.points[user];
-				winner = user;
+		let winners = [], points = 0;
+		for (let i in this.points) {
+			if (this.points[i] === points) {
+				winners.push(this.names[i]);
+			} else if (this.points[i] > points) {
+				points = this.points[i];
+				winners = [];
+				winners.push(this.names[i]);
 			}
 		}
-		if (winner) {
-			this.send(translator.get(14, this.lang) + "! " + translator.get(15, this.lang) + " **" + this.names[winner] +
-				"** " + translator.get(16, this.lang) + " __" + this.points[winner] + "__ " + translator.get(17, this.lang) + "!");
-		} else {
-			this.send(translator.get(14, this.lang) + "!");
+		if (!points) {
+			this.send(translator.get('lose', this.lang) + "!");
+			App.modules.games.system.terminateGame(this.room);
+			return;
+		}
+		let t = parseWinners(winners, this.lang);
+		let txt = "**" + translator.get('end', this.lang) + "** ";
+		switch (t.type) {
+		case 'win':
+			txt += translator.get('grats1', this.lang) + " " + t.text + " " + translator.get('grats2', this.lang) +
+					" __" + points + " " + translator.get('points', this.lang) + "__!";
+			break;
+		case 'tie':
+			txt += translator.get('tie1', this.lang) + " __" + points + " " + translator.get('points', this.lang) +
+					"__ " + translator.get('tie2', this.lang) + " " + t.text;
+			break;
 		}
 
+		this.send(txt);
 		App.modules.games.system.terminateGame(this.room);
 	}
 
