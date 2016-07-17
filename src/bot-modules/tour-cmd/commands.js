@@ -38,9 +38,6 @@ module.exports = {
 			return this.errorReply(translator.get('nochat', this.lang));
 		}
 		if (Mod.tourData[this.room]) {
-			if (Text.toId(this.arg) === 'end') {
-				return this.reply('/tournament end');
-			}
 			if (Text.toId(this.arg) === 'start' && !Mod.tourData[this.room].isStarted) {
 				return this.reply('/tournament start');
 			}
