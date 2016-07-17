@@ -1,0 +1,69 @@
+﻿# Translations File
+
+%english
+
+$and = and
+$total = Total
+$init = **A new game of BlackJack was created!** Use **$in** to participate and **$start** to start the game
+$start = The game of BlackJack has started!
+$topcard = Dealer\'s Top Card
+$turn1 = 
+$turn2 = \'s turn!
+$helpturn1 = Use **$hit** to obtain new cards and **$stand** to terminate your turn (you have a max of
+$helpturn2 = seconds)
+$hand1 = 
+$hand2 = 's Hand
+$stand = stands
+$hit = got a new card! Hand
+$bj = has a BlackJack
+$bust = has busted with
+$timeout1 = Time is up for
+$timeout2 = 's turn!
+$dealer = The Dealer
+$dhand = Dealer's Hand
+$dbj = The Dealer has a BlackJack! Better luck next time
+$dbust1 = The Dealer has busted with
+$dbust2 = This is your lucky day!
+$end = The game of BlackJack ended!
+$grats1 = Congratulations to
+$grats2 = for winning the game
+$natural = for getting a natural BlackJack
+$lose = Sorry, there are no winners this time
+$forceend = The game of BlackJack was terminated
+$yourhand = Your hand
+$noplayers = There are no players participating in this game
+$players = Players
+
+%spanish
+
+$and = y
+$total = Total
+$init = **Se ha iniciado un juego de BlackJack!** Usa **$in** para participar y **$start** para iniciar el juego
+$start = El juego de BlackJack ha comenzado!
+$topcard = Primera carta de la Banca
+$turn1 = Turno de
+$turn2 = !
+$helpturn1 = Usa **$hit** para pedir cartas y **$stand** para quedarse y finaliar el turno (tienes un máximo de
+$helpturn2 = segundos)
+$hand1 = Mano de
+$hand2 = 
+$stand = se queda
+$hit = recibe una carta extra! Mano
+$bj = tiene un BlackJack
+$bust = ha sobrepasado al límite con
+$timeout1 = El tiempo para el turno de
+$timeout2 =  ha terminado
+$dealer = La Banca
+$dhand = Mano de la Banca
+$dbj = La Banca tiene un BlackJack! Más suerte la próxima
+$dbust1 = La Banca ha sobrepasado al límite con
+$dbust2 = Es vuestro día de suerte!
+$end = El juego de BlackJack ha terminado!
+$grats1 = Felicidades a
+$grats2 = por ganar el juego
+$natural = por conseguir un BlackJack
+$lose = Lamentablemente, nadie ha ganado esta vez
+$forceend = El juego de BlackJack ha sido finalizado
+$yourhand = Mano
+$noplayers = No hay ningún jugador apuntado al juego
+$players = Jugadores
