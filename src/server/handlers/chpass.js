@@ -10,10 +10,6 @@ const check = Tools.get('check.js');
 
 App.server.setPermission('chpass', 'Permission for changing the password of the user account');
 
-/* Menu Options */
-
-App.server.setMenuOption('chpass', 'Change Password', '/chpass/', 'chpass');
-
 /* Handlers */
 
 App.server.setHandler('chpass', (context, parts) => {

@@ -54,6 +54,7 @@ exports.generate = function (body, loginData, menu, options) {
 			buf += '<div style=" margin-bottom:8px;"><strong><i>(' +
 				loginData.group + ')</i></strong></div>';
 		}
+		buf += '<div style=" margin-bottom:8px;"><a href="/chpass/"><i>Change Password</i></a></div>';
 		buf += '<div style=" margin-bottom:8px;">' +
 			'<form class="logoutform" method="POST" action="">' +
 			'<input type="submit" name="logout" value="Logout" /></form></div>';
