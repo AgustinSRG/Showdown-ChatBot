@@ -14,7 +14,7 @@ const trigger = require(Path.resolve(__dirname, 'cmd-trigger.js'));
 
 module.exports = {
 	ambush: function () {
-		if (!this.can('games')) return this.replyAccessDenied('games');
+		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		if (this.getRoomType(this.room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
 		let maxPlayers = parseInt(this.arg);
 		if (Text.toId(this.arg) === 'infinite') {

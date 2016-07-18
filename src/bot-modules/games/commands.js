@@ -15,7 +15,7 @@ App.parser.addPermission('games', {group: 'owner'});
 let commands = {
 	endgame: "terminategame",
 	terminategame: function () {
-		if (!this.can('games')) return this.replyAccessDenied('games');
+		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		let room = this.targetRoom;
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
 		if (App.modules.games.system.terminateGame(room)) {

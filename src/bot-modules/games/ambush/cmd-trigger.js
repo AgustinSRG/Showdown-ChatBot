@@ -18,7 +18,7 @@ module.exports = {
 	},
 
 	start: function (game) {
-		if (!this.can('games')) return this.replyAccessDenied('games');
+		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		game.system.startFight();
 	},
 
@@ -51,7 +51,7 @@ module.exports = {
 
 	end: "endambush",
 	endambush: function (game) {
-		if (!this.can('games')) return this.replyAccessDenied('games');
+		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		game.system.end();
 	},
 };

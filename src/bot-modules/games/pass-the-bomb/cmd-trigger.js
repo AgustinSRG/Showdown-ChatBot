@@ -1,5 +1,5 @@
 /**
- * Trigger: Ambush
+ * Trigger: Pass The Bomb
  */
 
 'use strict';
@@ -18,7 +18,7 @@ module.exports = {
 	},
 
 	start: function (game) {
-		if (!this.can('games')) return this.replyAccessDenied('games');
+		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		game.system.startGame();
 	},
 
@@ -54,7 +54,7 @@ module.exports = {
 	},
 
 	end: function (game) {
-		if (!this.can('games')) return this.replyAccessDenied('games');
+		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		game.system.end();
 	},
 };

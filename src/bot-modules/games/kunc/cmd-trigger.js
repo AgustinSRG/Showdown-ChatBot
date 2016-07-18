@@ -20,7 +20,7 @@ module.exports = {
 
 	end: "endkunc",
 	endkunc: function (game) {
-		if (!this.can('games')) return this.replyAccessDenied('games');
+		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		game.system.end();
 	},
 };

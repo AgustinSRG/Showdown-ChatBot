@@ -16,7 +16,7 @@ const Hangman = require(Path.resolve(__dirname, 'hangman.js'));
 
 module.exports = {
 	anagrams: function () {
-		if (!this.can('games')) return this.replyAccessDenied('games');
+		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		if (!this.arg) {
 			return this.errorReply(this.usage({desc: 'games'}, {desc: 'max points', optional: true},
 				{desc: 'seconds to answer', optional: true}));
@@ -49,7 +49,7 @@ module.exports = {
 	},
 
 	hangman: function () {
-		if (!this.can('games')) return this.replyAccessDenied('games');
+		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		if (this.getRoomType(this.room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
 		let maxFails = parseInt(this.arg || '0');
 		if (isNaN(maxFails) || maxFails < 0) {

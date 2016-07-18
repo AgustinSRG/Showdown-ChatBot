@@ -14,7 +14,7 @@ const trigger = require(Path.resolve(__dirname, 'cmd-trigger.js'));
 
 module.exports = {
 	kunc: function () {
-		if (!this.can('games')) return this.replyAccessDenied('games');
+		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		if (!this.arg) {
 			return this.errorReply(this.usage({desc: 'games'}, {desc: 'max points', optional: true},
 				{desc: 'seconds to answer', optional: true}));

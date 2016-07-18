@@ -17,7 +17,7 @@ exports.anagrams = {
 
 	end: "endanagrams",
 	endanagrams: function (game) {
-		if (!this.can('games')) return this.replyAccessDenied('games');
+		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		game.system.end();
 	},
 };
@@ -40,7 +40,7 @@ exports.hangman = {
 
 	end: "endhangman",
 	endhangman: function (game) {
-		if (!this.can('games')) return this.replyAccessDenied('games');
+		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		game.system.end();
 	},
 };
