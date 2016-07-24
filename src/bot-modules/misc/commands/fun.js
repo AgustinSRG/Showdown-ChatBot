@@ -43,7 +43,7 @@ module.exports = {
 		let roomData = App.bot.rooms[this.room];
 		let botid = Text.toId(App.bot.getBotNick());
 		if (this.can('randpoke') && roomData && roomData.users[botid] && this.parser.equalOrHigherGroup({group: roomData.users[botid]}, 'driver')) {
-			this.reply('!dt ' + chosen);
+			this.send('!dt ' + chosen, this.room);
 		} else {
 			this.pmReply(Text.stripCommands(chosen));
 		}
