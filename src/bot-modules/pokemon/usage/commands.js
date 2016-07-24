@@ -157,6 +157,21 @@ module.exports = {
 					usage: 0,
 					raw: 0,
 				};
+				let dataResAux = {
+					name: poke,
+					pos: -1,
+					usage: 0,
+					raw: 0,
+					ld: 10,
+				};
+				let maxLd = 3;
+				if (poke.length <= 1) {
+					maxLd = 0;
+				} else if (poke.length <= 4) {
+					maxLd = 1;
+				} else if (poke.length <= 6) {
+					maxLd = 2;
+				}
 				for (let i = 5; i < lines.length; i++) {
 					let line = lines[i].split("|");
 					if (line.length < 7) continue;
@@ -166,11 +181,28 @@ module.exports = {
 						dataRes.usage = line[3].trim();
 						dataRes.raw = line[4].trim();
 						break;
+					} else if (maxLd) {
+						let ld = Text.levenshtein(poke, Text.toId(line[2]), maxLd);
+						if (ld <= maxLd && ld < dataResAux.ld) {
+							dataResAux.ld = ld;
+							dataResAux.name = line[2].trim();
+							dataResAux.pos = parseInt(line[1].trim());
+							dataResAux.usage = line[3].trim();
+							dataResAux.raw = line[4].trim();
+						}
 					}
 				}
 				if (!dataRes.pos || dataRes.pos < 1) {
-					return this.errorReply(translator.get('pokeerr1', this.lang) + " \"" + poke + "\" " +
-						translator.get('pokeerr2', this.lang) + " " + tierName(tier) + " " + translator.get('pokeerr3', this.lang));
+					if (!dataResAux.pos || dataResAux.pos < 1) {
+						return this.errorReply(translator.get('pokeerr1', this.lang) + " \"" + poke + "\" " +
+							translator.get('pokeerr2', this.lang) + " " + tierName(tier) + " " + translator.get('pokeerr3', this.lang));
+					} else {
+						return this.restrictReply(translator.get('pokeerr1', this.lang) + " \"" + poke + "\" " +
+							translator.get('pokeerr2', this.lang) + " " + tierName(tier) + " " + translator.get('pokeerr3', this.lang) +
+							' | ' + "**" + dataResAux.name + "**, #" + dataResAux.pos + " " + translator.get('in', this.lang) +
+							" **" + tierName(tier) + "**. " + translator.get('pokeusage', this.lang) + ": " + dataResAux.usage + ", " +
+							translator.get('pokeraw', this.lang) + ": " + dataResAux.raw, 'usage');
+					}
 				}
 				this.restrictReply("**" + dataRes.name + "**, #" + dataRes.pos + " " + translator.get('in', this.lang) +
 					" **" + tierName(tier) + "**. " + translator.get('pokeusage', this.lang) + ": " + dataRes.usage + ", " +
