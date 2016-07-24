@@ -1,0 +1,10 @@
+{
+  "id": "htmlbox",
+  "name": "HtmlBox Commands",
+  "version": "1.0",
+  "main": "main.js",
+  "commands": [
+    "commands.js"
+  ],
+  "description": "Special subcommands using /htmlbox showdown feature"
+}

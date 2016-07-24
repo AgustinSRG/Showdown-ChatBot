@@ -1,0 +1,17 @@
+﻿# Translations file
+
+%english
+
+$nochat = This command is only available for chat rooms
+$nobot = Bot requires rank of bot or higher to use this feature
+
+$0 = Html-Box command called
+$1 = not found
+
+%spanish
+
+$nochat = Este comando solo está disponible para las salas de chat
+$nobot = Necesito rango de bot o superior para poder usar esta funcionalidad
+
+$0 = El comando html con nombre
+$1 = no existe
