@@ -20,6 +20,14 @@ $7 = hours
 $8 = day
 $9 = days
 
+$10 = The account
+$11 = has no ladder battles won. To be autoconfirmed you must won at least one battle using the button __Battle!__
+$12 = is already autoconfirmed. If you cannot chat try /logout and login again. If this does not work maybe you did not have any ladder battles won or there is a server error.
+$13 = is not registered. To be autoconfirmed first register the account in the options up to the right
+$14 = The account
+$15 = requires
+$16 = more to be autoconfirmed
+
 %spanish
 
 $inv = Nombre de usuario no válido
@@ -39,3 +47,11 @@ $6 = hora
 $7 = horas
 $8 = día
 $9 = días
+
+$10 = La cuenta
+$11 = no tiene ninguna batalla de ladder registrada. Pare ser autoconfirmed busca y gana una batalla con el botón __Battle!__
+$12 = es autoconfirmed. Si no puedes hablar por el chat prueba a hacer /logout y volver a entrar. Si no funciona se puede deber de un error del servidor o bien aún no has ganado ninguna batalla de ladder
+$13 = no está registrada. Para poder ser autoconfirmed lo primero registra la cuenta en las opciones de arriba a la derecha
+$14 = A la cuenta
+$15 = le quedan
+$16 = para ser autononfirmed
