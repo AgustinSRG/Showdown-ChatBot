@@ -303,6 +303,8 @@ class CommandParser {
 				if (this.execDyn(context)) {
 					this.monitor.count(userid);
 					if (!this.data.exceptions[userid]) this.markPrivateCommand(userid, room);
+				} else {
+					this.execTriggers('after', context);
 				}
 			} else {
 				this.monitor.count(userid);
@@ -312,8 +314,6 @@ class CommandParser {
 			App.log("[COMMAND CRASH] " + err.code + ":" + err.message + " | " + context.toString() + "\n" + err.stack);
 			context.errorReply("The command crashed: " + err.code + " (" + err.message + ")");
 		}
-
-		this.execTriggers('after', context);
 	}
 
 	/**

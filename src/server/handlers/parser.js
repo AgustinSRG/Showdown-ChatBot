@@ -69,7 +69,7 @@ function parserConfigurationHandler(context, html) {
 			auxGroups[i] = auxGroups[i].trim();
 			if (auxGroups[i]) groups.push(auxGroups[i]);
 		}
-		let defGroups = ['voice', 'driver', 'mod', 'owner', 'admin'];
+		let defGroups = ['voice', 'driver', 'mod', 'bot', 'owner', 'admin'];
 		for (let i = 0; i < defGroups.length; i++) {
 			if (groups.indexOf(context.post[defGroups[i]]) < 0) {
 				error = 'Group corresponding to defined group <strong>' + defGroups[i] + '</strong> must be defined.';
@@ -126,6 +126,8 @@ function parserConfigurationHandler(context, html) {
 		App.config.parser.driver + '"/></label></td></tr>';
 	html += '<tr><td>Moderator Group: </td><td><label><input name="mod" type="text" size="10" value="' +
 		App.config.parser.mod + '"/></label></td></tr>';
+	html += '<tr><td>Bot Group: </td><td><label><input name="bot" type="text" size="10" value="' +
+		App.config.parser.bot + '"/></label></td></tr>';
 	html += '<tr><td>Room Owner Group: </td><td><label><input name="owner" type="text" size="10" value="' +
 		App.config.parser.owner + '"/></label></td></tr>';
 	html += '<tr><td>Administrator Group: </td><td><label><input name="admin" type="text" size="10" value="' +
