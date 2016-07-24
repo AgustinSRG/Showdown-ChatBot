@@ -571,6 +571,7 @@ function debugBestMove(battle, bestSw, damageMoves, supportMoves) {
 		if (!damageMoves[i] || !damageMoves[i].length) continue;
 		tmp = [];
 		for (let j = 0; j < damageMoves[i].length; j++) {
+			if (!damageMoves[i][j][0]) continue;
 			tmp.push(damageMoves[i][j][0].move);
 		}
 		battle.debug("Damage Moves (" + i + ") -> " + tmp);
@@ -579,6 +580,7 @@ function debugBestMove(battle, bestSw, damageMoves, supportMoves) {
 		if (!supportMoves[i] || !supportMoves[i].length) continue;
 		tmp = [];
 		for (let j = 0; j < supportMoves[i].length; j++) {
+			if (!supportMoves[i][j][0]) continue;
 			tmp.push(supportMoves[i][j][0].move);
 		}
 		battle.debug("Support Moves (" + i + ") -> " + tmp);
