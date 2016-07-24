@@ -39,7 +39,7 @@ module.exports = {
 		}
 		if (Mod.tourData[this.room]) {
 			if (Text.toId(this.arg) === 'start' && !Mod.tourData[this.room].isStarted) {
-				return this.reply('/tournament start');
+				return this.send('/tournament start', this.room);
 			}
 			return this.errorReply(translator.get('e2', this.lang));
 		}
