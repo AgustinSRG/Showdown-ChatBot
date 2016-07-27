@@ -33,12 +33,12 @@ To start the bot, use `cd` to reach the directory of the bot and run the command
 node showdown-chatbot
 ```
 
-Once installed, configure your bot using the control panel
+Once installed, [configure your bot using the control panel](https://github.com/asanrom/Showdown-ChatBot/blob/master/doc/configuration.md)
 
 Useful Documentation
 ------------
 
- - Commands List
+ - [Commands List](https://github.com/asanrom/Showdown-ChatBot/blob/master/doc/commands.md)
 
 Lisense
 ------------
