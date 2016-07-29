@@ -8,6 +8,7 @@
 try {
 	require('sugar');
 	require('websocket');
+	require('githubhook');
 } catch (e) {
 	console.log('Installing dependencies...');
 	require('child_process').spawnSync('sh', ['-c', 'npm install --production'], {stdio: 'inherit'});

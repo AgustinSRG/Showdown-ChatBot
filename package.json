@@ -17,7 +17,8 @@
   },
   "dependencies": {
     "sugar": "1.4.1",
-    "websocket": "1.0.18"
+    "websocket": "1.0.18",
+    "githubhook": "1.6.1"
   },
   "description": "Chat Bot for Pokemon Showdown",
   "homepage": "https://github.com/asanrom/Showdown-ChatBot",

@@ -1,7 +1,7 @@
 Commands Table
 ====================
 
-This guide is an index with all **static commands** present in *Showdown Chatbot*. A static command is a command present by default in the bot and also cannot be remobed without edditing the source files. These commands gives Pokemon Showdown users the capacity to interact with the bot and administrators to control it without accesing the control panel (note that there are a lot of configuration options only avaliable using the control pannel).
+This guide is an index with all **static commands** present in *Showdown Chatbot*. A static command is a command present by default in the bot and also cannot be removed without edditing the source files. These commands gives Pokemon Showdown users the capacity to interact with the bot and administrators to control it without accesing the control panel (note that there are a lot of configuration options only avaliable using the control pannel).
 
 For each command, this guide gives the usage (or different usage modes), the description of what the command does, the permission required to use the command (\* means that the command can be used by anyone via private message, but requires certain permission to make the bot reply in a chat room) and the command type (**A** means Action Command, **C** means Configuration command, **I** means Information Command and **D** means development command)
 
@@ -168,3 +168,11 @@ HtmlBox Commands Module
 | ----- | ----------  | --- | --- |
 `htmlcmdlist` | Gets html-box commands list. Note: Requires to set the server url in the administration options in the control pannel. | info\* | **I**
 `htmlcmd <command>` | Executes a html-box command if exists | htmlboxcmd | **A**
+
+GitHub Hook Module
+------------
+
+| Usage | Description | Permission | |
+| ----- | ----------  | --- | --- |
+`gitban <user>` | Adds an user to the github blacklist | gitban | **C**
+`gitunban <user>` | Removes an user from the github blacklist | gitban | **C**

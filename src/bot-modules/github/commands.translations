@@ -1,0 +1,21 @@
+﻿# Translations file
+
+%english
+
+$0 = GitHub user
+
+$1 = already present in the blacklist
+$2 = added to the blacklist suessfully
+
+$3 = was not present in the blacklist
+$4 = removed from the blacklist suessfully
+
+%spanish
+
+$0 = Usuario de GitHub
+
+$1 = ya estaba presente en la lista negra
+$2 = agregado a la lista negra conrrectamente
+
+$3 = no estaba presente en la lista negra
+$4 = eliminado de la lista negra correctamente
