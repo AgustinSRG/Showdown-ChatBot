@@ -35,7 +35,7 @@ module.exports = {
 	},
 
 	addquote: function () {
-		if (!this.can('editquote')) return this.replyAccessDenied('editquote');
+		if (!this.can('editquote', this.room)) return this.replyAccessDenied('editquote');
 		let quote = this.arg.trim();
 		if (!quote) return this.errorReply(this.usage({desc: 'quote'}));
 		if (App.modules.quote.system.getQuoteId(quote) === -1) {
@@ -49,7 +49,7 @@ module.exports = {
 	},
 
 	rmquote: function () {
-		if (!this.can('editquote')) return this.replyAccessDenied('editquote');
+		if (!this.can('editquote', this.room)) return this.replyAccessDenied('editquote');
 		let quote = this.arg.trim();
 		if (!quote) return this.errorReply(this.usage({desc: 'quote'}));
 		let id = App.modules.quote.system.getQuoteId(quote);
@@ -64,7 +64,7 @@ module.exports = {
 	},
 
 	addjoke: function () {
-		if (!this.can('editquote')) return this.replyAccessDenied('editquote');
+		if (!this.can('editquote', this.room)) return this.replyAccessDenied('editquote');
 		let joke = this.arg.trim();
 		if (!joke) return this.errorReply(this.usage({desc: 'joke'}));
 		if (App.modules.quote.system.getJokeId(joke) === -1) {
@@ -78,7 +78,7 @@ module.exports = {
 	},
 
 	rmjoke: function () {
-		if (!this.can('editquote')) return this.replyAccessDenied('editquote');
+		if (!this.can('editquote', this.room)) return this.replyAccessDenied('editquote');
 		let joke = this.arg.trim();
 		if (!joke) return this.errorReply(this.usage({desc: 'joke'}));
 		let id = App.modules.quote.system.getQuoteId(joke);

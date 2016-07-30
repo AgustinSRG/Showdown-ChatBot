@@ -25,7 +25,7 @@ function parseAliases(format) {
 
 module.exports = {
 	chall: function () {
-		if (!this.can('chall')) return this.replyAccessDenied('chall');
+		if (!this.can('chall', this.room)) return this.replyAccessDenied('chall');
 		let mod = App.modules.battle.system;
 		let user = Text.toId(this.args[0]) || this.byIdent.id;
 		let format = parseAliases(this.args[1]);
@@ -59,7 +59,7 @@ module.exports = {
 	},
 
 	searchbattle: function () {
-		if (!this.can('searchbattle')) return this.replyAccessDenied('searchbattle');
+		if (!this.can('searchbattle', this.room)) return this.replyAccessDenied('searchbattle');
 		let mod = App.modules.battle.system;
 		let format = parseAliases(this.arg);
 		if (!format) return this.errorReply(this.usage({desc: 'format'}));

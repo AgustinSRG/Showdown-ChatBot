@@ -21,7 +21,7 @@ let Temp_Var = "";
 module.exports = {
 	/* Aliases */
 	setalias: function () {
-		if (!this.can('commands')) return this.replyAccessDenied('commands');
+		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (this.args.length !== 2) return this.errorReply(this.usage({desc: 'alias'}, {desc: 'command'}));
 		let alias = Text.toCmdid(this.args[0]);
 		let cmd = Text.toCmdid(this.args[1]);
@@ -36,7 +36,7 @@ module.exports = {
 	},
 
 	rmalias: function () {
-		if (!this.can('commands')) return this.replyAccessDenied('commands');
+		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (!this.arg) return this.errorReply(this.usage({desc: 'alias'}));
 		let alias = Text.toCmdid(this.arg);
 		if (!alias) return this.errorReply(this.usage({desc: 'alias'}));
@@ -72,7 +72,7 @@ module.exports = {
 
 	/* Dynamic commands */
 	temp: function () {
-		if (!this.can('commands')) return this.replyAccessDenied('commands');
+		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (this.arg) {
 			Temp_Var = this.arg;
 		}
@@ -80,7 +80,7 @@ module.exports = {
 	},
 
 	setcmd: function () {
-		if (!this.can('commands')) return this.replyAccessDenied('commands');
+		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (!this.arg) return this.errorReply(this.usage({desc: 'command'}));
 		if (!Temp_Var) return this.errorReply(translator.get(11, this.lang) + ' ``temp <text>``');
 		let cmd = Text.toCmdid(this.args[0]);
@@ -95,7 +95,7 @@ module.exports = {
 	},
 
 	setindexcmd: function () {
-		if (!this.can('commands')) return this.replyAccessDenied('commands');
+		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (!this.arg) return this.errorReply(this.usage({desc: 'command'}));
 		let cmd = Text.toCmdid(this.args[0]);
 		if (!cmd) return this.errorReply(this.usage({desc: 'command'}));
@@ -109,7 +109,7 @@ module.exports = {
 	},
 
 	setsubcmd: function () {
-		if (!this.can('commands')) return this.replyAccessDenied('commands');
+		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (this.args.length !== 2) return this.errorReply(this.usage({desc: 'command'}, {desc: 'sub-command'}));
 		if (!Temp_Var) return this.errorReply(translator.get(11, this.lang) + ' ``temp <text>``');
 		let cmd = Text.toCmdid(this.args[0]);
@@ -125,7 +125,7 @@ module.exports = {
 	},
 
 	rmcmd: function () {
-		if (!this.can('commands')) return this.replyAccessDenied('commands');
+		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (!this.arg) return this.errorReply(this.usage({desc: 'command'}));
 		let cmd = Text.toCmdid(this.arg);
 		if (!cmd) return this.errorReply(this.usage({desc: 'command'}));
@@ -139,7 +139,7 @@ module.exports = {
 	},
 
 	rmsubcmd: function () {
-		if (!this.can('commands')) return this.replyAccessDenied('commands');
+		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (this.args.length !== 2) return this.errorReply(this.usage({desc: 'command'}, {desc: 'sub-command'}));
 		let cmd = Text.toCmdid(this.args[0]);
 		let sub = Text.toCmdid(this.args[1]);
@@ -168,7 +168,7 @@ module.exports = {
 
 	/* Permissions */
 	grant: function () {
-		if (!this.can('grant')) return this.replyAccessDenied('grant');
+		if (!this.can('grant', this.room)) return this.replyAccessDenied('grant');
 		if (this.args.length !== 2) return this.errorReply(this.usage({desc: 'permission'}, {desc: 'rank'}));
 		let perm = Text.toId(this.args[0]);
 		let rank = this.args[1].toLowerCase().trim();
@@ -266,7 +266,7 @@ module.exports = {
 	/* Control rooms */
 
 	setcontrolroom: function () {
-		if (!this.can('commands')) return this.replyAccessDenied('commands');
+		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (this.args.length !== 2) return this.errorReply(this.usage({desc: 'control-room'}, {desc: 'target-room'}));
 		let control = Text.toRoomid(this.args[0]);
 		let target = Text.toRoomid(this.args[1]);
@@ -278,7 +278,7 @@ module.exports = {
 	},
 
 	rmcontrolroom: function () {
-		if (!this.can('commands')) return this.replyAccessDenied('commands');
+		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (!this.arg) return this.errorReply(this.usage({desc: 'control-room'}));
 		let control = Text.toRoomid(this.arg);
 		if (!control) return this.errorReply(this.usage({desc: 'control-room'}));

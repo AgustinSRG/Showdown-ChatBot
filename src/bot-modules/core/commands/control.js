@@ -21,7 +21,7 @@ module.exports = {
 
 	joinrooms: 'joinroom',
 	joinroom: function () {
-		if (!this.can('joinroom')) return this.replyAccessDenied('joinroom');
+		if (!this.can('joinroom', this.room)) return this.replyAccessDenied('joinroom');
 		if (!this.arg) return this.errorReply(this.usage({desc: 'room'}, {desc: '...', optional: true}));
 		let rooms = [];
 		for (let i = 0; i < this.args.length; i++) {
@@ -38,7 +38,7 @@ module.exports = {
 
 	leaverooms: 'leaveroom',
 	leaveroom: function () {
-		if (!this.can('joinroom')) return this.replyAccessDenied('joinroom');
+		if (!this.can('joinroom', this.room)) return this.replyAccessDenied('joinroom');
 		if (!this.arg) return this.errorReply(this.usage({desc: 'room'}, {desc: '...', optional: true}));
 		let rooms = [];
 		for (let i = 0; i < this.args.length; i++) {
@@ -56,14 +56,14 @@ module.exports = {
 	/* Custom send */
 
 	custom: function () {
-		if (!this.can('send')) return this.replyAccessDenied('send');
+		if (!this.can('send', this.room)) return this.replyAccessDenied('send');
 		if (!this.arg) return this.errorReply(this.usage({desc: 'message'}));
 		this.send(this.arg, this.targetRoom);
 		App.logCommandAction(this);
 	},
 
 	send: function () {
-		if (!this.can('send')) return this.replyAccessDenied('send');
+		if (!this.can('send', this.room)) return this.replyAccessDenied('send');
 		if (this.args.length !== 2) return this.errorReply(this.usage({desc: 'room'}, {desc: 'message'}));
 		let room = Text.toRoomid(this.args[0]);
 		let msg = this.args[1].trim();
@@ -74,7 +74,7 @@ module.exports = {
 
 	pm: 'sendpm',
 	sendpm: function () {
-		if (!this.can('send')) return this.replyAccessDenied('send');
+		if (!this.can('send', this.room)) return this.replyAccessDenied('send');
 		if (this.args.length !== 2) return this.errorReply(this.usage({desc: 'user'}, {desc: 'message'}));
 		let user = Text.toId(this.args[0]);
 		let msg = this.args[1].trim();
@@ -84,7 +84,7 @@ module.exports = {
 	},
 
 	say: function () {
-		if (!this.can('say')) return this.replyAccessDenied('say');
+		if (!this.can('say', this.room)) return this.replyAccessDenied('say');
 		if (!this.arg) return this.errorReply(this.usage({desc: 'message'}));
 		this.reply(Text.stripCommands(this.arg));
 	},
