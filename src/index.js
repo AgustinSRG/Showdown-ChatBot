@@ -54,6 +54,8 @@ require(Path.resolve(__dirname, 'server/basic-handlers.js'));
 
 App.loadModules(Path.resolve(__dirname, 'bot-modules/'));
 
+App.loadAddons();
+
 /* Set Crash-Guard */
 
 const CrashGuardTemplate = Tools.get('crashguard.js');

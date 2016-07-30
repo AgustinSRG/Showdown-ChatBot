@@ -168,6 +168,11 @@ class ChatBotApp {
 		this.logger = null;
 		this.logsDir = null;
 		this.modules = {};
+
+		/* Add-ons */
+		this.addonsDir = Path.resolve(this.confDir, 'add-ons/');
+		checkDir(this.addonsDir);
+		this.addons = {};
 	}
 
 	/**
@@ -247,6 +252,57 @@ class ChatBotApp {
 				}
 			}.bind(this));
 		}
+	}
+
+	/* Add-ons */
+
+	/*
+	 * Reads the add-ons path and installs the add-ons
+	 */
+	loadAddons() {
+		let files = FileSystem.readdirSync(this.addonsDir);
+		files.forEach(function (file) {
+			let absFile = Path.resolve(this.addonsDir, file);
+			if (FileSystem.existsSync(absFile) && FileSystem.statSync(absFile).isFile()) {
+				this.installAddon(file);
+			}
+		}.bind(this));
+	}
+
+	/*
+	 * Installs an add-on
+	 *
+	 * @param file Add-on filename
+	 */
+	installAddon(file) {
+		let path = Path.resolve(this.addonsDir, file);
+		try {
+			this.addons[file] = require(path);
+			return true;
+		} catch (err) {
+			this.reportCrash(err);
+			return false;
+		}
+	}
+
+	/*
+	 * Uninstalls an add-on
+	 *
+	 * @param file Add-on filename
+	 */
+	removeAddon(file) {
+		if (typeof this.addons[file] === 'object' && typeof this.addons[file].destroy === 'function') {
+			try {
+				this.addons[file].destroy();
+			} catch (err) {
+				this.reportCrash(err);
+			}
+		}
+		let path = Path.resolve(this.addonsDir, file);
+		try {
+			uncacheTree(path);
+		} catch (e) {}
+		delete this.addons[file];
 	}
 
 	/* Logger Methods */

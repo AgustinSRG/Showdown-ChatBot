@@ -99,6 +99,28 @@ class CommandParser {
 	}
 
 	/**
+	 * Removes static commands (to uninstall an add-on
+	 *
+	 * @param cmds Object key = command id, value = function or string
+	 */
+	removeCommands(cmds) {
+		for (let k in cmds) {
+			switch (typeof cmds[k]) {
+			case 'function':
+				if (this.commands[k] && this.commands[k].func === cmds[k]) {
+					delete this.commands[k];
+				}
+				break;
+			case 'string':
+				if (this.data.aliases[k] && this.data.aliases[k] === cmds[k]) {
+					delete this.data.aliases[k];
+				}
+				break;
+			}
+		}
+	}
+
+	/**
 	 * Asynchronous method to write the configuration
 	 * to persistent storage
 	 */
