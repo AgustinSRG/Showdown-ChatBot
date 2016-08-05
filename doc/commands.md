@@ -167,7 +167,7 @@ HtmlBox Commands Module
 | Usage | Description | Permission | |
 | ----- | ----------  | --- | --- |
 `htmlcmdlist` | Gets html-box commands list. Note: Requires to set the server url in the administration options in the control pannel. | info\* | **I**
-`htmlcmd <command>` | Executes a html-box command if exists | htmlboxcmd | **A**
+`htmlcmd <command>` | Executes a html-box command if exists | htmlboxcmd\* | **A**
 
 GitHub Hook Module
 ------------

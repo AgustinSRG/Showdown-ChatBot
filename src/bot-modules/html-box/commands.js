@@ -21,7 +21,6 @@ function botCanHtml(room) {
 module.exports = {
 	html: 'htmlcmd',
 	htmlcmd: function () {
-		if (!this.can('htmlboxcmd', this.room)) return this.replyAccessDenied('htmlboxcmd');
 		if (this.getRoomType(this.room) !== 'chat') {
 			return this.errorReply(translator.get('nochat', this.lang));
 		}
@@ -39,7 +38,11 @@ module.exports = {
 			content = Mod.data.commands[Mod.data.aliases[cmd]];
 		}
 		if (content) {
-			return this.send('/addhtmlbox ' + content, this.room);
+			if (this.can('htmlboxcmd', this.room)) {
+				return this.send('/addhtmlbox ' + content, this.room);
+			} else {
+				return this.send('/pminfobox  ' + this.byIdent.id + ',' + content, this.room);
+			}
 		} else {
 			return this.errorReply(translator.get(0, this.lang) + " __" + cmd + "__ " + translator.get(1, this.lang));
 		}
