@@ -176,3 +176,11 @@ GitHub Hook Module
 | ----- | ----------  | --- | --- |
 `gitban <user>` | Adds an user to the github blacklist | gitban | **C**
 `gitunban <user>` | Removes an user from the github blacklist | gitban | **C**
+
+Timers Module
+------------
+
+| Usage | Description | Permission | |
+| ----- | ----------  | --- | --- |
+`starttimer <minutes>, <seconds>` | Starts a timeoyt | timer | **A**
+`stoptimer` | Stops the timeout | timer | **A**
