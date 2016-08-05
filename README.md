@@ -5,8 +5,6 @@ Showdown ChatBot
 [![Dependency Status](https://david-dm.org/asanrom/Showdown-ChatBot.svg)](https://david-dm.org/asanrom/Showdown-ChatBot)
 [![devDependency Status](https://david-dm.org/asanrom/Showdown-ChatBot/dev-status.svg)](https://david-dm.org/asanrom/Showdown-ChatBot#info=devDependencies)
 
-**WARNING:** Project in developement. If you want a complete Pokemon Showdown bot try https://github.com/Ecuacion/Pokemon-Showdown-Node-Bot
-
 [Pokemon Showdown](https://github.com/Zarel/Pokemon-Showdown) bot written for [Node JS](http://nodejs.org/) with a toon of features often useful for chat rooms like automated moderation, blacklist, customizable help / information commands, games, tournament tools and chat logs. All of those features can be configured with an user friendly control panel that does not require any programming knowledge to be used.
 
 Installation
@@ -38,7 +36,10 @@ Once installed, [configure your bot using the control panel](https://github.com/
 Useful Documentation
 ------------
 
+ - [Frequently Asked Questions](https://github.com/asanrom/Showdown-ChatBot/blob/master/doc/faq.md)
  - [Commands List](https://github.com/asanrom/Showdown-ChatBot/blob/master/doc/commands.md)
+ - [Development Documentation](https://github.com/asanrom/Showdown-ChatBot/blob/master/doc/development.md)
+ - [Add-ons explanation](https://github.com/asanrom/Showdown-ChatBot/blob/master/doc/addons-development.md)
 
 Lisense
 ------------
