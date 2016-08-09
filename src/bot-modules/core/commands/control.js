@@ -19,6 +19,7 @@ App.parser.addPermission('say', {group: 'mod'});
 module.exports = {
 	/* Joining / Leaving Rooms */
 
+	join: 'joinroom',
 	joinrooms: 'joinroom',
 	joinroom: function () {
 		if (!this.can('joinroom', this.room)) return this.replyAccessDenied('joinroom');
@@ -36,6 +37,7 @@ module.exports = {
 		}
 	},
 
+	leave: 'leaveroom',
 	leaverooms: 'leaveroom',
 	leaveroom: function () {
 		if (!this.can('joinroom', this.room)) return this.replyAccessDenied('joinroom');
