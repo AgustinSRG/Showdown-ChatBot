@@ -116,18 +116,21 @@ module.exports = {
 	},
 
 	win: function (args, kwargs, isIntro) {
+		if (!this.self) return; // Not playing
 		if (!isIntro) this.win(args[1]);
 		this.ended = true;
 		this.leave();
 	},
 
 	tie: function (args, kwargs, isIntro) {
+		if (!this.self) return; // Not playing
 		this.ended = true;
 		if (!isIntro) this.win();
 		this.leave();
 	},
 
 	prematureend: function (args, kwargs) {
+		if (!this.self) return; // Not playing
 		this.ended = true;
 		this.leave();
 	},
