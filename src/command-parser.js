@@ -265,6 +265,9 @@ class CommandParser {
 	 * @param by User name
 	 */
 	parse(msg, room, by) {
+		if (!room && msg.substr(0, 8) === '/invite ') {
+			return this.parse((App.config.parser.tokens[0] || '') + 'joinroom ' + msg.substr(8), room, by);
+		}
 		let userid = Text.toId(by);
 		if (room && this.data.sleep[room]) return; /* Sleeping room */
 		if (!this.data.exceptions[userid] && this.monitor.isLocked(userid)) return; /* User locked */
@@ -278,7 +281,7 @@ class CommandParser {
 		if (openIndex === 0 && closeIndex !== -1 && this.data.exceptions[userid]) {
 			tarRoom = Text.toRoomid(msg.substr(1, closeIndex - 1));
 			msg = msg.substr(closeIndex + 1);
-		} else if (this.data.roomctrl[room]) {
+		} else if (room && this.data.roomctrl[room]) {
 			tarRoom = this.data.roomctrl[room]; /* Control room */
 		}
 
