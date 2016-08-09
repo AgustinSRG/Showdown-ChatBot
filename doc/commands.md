@@ -182,5 +182,5 @@ Timers Module
 
 | Usage | Description | Permission | |
 | ----- | ----------  | --- | --- |
-`starttimer <minutes>, <seconds>` | Starts a timeoyt | timer | **A**
+`starttimer <minutes>, <seconds>` | Starts a timeout | timer | **A**
 `stoptimer` | Stops the timeout | timer | **A**

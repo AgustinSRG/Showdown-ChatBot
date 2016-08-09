@@ -4,8 +4,8 @@ Frequently Asked Questions
 **Where I can report bugs or suggestions?**
  - Here: [https://github.com/asanrom/Showdown-ChatBot/issues](https://github.com/asanrom/Showdown-ChatBot/issues)
 
-**Why can't I use any of the bot commands**
- - Maybe you forgot configure the commands in the *Command Parser* manu option at the control panel of your bot.
+**Why can't I use any of the bot commands?**
+ - Maybe you forgot configuring the commands in the *Command Parser* menu option at the control panel of your bot.
  - There are commands everyone can use, but the mayority of them require certain rank to be used. You can change this with the command `set` and `grant` or using the control pannel (*Commmand Parser* -> *Permissions*).
 
 **My bot gets locked every time it joins the server, what is happening?**
@@ -17,8 +17,8 @@ Frequently Asked Questions
 
 **Why the bot is so bad at pokemon battles?**
  - Basically, Pokemon battles require human intelligence (prediction, strategy) and the bot does not have it. The bot uses a pseudo-random algorithm to decide in the battles.
- - Developing an artificial intelligence for Pokemon Showdown may sound interesting, but Pokemon is a game with a lot of lucky factors and usualy based on win ratios. If a bot could get high win ratios with ease, bots will be banned from pokemon showdown (basically because that would be cheating).
- - The battle module is realy secondary and only developed for pure fun, to integrate the bot more easily with the rest of users.
+ - Developing an artificial intelligence for Pokemon Showdown may sound interesting, but Pokemon is a game with a lot of lucky factors and usualy based on win ratios. If a bot could get high win ratios with ease, bots would be banned from pokemon showdown (basically because that would be cheating).
+ - The battle module is secondary and only developed for pure fun, to integrate the bot more easily with the rest of users.
 
 **What is the Anti-Spam system option in the Command Parser control panel option**
  - If you enable it, users cannot spam the bot with commands via pm. That's because they must wait 2 seconds between commands used with the private messages.
