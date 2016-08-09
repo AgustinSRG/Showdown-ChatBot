@@ -18,6 +18,8 @@ $end1 = **The Pass-The-Bomb game ended!** Congratulations to
 $end2 = for winning the game!
 $forceend = The Pass-The-Bomb game was terminated!
 
+$starterr = There are not enough players to start the game
+
 %spanish
 
 $lose2 = fue descalificado por tratar de pasar la bomba cuando no la tenía
@@ -35,3 +37,5 @@ $lose = fue eliminado!
 $end1 = **El juego de Pass-The-Bomb ha terminado!** Felicidades a
 $end2 = por ganar el juego!
 $forceend = El juego de Pass-The-Bomb ha sido finalizado!
+
+$starterr = No hay suficientes jugadores para iniciar el juego

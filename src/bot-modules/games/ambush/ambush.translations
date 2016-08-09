@@ -20,6 +20,8 @@ $11 = **The Ambush game ended!**
 $12 = Congratulations to
 $13 = for winning the game
 
+$starterr = There are not enough players to start the game
+
 %spanish
 
 $0 = Se ha creado un nuevo juego de **Ambush**
@@ -39,3 +41,5 @@ $10 = y queda eliminado
 $11 = **El juego de Ambush ha terminado!**
 $12 = Felicidades a
 $13 = por ganar el juego
+
+$starterr = No hay suficientes jugadores para iniciar el juego

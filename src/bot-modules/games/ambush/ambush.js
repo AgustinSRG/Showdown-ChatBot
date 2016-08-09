@@ -78,7 +78,10 @@ class Ambush {
 
 	startFight() {
 		if (this.status !== 'signups') return;
-		if (Object.keys(this.players).length < 2) return;
+		if (Object.keys(this.players).length < 2) {
+			this.send(translator.get('starterr', this.lang));
+			return;
+		}
 		this.status = 'fight';
 		let txt = '';
 		txt += '**' + translator.get(7, this.lang) + '!** ' + translator.get(1, this.lang) +

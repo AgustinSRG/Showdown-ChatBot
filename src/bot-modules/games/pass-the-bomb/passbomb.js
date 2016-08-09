@@ -59,7 +59,10 @@ class PassBomb {
 
 	startGame() {
 		if (this.status !== 'signups') return;
-		if (Object.keys(this.players).length < 2) return;
+		if (Object.keys(this.players).length < 2) {
+			this.send(translator.get('starterr', this.lang));
+			return;
+		}
 		this.status = 'started';
 		this.newRound();
 	}
