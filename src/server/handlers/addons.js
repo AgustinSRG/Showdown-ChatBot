@@ -38,8 +38,10 @@ App.server.setHandler('addons', (context, parts) => {
 		if (addon && App.addons[addon]) {
 			App.removeAddon(addon);
 			try {
-				FileSystem.unlinkSync(Path.resolve(this.addonsDir, addon));
-			} catch (err) {}
+				FileSystem.unlinkSync(Path.resolve(App.addonsDir, addon));
+			} catch (err) {
+				App.reportCrash(err);
+			}
 			App.logServerAction(context.user.id, 'Add-on uninstalled: ' + addon + '.js');
 			ok = "Addon " + addon + " deleted sucessfully";
 		} else {
