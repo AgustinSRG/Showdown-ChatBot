@@ -56,7 +56,7 @@ Pokemon Module
 `boosting <pokemon>` | Gets the boosting moves a pokemon can learn | pokemon\* | **I**
 `recovery <pokemon>` | Gets the recovery moves a pokemon can learn | pokemon\* | **I**
 `hazards <pokemon>` | Gets the hazards moves a pokemon can learn | pokemon\* | **I**
-`translate <pokemon / item / ability / move / nature>` | Translates pokemon stuff (English - Spanish, bidirectional) | translate\* | **I**
+`translate <pokemon / item / ability / move / nature>, [origin language], [target language]` | Translates pokemon stuff | translate\* | **I**
 `usage` | Gets the smogon usage stats link | usage\* | **I**
 `usage <pokemon>, [tier]` | Gets the usage stats of a pokemon (via Smogon) | usage\* | **I**
 `usagedata <pokemon>, moves, [tier]` | Gets the most used moves of a pokemon (via Smogon) | usagedata\* | **I**

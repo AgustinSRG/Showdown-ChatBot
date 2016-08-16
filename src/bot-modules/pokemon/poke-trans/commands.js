@@ -16,14 +16,37 @@ const getTranslations = require(Path.resolve(__dirname, 'translate.js'));
 
 App.parser.addPermission('translate', {group: 'driver'});
 
+const Available_Languages = ['english', 'spanish'];
+
 module.exports = {
 	translate: function () {
-		if (!this.arg) return this.errorReply(this.usage({desc: 'pokemon/item/ability/move/nature'}));
+		if (!this.arg) {
+			return this.errorReply(this.usage({desc: 'pokemon/item/ability/move/nature'},
+				{desc: 'origin language', optional: true}, {desc: 'target language', optional: true}));
+		}
 		let args = this.args;
 		let word = args[0].trim();
-		let from = 'spanish';
-		let to = 'english';
-		if (!word) return this.errorReply(this.usage({desc: 'pokemon/item/ability/move/nature'}));
+		let from = Text.toId(args[1] || this.lang);
+		let to = Text.toId(args[2] || 'english');
+		let bidirectional = true;
+		if (!word || !from || !to || from === to) {
+			return this.errorReply(this.usage({desc: 'pokemon/item/ability/move/nature'},
+				{desc: 'origin language', optional: true}, {desc: 'target language', optional: true}));
+		}
+
+		if (Available_Languages.indexOf(from) === -1) {
+			return this.errorReply(translator.get(4, this.lang) + ": __" + from + "__. " +
+				translator.get(5, this.lang) + ": __" + Available_Languages.join(', ') + "__");
+		}
+
+		if (Available_Languages.indexOf(to) === -1) {
+			return this.errorReply(translator.get(4, this.lang) + ": __" + to + "__. " +
+				translator.get(5, this.lang) + ": __" + Available_Languages.join(', ') + "__");
+		}
+
+		if (args[1] || args[2]) {
+			bidirectional = false;
+		}
 
 		try {
 			let aliases = App.data.getAliases();
@@ -34,19 +57,22 @@ module.exports = {
 
 		/* Translation */
 		let translations = getTranslations(from, to, word);
-		let translationsInv = getTranslations(to, from, word);
-		if (translationsInv && translationsInv.length) {
-			if ((!translations || !translations.length) || (translationsInv[0].ld < translations[0].ld)) {
-				translations = translationsInv;
-				let temp = to;
-				to = from;
-				from = temp;
+		if (bidirectional) {
+			let translationsInv = getTranslations(to, from, word);
+			if (translationsInv && translationsInv.length) {
+				if ((!translations || !translations.length) || (translationsInv[0].ld < translations[0].ld)) {
+					translations = translationsInv;
+					let temp = to;
+					to = from;
+					from = temp;
+				}
 			}
 		}
 
 		if (!translations || !translations.length) {
 			return this.errorReply(translator.get(0, this.lang) + ' "' +
-				word + '" ' + translator.get(1, this.lang) + '. ' + translator.get(2, this.lang));
+				word + '" ' + translator.get(1, this.lang) + '. ' +
+				"(" + translator.get(from, this.lang) + " - " + translator.get(to, this.lang) + ")");
 		}
 
 		let text = "";
@@ -55,17 +81,17 @@ module.exports = {
 		}
 		text += translator.get(3, this.lang) + ' ' + " **" + (translations[0].from || "").trim() +
 			"** (" + translator.get(from, this.lang) + " - " + translator.get(to, this.lang) + "): ";
+		let results = [];
 		for (let i = 0; i < translations.length; i++) {
 			if (normalize(translations[0].from) !== normalize(translations[i].from)) continue;
 			if (typeof translations[i].to === "string") {
-				text += "**" + (translations[i].to || "").trim() + "** (" +
-					(translator.get(translations[i].type, this.lang) || translations[i].type) + ")";
+				results.push("**" + (translations[i].to || "").trim() + "** (" +
+					(translator.get(translations[i].type, this.lang) || translations[i].type) + ")");
 			} else {
-				text += "**" + (translations[i].to[0] || "").trim() + "** (" +
-					(translator.get(translations[i].type, this.lang) || translations[i].type) + ")";
+				results.push("**" + (translations[i].to[0] || "").trim() + "** (" +
+					(translator.get(translations[i].type, this.lang) || translations[i].type) + ")");
 			}
-			if (i < translations.length - 1) text += ", ";
 		}
-		this.restrictReply(text, "translate");
+		this.restrictReply(text + results.join(', '), "translate");
 	},
 };

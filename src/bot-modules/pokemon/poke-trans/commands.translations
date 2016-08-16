@@ -4,8 +4,9 @@
 
 $0 = Pokemon, ability, item, move or nature called
 $1 = is not available in the translations
-$2 = (English - Spanish)
 $3 = Translations of
+$4 = Unavailable language
+$5 = Available languages
 
 $english = English
 $spanish = Spanish
@@ -20,8 +21,9 @@ $natures = Nature
 
 $0 = Pokemon, habilidad, objeto, movimineto o naturaleza llamado
 $1 = no está disponible en las traducciones
-$2 = (Inglés - Español)
 $3 = Traducciones de
+$4 = Idioma no disponible
+$5 = Idiomas disponibles
 
 $english = Inglés
 $spanish = Español
