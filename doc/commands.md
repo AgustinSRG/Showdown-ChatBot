@@ -44,6 +44,7 @@ Core Module
 `hotpatch` | Reloads the commands source files | *(Only excepted users)*  | **D**
 `parserignore <user>` | Locks an user from using the bot commands | *(Only excepted users)* | **D**
 `parserunignore <user>` | Unlocks an user from using the bot commands | *(Only excepted users)* | **D**
+`null` | Does nothing. Only for development purposes | - | **D**
 
 Pokemon Module
 ------------

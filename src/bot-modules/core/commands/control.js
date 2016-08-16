@@ -93,6 +93,10 @@ module.exports = {
 
 	/* Development */
 
+	"null": function () {
+		return;
+	},
+
 	"eval": function () {
 		if (!App.config.debug) return;
 		if (!this.isExcepted()) return;
