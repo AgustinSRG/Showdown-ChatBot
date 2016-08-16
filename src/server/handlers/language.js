@@ -9,7 +9,7 @@ const check = Tools.get('check.js');
 
 /* Menu Options */
 
-App.server.setMenuOption('lang', 'Bot Language', '/lang/', 'bot');
+App.server.setMenuOption('lang', 'Bot&nbsp;Language', '/lang/', 'bot');
 
 /* Handlers */
 

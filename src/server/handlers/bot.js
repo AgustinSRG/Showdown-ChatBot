@@ -12,7 +12,7 @@ App.server.setPermission('bot', 'Permission for changing the bot configuration')
 
 /* Menu Options */
 
-App.server.setMenuOption('bot', 'Bot Config', '/bot/', 'bot');
+App.server.setMenuOption('bot', 'Bot&nbsp;Configuration', '/bot/', 'bot');
 
 /* Handlers */
 

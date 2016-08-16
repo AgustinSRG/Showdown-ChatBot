@@ -13,7 +13,7 @@ App.server.setPermission('htmlbox', 'Permission for managing htmlbox commands');
 
 /* Menu Options */
 
-App.server.setMenuOption('htmlbox', 'HtmlBox Commands', '/htmlbox/', 'htmlbox');
+App.server.setMenuOption('htmlbox', 'HtmlBox&nbsp;Commands', '/htmlbox/', 'htmlbox');
 
 /* Handlers */
 

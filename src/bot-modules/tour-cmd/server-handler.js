@@ -15,7 +15,7 @@ App.server.setPermission('tourcmd', 'Permission for changin the tour command con
 
 /* Menu Options */
 
-App.server.setMenuOption('tourcmd', 'Tour Cmd', '/tourcmd/', 'tourcmd');
+App.server.setMenuOption('tourcmd', 'Tour&nbsp;Command', '/tourcmd/', 'tourcmd');
 
 /* Handlers */
 

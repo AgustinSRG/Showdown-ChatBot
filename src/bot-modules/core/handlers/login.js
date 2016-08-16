@@ -9,7 +9,7 @@ const check = Tools.get('check.js');
 
 /* Menu Options */
 
-App.server.setMenuOption('botlogin', 'Bot Login', '/botlogin/', 'core');
+App.server.setMenuOption('botlogin', 'Bot&nbsp;Login', '/botlogin/', 'core');
 
 /* Handlers */
 

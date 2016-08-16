@@ -12,7 +12,7 @@ App.server.setPermission('github', 'Permission for changing github hook configur
 
 /* Menu Options */
 
-App.server.setMenuOption('github', 'GitHub Hook', '/github/', 'github');
+App.server.setMenuOption('github', 'GitHub&nbsp;Hook', '/github/', 'github');
 
 /* Handlers */
 

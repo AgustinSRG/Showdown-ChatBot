@@ -13,7 +13,7 @@ App.server.setPermission('quotejoke', 'Permission for managing the quotes and jo
 
 /* Menu Options */
 
-App.server.setMenuOption('quotejoke', 'Quotes &amp; Jokes', '/quotejoke/', 'quotejoke');
+App.server.setMenuOption('quotejoke', 'Quotes&nbsp;&amp;&nbsp;Jokes', '/quotejoke/', 'quotejoke');
 
 /* Handlers */
 

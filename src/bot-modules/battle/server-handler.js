@@ -17,8 +17,8 @@ App.server.setPermission('teams', 'Permission for managing bot teams database');
 
 /* Menu Options */
 
-App.server.setMenuOption('battle', 'Battle Bot', '/battle/', 'battle');
-App.server.setMenuOption('teams', 'Bot Teams', '/teams/', 'teams');
+App.server.setMenuOption('battle', 'Battle&nbsp;Bot', '/battle/', 'battle');
+App.server.setMenuOption('teams', 'Bot&nbsp;Teams', '/teams/', 'teams');
 
 /* Handlers */
 

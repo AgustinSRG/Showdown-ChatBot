@@ -13,7 +13,7 @@ App.server.setPermission('dyncmd', 'Permission for managing dynamic commands');
 
 /* Menu Options */
 
-App.server.setMenuOption('dyncmd', 'Dynamic Commands', '/dyncmd/', 'dyncmd');
+App.server.setMenuOption('dyncmd', 'Dynamic&nbsp;Commands', '/dyncmd/', 'dyncmd');
 
 /* Handlers */
 

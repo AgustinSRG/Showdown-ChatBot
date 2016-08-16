@@ -9,7 +9,7 @@ const check = Tools.get('check.js');
 
 /* Menu Options */
 
-App.server.setMenuOption('banwords', 'Banned Words', '/banwords/', 'moderation');
+App.server.setMenuOption('banwords', 'Banned&nbsp;Words', '/banwords/', 'moderation');
 
 /* Handlers */
 
