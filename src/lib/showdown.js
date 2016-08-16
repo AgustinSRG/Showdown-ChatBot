@@ -522,7 +522,7 @@ class Bot {
 			if (!this.users[userid]) {
 				this.users[userid] = new BotUser(splittedLine[1]);
 			}
-			this.users[userid].onChat(room);
+			this.users[userid].onChat(room, splittedLine[1]);
 			if (userid === this.status.userid) {
 				this.events.emit('chat', room, time, splittedLine.slice(2).join('|'));
 			} else {
@@ -536,7 +536,7 @@ class Bot {
 			if (!this.users[userid]) {
 				this.users[userid] = new BotUser(splittedLine[2]);
 			}
-			this.users[userid].onChat(room);
+			this.users[userid].onChat(room, splittedLine[2]);
 			if (userid === this.status.userid) {
 				this.events.emit('chat', room, time, splittedLine.slice(3).join('|'));
 			} else {
@@ -581,7 +581,7 @@ class Bot {
 			if (!this.users[userid]) {
 				this.users[userid] = new BotUser(splittedLine[1]);
 			}
-			this.users[userid].onLeave(room);
+			this.users[userid].onLeave(room, splittedLine[1]);
 			if (this.rooms[room]) {
 				this.rooms[room].userLeave(splittedLine[1]);
 			}
@@ -730,7 +730,9 @@ class BotUser {
 		};
 	}
 
-	onChat(room) {
+	onChat(room, ident) {
+		ident = Text.parseUserIdent(ident);
+		this.name = ident.name;
 		this.lastSeen = {
 			type: "C",
 			room: room,
@@ -738,7 +740,9 @@ class BotUser {
 		};
 	}
 
-	onLeave(room) {
+	onLeave(room, ident) {
+		ident = Text.parseUserIdent(ident);
+		this.name = ident.name;
 		this.lastSeen = {
 			type: "L",
 			room: room,
