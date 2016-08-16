@@ -40,7 +40,7 @@ App.server.setHandler('addons', (context, parts) => {
 			try {
 				FileSystem.unlinkSync(Path.resolve(this.addonsDir, addon));
 			} catch (err) {}
-			App.logServerAction(context.user.id, 'Add-on installed: ' + addon + '.js');
+			App.logServerAction(context.user.id, 'Add-on uninstalled: ' + addon + '.js');
 			ok = "Addon " + addon + " deleted sucessfully";
 		} else {
 			error = "Invalid add-on";
@@ -146,14 +146,8 @@ function editAddonHandler(context, parts) {
 			error = err.message;
 		}
 		if (!error) {
+			App.removeAddon(addon);
 			FileSystem.writeFileSync(Path.resolve(App.addonsDir, addon), content);
-			if (typeof App.addons[addon] === 'object' && typeof App.addons[addon].destroy === 'function') {
-				try {
-					App.addons[addon].destroy();
-				} catch (err) {
-					App.reportCrash(err);
-				}
-			}
 			if (!App.installAddon(addon)) {
 				error = "Failed to re-install the add-on";
 			} else {
