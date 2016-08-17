@@ -516,9 +516,9 @@ class Bot {
 			}
 			break;
 		case 'c':
+			if (initialMsg) break;
 			userid = Text.toId(splittedLine[1]);
 			time = Date.now();
-			if (initialMsg) break;
 			if (!this.users[userid]) {
 				this.users[userid] = new BotUser(splittedLine[1]);
 			}
@@ -530,9 +530,9 @@ class Bot {
 			}
 			break;
 		case 'c:':
+			if (initialMsg) break;
 			userid = Text.toId(splittedLine[2]);
 			time = parseInt(splittedLine[1]) * 1000;
-			if (initialMsg) break;
 			if (!this.users[userid]) {
 				this.users[userid] = new BotUser(splittedLine[2]);
 			}
@@ -553,6 +553,7 @@ class Bot {
 			break;
 		case 'n':
 		case 'N':
+			if (initialMsg) break;
 			userid = Text.toId(splittedLine[2]);
 			if (!this.users[userid]) {
 				this.users[userid] = new BotUser(splittedLine[2]);
@@ -565,6 +566,7 @@ class Bot {
 			break;
 		case 'J':
 		case 'j':
+			if (initialMsg) break;
 			userid = Text.toId(splittedLine[1]);
 			if (!this.users[userid]) {
 				this.users[userid] = new BotUser(splittedLine[1]);
@@ -577,6 +579,7 @@ class Bot {
 			break;
 		case 'l':
 		case 'L':
+			if (initialMsg) break;
 			userid = Text.toId(splittedLine[1]);
 			if (!this.users[userid]) {
 				this.users[userid] = new BotUser(splittedLine[1]);

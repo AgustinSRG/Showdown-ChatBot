@@ -474,13 +474,13 @@ class Bot {
 			}
 			break;
 		case 'c':
+			if (initialMsg) break;
 			userid = Text.toId(splittedLine[1]);
 			time = Date.now();
-			if (initialMsg) break;
 			if (!this.users[userid]) {
 				this.users[userid] = new BotUser(splittedLine[1]);
 			}
-			this.users[userid].onChat(room);
+			this.users[userid].onChat(room, splittedLine[1]);
 			if (userid === this.status.userid) {
 				this.events.emit('chat', room, time, splittedLine.slice(2).join('|'));
 			} else {
@@ -488,13 +488,13 @@ class Bot {
 			}
 			break;
 		case 'c:':
+			if (initialMsg) break;
 			userid = Text.toId(splittedLine[2]);
 			time = parseInt(splittedLine[1]) * 1000;
-			if (initialMsg) break;
 			if (!this.users[userid]) {
 				this.users[userid] = new BotUser(splittedLine[2]);
 			}
-			this.users[userid].onChat(room);
+			this.users[userid].onChat(room, splittedLine[2]);
 			if (userid === this.status.userid) {
 				this.events.emit('chat', room, time, splittedLine.slice(3).join('|'));
 			} else {
@@ -511,6 +511,7 @@ class Bot {
 			break;
 		case 'n':
 		case 'N':
+			if (initialMsg) break;
 			userid = Text.toId(splittedLine[2]);
 			if (!this.users[userid]) {
 				this.users[userid] = new BotUser(splittedLine[2]);
@@ -523,6 +524,7 @@ class Bot {
 			break;
 		case 'J':
 		case 'j':
+			if (initialMsg) break;
 			userid = Text.toId(splittedLine[1]);
 			if (!this.users[userid]) {
 				this.users[userid] = new BotUser(splittedLine[1]);
@@ -535,11 +537,12 @@ class Bot {
 			break;
 		case 'l':
 		case 'L':
+			if (initialMsg) break;
 			userid = Text.toId(splittedLine[1]);
 			if (!this.users[userid]) {
 				this.users[userid] = new BotUser(splittedLine[1]);
 			}
-			this.users[userid].onLeave(room);
+			this.users[userid].onLeave(room, splittedLine[1]);
 			if (this.rooms[room]) {
 				this.rooms[room].userLeave(splittedLine[1]);
 			}
@@ -688,7 +691,9 @@ class BotUser {
 		};
 	}
 
-	onChat(room) {
+	onChat(room, ident) {
+		ident = Text.parseUserIdent(ident);
+		this.name = ident.name;
 		this.lastSeen = {
 			type: "C",
 			room: room,
@@ -696,7 +701,9 @@ class BotUser {
 		};
 	}
 
-	onLeave(room) {
+	onLeave(room, ident) {
+		ident = Text.parseUserIdent(ident);
+		this.name = ident.name;
 		this.lastSeen = {
 			type: "L",
 			room: room,
