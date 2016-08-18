@@ -187,11 +187,15 @@ function toolSeen(context, html, parts) {
 				reply += 'chatting in' + ' ';
 				break;
 			case 'R':
-				reply += 'changing nick to' + ' **' + seen.detail + '**';
+				reply += 'changing nick to' + ' ' + seen.detail;
 				break;
 			}
 			if (seen.type in {'J': 1, 'L': 1, 'C': 1}) {
 				reply += tryGetRoomTitle(seen.room);
+			}
+			if (App.bot.users[user].alts.length > 0) {
+				reply += '\n';
+				reply += 'Alts: ' + App.bot.users[user].alts.join(', ');
 			}
 			context.endWithText(reply);
 		} else {
@@ -206,7 +210,7 @@ function toolSeen(context, html, parts) {
 			' document.getElementById("seenresult").innerHTML = "<p><i>Getting seen data for " + escapeHtml(user) + "...</i></p>";' +
 			' req = $.get(\'/tools/seen/?user=\' + encodeURI(user) + \'&time=\' + Date.now(), ' +
 			'function (data) {var res = document.getElementById("seenresult");' +
-			'res.innerHTML = \'<p><strong>\' + escapeHtml(data) + \'</strong></p>\';}).fail(' +
+			'res.innerHTML = \'<p><strong>\' + escapeHtml(data).replace(/\\n/g, "<br />") + \'</strong></p>\';}).fail(' +
 			'function () {document.getElementById("seenresult").innerHTML = \'<p><span class="error-msg">' +
 			'Error: Could not get seen data</span></p>\';});}';
 		html += '</script>';
