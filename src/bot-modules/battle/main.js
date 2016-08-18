@@ -27,12 +27,12 @@ TeamBuilder.loadTeamList();
 
 App.bot.on('connect', () => {
 	BattleBot.init();
-	TourManager.clearData();
 });
 
 App.bot.on('disconnect', () => {
 	BattleBot.init();
 	TourManager.clearData();
+	ChallManager.clean();
 });
 
 App.bot.on('line', (room, line, spl, isIntro) => {

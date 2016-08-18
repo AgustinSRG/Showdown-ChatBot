@@ -9,6 +9,12 @@ $3 = Team
 $4 = not found
 $5 = is not available for ladder
 
+$6 = Already challenging
+$7 = Use 
+$8 = to cancel the challenge
+
+$9 = No challenges found
+
 %spanish
 
 $0 = El formato
@@ -17,3 +23,9 @@ $2 = No poseo equipos para jugar el formato
 $3 = El equipo
 $4 = no existe
 $5 = no está disponible para ladder
+
+$6 = Ya se estaba retando a
+$7 = Usa 
+$8 = para cancelar el reto
+
+$9 = No se han encontrado retos

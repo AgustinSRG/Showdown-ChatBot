@@ -160,6 +160,7 @@ Battle Module
 | Usage | Description | Permission | |
 | ----- | ----------  | --- | --- |
 `chall <user>, <format>, [team]` | Challenges an user | chall | **A**
+`cancelchallenge` | Cancels current challenge request | chall | **A**
 `searchbattle <format>` | Search a battle in ladder and returns the link | searchbattle | **A**
 
 HtmlBox Commands Module

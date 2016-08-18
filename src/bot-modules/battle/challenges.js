@@ -66,3 +66,7 @@ exports.parse = function (room, message, isIntro, spl) {
 		}
 	}
 };
+
+exports.clean = function () {
+	exports.challenges = {};
+};

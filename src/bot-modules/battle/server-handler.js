@@ -94,6 +94,42 @@ App.server.setHandler('battle', (context, parts) => {
 			App.logServerAction(context.user.id, "Stop Laddering");
 			ok = 'Stopped laddering';
 		}
+	} else if (context.post.sendchall) {
+		let user = Text.toId(context.post.showdownname);
+		let format = Text.toId(context.post.format);
+		let team = Text.toId(context.post.team);
+		try {
+			check(!mod.ChallManager.challenges || !mod.ChallManager.challenges.challengeTo, "There is a pending challenge request");
+			check(user, "You must specify an user to send the challenge");
+			check(App.bot.formats[format] && App.bot.formats[format].chall, "Format " + format + " is not available for challenges");
+			check(team || !App.bot.formats[format].team || mod.TeamBuilder.hasTeam(format), "No teams available for " + format);
+			check(!team || mod.TeamBuilder.dynTeams[team], "Team " + team + " not found");
+		} catch (err) {
+			error = err.message;
+		}
+		if (!error) {
+			let cmds = [];
+			if (team) {
+				cmds.push('|/useteam ' + mod.TeamBuilder.dynTeams[team].packed);
+			} else {
+				let randTeam = mod.TeamBuilder.getTeam(format);
+				if (randTeam) {
+					cmds.push('|/useteam ' + randTeam);
+				}
+			}
+			cmds.push('|/challenge ' + user + ", " + format);
+			App.bot.send(cmds);
+			App.logServerAction(context.user.id, "Send Challenge: " + user + " | " + format + " | " + (team || "-"));
+			ok = "Challenge request sent to " + user;
+		}
+	} else if (context.post.cancelchall) {
+		if (mod.ChallManager.challenges && mod.ChallManager.challenges.challengeTo) {
+			App.bot.send('|/cancelchallenge ' + mod.ChallManager.challenges.challengeTo.to);
+			App.logServerAction(context.user.id, "Cancel Callenge");
+			ok = 'Challenge Canceled';
+		} else {
+			error = "No challenges found.";
+		}
 	}
 
 	/* Generate Html */
@@ -130,6 +166,22 @@ App.server.setHandler('battle', (context, parts) => {
 		html += '<p><strong>Search Interval (seconds)</strong>:&nbsp;' +
 			'<input name="interval" type="text" size="10" value="10" /></p>';
 		html += '<p><input type="submit" name="startladder" value="Start Laddering" /></p>';
+	}
+	html += '</form>';
+
+	html += '<hr />';
+
+	html += '<form method="post" action="">';
+	if (mod.ChallManager.challenges && mod.ChallManager.challenges.challengeTo && !context.post.cancelchall) {
+		let format = mod.ChallManager.challenges.challengeTo.format;
+		if (App.bot.formats[format]) format = App.bot.formats[format].name;
+		html += '<p><strong>Challenging ' + mod.ChallManager.challenges.challengeTo.to + ' in format ' + format + '</strong></p>';
+		html += '<p><input type="submit" name="cancelchall" value="Cancel Challenge" /></p>';
+	} else {
+		html += '<p><strong>User</strong>:&nbsp;<input name="showdownname" type="text" size="30" value="" /></p>';
+		html += '<p><strong>Format</strong>:&nbsp;' + getLadderFormatsMenu() + '</p>';
+		html += '<p><strong>Team</strong>:&nbsp;' + getTeamsMenu() + '</p>';
+		html += '<p><input type="submit" name="sendchall" value="Send Challenge" /></p>';
 	}
 	html += '</form>';
 
@@ -266,6 +318,22 @@ function getFormatsMenu() {
 		return ('<select name="format">' + formats.join() + '</select>');
 	} else {
 		return '<input name="format" type="text" size="40" value="" />';
+	}
+}
+
+function getTeamsMenu() {
+	let teams = App.modules.battle.system.TeamBuilder.dynTeams;
+	let teamOptions = [];
+	teamOptions.push('<option value="">Random Team</option>');
+	for (let id in teams) {
+		let formatName = teams[id].format;
+		if (App.bot.formats[formatName]) formatName = App.bot.formats[formatName].name;
+		teamOptions.push('<option value="' + id + '">' + id + ' - ' + formatName + '</option>');
+	}
+	if (teamOptions.length > 0) {
+		return ('<select name="team">' + teamOptions.join() + '</select>');
+	} else {
+		return '<i>No available Teams</i>';
 	}
 }
 

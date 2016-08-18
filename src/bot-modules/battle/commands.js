@@ -36,8 +36,12 @@ module.exports = {
 		if (!App.bot.formats[format] || !App.bot.formats[format].chall) {
 			return this.errorReply(translator.get(0, this.lang) + ' __' + format + '__ ' + translator.get(1, this.lang));
 		}
-		if (App.bot.formats[format].team && !mod.TeamBuilder.hasTeam(format)) {
+		if (!teamId && App.bot.formats[format].team && !mod.TeamBuilder.hasTeam(format)) {
 			return this.errorReply(translator.get(2, this.lang) + ' __' + format + '__');
+		}
+		if (mod.ChallManager.challenges && mod.ChallManager.challenges.challengeTo) {
+			return this.errorReply(translator.get(6, this.lang) + ' ' + mod.ChallManager.challenges.challengeTo.to +
+				'. ' + translator.get(7, this.lang) + ' ``' + this.token + 'cancelchallenge`` ' + translator.get(8, this.lang));
 		}
 		let cmds = [];
 		if (teamId) {
@@ -56,6 +60,17 @@ module.exports = {
 		cmds.push('|/challenge ' + user + ", " + format);
 		this.send(cmds);
 		App.logCommandAction(this);
+	},
+
+	cancelchallenge: function () {
+		if (!this.can('chall', this.room)) return this.replyAccessDenied('chall');
+		let mod = App.modules.battle.system;
+		if (mod.ChallManager.challenges && mod.ChallManager.challenges.challengeTo) {
+			this.send('|/cancelchallenge ' + mod.ChallManager.challenges.challengeTo.to);
+			App.logCommandAction(this);
+		} else {
+			this.errorReply(translator.get(9, this.lang));
+		}
 	},
 
 	searchbattle: function () {
