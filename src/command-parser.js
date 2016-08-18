@@ -674,7 +674,7 @@ class CommandContext {
 	 */
 	usage() {
 		let txt = "";
-		txt += "__" + translator.get(3, this.lang) + ":__ ``";
+		txt += "" + translator.get(3, this.lang) + ": __";
 		txt += this.token + this.cmd;
 		txt += " ";
 		for (let i = 0; i < arguments.length; i++) {
@@ -685,7 +685,7 @@ class CommandContext {
 			}
 			if (i < arguments.length - 1) txt += ", ";
 		}
-		txt += "``";
+		txt += "__";
 		return txt;
 	}
 
