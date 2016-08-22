@@ -15,7 +15,6 @@ const Logger = Tools.get('logs.js');
 const BotMod = Tools.get('bot-mod.js');
 
 const ShowdownBot = require(Path.resolve(__dirname, 'lib/showdown.js')).Bot;
-const ShowdownBotAlt = require(Path.resolve(__dirname, 'lib/showdown-alt.js')).Bot;
 
 const Server = require(Path.resolve(__dirname, 'server/server.js')).Server;
 const DataManager = require(Path.resolve(__dirname, 'data.js'));
@@ -110,17 +109,8 @@ class ChatBotApp {
 			this.config.cmdtokens = [];
 		}
 
-		/* Showdown protocol configuration */
-		if (!this.config.showdownProtocol) {
-			this.config.showdownProtocol = 'std';
-		}
-		let Bot = ShowdownBot;
-		if (this.config.showdownProtocol === 'alt') {
-			Bot = ShowdownBotAlt;
-		}
-
 		/* Create the bot */
-		this.bot = new Bot(this.config.bot.server,
+		this.bot = new ShowdownBot(this.config.bot.server,
 			this.config.bot.port,
 			{loginServer: this.config.bot.loginserv,
 			serverid: this.config.bot.serverid},

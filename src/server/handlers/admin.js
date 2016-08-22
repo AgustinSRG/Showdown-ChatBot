@@ -78,7 +78,6 @@ App.server.setHandler('admin', (context, parts) => {
 			}
 			App.config.server.url = context.post.appurl || "";
 			App.config.apptitle = context.post.apptitle || "";
-			App.config.showdownProtocol = (context.post.showdownprotocol === 'alt') ? 'alt' : 'std';
 			App.config.debug = !!context.post.debugmode;
 			App.config.useproxy = !!context.post.useproxy;
 			App.db.write();
@@ -109,11 +108,6 @@ App.server.setHandler('admin', (context, parts) => {
 		(App.config.server.url || "") + '" /></td></tr>';
 	html += '<tr><td><strong>Application Title</strong>: </td><td><input type="text" name="apptitle" value="' +
 		(App.config.apptitle || 'Showdown ChatBot') + '" /></td></tr>';
-	html += '<tr><td><strong>Showdown Protocol</strong>: </td><td>';
-	html += '<select name="showdownprotocol">';
-	html += '<option value="std"' + (App.config.showdownProtocol !== 'alt' ? ' selected="selected"' : '') + '>Standard Protocol</option>';
-	html += '<option value="alt"' + (App.config.showdownProtocol === 'alt' ? ' selected="selected"' : '') + '>Alternative Protocol</option>';
-	html += '</select></td></tr>';
 	html += '</table>';
 	html += '<p><label><input type="checkbox" name="debugmode" value="true" ' +
 		(App.config.debug ? 'checked="checked"' : '') + ' /></label>&nbsp;Enable debug mode.</p>';
