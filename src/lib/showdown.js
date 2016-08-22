@@ -32,7 +32,16 @@ const Default_Retry_Delay = 10 * 1000;
 const Max_Lines = 3;
 const Default_Room = "lobby";
 
+/**
+ * Represents a Pokemon Showdown Bot
+ */
 class Bot {
+	/**
+	 * @param {String} server - The Pokemon Showdown sever to connect
+	 * @param {Number} port
+	 * @param {Object} loginOptions - Login Options are: loginServer {String}, serverId {String}
+	 * @param {Object} errOptions - Error Options are: retryDelay {Number}, ckeckInterval {Number}
+	 */
 	constructor(server, port, loginOptions, errOptions) {
 		this.server = server;
 		this.port = port;
@@ -91,18 +100,32 @@ class Bot {
 
 	/* Getters */
 
+	/**
+	 * @returns {Boolean} Check if the bot is connected to the server
+	 */
 	isConnected() {
 		return this.status.connected || false;
 	}
 
+	/**
+	 * @returns {String} The bot nicknsme
+	 */
 	getBotNick() {
 		return this.status.nick || "";
 	}
 
+	/**
+	 * @returns {Object} Formats data received from the Pokemon Showdown Server
+	 */
 	getFormats() {
 		return this.formats || {};
 	}
 
+	/**
+	 * @param {String} user
+	 * @param {String} room
+	 * @returns {String} The user group (symbol)
+	 */
 	getUserGroup(user, room) {
 		user = Text.toId(user);
 		if (!this.rooms[room]) return null;
@@ -110,6 +133,9 @@ class Bot {
 		return {group: this.rooms[room].users[user]};
 	}
 
+	/**
+	 * @returns {String} The websocket url to connect
+	 */
 	getConnectionUrl() {
 		return Util.format("ws://%s:%d/showdown/%d/%s/websocket",
 			this.server,
@@ -118,6 +144,9 @@ class Bot {
 			Text.randomId(8));
 	}
 
+	/**
+	 * @returns {String} The login server url
+	 */
 	getLoginUrl() {
 		return Util.format("https://%s/~~%s/action.php",
 			this.loginUrl.loginServer, this.loginUrl.serverId);
@@ -125,6 +154,9 @@ class Bot {
 
 	/* Setters */
 
+	/**
+	 * @param {Object} loginOptions
+	 */
 	setLoginOptions(loginOptions) {
 		this.loginOptions = loginOptions || null;
 		this.loginUrl = {
@@ -183,10 +215,18 @@ class Bot {
 
 	/* Events */
 
+	/**
+	 * @param {String} event
+	 * @param {function} handler
+	 */
 	on(event, handler) {
 		this.events.on(event, handler);
 	}
 
+	/**
+	 * @param {String} event
+	 * @param {function} handler
+	 */
 	removeListener(event, handler) {
 		this.events.removeListener(event, handler);
 	}
@@ -202,6 +242,9 @@ class Bot {
 		this.webSocket.connect(this.getConnectionUrl(), []);
 	}
 
+	/**
+	 * @param {Number} delay
+	 */
 	retryConnect(delay) {
 		if (this.connectionRetryTimer) {
 			clearTimeout(this.connectionRetryTimer);
@@ -244,6 +287,11 @@ class Bot {
 
 	/* Login */
 
+	/**
+	 * @param {String} nick
+	 * @param {String} pass - Passowrd if needed
+	 * @param {funtion(String)} callback - Gets the access token
+	 */
 	getRename(nick, pass, callback) {
 		if (!this.status.challstr) {
 			this.events.emit('renamefailure', 'nochallstr', nick, pass);
@@ -318,6 +366,10 @@ class Bot {
 		req.end();
 	}
 
+	/**
+	 * @param {String} nick
+	 * @param {String} pass - Passowrd if needed
+	 */
 	rename(nick, pass) {
 		if (Text.toId(this.status.nick) === Text.toId(nick)) {
 			this.sendToGlobal('/trn ' + nick);
@@ -330,6 +382,11 @@ class Bot {
 		}
 	}
 
+	/**
+	 * @param {Number} delay
+	 * @param {String} nick
+	 * @param {String} pass - Passowrd if needed
+	 */
 	retryRename(delay, nick, pass) {
 		if (this.loginRetryTimer) {
 			clearTimeout(this.loginRetryTimer);
@@ -350,6 +407,10 @@ class Bot {
 		return this.nextSend++;
 	}
 
+	/**
+	 * @param {String|Array<String>} data
+	 * @returns {SendManager}
+	 */
 	send(data) {
 		if (!this.connection) return null;
 		let id = this.getSendId();
@@ -368,6 +429,11 @@ class Bot {
 		return manager;
 	}
 
+	/**
+	 * @param {String} room
+	 * @param {String|Array<String>} data
+	 * @returns {SendManager}
+	 */
 	sendTo(room, data) {
 		if (!(data instanceof Array)) {
 			data = [data.toString()];
@@ -378,10 +444,19 @@ class Bot {
 		return this.send(data);
 	}
 
+	/**
+	 * @param {String|Array<String>} data
+	 * @returns {SendManager}
+	 */
 	sendToGlobal(data) {
 		return this.sendTo('', data);
 	}
 
+	/**
+	 * @param {String} user
+	 * @param {String|Array<String>} data
+	 * @returns {SendManager}
+	 */
 	pm(user, data) {
 		if (!(data instanceof Array)) {
 			data = [data.toString()];
@@ -392,6 +467,10 @@ class Bot {
 		return this.send(data);
 	}
 
+	/**
+	 * @param {Array<String>} rooms
+	 * @returns {SendManager}
+	 */
 	joinRooms(rooms) {
 		let data = [];
 		for (let i = 0; i < rooms.length; i++) {
@@ -401,10 +480,18 @@ class Bot {
 		return this.send(data);
 	}
 
+	/**
+	 * @param {String} room
+	 * @returns {SendManager}
+	 */
 	joinRoom(room) {
 		return this.joinRooms([room]);
 	}
 
+	/**
+	 * @param {Array<String>} rooms
+	 * @returns {SendManager}
+	 */
 	leaveRooms(rooms) {
 		let data = [];
 		for (let i = 0; i < rooms.length; i++) {
@@ -414,12 +501,20 @@ class Bot {
 		return this.send(data);
 	}
 
+	/**
+	 * @param {String} room
+	 * @returns {SendManager}
+	 */
 	leaveRoom(room) {
 		return this.leaveRooms([room]);
 	}
 
 	/* Receiving */
 
+	/**
+	 * Receives messages from the websocket
+	 * @param {String} msg
+	 */
 	receive(msg) {
 		let type = msg.charAt(0);
 		let data;
@@ -440,6 +535,10 @@ class Bot {
 		}
 	}
 
+	/**
+	 * Receives parsed messages
+	 * @param {String} msg
+	 */
 	receiveMsg(msg) {
 		if (!msg) return;
 		if (msg.includes('\n')) {
@@ -465,6 +564,12 @@ class Bot {
 		}
 	}
 
+	/**
+	 * Receives lines (individual messages)
+	 * @param {String} room
+	 * @param {String} line
+	 * @param {Boolean} initialMsg
+	 */
 	parseLine(room, line, initialMsg) {
 		let splittedLine = line.substr(1).split('|');
 		let userid, time;
@@ -594,6 +699,9 @@ class Bot {
 		this.events.emit('parsedline', room, line, splittedLine, initialMsg);
 	}
 
+	/**
+	 * @param {String} formats - Formats data received from the server
+	 */
 	updateFormats(formats) {
 		let formatsArr = formats.split('|');
 		let commaIndex, formatData, code, name;
@@ -640,6 +748,9 @@ class Bot {
 	}
 }
 
+/**
+ * Represents ths Bot status
+ */
 class BotStatus {
 	constructor() {
 		this.connected = false;
@@ -654,6 +765,10 @@ class BotStatus {
 		this.connected = true;
 	}
 
+	/**
+	 * @param {String} id - Login Key
+	 * @param {String} str - Login Token
+	 */
 	onChallstr(id, str) {
 		this.challstr = {
 			id: id,
@@ -669,6 +784,10 @@ class BotStatus {
 		this.challstr = null;
 	}
 
+	/**
+	 * @param {String} nick
+	 * @param {Boolean} named
+	 */
 	onRename(nick, named) {
 		this.nick = nick;
 		this.userid = Text.toId(nick);
@@ -676,7 +795,14 @@ class BotStatus {
 	}
 }
 
+/**
+ * Represents a Pokemon Showdown Room
+ */
 class BotRoom {
+	/**
+	 * @param {String} id
+	 * @param {String} type - It can be: "chat" or "battle"
+	 */
 	constructor(id, type) {
 		this.id = id;
 		this.type = type || "chat";
@@ -684,26 +810,45 @@ class BotRoom {
 		this.users = {};
 	}
 
+	/**
+	 * @param {String} title
+	 */
 	setTitle(title) {
 		this.title = title;
 	}
 
+	/**
+	 * @param {String} userIdent
+	 */
 	userJoin(userIdent) {
 		let ident = Text.parseUserIdent(userIdent);
 		this.users[ident.id] = ident.group;
 	}
 
+	/**
+	 * @param {String} user
+	 */
 	userLeave(user) {
 		delete this.users[Text.toId(user)];
 	}
 
+	/**
+	 * @param {String} oldIdent
+	 * @param {String} newIdent
+	 */
 	userRename(oldIdent, newIdent) {
 		this.userLeave(oldIdent);
 		this.userJoin(newIdent);
 	}
 }
 
+/**
+ * Represents a Pokemon Showdown User
+ */
 class BotUser {
+	/**
+	 * @param {String} name
+	 */
 	constructor(name) {
 		this.id = Text.toId(name);
 		this.name = name;
@@ -711,6 +856,10 @@ class BotUser {
 		this.alts = [];
 	}
 
+	/**
+	 * @param {String} alt
+	 * @param {Map<BotUser>} users
+	 */
 	markAlt(alt, users) {
 		if (alt === this.id) return;
 		if (this.alts.indexOf(alt) < 0) {
@@ -723,6 +872,10 @@ class BotUser {
 		}
 	}
 
+	/**
+	 * @param {String} room
+	 * @param {String} ident - User Ident
+	 */
 	onJoin(room, ident) {
 		ident = Text.parseUserIdent(ident);
 		this.name = ident.name;
@@ -733,6 +886,10 @@ class BotUser {
 		};
 	}
 
+	/**
+	 * @param {String} room
+	 * @param {String} ident - User Ident
+	 */
 	onChat(room, ident) {
 		ident = Text.parseUserIdent(ident);
 		this.name = ident.name;
@@ -743,6 +900,10 @@ class BotUser {
 		};
 	}
 
+	/**
+	 * @param {String} room
+	 * @param {String} ident - User Ident
+	 */
 	onLeave(room, ident) {
 		if ((/[^a-zA-Z0-1]/).test(ident.charAt(0))) {
 			ident = Text.parseUserIdent(ident);
@@ -755,6 +916,11 @@ class BotUser {
 		};
 	}
 
+	/**
+	 * @param {String} room
+	 * @param {String} newIdent
+	 * @param {Map<BotUser>} users
+	 */
 	onRename(room, newIdent, users) {
 		newIdent = Text.parseUserIdent(newIdent);
 		if (newIdent.id === this.id) {
@@ -776,7 +942,17 @@ class BotUser {
 	}
 }
 
+/**
+ * Represents a queue manager that sends messages
+ * to a Pokemon Showdown Server
+ */
 class SendManager {
+	/**
+	 * @param {String|Array<String>} data
+	 * @param {Number} msgMaxLines
+	 * @param {function(String)} sendFunc
+	 * @param {function} destroyHandler
+	 */
 	constructor(data, msgMaxLines, sendFunc, destroyHandler) {
 		this.data = data;
 		this.msgMaxLines = msgMaxLines;
@@ -814,6 +990,9 @@ class SendManager {
 		if (typeof this.destroyHandler === "function") this.destroyHandler();
 	}
 
+	/**
+	 * @param {function} callback
+	 */
 	then(callback) {
 		if (this.status !== 'sending') {
 			return callback(this.err);
