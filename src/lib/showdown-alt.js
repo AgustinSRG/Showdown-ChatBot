@@ -702,8 +702,10 @@ class BotUser {
 	}
 
 	onLeave(room, ident) {
-		ident = Text.parseUserIdent(ident);
-		this.name = ident.name;
+		if ((/[^a-zA-Z0-1]/).test(ident.charAt(0))) {
+			ident = Text.parseUserIdent(ident);
+			this.name = ident.name;
+		}
 		this.lastSeen = {
 			type: "L",
 			room: room,
