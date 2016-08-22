@@ -33,6 +33,13 @@ node showdown-chatbot
 
 Once installed, [configure your bot using the control panel](https://github.com/asanrom/Showdown-ChatBot/blob/master/doc/configuration.md)
 
+Add-ons
+------------
+
+Add-ons are like optional modules you can install for your bot. They are rather limited and have no translation feature but they can be used to add custom commands and very specific features to your bot. Some public add-ons here:
+
+ - [Youtube Link Recognition (for YouTube related rooms)](https://gist.github.com/asanrom/c93eb063a57a6937f235df8ee23c1460)
+
 Useful Documentation
 ------------
 
@@ -40,6 +47,7 @@ Useful Documentation
  - [Commands List](https://github.com/asanrom/Showdown-ChatBot/blob/master/doc/commands.md)
  - [Development Documentation](https://github.com/asanrom/Showdown-ChatBot/blob/master/doc/development.md)
  - [Add-ons explanation](https://github.com/asanrom/Showdown-ChatBot/blob/master/doc/addons-development.md)
+
 
 Lisense
 ------------
