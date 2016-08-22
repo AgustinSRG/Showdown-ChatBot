@@ -40,7 +40,7 @@ Core Module
 `grant <permission>, <rank>` | Configures a permission | grant | **C**
 `set <permission>, <rank>` | Configures a permission in a room | set | **C**
 `lang <language>` | Changes the language of a chat room | set | **C**
-`eval <javascript>` | Executes arbitrry javascript. Note: Only available on debig mode | *(Only excepted users)* | **D**
+`eval <javascript>` | Executes arbitrry javascript. Note: Only available on debug mode | *(Only excepted users)* | **D**
 `hotpatch` | Reloads the commands source files | *(Only excepted users)*  | **D**
 `parserignore <user>` | Locks an user from using the bot commands | *(Only excepted users)* | **D**
 `parserunignore <user>` | Unlocks an user from using the bot commands | *(Only excepted users)* | **D**
@@ -162,6 +162,7 @@ Battle Module
 `chall <user>, <format>, [team]` | Challenges an user | chall | **A**
 `cancelchallenge` | Cancels current challenge request | chall | **A**
 `searchbattle <format>` | Search a battle in ladder and returns the link | searchbattle | **A**
+`evalbattle <javascript>` | Executes arbitrry javascript in a attle context. Note: Only available on debug mode | *(Only excepted users)* | **D**
 
 HtmlBox Commands Module
 ------------

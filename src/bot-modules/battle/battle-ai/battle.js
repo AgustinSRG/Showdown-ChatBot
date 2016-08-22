@@ -80,6 +80,10 @@ class Battle {
 		this.log('DEBUG: ' + txt);
 	}
 
+	evalBattle(txt) {
+		return eval(txt);
+	}
+
 	sendDecision(decision, retry) {
 		if (!decision || !decision.length) return;
 		this.debug("Send Decision: " + JSON.stringify(decision));
