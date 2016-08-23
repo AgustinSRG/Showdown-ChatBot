@@ -7,7 +7,14 @@
 
 const EventsManager = Tools.get('events.js');
 
+/**
+ * Represents an abuse monitor
+ */
 class AbuseMonitor {
+	/**
+	 * @param {Number} maxFlood - Max number of hits
+	 * @param {Number} intervalFlood - Interval of time
+	 */
 	constructor(maxFlood, intervalFlood) {
 		this.events = new EventsManager();
 		this.usage = {};
@@ -17,28 +24,50 @@ class AbuseMonitor {
 		this.intervalFlood = intervalFlood;
 	}
 
+	/**
+	 * @param {String} event
+	 * @param {function} handler
+	 */
 	on(event, handler) {
 		this.events.on(event, handler);
 	}
 
+	/**
+	 * @param {String} event
+	 * @param {function} handler
+	 */
 	removeListener(event, handler) {
 		this.events.removeListener(event, handler);
 	}
 
+	/**
+	 * @param {String} user
+	 * @returns {Boolean}
+	 */
 	isLocked(user) {
 		return !!this.locked[user];
 	}
 
+	/**
+	 * @param {String} user
+	 * @param {String} reason
+	 */
 	lock(user, reason) {
 		this.locked[user] = true;
 		this.events.emit('lock', user, reason);
 	}
 
+	/**
+	 * @param {String} user
+	 */
 	unlock(user) {
 		delete this.locked[user];
 		this.events.emit('unlock', user);
 	}
 
+	/**
+	 * @param {String} user
+	 */
 	count(user) {
 		let now = Date.now();
 		if (!this.times[user]) {

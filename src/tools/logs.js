@@ -8,18 +8,35 @@ const Path = require('path');
 const FileSystem = require('fs');
 const Util = require('util');
 
+/**
+ * Gets the month name
+ * @param {Number} n - Month number (1 - 12)
+ * @returns {String} Month name
+ */
 function getMonthString(n) {
 	let table = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
 		'August', 'September', 'October', 'November', 'December'];
 	return table[parseInt(n) - 1];
 }
 
+/**
+ * Adds "0" at left to complete a string
+ * @param {Number} num
+ * @param {Number} nz - Number of zeros
+ * @returns {String}
+ */
 function addLeftZero(num, nz) {
 	let str = num.toString();
 	while (str.length < nz) str = "0" + str;
 	return str;
 }
 
+/**
+ * Gets the difference between two dates
+ * @param {Object} date1 - Date(day, month, year)
+ * @param {Object} date2 - Date(day, month, year)
+ * @returns {Number} days
+ */
 function dateDifference(date1, date2) {
 	if (!date1 || !date1.day || !date1.month || !date1.year) return 0;
 	if (!date2 || !date2.day || !date2.month || !date2.year) return 0;
@@ -36,7 +53,15 @@ function dateDifference(date1, date2) {
 	return dif;
 }
 
+/**
+ * Represents a logger
+ */
 class Logger {
+	/**
+	 * @param {Path} path
+	 * @param {String} id
+	 * @param {Number} maxOld - In days
+	 */
 	constructor(path, id, maxOld) {
 		this.id = id || "log";
 		this.path = path;
@@ -45,6 +70,9 @@ class Logger {
 		this.maxOld = maxOld || 0;
 	}
 
+	/**
+	 * @returns {String} Current log filename
+	 */
 	getFile() {
 		let date = new Date();
 		return Util.format("%s_%s_%s_%s.log",
@@ -52,12 +80,18 @@ class Logger {
 			addLeftZero(date.getMonth() + 1, 2), addLeftZero(date.getDate(), 2));
 	}
 
+	/**
+	 * @returns {String} Current time prefix
+	 */
 	getTime() {
 		let date = new Date();
 		return Util.format("[%s:%s:%s]",
 			addLeftZero(date.getHours(), 2), addLeftZero(date.getMinutes(), 2), addLeftZero(date.getSeconds(), 2));
 	}
 
+	/**
+	 * @param {String} str
+	 */
 	write(str) {
 		let file = this.getFile();
 		if (file !== this.file) {
@@ -72,6 +106,9 @@ class Logger {
 		this.stream.write(str + "\n");
 	}
 
+	/**
+	 * @param {String} str
+	 */
 	log(str) {
 		this.write(this.getTime() + " " + str);
 	}
@@ -102,6 +139,9 @@ class Logger {
 		}
 	}
 
+	/**
+	 * @returns {Array<Object>} Log files list
+	 */
 	getFilesList() {
 		let list = [];
 		let dir = FileSystem.readdirSync(this.path);

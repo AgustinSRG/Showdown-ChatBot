@@ -7,6 +7,14 @@
 
 const Util = require('util');
 
+/**
+ * Generates a dynamic webpage for Showdown ChatBot
+ * @param {String} body
+ * @param {Object} loginData - Options: name {String}, group {String}, invalid {Boolean}
+ * @param {Array<Object>} menu - Menu Option: url {String}, name {String}, selected {Boolean}
+ * @param {Object} options - Options: styles {Array<String>}, scripts {Array<String>}, title {String}
+ * @returns {String} html source of the webpage
+ */
 exports.generate = function (body, loginData, menu, options) {
 	let buf = '';
 	if (!loginData) loginData = {};

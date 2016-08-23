@@ -7,7 +7,13 @@
 const FileSystem = require('fs');
 const EventsManager = require('./events.js');
 
+/**
+ * Represents a JSON database
+ */
 class JSONDataBase {
+	/**
+	 * @param {Path} file
+	 */
 	constructor(file) {
 		this.data = {};
 		this.file = file;
@@ -45,10 +51,18 @@ class JSONDataBase {
 		}.bind(this));
 	}
 
+	/**
+	 * @param {String} event
+	 * @param {function} handler
+	 */
 	on(event, handler) {
 		this.events.on(event, handler);
 	}
 
+	/**
+	 * @param {String} event
+	 * @param {function} handler
+	 */
 	removeListener(event, handler) {
 		this.events.removeListener(event, handler);
 	}
@@ -65,14 +79,23 @@ class JSONDataBase {
 		}
 	}
 
+	/**
+	 * @returns {Object} Database main object
+	 */
 	get() {
 		return this.data;
 	}
 
+	/**
+	 * @param {Object} data
+	 */
 	set(data) {
 		this.data = data;
 	}
 
+	/**
+	 * Deletes the database file
+	 */
 	destroy() {
 		if (FileSystem.existsSync(this.file)) {
 			try {

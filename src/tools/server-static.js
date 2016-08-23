@@ -7,6 +7,13 @@
 const Path = require('path');
 const FileSystem = require('fs');
 
+/**
+ * Generates standard html error pages
+ * @param {Number} errcode
+ * @param {String} title - Error Name
+ * @param {String} msg - Error description
+ * @returns {String} html
+ */
 function getErrHtml(errcode, title, msg) {
 	let html = "";
 	html += '<!DOCTYPE html>';
@@ -20,6 +27,12 @@ function getErrHtml(errcode, title, msg) {
 	return html;
 }
 
+/**
+ * Serves a static file
+ * @param {Path} file
+ * @param {ClientRequest} request
+ * @param {ServerResponse} response
+ */
 exports.serveFile = function (file, request, response) {
 	let ext = Path.extname(file);
 	let contentType = 'text/html; charset=utf-8';

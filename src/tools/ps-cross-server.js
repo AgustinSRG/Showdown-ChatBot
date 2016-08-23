@@ -7,6 +7,11 @@
 const Url = require('url');
 const Http = require('http');
 
+/**
+ * Gets the server, port and serverid of a pokemon showdown client
+ * @param {String} url
+ * @param {function(String, Number, String)} callback - Server, Port and ServerID
+ */
 exports.getShowdownServer = function (url, callback) {
 	if (url.indexOf('://') !== -1) {
 		url = Url.parse(url).host;

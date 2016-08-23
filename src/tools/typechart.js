@@ -1,3 +1,8 @@
+/**
+ * Pokemon Typechart
+ * Gen: 6
+ */
+
 'use strict';
 
 module.exports = {

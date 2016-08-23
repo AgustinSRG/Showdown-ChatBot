@@ -18,6 +18,11 @@ function normalize_init() {
 
 const normalObj = normalize_init();
 
+/**
+ * Normalizes a string
+ * @param {String} str
+ * @returns {String} Normalized string
+ */
 function normalize(str) {
 	if (!str) return '';
 	let res = '';

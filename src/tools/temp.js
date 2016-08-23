@@ -9,7 +9,14 @@ const FileSystem = require('fs');
 
 const Text = Tools.get('text.js');
 
+/**
+ * Represents a temporal files manager
+ */
 class TempManager {
+	/**
+	 * @param {Path} path
+	 * @param {Number} size
+	 */
 	constructor(path, size) {
 		this.path = path;
 		this.files = [];
@@ -28,6 +35,10 @@ class TempManager {
 		}
 	}
 
+	/**
+	 * @param {String} data
+	 * @returns {String} Temporal file key
+	 */
 	createTempFile(data) {
 		let toRemove = this.files.pop();
 		if (toRemove) {
@@ -54,6 +65,10 @@ class TempManager {
 		return key;
 	}
 
+	/**
+	 * @param {String} key
+	 * @returns {Path} Temporal file
+	 */
 	getTempFile(key) {
 		for (let i = 0; i < this.files.length; i++) {
 			if (this.files[i] && this.files[i].key === key) {

@@ -9,7 +9,14 @@ const FileSystem = require('fs');
 const Text = Tools.get('text.js');
 const DataBase = Tools.get('json-db.js');
 
+/**
+ * Represents a limited cache
+ * stored in RAM
+ */
 class BufferCache {
+	/**
+	 * @param {Number} length
+	 */
 	constructor(length) {
 		this.data = [];
 		this.length = length;
@@ -18,11 +25,19 @@ class BufferCache {
 		}
 	}
 
+	/**
+	 * @param {String} key
+	 * @param {Object|Number|String} value
+	 */
 	cache(key, value) {
 		this.data.pop();
 		this.data.unshift({key: key, value: value});
 	}
 
+	/**
+	 * @param {String} key
+	 * @returns {Boolean}
+	 */
 	has(key) {
 		for (let i = 0; i < this.length; i++) {
 			if (this.data[i] && this.data[i].key === key) return true;
@@ -30,6 +45,10 @@ class BufferCache {
 		return false;
 	}
 
+	/**
+	 * @param {String} key
+	 * @returns {Object|Number|String} Cached value, null if not exits
+	 */
 	get(key) {
 		for (let i = 0; i < this.length; i++) {
 			if (this.data[i] && this.data[i].key === key) {
@@ -40,7 +59,14 @@ class BufferCache {
 	}
 }
 
+/**
+ * Represents an unlimited cache
+ * stored in the hard disk
+ */
 class WebCache {
+	/**
+	 * @param {Path} path - Directory where the cached files are located
+	 */
 	constructor(path) {
 		this.path = path;
 		this.db = new DataBase(Path.resolve(path, 'cache.json'));
@@ -51,6 +77,9 @@ class WebCache {
 		this.db.write();
 	}
 
+	/**
+	 * @returns {String} Free cache key
+	 */
 	getFreeCache() {
 		let id, rep;
 		do {
@@ -66,6 +95,12 @@ class WebCache {
 		return id;
 	}
 
+	/**
+	 * @param {String} url
+	 * @param {String} data
+	 * @param {Number} expires
+	 * @param {Object} marks
+	 */
 	cache(url, data, expires, marks) {
 		let cacheFile = this.getFreeCache();
 		this.data[url] = {
@@ -83,10 +118,17 @@ class WebCache {
 		}.bind(this));
 	}
 
+	/**
+	 * @param {String} url
+	 */
 	has(url) {
 		return !!this.data[url];
 	}
 
+	/**
+	 * @param {String} url
+	 * @returns {String} Cached data
+	 */
 	get(url) {
 		if (this.data[url]) {
 			try {
@@ -104,6 +146,10 @@ class WebCache {
 		}
 	}
 
+	/**
+	 * @param {String} url
+	 * @returns {Object} Cache marks
+	 */
 	getMarks(url) {
 		if (this.data[url]) {
 			return this.data[url].marks;
@@ -124,6 +170,9 @@ class WebCache {
 		if (mod) this.write();
 	}
 
+	/**
+	 * @param {String} url
+	 */
 	uncache(url) {
 		if (this.data[url]) {
 			try {
@@ -133,6 +182,9 @@ class WebCache {
 		}
 	}
 
+	/**
+	 * @param {String} mark
+	 */
 	uncacheAll(mark) {
 		for (let url in this.data) {
 			if (this.data[url].marks && this.data[url].marks[mark]) {

@@ -4,46 +4,94 @@
 
 'use strict';
 
+/**
+ * Transforms string to ID
+ * @param {String} str
+ * @returns {String} id
+ */
 exports.toId = function (str) {
 	if (!str) return '';
 	return str.toLowerCase().replace(/[^a-z0-9]/g, '');
 };
 
+/**
+ * Transforms string to Room ID
+ * @param {String} str
+ * @returns {String} room id
+ */
 exports.toRoomid = function (str) {
 	if (!str) return '';
 	return str.replace(/[^a-zA-Z0-9-]+/g, '').toLowerCase();
 };
 
+/**
+ * Transforms string to Command ID
+ * @param {String} str
+ * @returns {String} command id
+ */
 exports.toCmdid = function (str) {
 	if (!str) return '';
 	return str.replace(/[^_a-zA-Z0-9-]+/g, '').toLowerCase();
 };
+
+/**
+ * Transforms string to Command Token ID
+ * @param {String} str
+ * @returns {String} command token id
+ */
 exports.toCmdTokenid = function (str) {
 	if (!str) return '';
 	return str.replace(/ /g, '').toLowerCase();
 };
 
+/**
+ * Removes lateral blank spaces
+ * @param {String} str
+ * @returns {String}
+ */
 exports.trim = function (str) {
 	if (!str) return '';
 	return str.trim();
 };
 
+/**
+ * Escapes HTML code
+ * @param {String} str
+ * @returns {String}
+ */
 exports.escapeHTML = function (str) {
 	if (!str) return '';
 	return ('' + str).escapeHTML();
 };
 
+/**
+ * Removes pokemon showdown command from a chat message
+ * @param {String} text
+ * @returns {String}
+ */
 exports.stripCommands = function (text) {
 	if (!text) return '';
 	return ((text.trim().charAt(0) === '/') ? '/' : ((text.trim().charAt(0) === '!') ? ' ' : '')) + text.trim();
 };
 
+/**
+ * Transforms string to  valid chat message
+ * @param {String} text
+ * @returns {String}
+ */
 exports.toChatMessage = function (text) {
 	if (!text) return '';
 	return (text.replace(/\n/, '').trim());
 };
 
-exports.levenshtein = function (s, t, l) { // s = string 1, t = string 2, l = limit
+/**
+ * Gets levenshtein distsance between two strings
+ * @param {String} s - String 1
+ * @param {String} t - String 2
+ * @param {Number} l - Limit
+ * @returns {Number} levenshtein distance
+ */
+exports.levenshtein = function (s, t, l) {
 	// Original levenshtein distance function by James Westgate, turned out to be the fastest
 	let d = []; // 2d matrix
 	// Step 1
@@ -79,6 +127,11 @@ exports.levenshtein = function (s, t, l) { // s = string 1, t = string 2, l = li
 	return d[n][m];
 };
 
+/**
+ * Gets a random ID
+ * @param {Number} length
+ * @returns {String} random ID
+ */
 exports.randomId = function (length) {
 	const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
 	let str = '';
@@ -88,6 +141,11 @@ exports.randomId = function (length) {
 	return str;
 };
 
+/**
+ * Gets a random token
+ * @param {Number} length
+ * @returns {String} random token
+ */
 exports.randomToken = function (length) {
 	const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_';
 	let str = '';
@@ -97,6 +155,11 @@ exports.randomToken = function (length) {
 	return str;
 };
 
+/**
+ * Parses Pokemon Showdown user idents
+ * @param {String} ident
+ * @returns {Object} parsed ident - (id, group, name, ident)
+ */
 exports.parseUserIdent = function (ident) {
 	return {
 		ident: ident,

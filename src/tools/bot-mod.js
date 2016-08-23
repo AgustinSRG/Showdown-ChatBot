@@ -6,7 +6,14 @@
 
 const Path = require('path');
 
+/**
+ * Represents a Bot Module
+ */
 class BotMod {
+	/**
+	 * @param {Path} path - Location of the module in the file system
+	 * @param {Object} config - Module Configuration
+	 */
 	constructor(path, config) {
 		this.enabled = true;
 		this.id = config.id;

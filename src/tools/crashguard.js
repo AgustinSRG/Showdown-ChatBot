@@ -1,10 +1,17 @@
 /**
- * Crash Guard
+ * CrashGuard
  */
 
 'use strict';
 
+/**
+ * Represents a crashguard system
+ * for current process
+ */
 class CrashGuard {
+	/**
+	 * @param {function(Error)} errFunc
+	 */
 	constructor(errFunc) {
 		this.func = function (err) {
 			errFunc(err);

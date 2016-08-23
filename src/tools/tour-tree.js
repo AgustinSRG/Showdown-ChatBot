@@ -4,6 +4,11 @@
 
 'use strict';
 
+/**
+ * Parses a tournament binary tree
+ * @param {Object} tree
+ * @returns {Map<String, Number>} Parsed results
+ */
 function parseTourTree(tree) {
 	let auxobj = {};
 	let team = tree.team;

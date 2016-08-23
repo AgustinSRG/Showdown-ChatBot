@@ -8,6 +8,13 @@ const Crypto = require('crypto');
 const FileSystem = require('fs');
 const EventsManager = require('./events.js');
 
+/**
+ * Encrypts a text
+ * @param {String} text
+ * @param {String} algorithm
+ * @param {String} password
+ * @returns {String} Encrypted text
+ */
 function encrypt(text, algorithm, password) {
 	let cipher = Crypto.createCipher(algorithm, password);
 	let crypted = cipher.update(text, 'utf8', 'hex');
@@ -15,6 +22,13 @@ function encrypt(text, algorithm, password) {
 	return crypted;
 }
 
+/**
+ * Decrypts a text
+ * @param {String} text - Encrypted text
+ * @param {String} algorithm
+ * @param {String} password
+ * @returns {String} Decrypted text
+ */
 function decrypt(text, algorithm, password) {
 	let decipher = Crypto.createDecipher(algorithm, password);
 	let data = decipher.update(text, 'hex', 'utf8');
@@ -22,7 +36,15 @@ function decrypt(text, algorithm, password) {
 	return data;
 }
 
+/**
+ * Represents an encrypted JSON database
+ */
 class JSONDataBase {
+	/**
+	 * @param {Path} file
+	 * @param {String} password
+	 * @param {String} algo
+	 */
 	constructor(file, password, algo) {
 		this.algo = algo || "aes-256-ctr";
 		this.password = password;
@@ -63,10 +85,18 @@ class JSONDataBase {
 		}.bind(this));
 	}
 
+	/**
+	 * @param {String} event
+	 * @param {function} handler
+	 */
 	on(event, handler) {
 		this.events.on(event, handler);
 	}
 
+	/**
+	 * @param {String} event
+	 * @param {function} handler
+	 */
 	removeListener(event, handler) {
 		this.events.removeListener(event, handler);
 	}
@@ -84,14 +114,23 @@ class JSONDataBase {
 		}
 	}
 
+	/**
+	 * @returns {Object} Database main object
+	 */
 	get() {
 		return this.data;
 	}
 
+	/**
+	 * @param {Object} data
+	 */
 	set(data) {
 		this.data = data;
 	}
 
+	/**
+	 * Deletes the database file
+	 */
 	destroy() {
 		if (FileSystem.existsSync(this.file)) {
 			try {

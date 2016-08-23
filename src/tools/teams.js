@@ -1,5 +1,5 @@
 /**
- * Teams Utils
+ * Pokemon Showdown Teams
  */
 
 'use strict';
@@ -36,8 +36,12 @@ const BattleStatNames = exports.BattleStatNames = {
 	spe: 'Spe',
 };
 
-/* Teams - Pokemon Showdown format */
 
+/**
+ * Transforms an exportable team to JSON format
+ * @param {String} text - Exportable team
+ * @returns {Object} - JSON team
+ */
 exports.teamToJSON = function (text) {
 	text = text.split("\n");
 	let team = [];
@@ -145,6 +149,11 @@ exports.teamToJSON = function (text) {
 	return team;
 };
 
+/**
+ * Transforms a JSON team to packed format
+ * @param {Object} team - JSON team
+ * @returns {String} - Packed team
+ */
 exports.packTeam = function (team) {
 	let buf = '';
 	if (!team) return '';
@@ -235,6 +244,11 @@ exports.packTeam = function (team) {
 	return buf;
 };
 
+/**
+ * Transforms a packed team to JSON format
+ * @param {String} buf - Packed team
+ * @returns {Object} - JSON team
+ */
 const fastUnpackTeam = exports.fastUnpackTeam = function (buf) {
 	if (!buf) return [];
 
@@ -336,6 +350,11 @@ const fastUnpackTeam = exports.fastUnpackTeam = function (buf) {
 	return team;
 };
 
+/**
+ * Gets team overview (pokemon names)
+ * @param {String} buf - Packed team
+ * @returns {String} List of pokemon
+ */
 exports.teamOverview = function (buf) {
 	let team = fastUnpackTeam(buf);
 	if (!team) return '(empty)';
@@ -347,6 +366,11 @@ exports.teamOverview = function (buf) {
 	return pokes.join(', ');
 };
 
+/**
+ * Transforms a JSON team to exportable format
+ * @param {Object} team - JSON team
+ * @returns {String} - Exportable team
+ */
 exports.exportTeam = function (team) {
 	if (!team) return "";
 	if (typeof team === 'string') {
@@ -456,6 +480,11 @@ exports.exportTeam = function (team) {
 	return text;
 };
 
+/**
+ * Gets a pokemon template
+ * @param {String} name
+ * @returns {Object} - Pokemon
+ */
 exports.getTemplate = function (name) {
 	name = Text.toId(name || '');
 	try {
@@ -464,6 +493,11 @@ exports.getTemplate = function (name) {
 	return {};
 };
 
+/**
+ * Gets an item template
+ * @param {String} name
+ * @returns {Object} - Item
+ */
 exports.getItem = function (name) {
 	name = Text.toId(name || '');
 	try {
@@ -472,6 +506,11 @@ exports.getItem = function (name) {
 	return {};
 };
 
+/**
+ * Gets an ability template
+ * @param {String} name
+ * @returns {Object} - Ability
+ */
 exports.getAbility = function (name) {
 	name = Text.toId(name || '');
 	try {
@@ -480,6 +519,11 @@ exports.getAbility = function (name) {
 	return {};
 };
 
+/**
+ * Gets a move template
+ * @param {String} name
+ * @returns {Object} - Move
+ */
 exports.getMove = function (name) {
 	name = Text.toId(name || '');
 	try {

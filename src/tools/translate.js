@@ -7,7 +7,13 @@
 const Text = Tools.get('text.js');
 const FileSystem = require('fs');
 
+/**
+ * Represents a basic translator
+ */
 class Translator {
+	/**
+	 * @param {Path} file - Translations file
+	 */
 	constructor(file) {
 		this.data = {};
 		let str = FileSystem.readFileSync(file).toString();
@@ -37,6 +43,11 @@ class Translator {
 		}
 	}
 
+	/**
+	 * @param {String|Number} key
+	 * @param {String} lang
+	 * @returns {String} Translated key
+	 */
 	get(key, lang) {
 		if (typeof key !== 'string') key = '' + key;
 		if (lang && this.data[lang] && typeof this.data[lang][key] === 'string') {
