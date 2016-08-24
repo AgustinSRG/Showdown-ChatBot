@@ -209,8 +209,13 @@ class Bot {
 		}
 		this.nextSend = 0;
 		this.rooms = {};
-		this.users = {};
 		this.status.onDisconnect();
+	}
+
+	clearUserData() {
+		for (let user in this.users) {
+			delete this.users[user];
+		}
 	}
 
 	/* Events */

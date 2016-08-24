@@ -35,11 +35,13 @@ App.server.setHandler('tools', (context, parts) => {
 	html += ' | ';
 	html += '<a class="submenu-option' + (opt in {'seen': 1} ? '-selected' : '') + '" href="/tools/seen/">Seen</a>';
 	html += ' | ';
+	html += '<a class="submenu-option' + (opt in {'clearusers': 1} ? '-selected' : '') + '" href="/tools/clearusers/">Clear&nbsp;User-Data</a>';
+	html += ' | ';
 	html += '<a class="submenu-option' + (opt in {'hotpatch': 1} ? '-selected' : '') + '" href="/tools/hotpatch/">Hotpatch</a>';
 	html += ' | ';
-	html += '<a class="submenu-option' + (opt in {'ddata': 1} ? '-selected' : '') + '" href="/tools/ddata/">Reload Data</a>';
+	html += '<a class="submenu-option' + (opt in {'ddata': 1} ? '-selected' : '') + '" href="/tools/ddata/">Reload&nbsp;Data</a>';
 	html += ' | ';
-	html += '<a class="submenu-option' + (opt in {'cache': 1} ? '-selected' : '') + '" href="/tools/cache/">Clear Cache</a>';
+	html += '<a class="submenu-option' + (opt in {'cache': 1} ? '-selected' : '') + '" href="/tools/cache/">Clear&nbsp;Cache</a>';
 	html += ' | ';
 	html += '<a class="submenu-option' + (opt in {'eval': 1} ? '-selected' : '') + '" href="/tools/eval/">Eval&nbsp;(JavaScript)</a>';
 	html += '</div>';
@@ -56,6 +58,9 @@ App.server.setHandler('tools', (context, parts) => {
 		break;
 	case 'seen':
 		toolSeen(context, html, parts);
+		break;
+	case 'clearusers':
+		toolClearUsers(context, html, parts);
 		break;
 	case 'hotpatch':
 		toolHotpatch(context, html, parts);
@@ -325,6 +330,30 @@ function toolClearCache(context, html, parts) {
 		'Use this option if you want to remove the data from the web cache.</p>';
 	html += '<form method="post" action="">';
 	html += '<p><input type="submit" name="clearcache" value="Clear Web Cache" /></p>';
+	html += '</form>';
+
+	if (error) {
+		html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
+	} else if (ok) {
+		html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
+	}
+
+	context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
+}
+
+function toolClearUsers(context, html, parts) {
+	let ok = null, error = null;
+	if (context.post.clearusers) {
+		App.bot.clearUserData();
+		App.logServerAction(context.user.id, 'Clear User-Data');
+		ok = "User-Data cleared sucessfully.";
+	}
+
+	html += '<h2>Clear User-Data</h2>';
+	html += '<p>Clears temporal data stored about pokemon showdown users. ' +
+		'This includes name, last seen date, last action and alts.</p>';
+	html += '<form method="post" action="">';
+	html += '<p><input type="submit" name="clearusers" value="Clear User-Data" /></p>';
 	html += '</form>';
 
 	if (error) {
