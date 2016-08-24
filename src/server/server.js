@@ -17,9 +17,10 @@ const QueryString = require('querystring');
 
 const Static = Tools.get('server-static.js');
 const DataBase = Tools.get('crypto-json.js');
-const PageMaker = Tools.get('html-maker.js');
 const AbuseMonitor = Tools.get('abuse-monitor.js');
 const Text = Tools.get('text.js');
+
+const PageMaker = require(Path.resolve(__dirname, 'html-maker.js'));
 
 class Server {
 	/**
