@@ -1,0 +1,10 @@
+{
+  "id": "joinphrases",
+  "name": "Join-Phrases",
+  "version": "1.0",
+  "main": "main.js",
+  "commands": [
+    "commands.js"
+  ],
+  "description": "Phrases to be sent when an user joins a room"
+}
