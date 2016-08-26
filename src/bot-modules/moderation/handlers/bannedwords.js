@@ -130,6 +130,9 @@ function roomHandler(context, room, html) {
 
 		if (!error) {
 			delete config.bannedWords[room][word];
+			if (Object.keys(config.bannedWords[room]).length === 0) {
+				delete config.bannedWords[room];
+			}
 			App.modules.moderation.system.db.write();
 			App.logServerAction(context.user.id, "Delete Banword. Room: " + room + " | Word: " + word);
 			ok = "Removed Banword: " + Text.escapeHTML(word);
