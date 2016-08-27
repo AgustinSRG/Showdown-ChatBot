@@ -11,7 +11,7 @@ const Config = App.config.modules.tourcmd;
 
 /* Permissions */
 
-App.server.setPermission('tourcmd', 'Permission for changin the tour command configuration');
+App.server.setPermission('tourcmd', 'Permission for changing the tour command configuration');
 
 /* Menu Options */
 
