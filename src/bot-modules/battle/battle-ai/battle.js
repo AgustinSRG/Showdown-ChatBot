@@ -92,7 +92,22 @@ class Battle {
 			switch (decision[i].type) {
 			case "team":
 				let team = [];
-				for (let j = 0; j < decision[i].team.length; j++) team.push(decision[i].team[j] + 1);
+				for (let j = 0; j < decision[i].team.length; j++) {
+					team.push(decision[i].team[j] + 1);
+				}
+				let first = team[0] || 1;
+				for (let j = first - 1; j > 0; j--) {
+					if (team.indexOf(j) === -1) {
+						team.push(j);
+					}
+				}
+				if (this.request && this.request.side && this.request.side.pokemon) {
+					for (let j = 1; j <= this.request.side.pokemon.length; j++) {
+						if (team.indexOf(j) === -1) {
+							team.push(j);
+						}
+					}
+				}
 				str += "team " + team.join("");
 				break;
 			case "move":
