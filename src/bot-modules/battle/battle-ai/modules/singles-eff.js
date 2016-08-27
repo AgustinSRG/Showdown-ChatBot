@@ -549,6 +549,11 @@ let getViableDamageMoves = exports.getViableDamageMoves = function (battle, deci
 				res.immune.push(decisions[i]);
 				continue;
 			}
+		} else if (move.id === "futuresight") {
+			if (battle.self.active[0].volatiles && battle.self.active[0].volatiles['futuresight']) {
+				res.immune.push(decisions[i]);
+				continue;
+			}
 		}
 		res.total++;
 		if (pc >= 100) {

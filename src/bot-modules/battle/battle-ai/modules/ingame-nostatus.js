@@ -31,10 +31,10 @@ exports.id = "ingame-nostatus";
 /*
  * Bad moves for 1v1
  */
-const BadMoves = ['focuspunch', 'explosion', 'selfdestruct', 'lastresort', 'dreameater', 'snore'];
+const BadMoves = ['focuspunch', 'explosion', 'selfdestruct', 'lastresort', 'futuresight'];
 
 /*
- * Moves which require 2 turs without any protection
+ * Moves which require 2 turns without any protection
  */
 const DoubleTurnMoves = ['solarbeam'];
 

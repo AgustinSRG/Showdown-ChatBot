@@ -391,6 +391,12 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		bp = (Math.floor(25 * statsB.spe / statsA.spe) || 1);
 		if (bp > 150) bp = 150;
 		break;
+	case "snore":
+		if (pokeA.status !== 'slp') bp = 0;
+		break;
+	case "dreameater":
+		if (pokeB.status !== 'slp') bp = 0;
+		break;
 	}
 
 	if (!bp) {
