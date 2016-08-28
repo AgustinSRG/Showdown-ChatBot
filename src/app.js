@@ -14,8 +14,6 @@ const JSONDataBase = Tools.get('json-db.js');
 const Logger = Tools.get('logs.js');
 const BotMod = Tools.get('bot-mod.js');
 
-const ShowdownBot = require(Path.resolve(__dirname, 'lib/showdown.js')).Bot;
-
 const Server = require(Path.resolve(__dirname, 'server/server.js')).Server;
 const DataManager = require(Path.resolve(__dirname, 'data.js'));
 const CommandParser = require(Path.resolve(__dirname, 'command-parser.js')).CommandParser;
@@ -110,6 +108,19 @@ class ChatBotApp {
 		}
 
 		/* Create the bot */
+		let ShowdownBot = null;
+		if (this.config.websocketLibrary === 'sockjs') {
+			try {
+				require('sockjs-client');
+			} catch (e) {
+				console.log('Installing dependencies... (sockjs-client)');
+				require('child_process').spawnSync('sh', ['-c', 'npm install sockjs-client'], {stdio: 'inherit'});
+			}
+			ShowdownBot = require(Path.resolve(__dirname, 'lib/showdown-sockjs.js')).Bot;
+		} else {
+			ShowdownBot = require(Path.resolve(__dirname, 'lib/showdown.js')).Bot;
+		}
+
 		this.bot = new ShowdownBot(this.config.bot.server,
 			this.config.bot.port,
 			{loginServer: this.config.bot.loginserv,

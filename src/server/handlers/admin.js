@@ -80,6 +80,11 @@ App.server.setHandler('admin', (context, parts) => {
 			App.config.apptitle = context.post.apptitle || "";
 			App.config.debug = !!context.post.debugmode;
 			App.config.useproxy = !!context.post.useproxy;
+			if (context.post.wslib === 'sockjs') {
+				App.config.websocketLibrary = 'sockjs';
+			} else {
+				App.config.websocketLibrary = 'websocket';
+			}
 			App.db.write();
 			ok = "Changes made successfuly.";
 			App.logServerAction(context.user.id, 'Administration options were editted');
@@ -108,6 +113,10 @@ App.server.setHandler('admin', (context, parts) => {
 		(App.config.server.url || "") + '" /></td></tr>';
 	html += '<tr><td><strong>Application Title</strong>: </td><td><input type="text" name="apptitle" value="' +
 		(App.config.apptitle || 'Showdown ChatBot') + '" /></td></tr>';
+	html += '<tr><td><strong>Websocket Library</strong>: </td><td><select name="wslib">';
+	html += '<option value="websocket"' + (App.config.websocketLibrary !== 'sockjs' ? 'selected="selected"' : '') + '>Websocket</option>';
+	html += '<option value="sockjs"' + (App.config.websocketLibrary === 'sockjs' ? 'selected="selected"' : '') + '>SockJS</option>';
+	html += '</select></td></tr>';
 	html += '</table>';
 	html += '<p><label><input type="checkbox" name="debugmode" value="true" ' +
 		(App.config.debug ? 'checked="checked"' : '') + ' /></label>&nbsp;Enable debug mode.</p>';

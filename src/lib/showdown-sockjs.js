@@ -22,11 +22,10 @@ const Text = Tools.get('text.js');
 const Events = Tools.get('events.js');
 const Util = require('util');
 const Url = require('url');
-const WebSocketClient = require('websocket').client;
+const SockJS = require('sockjs-client');
 const Https = require('https');
 
 const Default_Login_Server = "play.pokemonshowdown.com";
-const Max_Idle_Interval = 2 * 60 * 1000;
 const Message_Sent_Delay = 2000;
 const Default_Retry_Delay = 10 * 1000;
 const Max_Lines = 3;
@@ -54,7 +53,7 @@ class Bot {
 
 		this.errOptions = errOptions || null;
 
-		this.connection = null;
+		this.socket = null;
 		this.connecting = false;
 		this.closed = false;
 		this.status = new BotStatus();
@@ -67,25 +66,7 @@ class Bot {
 		this.sending = {};
 		this.nextSend = 0;
 
-		this.connectionCheckTimer = null;
 		this.connectionRetryTimer = null;
-
-		let webSocket = this.webSocket = new WebSocketClient();
-		webSocket.on('connectFailed', function (err) {
-			webSocket.abort();
-			this.connecting = false;
-			this.status.onDisconnect();
-			this.events.emit('connectFailed', err);
-		}.bind(this));
-
-		webSocket.on('connect', function (connection) {
-			this.connecting = false;
-			this.connection = connection;
-			this.status.onConnection();
-			this.prepareConnection();
-			this.startConnectionMonitor();
-			this.events.emit('connect', connection);
-		}.bind(this));
 
 		if (errOptions) {
 			this.on('connectFailed', function () {
@@ -138,11 +119,7 @@ class Bot {
 	 * @returns {String} The websocket url to connect
 	 */
 	getConnectionUrl() {
-		return Util.format("ws://%s:%d/showdown/%d/%s/websocket",
-			this.server,
-			this.port,
-			~~(Math.random() * 900) + 100,
-			Text.randomId(8));
+		return Util.format("http://%s:%d/showdown/", this.server, this.port);
 	}
 
 	/**
@@ -166,31 +143,6 @@ class Bot {
 		};
 	}
 
-	prepareConnection() {
-		let connection = this.connection;
-		connection.on('error', function (err) {
-			this.connecting = false;
-			this.connection = null;
-			this.reset();
-			this.events.emit('disconnect', err);
-		}.bind(this));
-
-		connection.on('close', function () {
-			this.connecting = false;
-			this.connection = null;
-			this.reset();
-			this.events.emit('disconnect');
-		}.bind(this));
-
-		connection.on('message', function (message) {
-			if (message.type === 'utf8') {
-				this.lastMessage = Date.now();
-				this.events.emit('message', message.utf8Data);
-				this.receive(message.utf8Data);
-			}
-		}.bind(this));
-	}
-
 	reset() {
 		if (this.connectionRetryTimer) {
 			clearTimeout(this.connectionRetryTimer);
@@ -199,10 +151,6 @@ class Bot {
 		if (this.loginRetryTimer) {
 			clearTimeout(this.loginRetryTimer);
 			this.loginRetryTimer = null;
-		}
-		if (this.connectionCheckTimer) {
-			clearInterval(this.connectionCheckTimer);
-			this.connectionCheckTimer = null;
 		}
 		for (let k in this.sending) {
 			this.sending[k].kill();
@@ -240,12 +188,41 @@ class Bot {
 	/* Connection */
 
 	connect() {
-		if (this.status.connected || this.connecting) return;
-		this.connecting = true;
+		if (this.status.connected || this.socket) return;
 		this.closed = false;
 		this.reset();
+		this.socket = new SockJS(this.getConnectionUrl());
+		this.socket.onerror = function () {
+			this.connecting = false;
+			this.reset();
+			if (this.socket) {
+				this.socket.close();
+				this.socket = null;
+			}
+			this.events.emit('disconnect');
+		}.bind(this);
+		this.socket.onopen = function () {
+			this.connecting = false;
+			this.status.onConnection();
+			this.events.emit('connect', this.socket);
+		}.bind(this);
+		this.socket.onclose = function (e) {
+			if (!this.closed) this.socket = null;
+			this.connecting = false;
+			this.reset();
+			this.events.emit('disconnect', {code: e.code, message: e.reason});
+		}.bind(this);
+		this.socket.onmessage = function (e) {
+			let data = e.data;
+			if (typeof data !== "string") {
+				data = JSON.stringify(data);
+			}
+			this.lastMessage = Date.now();
+			this.events.emit('message', data);
+			this.receive(data);
+		}.bind(this);
+		this.connecting = true;
 		this.events.emit('connecting');
-		this.webSocket.connect(this.getConnectionUrl(), []);
 	}
 
 	/**
@@ -269,28 +246,15 @@ class Bot {
 
 	disconnect() {
 		this.closed = true;
-		this.reset();
-		if (this.connection) {
-			this.connection.close();
-			this.connection = null;
-		}
-		this.webSocket.abort();
 		this.connecting = false;
-	}
-
-	startConnectionMonitor() {
-		if (this.connectionCheckTimer) return;
-		if (!this.errOptions) return;
-		let l = this.errOptions.ckeckInterval || Max_Idle_Interval;
-		this.connectionCheckTimer = setInterval(function () {
-			if (this.status.connected && this.lastMessage) {
-				let time = Date.now();
-				if (time - this.lastMessage > l) {
-					this.events.emit('timeout');
-					this.reconnect();
-				}
-			}
-		}.bind(this), l);
+		this.reset();
+		if (this.socket) {
+			this.socket.onclose = function (e) {
+				this.events.emit('disconnect', {code: e.code, message: e.reason});
+			}.bind(this);
+			this.socket.close();
+			this.socket = null;
+		}
 	}
 
 	/* Login */
@@ -384,6 +348,7 @@ class Bot {
 		} else {
 			this.getRename(nick, pass, function (token) {
 				if (token) {
+					console.log('Token: ' + token);
 					this.sendToGlobal('/trn ' + nick + ',0,' + token);
 				}
 			}.bind(this));
@@ -420,11 +385,11 @@ class Bot {
 	 * @returns {SendManager}
 	 */
 	send(data) {
-		if (!this.connection) return null;
+		if (!this.socket) return null;
 		let id = this.getSendId();
 		let manager = new SendManager(data, Max_Lines,
 			function (msg) {
-				this.connection.send(msg);
+				this.socket.send(msg);
 				this.events.emit('send', msg);
 			}.bind(this),
 
@@ -524,23 +489,7 @@ class Bot {
 	 * @param {String} msg
 	 */
 	receive(msg) {
-		let type = msg.charAt(0);
-		let data;
-		if (type === 'a') {
-			try {
-				data = JSON.parse(msg.substr(1));
-			} catch (err) {
-				this.events.emit('error', err);
-				return;
-			}
-			if (data instanceof Array) {
-				for (let i = 0; i < data.length; i++) {
-					this.receiveMsg(data[i]);
-				}
-			} else {
-				this.receiveMsg(data);
-			}
-		}
+		this.receiveMsg(msg);
 	}
 
 	/**
@@ -985,8 +934,10 @@ class SendManager {
 				return;
 			}
 			let toSend = data.splice(0, this.msgMaxLines);
-			toSend = JSON.stringify(toSend);
-			this.sendFunc(toSend);
+			for (let i = 1; i < toSend.length; i++) {
+				toSend[i] = toSend[i].split('|').slice(1).join('|');
+			}
+			this.sendFunc(toSend.join('\n'));
 		};
 		this.interval = setInterval(nextToSend.bind(this), Message_Sent_Delay);
 		nextToSend.call(this);
@@ -995,7 +946,7 @@ class SendManager {
 	finalize() {
 		this.status = 'finalized';
 		if (typeof this.callback === "function") this.callback(this.err);
-		if (typeof this.destroyHandler === "function") this.destroyHandler();
+		if (typeof this.destroyHandler === "function") this.destroyHandler(this);
 	}
 
 	/**
