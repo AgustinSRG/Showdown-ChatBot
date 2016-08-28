@@ -187,3 +187,13 @@ Timers Module
 | ----- | ----------  | --- | --- |
 `starttimer <minutes>, <seconds>` | Starts a timeout | timer | **A**
 `stoptimer` | Stops the timeout | timer | **A**
+
+Join-Phrases Module
+------------
+
+| Usage | Description | Permission | |
+| ----- | ----------  | --- | --- |
+`joinphrase get, <user>` | Gets the join-phrase of an user | joinphrases | **I**
+`listjoinphrases` | Gets the list of join-phrase for the current room | joinphrases | **I**
+`joinphrase set, <user>, <phrase>` | Sets a join-phrase | joinphrases | **C**
+`joinphrase delete, <user>` | Removes a join-phrase | joinphrases | **C**
