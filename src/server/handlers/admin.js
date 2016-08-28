@@ -80,6 +80,7 @@ App.server.setHandler('admin', (context, parts) => {
 			App.config.apptitle = context.post.apptitle || "";
 			App.config.debug = !!context.post.debugmode;
 			App.config.useproxy = !!context.post.useproxy;
+			App.config.blockautodownload = !!context.post.blockautodownload;
 			if (context.post.wslib === 'sockjs') {
 				App.config.websocketLibrary = 'sockjs';
 			} else {
@@ -122,6 +123,8 @@ App.server.setHandler('admin', (context, parts) => {
 		(App.config.debug ? 'checked="checked"' : '') + ' /></label>&nbsp;Enable debug mode.</p>';
 	html += '<p><label><input type="checkbox" name="useproxy" value="true" ' +
 		(App.config.useproxy ? 'checked="checked"' : '') + ' /></label>&nbsp;Check this option if you are using a proxy for your application.</p>';
+	html += '<p><label><input type="checkbox" name="blockautodownload" value="true" ' +
+		(App.config.blockautodownload ? 'checked="checked"' : '') + ' /></label>&nbsp;Block automated data downloads.</p>';
 	html += '<p><input type="submit" name="savechanges" value="Save Changes" /></p>';
 	html += '</form>';
 

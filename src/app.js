@@ -144,6 +144,7 @@ class ChatBotApp {
 
 		/* Data manager bot events */
 		this.bot.on('formats', function () {
+			if (this.config.blockautodownload) return;
 			this.data.downloadAll();
 		}.bind(this));
 
