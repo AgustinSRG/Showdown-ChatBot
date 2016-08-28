@@ -162,6 +162,9 @@ class ChatBotApp {
 			console.log('Could not connect to the server' + (err ? (" | " + err.code + ": " + err.message) : ''));
 		}.bind(this));
 		this.bot.on('disconnect', function (err) {
+			if (this.config.autoremoveuserdata) {
+				this.bot.clearUserData();
+			}
 			this.log('Bot Disconnected' + (err ? (" | " + err.code + ": " + err.message) : ''));
 			console.log('Bot Disconnected' + (err ? (" | " + err.code + ": " + err.message) : ''));
 		}.bind(this));
