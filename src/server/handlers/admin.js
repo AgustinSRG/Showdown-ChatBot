@@ -103,6 +103,18 @@ App.server.setHandler('admin', (context, parts) => {
 	html += '<h2>Administration Options</h2>';
 	html += '<p>Note: Changes here requires a restart to be effective.</p>';
 
+	html += '<input type="hidden" name="uptime" id="uptime" value="' + Math.floor(process.uptime() * 1000) + '" />';
+	html += '<p><span id="show-uptime">&nbsp;</span></p>';
+
+	html += '<script type="text/javascript">var n = Date.now(); function updateUptime() {var d = Date.now();var times = [];' +
+		'var time = parseInt(document.getElementById("uptime").value) + (d - n);time = Math.round(time / 1000);' +
+		'var aux = time % 60; if (aux > 0 || time === 0) {times.unshift(aux + " " + (aux === 1 ? "second" : "seconds"));}' +
+		'time = Math.floor(time / 60);aux = time % 60;if (aux > 0) {times.unshift(aux + " " + (aux === 1 ? "minute" : "minutes"));}' +
+		'time = Math.floor(time / 60);aux = time % 24;if (aux > 0) {times.unshift(aux + " " + (aux === 1 ? "hour" : "hours"));}' +
+		'time = Math.floor(time / 24);if (time > 0) {times.unshift(time + " " + (time === 1 ? "day" : "days"));}' +
+		'document.getElementById("show-uptime").innerHTML = "<strong>Uptime</strong>: <i>" + times.join(", ") + "</i>";}' +
+		'setInterval(updateUptime, 1000);updateUptime();</script>';
+
 	html += '<form method="post" action="">';
 	html += '<table border="0">';
 	html += '<tr><td><strong>Http Port</strong>: </td><td><input type="text" name="port" value="' +
