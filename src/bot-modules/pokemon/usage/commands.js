@@ -119,13 +119,13 @@ module.exports = {
 				App.log("Could not fetch aliases. Cmd: " + this.cmd + " " + this.arg + " | Room: " + this.room + " | By: " + this.by);
 			}
 			if (!isNaN(parseInt(poke))) searchIndex = parseInt(poke);
-			if (args.length < 1) return this.errorReply(this.usage({desc: 'pokemon'}, {desc: 'tier', optional: true}));
 			if (args[1]) {
 				tier = parseAliases(args[1]);
 				if (!App.bot.formats[tier] && !App.bot.formats[tier + "suspecttest"]) {
 					return this.errorReply(translator.get('tiererr1', this.lang) + ' "' + tier + '" ' + translator.get('tiererr2', this.lang));
 				}
 			}
+			if (!poke || !tier) return this.errorReply(this.usage({desc: 'pokemon'}, {desc: 'tier', optional: true}));
 			if (Rank_Exceptions[tier]) ladderType = Rank_Exceptions[tier];
 			let url = link + tier + "-" + ladderType + ".txt";
 			if (markDownload(url)) {

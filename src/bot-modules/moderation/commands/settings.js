@@ -44,7 +44,7 @@ module.exports = {
 		let room = this.targetRoom;
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
 		let rank = this.arg.toLowerCase().trim();
-		if (!rank) return this.errorReply(this.usage({desc: 'rank'}));
+		if (!rank) return this.errorReply(this.usage({desc: this.usageTrans('rank')}));
 		let groups = ['user', 'excepted'].concat(App.config.parser.groups);
 		if (groups.indexOf(rank) >= 0) {
 			let config = App.modules.moderation.system.data;

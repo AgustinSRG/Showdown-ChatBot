@@ -32,7 +32,10 @@ module.exports = {
 		case 'set':
 			user = Text.toId(this.args[1]);
 			let phrase = Text.trim(this.args.slice(2).join(','));
-			if (!user || !phrase) return this.errorReply(this.usage({desc: 'get'}, {desc: 'user'}, {desc: 'phrase'}));
+			if (!user || !phrase) {
+				return this.errorReply(this.usage({desc: 'get'}, {desc: this.usageTrans('user')},
+					{desc: translator.get('phrase', this.lang)}));
+			}
 			if (user.length > 19) return this.errorReply(translator.get('inv', this.lang));
 			if (!config.rooms[room]) config.rooms[room] = {};
 			config.rooms[room][user] = phrase;
@@ -43,7 +46,7 @@ module.exports = {
 		case 'remove':
 		case 'delete':
 			user = Text.toId(this.args[1]);
-			if (!user) return this.errorReply(this.usage({desc: 'get'}, {desc: 'user'}));
+			if (!user) return this.errorReply(this.usage({desc: 'get'}, {desc: this.usageTrans('user')}));
 			if (config.rooms[room] && config.rooms[room][user]) {
 				delete config.rooms[room][user];
 				if (Object.keys(config.rooms[room]).length === 0) {
@@ -58,7 +61,7 @@ module.exports = {
 			break;
 		case 'get':
 			user = Text.toId(this.args[1]);
-			if (!user) return this.errorReply(this.usage({desc: 'get'}, {desc: 'user'}));
+			if (!user) return this.errorReply(this.usage({desc: 'get'}, {desc: this.usageTrans('user')}));
 			if (config.rooms[room] && config.rooms[room][user]) {
 				this.reply(Text.stripCommands(config.rooms[room][user]));
 			} else {

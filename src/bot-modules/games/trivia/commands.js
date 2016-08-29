@@ -16,8 +16,8 @@ module.exports = {
 	trivia: function () {
 		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		if (!this.arg) {
-			return this.errorReply(this.usage({desc: 'games'}, {desc: 'max points', optional: true},
-				{desc: 'seconds to answer', optional: true}));
+			return this.errorReply(this.usage({desc: translator.get('games', this.lang)},
+				{desc: translator.get('maxpoints', this.lang), optional: true}, {desc: translator.get('anstime', this.lang), optional: true}));
 		}
 		let args = this.args;
 		if (this.getRoomType(this.room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
@@ -34,8 +34,8 @@ module.exports = {
 			return this.errorReply(translator.get(0, this.lang));
 		}
 		if (games < 0 || points < 0) {
-			return this.errorReply(this.usage({desc: 'games'}, {desc: 'max points', optional: true},
-				{desc: 'seconds to answer', optional: true}));
+			return this.errorReply(this.usage({desc: translator.get('games', this.lang)},
+				{desc: translator.get('maxpoints', this.lang), optional: true}, {desc: translator.get('anstime', this.lang), optional: true}));
 		}
 		if (App.modules.games.system.templates.trivia.isDataEmpty()) {
 			return this.errorReply(translator.get(2, this.lang));

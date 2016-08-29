@@ -15,6 +15,9 @@ $5 = is no longer banned in room
 $6 = There are not banned words in room
 $7 = This feature is not available
 
+$word = word
+$punishment = punishment
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
@@ -29,3 +32,6 @@ $5 = ha dejado de estar prohibida en la sala
 
 $6 = No hay ninguna frase prohibida en la sala
 $7 = Funcionalidad no disponible
+
+$word = palabra
+$punishment = castigo

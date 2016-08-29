@@ -23,7 +23,7 @@ module.exports = {
 	joinrooms: 'joinroom',
 	joinroom: function () {
 		if (!this.can('joinroom', this.room)) return this.replyAccessDenied('joinroom');
-		if (!this.arg) return this.errorReply(this.usage({desc: 'room'}, {desc: '...', optional: true}));
+		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: '...', optional: true}));
 		let rooms = [];
 		for (let i = 0; i < this.args.length; i++) {
 			let roomid = Text.toRoomid(this.args[i]);
@@ -41,7 +41,7 @@ module.exports = {
 	leaverooms: 'leaveroom',
 	leaveroom: function () {
 		if (!this.can('joinroom', this.room)) return this.replyAccessDenied('joinroom');
-		if (!this.arg) return this.errorReply(this.usage({desc: 'room'}, {desc: '...', optional: true}));
+		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: '...', optional: true}));
 		let rooms = [];
 		for (let i = 0; i < this.args.length; i++) {
 			let roomid = Text.toRoomid(this.args[i]);
@@ -59,17 +59,21 @@ module.exports = {
 
 	custom: function () {
 		if (!this.can('send', this.room)) return this.replyAccessDenied('send');
-		if (!this.arg) return this.errorReply(this.usage({desc: 'message'}));
+		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('message')}));
 		this.send(this.arg, this.targetRoom);
 		App.logCommandAction(this);
 	},
 
 	send: function () {
 		if (!this.can('send', this.room)) return this.replyAccessDenied('send');
-		if (this.args.length !== 2) return this.errorReply(this.usage({desc: 'room'}, {desc: 'message'}));
+		if (this.args.length !== 2) {
+			return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: this.usageTrans('message')}));
+		}
 		let room = Text.toRoomid(this.args[0]);
 		let msg = this.args[1].trim();
-		if (!msg) return this.errorReply(this.usage({desc: 'room'}, {desc: 'message'}));
+		if (!msg) {
+			return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: this.usageTrans('message')}));
+		}
 		this.send(msg, room);
 		App.logCommandAction(this);
 	},
@@ -77,17 +81,17 @@ module.exports = {
 	pm: 'sendpm',
 	sendpm: function () {
 		if (!this.can('send', this.room)) return this.replyAccessDenied('send');
-		if (this.args.length !== 2) return this.errorReply(this.usage({desc: 'user'}, {desc: 'message'}));
+		if (this.args.length !== 2) return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: this.usageTrans('message')}));
 		let user = Text.toId(this.args[0]);
 		let msg = this.args[1].trim();
-		if (!user || !msg) return this.errorReply(this.usage({desc: 'room'}, {desc: 'message'}));
+		if (!user || !msg) return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: this.usageTrans('message')}));
 		this.sendPM(user, msg);
 		App.logCommandAction(this);
 	},
 
 	say: function () {
 		if (!this.can('say', this.room)) return this.replyAccessDenied('say');
-		if (!this.arg) return this.errorReply(this.usage({desc: 'message'}));
+		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('message')}));
 		this.reply(Text.stripCommands(this.arg));
 	},
 

@@ -33,8 +33,9 @@ module.exports = {
 		let strictMode = Text.toId(this.args[3]) || 'std';
 		let nicks = Text.toId(this.args[4]) || 'std';
 		if (!word || !(type in {'banned': 1, 'inap': 1, 'insult': 1}) || !(strictMode in {'std': 1, 'strict': 1}) || !(nicks in {'std': 1, 'ignorenicks': 1})) {
-			return this.errorReply(this.usage({desc: 'word'}, {desc: 'banned/inap/insult', optional: true},
-				{desc: 'punishment', optional: true}, {desc: 'std/strict', optional: true}, {desc: 'std/ignorenicks', optional: true}));
+			return this.errorReply(this.usage({desc: translator.get('word', this.lang)}, {desc: 'banned/inap/insult', optional: true},
+				{desc: translator.get('punishment', this.lang), optional: true}, {desc: 'std/strict', optional: true},
+				{desc: 'std/ignorenicks', optional: true}));
 		}
 		if (config.punishments.indexOf(punishment) === -1) {
 			return this.errorReply(translator.get(0, this.lang) + ": " + config.punishments.join(', '));
@@ -69,7 +70,7 @@ module.exports = {
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
 		const config = App.modules.moderation.system.data;
 		let word = this.args[0].toLowerCase().trim();
-		if (!word) return this.errorReply(this.usage({desc: 'word'}));
+		if (!word) return this.errorReply(this.usage({desc: translator.get('word', this.lang)}));
 		if (!config.bannedWords[room] || !config.bannedWords[room][word]) {
 			return this.errorReply(translator.get(1, this.lang) + " \"" + word + "\" " + translator.get(4, this.lang) + " <<" + room + ">>");
 		}

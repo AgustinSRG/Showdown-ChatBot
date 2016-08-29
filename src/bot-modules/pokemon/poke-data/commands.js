@@ -19,7 +19,7 @@ App.parser.addPermission('pokemon', {group: 'voice'});
 module.exports = {
 	gen: function () {
 		let id = Text.toId(this.arg);
-		if (!id) return this.errorReply(this.usage({desc: 'pokemon/item/ability/move'}));
+		if (!id) return this.errorReply(this.usage({desc: translator.get(17, this.lang)}));
 		let gen;
 		try {
 			let aliases = App.data.getAliases();

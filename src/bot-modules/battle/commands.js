@@ -32,7 +32,8 @@ module.exports = {
 		let format = parseAliases(this.args[1]);
 		let teamId = Text.toId(this.args[2]);
 		if (!user || !format) {
-			return this.errorReply(this.usage({desc: 'user'}, {desc: 'format'}, {desc: 'team', optional: true}));
+			return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: translator.get('format', this.lang)},
+				{desc: translator.get('team', this.lang), optional: true}));
 		}
 		if (!App.bot.formats[format] || !App.bot.formats[format].chall) {
 			return this.errorReply(translator.get(0, this.lang) + ' __' + format + '__ ' + translator.get(1, this.lang));

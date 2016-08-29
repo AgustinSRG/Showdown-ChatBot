@@ -27,7 +27,7 @@ module.exports = {
 		let time = (minutes * 60) + seconds;
 		time = time * 1000;
 		if (isNaN(time) || time <= 0) {
-			return this.errorReply(this.usage({desc: 'minutes'}, {desc: 'seconds'}));
+			return this.errorReply(this.usage({desc: translator.get(6, this.lang)}, {desc: translator.get(7, this.lang)}));
 		}
 		if (time < Min_Timer) {
 			return this.errorReply(translator.get(1, this.lang));

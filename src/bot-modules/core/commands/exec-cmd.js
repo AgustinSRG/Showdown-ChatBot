@@ -17,7 +17,7 @@ const translator = new Translator(Path.resolve(__dirname, 'exec-cmd.translations
 
 module.exports = {
 	"exec": function () {
-		if (!this.arg) return this.errorReply(this.usage({desc: 'command'}));
+		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
 		let spl = this.arg.split(' ');
 		this.cmd = Text.toCmdid(spl.shift());
 		this.arg = spl.join(' ');
@@ -30,7 +30,7 @@ module.exports = {
 	},
 
 	"wall": function () {
-		if (!this.arg) return this.errorReply(this.usage({desc: 'command'}));
+		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
 		let spl = this.arg.split(' ');
 		this.cmd = Text.toCmdid(spl.shift());
 		this.arg = spl.join(' ');
@@ -44,7 +44,7 @@ module.exports = {
 	},
 
 	"execdyn": function () {
-		if (!this.arg) return this.errorReply(this.usage({desc: 'command'}));
+		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
 		let spl = this.arg.split(' ');
 		this.cmd = Text.toCmdid(spl.shift());
 		this.arg = spl.join(' ');

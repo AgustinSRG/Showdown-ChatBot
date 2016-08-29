@@ -18,6 +18,7 @@ const AbuseMonitor = Tools.get('abuse-monitor.js');
 const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'command-parser.translations'));
+const usageTranslator = new Translator(Path.resolve(__dirname, 'command-usage.translations'));
 
 class CommandParser {
 	/**
@@ -687,6 +688,10 @@ class CommandContext {
 		}
 		txt += "__";
 		return txt;
+	}
+
+	usageTrans(key) {
+		return usageTranslator.get(key, this.lang);
 	}
 
 	getRoomType(room) {

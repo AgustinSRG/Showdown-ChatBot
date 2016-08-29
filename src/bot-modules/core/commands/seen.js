@@ -18,7 +18,7 @@ module.exports = {
 	seen: function () {
 		let targetUser = Text.toId(this.arg);
 		if (!targetUser) {
-			this.pmReply(this.usage({desc: 'userid'}));
+			this.pmReply(this.usage({desc: this.usageTrans('user')}));
 		} else if (targetUser.length > 19) {
 			this.pmReply(translator.get('inv', this.lang));
 		} else if (targetUser === this.byIdent.id) {
@@ -78,7 +78,7 @@ module.exports = {
 	alts: function () {
 		let targetUser = Text.toId(this.arg);
 		if (!targetUser) {
-			this.pmReply(this.usage({desc: 'userid'}));
+			this.pmReply(this.usage({desc: this.usageTrans('user')}));
 		} else if (targetUser.length > 19) {
 			this.pmReply(translator.get('inv', this.lang));
 		} else if (App.bot.users[targetUser]) {

@@ -27,6 +27,8 @@ $14 = Recovery moves for
 $15 = No hazards moves found for pokemon
 $16 = Hazards moves for
 
+$17 = pokemon / item / ability / move
+
 %spanish
 
 $error = Se ha producido un error, inténtalo de nuevo más tarde
@@ -53,3 +55,5 @@ $14 = Movimientos de recuperación de
 
 $15 = No se han encontrado movimientos de hazards para el pokemon
 $16 = Movimientos de hazards de
+
+$17 = pokemon / objeto / habilidad / mivimiento

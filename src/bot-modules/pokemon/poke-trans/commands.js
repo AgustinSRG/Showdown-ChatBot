@@ -21,8 +21,8 @@ const Available_Languages = ['english', 'spanish'];
 module.exports = {
 	translate: function () {
 		if (!this.arg) {
-			return this.errorReply(this.usage({desc: 'pokemon/item/ability/move/nature'},
-				{desc: 'origin language', optional: true}, {desc: 'target language', optional: true}));
+			return this.errorReply(this.usage({desc: translator.get(6, this.lang)},
+				{desc: translator.get(7, this.lang), optional: true}, {desc: translator.get(8, this.lang), optional: true}));
 		}
 		let args = this.args;
 		let word = args[0].trim();
@@ -30,8 +30,8 @@ module.exports = {
 		let to = Text.toId(args[2] || 'english');
 		let bidirectional = true;
 		if (!word || !from || !to || from === to) {
-			return this.errorReply(this.usage({desc: 'pokemon/item/ability/move/nature'},
-				{desc: 'origin language', optional: true}, {desc: 'target language', optional: true}));
+			return this.errorReply(this.usage({desc: translator.get(6, this.lang)},
+				{desc: translator.get(7, this.lang), optional: true}, {desc: translator.get(8, this.lang), optional: true}));
 		}
 
 		if (Available_Languages.indexOf(from) === -1) {

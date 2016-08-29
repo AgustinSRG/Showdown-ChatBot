@@ -12,6 +12,8 @@ $6 = Joke added to the database
 $7 = Joke already exists
 $8 = Joke removed from the database
 $9 = Joke not found
+$10 = quote
+$11 = joke
 
 %spanish
 
@@ -25,3 +27,5 @@ $6 = Chiste agregado a la base de datos
 $7 = El chiste ya existía
 $8 = Chiste eliminado de la base de datos
 $9 = Chiste no encontrado
+$10 = cita
+$11 = chiste

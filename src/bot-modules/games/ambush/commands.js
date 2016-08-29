@@ -21,7 +21,7 @@ module.exports = {
 			maxPlayers = 0;
 		}
 		if (isNaN(maxPlayers) || (maxPlayers < 2 && maxPlayers !== 0)) {
-			return this.errorReply(this.usage({desc: 'max players', optional: true}));
+			return this.errorReply(this.usage({desc: translator.get('maxplayers', this.lang), optional: true}));
 		}
 		let ambush = new Ambush(this.room, maxPlayers);
 		if (!App.modules.games.system.createGame(this.room, ambush, trigger)) {

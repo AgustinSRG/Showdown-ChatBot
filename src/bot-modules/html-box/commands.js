@@ -31,7 +31,7 @@ module.exports = {
 		let spl = this.arg.split(' ');
 		let cmd = Text.toCmdid(spl[0]);
 		let content = null;
-		if (!cmd) return this.errorReply(this.usage({desc: 'cmd'}));
+		if (!cmd) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
 		if (Mod.data.commands[cmd]) {
 			content = Mod.data.commands[cmd];
 		} else if (Mod.data.aliases[cmd] && Mod.data.commands[Mod.data.aliases[cmd]]) {

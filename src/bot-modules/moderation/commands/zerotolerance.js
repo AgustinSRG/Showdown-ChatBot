@@ -28,11 +28,11 @@ module.exports = {
 		let room = this.targetRoom;
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
 		const config = App.modules.moderation.system.data;
-		if (!this.arg) return this.errorReply(this.usage({desc: 'user'}, {desc: 'min/low/normal/high/max', optional: true}));
+		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: 'min/low/normal/high/max', optional: true}));
 		let user = Text.toId(this.args[0]);
 		let level = Text.toId(this.args[1]) || 'normal';
 		if (!user || !(level in {'min': 1, 'low': 1, 'normal': 1, 'high': 1, 'max': 1})) {
-			return this.errorReply(this.usage({desc: 'user'}, {desc: 'min/low/normal/high/max', optional: true}));
+			return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: 'min/low/normal/high/max', optional: true}));
 		}
 		if (user.length > 19) {
 			return this.errorReply(translator.get(0, this.lang));
@@ -53,7 +53,7 @@ module.exports = {
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
 		const config = App.modules.moderation.system.data;
 		let user = Text.toId(this.args[0]);
-		if (!user) return this.errorReply(this.usage({desc: 'user'}));
+		if (!user) return this.errorReply(this.usage({desc: this.usageTrans('user')}));
 		if (!config.zeroTolerance[room] || !config.zeroTolerance[room][user]) {
 			return this.errorReply(translator.get(1, this.lang) + " __" + user + "__ " + translator.get(5, this.lang) + " <<" + room + ">>");
 		}
@@ -107,7 +107,7 @@ module.exports = {
 	checkzerotolerance: function () {
 		let room = Text.toRoomid(this.args[0]);
 		let user = Text.toId(this.args[1]) || this.byIdent.id;
-		if (!user || !room) return this.errorReply(this.usage({desc: 'room'}, {desc: 'user', optional: true}));
+		if (!user || !room) return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: this.usageTrans('user'), optional: true}));
 		if (!App.bot.rooms[room] || this.getRoomType(room) !== 'chat') {
 			return this.errorReply(translator.get(10, this.lang) + " __" + room + "__ " + translator.get(11, this.lang));
 		}

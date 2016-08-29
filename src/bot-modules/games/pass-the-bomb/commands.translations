@@ -7,9 +7,13 @@ $nochat = This command is only available for chat rooms
 $0 = Invalid answer time
 $1 = There is already a game in this room
 
+$maxplayers = max players
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
 
 $0 = Tiempo de respuesta no válido
 $1 = Ya hay un juego activo en esta sala
+
+$maxplayers = jugadores máximos

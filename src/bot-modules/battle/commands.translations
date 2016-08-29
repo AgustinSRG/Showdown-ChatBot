@@ -15,6 +15,9 @@ $8 = to cancel the challenge
 
 $9 = No challenges found
 
+$format = format
+$team = team
+
 %spanish
 
 $0 = El formato
@@ -29,3 +32,6 @@ $7 = Usa
 $8 = para cancelar el reto
 
 $9 = No se han encontrado retos
+
+$format = formato
+$team = equipo

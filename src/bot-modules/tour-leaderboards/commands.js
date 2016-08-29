@@ -30,7 +30,7 @@ module.exports = {
 		let user = Text.toId(this.args[0]) || this.byIdent.id;
 		let room = Text.toRoomid(this.args[1]) || this.room;
 		if (!user || !room) {
-			return this.errorReply(this.usage({desc: 'user', optional: true}, {desc: 'room', optional: true}));
+			return this.errorReply(this.usage({desc: this.usageTrans('user'), optional: true}, {desc: this.usageTrans('room'), optional: true}));
 		}
 		if (!Config[room]) {
 			return this.errorReply(translator.get(0, this.lang) + " __" + room + "__");
@@ -53,7 +53,7 @@ module.exports = {
 		let mod = App.modules.tourleaderboards.system;
 		let room = Text.toRoomid(this.arg) || this.room;
 		if (!room) {
-			return this.errorReply(this.usage({desc: 'room'}));
+			return this.errorReply(this.usage({desc: this.usageTrans('room')}));
 		}
 		if (!Config[room]) {
 			return this.errorReply(translator.get(0, this.lang) + " __" + room + "__");
@@ -76,7 +76,7 @@ module.exports = {
 		}
 		let room = Text.toRoomid(this.arg) || this.room;
 		if (!room) {
-			return this.errorReply(this.usage({desc: 'room'}));
+			return this.errorReply(this.usage({desc: this.usageTrans('room')}));
 		}
 		if (!Config[room]) {
 			return this.errorReply(translator.get(0, this.lang) + " __" + room + "__");

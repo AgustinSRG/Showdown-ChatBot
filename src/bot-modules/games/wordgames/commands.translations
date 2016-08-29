@@ -8,6 +8,11 @@ $0 = Invalid answer time
 $1 = There is already a game in this room
 $2 = Words database is empty
 
+$games = games
+$maxpoints = max points
+$anstime = seconds to answer
+$maxfails = max fails
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
@@ -15,3 +20,8 @@ $nochat = Este comando solo está disponible para las salas de chat
 $0 = Tiempo de respuesta no válido
 $1 = Ya hay un juego activo en esta sala
 $2 = La base de datos de palabras está vacía
+
+$games = rondas
+$maxpoints = puntos máximos
+$anstime = segundos para responder
+$maxfails = fallos máximos

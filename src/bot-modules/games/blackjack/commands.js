@@ -25,7 +25,8 @@ module.exports = {
 			return this.errorReply(translator.get(0, this.lang));
 		}
 		if (isNaN(maxPlayers) || (maxPlayers < 1 && maxPlayers !== 0)) {
-			return this.errorReply(this.usage({desc: 'max players', optional: true}, {desc: 'turn time (seconds)', optional: true}));
+			return this.errorReply(this.usage({desc: translator.get('maxplayers', this.lang), optional: true},
+				{desc: translator.get('turntime', this.lang), optional: true}));
 		}
 		let blackjack = new Blackjack(this.room, maxPlayers, turnTime * 1000);
 		if (!App.modules.games.system.createGame(this.room, blackjack, trigger)) {

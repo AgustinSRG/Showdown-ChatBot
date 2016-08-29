@@ -28,7 +28,7 @@ module.exports = {
 		if (!room || this.getRoomType(room) !== 'chat') {
 			return this.errorReply(translator.get('nochat', this.lang));
 		}
-		if (!this.arg) return this.errorReply(this.usage({desc: 'user'}, {desc: '...', optional: true}));
+		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: '...', optional: true}));
 		let added = [];
 		for (let i = 0; i < this.args.length; i++) {
 			let user = Text.toId(this.args[i]);
@@ -57,7 +57,7 @@ module.exports = {
 		if (!room || this.getRoomType(room) !== 'chat') {
 			return this.errorReply(translator.get('nochat', this.lang));
 		}
-		if (!this.arg) return this.errorReply(this.usage({desc: 'user'}, {desc: '...', optional: true}));
+		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: '...', optional: true}));
 		let removed = [];
 		for (let i = 0; i < this.args.length; i++) {
 			let user = Text.toId(this.args[i]);

@@ -9,6 +9,8 @@ $2 = Time cannot be higher than 2 hours
 $3 = There is already a timer in this room
 $4 = There is not a timer running in this room
 $5 = The timer was stopped
+$6 = minutes
+$7 = seconds
 
 %spanish
 
@@ -19,3 +21,5 @@ $2 = El tiempo no puede ser superior a 2 horas
 $3 = Ya hay un timer en esta sala
 $4 = No había ningún timer activo en esta sala
 $5 = El timer se ha detenido
+$6 = minutos
+$7 = segundos

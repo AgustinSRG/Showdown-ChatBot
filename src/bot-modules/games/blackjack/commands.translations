@@ -7,9 +7,15 @@ $nochat = This command is only available for chat rooms
 $0 = Invalid turn time
 $1 = There is already a game in this room
 
+$maxplayers = max players
+$turntime = turn time (seconds)
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
 
 $0 = Tiempo de turno no válido
 $1 = Ya hay un juego activo en esta sala
+
+$turntime = tiempo por turno (segundos)
+$maxplayers = jugadores máximos

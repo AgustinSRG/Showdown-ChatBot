@@ -1,0 +1,21 @@
+# Command Parser translations
+
+%english
+
+$user = user
+$room = room
+$command = command
+$subcmd = sub-command
+$text = text
+$rank = rank
+$message = message
+
+%spanish
+
+$user = usuario
+$room = sala
+$command = comando
+$subcmd = sub-comando
+$text = texto
+$rank = rango
+$message = mensaje
