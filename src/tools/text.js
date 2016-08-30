@@ -61,7 +61,7 @@ exports.trim = function (str) {
  */
 exports.escapeHTML = function (str) {
 	if (!str) return '';
-	return ('' + str).escapeHTML();
+	return ('' + str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;').replace(/\//g, '&#x2f;');
 };
 
 /**
