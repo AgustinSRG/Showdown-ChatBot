@@ -56,13 +56,21 @@ let randomPoke = exports.randomPoke = function () {
 			clue = 'Gen 6';
 			break;
 		}
-		if (chosen.num < 0) clue = 'CAP';
-		else if (chosen.num <= 151) clue = 'Gen 1';
-			else if (chosen.num <= 251) clue = 'Gen 2';
-			else if (chosen.num <= 386) clue = 'Gen 3';
-			else if (chosen.num <= 493) clue = 'Gen 4';
-			else if (chosen.num <= 649) clue = 'Gen 5';
-			else clue = 'Gen 6';
+		if (chosen.num < 0) {
+			clue = 'CAP';
+		} else if (chosen.num <= 151) {
+			clue = 'Gen 1';
+		} else if (chosen.num <= 251) {
+			clue = 'Gen 2';
+		} else if (chosen.num <= 386) {
+			clue = 'Gen 3';
+		} else if (chosen.num <= 493) {
+			clue = 'Gen 4';
+		} else if (chosen.num <= 649) {
+			clue = 'Gen 5';
+		} else {
+			clue = 'Gen 6';
+		}
 		break;
 	case 'tier':
 		clue = 'Tier ' + FormatData[pokeId].tier;

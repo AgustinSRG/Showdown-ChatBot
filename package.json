@@ -29,7 +29,7 @@
   "private": true,
   "license": "MIT",
   "devDependencies": {
-    "eslint": "2.12.0"
+    "eslint": "3.4.0"
   },
   "optionalDependencies": {
     "pem": "1.8.3",

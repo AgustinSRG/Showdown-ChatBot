@@ -252,9 +252,9 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	case "weatherball":
 		if (gconditions.weather === "primordialsea" || gconditions.weather === "raindance") moveType = "Water";
 		else if (gconditions.weather === "desolateland" || gconditions.weather === "sunnyday") moveType = "Fire";
-			else if (gconditions.weather === "sandstorm") moveType = "Rock";
-			else if (gconditions.weather === "hail") moveType = "Ice";
-			else moveType = "Normal";
+		else if (gconditions.weather === "sandstorm") moveType = "Rock";
+		else if (gconditions.weather === "hail") moveType = "Ice";
+		else moveType = "Normal";
 		break;
 	}
 
