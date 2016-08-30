@@ -7,8 +7,6 @@
 const Path = require('path');
 const Text = Tools.get('text.js');
 
-const GitHubHook = require('githubhook');
-
 if (!App.config.modules.github) {
 	App.config.modules.github = {
 		room: '',
@@ -91,6 +89,13 @@ function prepareWebHook(webhook) {
 exports.createWebHook = function (callback) {
 	if (exports.running) return;
 	let config = App.config.modules.github;
+	try {
+		require('githubhook');
+	} catch (err) {
+		console.log('Installing dependencies... (githubhook)');
+		require('child_process').spawnSync('sh', ['-c', 'npm install githubhook'], {stdio: 'inherit'});
+	}
+	const GitHubHook = require('githubhook');
 	exports.webhook = new GitHubHook({port: config.port, secret: config.secret});
 	exports.running = true;
 	prepareWebHook(exports.webhook);
