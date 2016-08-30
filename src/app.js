@@ -67,6 +67,11 @@ class ChatBotApp {
 			};
 		}
 
+		/* Module load configuration */
+		if (!this.config.loadmodules) {
+			this.config.loadmodules = {};
+		}
+
 		if (process.env['PORT']) {
 			this.config.server.port = process.env['PORT'];
 		} else if (process.env['OPENSHIFT_NODEJS_PORT']) {
@@ -213,10 +218,22 @@ class ChatBotApp {
 				if (FileSystem.existsSync(absFile) && FileSystem.statSync(absFile).isFile()) {
 					try {
 						let conf = require(absFile);
-						let mod = new BotMod(Path.resolve(path, file), conf);
-						this.modules[mod.id] = mod;
-						this.parser.addCommands(mod.commands);
-						console.log('NEW MODULE: ' + mod.name + ' (v' + mod.version + ')');
+						if (conf.id && this.config.loadmodules[conf.id] !== false) {
+							let mod = new BotMod(Path.resolve(path, file), conf);
+							this.modules[mod.id] = mod;
+							this.parser.addCommands(mod.commands);
+							console.log('NEW MODULE: ' + mod.name + ' (v' + mod.version + ')');
+						} else if (!this.modules[conf.id]) {
+							this.modules[conf.id] = {
+								id: conf.id,
+								name: conf.name,
+								description: conf.description,
+								version: conf.version,
+								commands: {},
+								system: null,
+								enabled: false,
+							};
+						}
 					} catch (err) {
 						console.log('Error: Cannot load module "' + file + '" - ' + err.message);
 					}
