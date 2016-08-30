@@ -4,6 +4,8 @@
 
 'use strict';
 
+const Chat = Tools.get('chat.js');
+
 exports.anagrams = {
 	g: "guess",
 	guess: function (game) {
@@ -11,8 +13,8 @@ exports.anagrams = {
 	},
 
 	show: function (game) {
-		this.restrictReply("**Poke-Anagrams:** " + game.system.randomizedChars.join(', ') +
-			' | **' + game.system.clue + '**', 'games');
+		this.restrictReply(Chat.bold("Poke-Anagrams:") + " " + game.system.randomizedChars.join(', ') +
+			' | ' + Chat.bold(game.system.clue), 'games');
 	},
 
 	end: "endanagrams",
@@ -30,10 +32,10 @@ exports.hangman = {
 
 	show: function (game) {
 		let txt = '';
-		txt += '**Poke-Hangman:** ';
+		txt += Chat.bold('Poke-Hangman:') + ' ';
 		txt += game.system.generateHangman();
 		txt += ' | ';
-		txt += '**' + game.system.clue + '** | ';
+		txt += Chat.bold(game.system.clue) + ' | ';
 		txt += game.system.said.sort().join(' ');
 		this.restrictReply(txt, 'games');
 	},

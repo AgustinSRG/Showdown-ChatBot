@@ -7,6 +7,7 @@
 const Path = require('path');
 const Translator = Tools.get('translate.js');
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
@@ -38,7 +39,7 @@ module.exports = {
 			}
 		}
 		if (added.length > 0) {
-			this.reply(translator.get(0, this.lang) + " <<" + room + ">>: __" + added.join(', ') + "__");
+			this.reply(translator.get(0, this.lang) + " " + Chat.italics(room) + ": " + added.join(', '));
 			App.modules.blacklist.system.db.write();
 			App.logCommandAction(this);
 			let cmds = App.modules.blacklist.system.getInitCmds();
@@ -66,7 +67,7 @@ module.exports = {
 			}
 		}
 		if (removed.length > 0) {
-			this.reply(translator.get(2, this.lang) + " <<" + room + ">>: __" + removed.join(', ') + "__");
+			this.reply(translator.get(2, this.lang) + " " + Chat.italics(room) + ": " + removed.join(', '));
 			App.modules.blacklist.system.db.write();
 			App.logCommandAction(this);
 		} else {
@@ -87,7 +88,7 @@ module.exports = {
 		}
 		let bl = App.modules.blacklist.system.data[room];
 		if (!bl || Object.keys(bl).length === 0) {
-			return this.pmReply(translator.get(5, this.lang) + " <<" + room + ">>");
+			return this.pmReply(translator.get(5, this.lang) + " " + Chat.italics(room));
 		}
 		let html = '';
 		html += '<html>';

@@ -5,6 +5,7 @@
 'use strict';
 
 const Path = require('path');
+const Chat = Tools.get('chat.js');
 const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'timers.translations'));
@@ -26,7 +27,8 @@ class Timer {
 			this.timer2 = setTimeout(this.midAnnounce.bind(this), halfTime);
 		}
 		this.timer1 = setTimeout(this.end.bind(this), time);
-		App.bot.sendTo(this.room, "**Timer:** " + translator.get(0, this.lang) + ' ' + this.getDiff() + ' ' + translator.get(1, this.lang));
+		App.bot.sendTo(this.room, Chat.bold("Timer:") + " " + translator.get(0, this.lang) + ' ' +
+			this.getDiff() + ' ' + translator.get(1, this.lang));
 	}
 
 	getDiff() {
@@ -50,12 +52,13 @@ class Timer {
 
 	midAnnounce() {
 		this.timer2 = null;
-		App.bot.sendTo(this.room, "**Timer:** " + translator.get(0, this.lang) + ' ' + this.getDiff() + ' ' + translator.get(1, this.lang));
+		App.bot.sendTo(this.room, Chat.bold("Timer:") + " " + translator.get(0, this.lang) + ' ' +
+			this.getDiff() + ' ' + translator.get(1, this.lang));
 	}
 
 	end() {
 		this.timer1 = null;
-		App.bot.sendTo(this.room, translator.get(2, this.lang));
+		App.bot.sendTo(this.room, Chat.bold(translator.get(2, this.lang)));
 		exports.stopTimer(this.room);
 	}
 

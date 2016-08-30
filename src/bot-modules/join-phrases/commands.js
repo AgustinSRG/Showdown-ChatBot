@@ -7,6 +7,7 @@
 const Path = require('path');
 const Translator = Tools.get('translate.js');
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
@@ -41,7 +42,7 @@ module.exports = {
 			config.rooms[room][user] = phrase;
 			App.modules.joinphrases.system.db.write();
 			App.logCommandAction(this);
-			this.reply(translator.get(0, this.lang) + ' __' + user + '__ ' + translator.get(1, this.lang) + ' __' + room + '__');
+			this.reply(translator.get(0, this.lang) + ' ' + Chat.italics(user) + ' ' + translator.get(1, this.lang) + ' ' + Chat.italics(room));
 			break;
 		case 'remove':
 		case 'delete':
@@ -54,9 +55,10 @@ module.exports = {
 				}
 				App.modules.joinphrases.system.db.write();
 				App.logCommandAction(this);
-				this.reply(translator.get(2, this.lang) + '__' + user + '__ ' + translator.get(1, this.lang) + ' __' + room + '__');
+				this.reply(translator.get(2, this.lang) + '' + Chat.italics(user) + ' ' + translator.get(1, this.lang) + ' ' + Chat.italics(room));
 			} else {
-				this.errorReply(translator.get(3, this.lang) + ' __' + user + '__ ' + translator.get(1, this.lang) + ' __' + room + '__');
+				this.errorReply(translator.get(3, this.lang) + ' ' + Chat.italics(user) + ' ' +
+					translator.get(1, this.lang) + ' ' + Chat.italics(room));
 			}
 			break;
 		case 'get':
@@ -65,7 +67,8 @@ module.exports = {
 			if (config.rooms[room] && config.rooms[room][user]) {
 				this.reply(Text.stripCommands(config.rooms[room][user]));
 			} else {
-				this.errorReply(translator.get(3, this.lang) + ' __' + user + '__ ' + translator.get(1, this.lang) + ' __' + room + '__');
+				this.errorReply(translator.get(3, this.lang) + ' ' + Chat.italics(user) + ' ' +
+					translator.get(1, this.lang) + ' ' + Chat.italics(room));
 			}
 			break;
 		default:
@@ -83,7 +86,7 @@ module.exports = {
 		let room = this.targetRoom;
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
 		if (!config.rooms[room]) {
-			return this.errorReply(translator.get(4, this.lang) + " __" + room + "__");
+			return this.errorReply(translator.get(4, this.lang) + " " + Chat.italics(room));
 		}
 		let html = '';
 		html += '<html>';

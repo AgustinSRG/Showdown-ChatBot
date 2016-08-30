@@ -10,6 +10,7 @@
 const Path = require('path');
 
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'seen.translations'));
@@ -43,8 +44,8 @@ module.exports = {
 			time = Math.floor(time / 24); // Days
 			if (time > 0) times.unshift(time + ' ' + (time === 1 ? translator.get(8, this.lang) : translator.get(9, this.lang)));
 			/* Reply */
-			let reply = translator.get(15, this.lang) + ' **' + name.trim() + '** ' +
-				translator.get('seen', this.lang) + ' __' + times.join(', ') + '__ ';
+			let reply = translator.get(15, this.lang) + ' ' + Chat.bold(name) + ' ' +
+				translator.get('seen', this.lang) + ' ' + Chat.italics(times.join(', ')) + ' ';
 			let ago = translator.get('ago', this.lang);
 			if (ago) reply += ago + ' ';
 			switch (seen.type) {
@@ -58,7 +59,7 @@ module.exports = {
 				reply += translator.get(12, this.lang) + ' ';
 				break;
 			case 'R':
-				reply += translator.get(13, this.lang) + ' **' + seen.detail + '**';
+				reply += translator.get(13, this.lang) + ' ' + Chat.bold(seen.detail);
 				break;
 			}
 			if (seen.type in {'J': 1, 'L': 1, 'C': 1}) {
@@ -66,12 +67,12 @@ module.exports = {
 				if (privates.indexOf(seen.room) >= 0) {
 					reply += translator.get(14, this.lang) + '.'; // Private Room
 				} else {
-					reply += '<<' + seen.room + '>>'; // Public Room
+					reply += Chat.room(seen.room); // Public Room
 				}
 			}
 			this.pmReply(reply);
 		} else {
-			this.pmReply(translator.get(15, this.lang) + ' __' + targetUser + '__ ' + translator.get(16, this.lang));
+			this.pmReply(translator.get(15, this.lang) + ' ' + Chat.italics(targetUser) + ' ' + translator.get(16, this.lang));
 		}
 	},
 
@@ -84,16 +85,16 @@ module.exports = {
 		} else if (App.bot.users[targetUser]) {
 			let alts = App.bot.users[targetUser].alts;
 			if (alts.length > 10) {
-				this.pmReply(translator.get(17, this.lang) + ' **' +
-					App.bot.users[targetUser].name + '**: __' + alts.splice(0, 10).join(', ').trim() + '__');
+				this.pmReply(translator.get(17, this.lang) + ' ' +
+					Chat.bold(App.bot.users[targetUser].name) + ': ' + alts.splice(0, 10).join(', ').trim() + '');
 			} else if (alts.length > 0) {
-				this.pmReply(translator.get(17, this.lang) + ' **' +
-					App.bot.users[targetUser].name + '**: __' + alts.join(', ').trim() + '__');
+				this.pmReply(translator.get(17, this.lang) + ' ' +
+					Chat.bold(App.bot.users[targetUser].name) + ': ' + alts.join(', ').trim() + '');
 			} else {
-				this.pmReply(translator.get(18, this.lang) + ' __' + targetUser + '__');
+				this.pmReply(translator.get(18, this.lang) + ' ' + Chat.italics(targetUser) + '');
 			}
 		} else {
-			this.pmReply(translator.get(18, this.lang) + ' __' + targetUser + '__');
+			this.pmReply(translator.get(18, this.lang) + ' ' + Chat.italics(targetUser) + '');
 		}
 	},
 };

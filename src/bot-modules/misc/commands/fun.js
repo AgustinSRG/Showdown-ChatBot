@@ -9,6 +9,7 @@ const Crypto = require('crypto');
 
 const Translator = Tools.get('translate.js');
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'fun.translations'));
 
@@ -26,7 +27,7 @@ module.exports = {
 			}
 		}
 		if (opts.length < 2) return this.errorReply(this.usage({desc: 'opt1'}, {desc: 'opt2'}, {desc: '...', optional: true}));
-		this.restrictReply('**' + translator.get('pick', this.lang) + ':** ' + opts[Math.floor(Math.random() * opts.length)], 'random');
+		this.restrictReply(Chat.bold(translator.get('pick', this.lang) + ':') + ' ' + opts[Math.floor(Math.random() * opts.length)], 'random');
 	},
 
 	rpoke: 'poke',

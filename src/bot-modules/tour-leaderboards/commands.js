@@ -7,6 +7,7 @@
 const Path = require('path');
 const Translator = Tools.get('translate.js');
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
@@ -33,14 +34,14 @@ module.exports = {
 			return this.errorReply(this.usage({desc: this.usageTrans('user'), optional: true}, {desc: this.usageTrans('room'), optional: true}));
 		}
 		if (!Config[room]) {
-			return this.errorReply(translator.get(0, this.lang) + " __" + room + "__");
+			return this.errorReply(translator.get(0, this.lang) + " " + Chat.italics(room));
 		}
 		if (user.length > 19) {
 			return this.errorReply(translator.get(1, this.lang));
 		}
 		let rank = mod.getUserPoints(room, user);
-		let txt = translator.get(2, this.lang) + " **" + (rank.name || "").trim() + "** " +
-			translator.get('in', this.lang) + " __" + tryGetRoomTitle(room) + "__ | ";
+		let txt = translator.get(2, this.lang) + " " + Chat.bold(rank.name) + " " +
+			translator.get('in', this.lang) + " " + Chat.italics(tryGetRoomTitle(room)) + " | ";
 		txt += translator.get(3, this.lang) + ": " + rank.points + " | ";
 		txt += translator.get(4, this.lang) + ": " + rank.wins + ", " + translator.get(5, this.lang) +
 			": " + rank.finals + ", " + translator.get(6, this.lang) + ": " + rank.semis + ". ";
@@ -56,17 +57,17 @@ module.exports = {
 			return this.errorReply(this.usage({desc: this.usageTrans('room')}));
 		}
 		if (!Config[room]) {
-			return this.errorReply(translator.get(0, this.lang) + " __" + room + "__");
+			return this.errorReply(translator.get(0, this.lang) + " " + Chat.italics(room));
 		}
 		let top = mod.getTop(room);
 		if (!top || !top.length) {
-			return this.restrictReply(translator.get(10, this.lang) + " <<" + room + ">> " + translator.get(11, this.lang), "rank");
+			return this.restrictReply(translator.get(10, this.lang) + " " + Chat.italics(room) + " " + translator.get(11, this.lang), "rank");
 		}
 		let topResults = [];
 		for (let i = 0; i < 5 && i < top.length; i++) {
-			topResults.push("__#" + (i + 1) + "__ **" + (top[i][0] || "").trim() + "** (" + top[i][6] + ")");
+			topResults.push(Chat.italics("#" + (i + 1)) + " " + Chat.bold(top[i][0]) + " (" + top[i][6] + ")");
 		}
-		this.restrictReply("**" + tryGetRoomTitle(room) + "** | " + topResults.join(", "), "toursrank");
+		this.restrictReply(Chat.bold(tryGetRoomTitle(room)) + " | " + topResults.join(", "), "toursrank");
 	},
 
 	tourleaderboards: function () {
@@ -79,7 +80,7 @@ module.exports = {
 			return this.errorReply(this.usage({desc: this.usageTrans('room')}));
 		}
 		if (!Config[room]) {
-			return this.errorReply(translator.get(0, this.lang) + " __" + room + "__");
+			return this.errorReply(translator.get(0, this.lang) + " " + Chat.italics(room));
 		}
 		if (server.charAt(server.length - 1) === '/') {
 			return this.restrictReply(App.config.server.url + 'tourtable/' + room + '/get', 'toursrank');
@@ -96,7 +97,7 @@ module.exports = {
 			return this.errorReply(translator.get('nochat', this.lang));
 		}
 		if (!Config[room]) {
-			return this.errorReply(translator.get(0, this.lang) + " __" + room + "__");
+			return this.errorReply(translator.get(0, this.lang) + " " + Chat.italics(room));
 		}
 		if (!mod.tourData[room]) {
 			return this.errorReply(translator.get(12, this.lang));
@@ -117,7 +118,7 @@ module.exports = {
 			return this.errorReply(translator.get('nochat', this.lang));
 		}
 		if (!Config[room]) {
-			return this.errorReply(translator.get(0, this.lang) + " __" + room + "__");
+			return this.errorReply(translator.get(0, this.lang) + " " + Chat.italics(room));
 		}
 		if (!mod.tourData[room]) {
 			return this.errorReply(translator.get(12, this.lang));

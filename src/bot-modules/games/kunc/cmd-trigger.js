@@ -4,6 +4,8 @@
 
 'use strict';
 
+const Chat = Tools.get('chat.js');
+
 module.exports = {
 	g: "kuncanswer",
 	guess: "kuncanswer",
@@ -15,7 +17,7 @@ module.exports = {
 
 	question: function (game) {
 		if (game.system.status !== 'question') return;
-		this.restrictReply("**Kunc:** " + game.system.clue, 'games');
+		this.restrictReply(Chat.bold("Kunc:") + " " + game.system.clue, 'games');
 	},
 
 	end: "endkunc",

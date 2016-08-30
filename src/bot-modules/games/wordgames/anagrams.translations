@@ -2,7 +2,7 @@
 
 %english
 
-$0 = A new **Anagrams** game was created
+$0 = A new Anagrams game was created!
 $1 = It will be a max of
 $2 = words
 $3 = If someone gets
@@ -13,13 +13,14 @@ $7 = Use
 $8 = g <word>
 $9 = to play
 
-$10 = **Time is out!** The word was
+$10 = Time is out!
+$10b = The word was
 
 $11 = Correct!
 $12 = guessed the word. The word was
 $13 = Current points
 
-$lose = **The Anagrams game ended!** But no one got any points so there are no winners
+$lose = But no one got any points so there are no winners
 $end = The Anagrams game ended!
 $grats1 = Congratulations to
 $grats2 = for winning the game with
@@ -29,7 +30,7 @@ $tie2 = between
 
 %spanish
 
-$0 = Se ha creado un juego de **Anagrams**
+$0 = ¡Se ha creado un juego de Anagrams!
 $1 = Serán un total de
 $2 = palabras
 $3 = Si alguien consigue
@@ -40,14 +41,15 @@ $7 = Usa
 $8 = g <palabra>
 $9 = para jugar
 
-$10 = **El tiempo ha terminado!** La palabra era
+$10 = ¡El tiempo ha terminado!
+$10b = La palabra era
 
-$11 = Correcto!
+$11 = ¡Correcto!
 $12 = adivinó la palabra. La palabra era
 $13 = Puntos
 
-$lose = **El juego de Anagrams ha terminado!** Sin embargo nadie ha conseguido ningún punto, por lo que no hay ganadores
-$end = El juego de Anagrams ha terminado!
+$lose = Sin embargo nadie ha conseguido ningún punto, por lo que no hay ganadores
+$end =¡ El juego de Anagrams ha terminado!
 $grats1 = Felicidades a
 $grats2 = por ganar el juego con
 $points = puntos

@@ -7,6 +7,7 @@
 const Path = require('path');
 
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'banwords.translations'));
@@ -41,7 +42,7 @@ module.exports = {
 			return this.errorReply(translator.get(0, this.lang) + ": " + config.punishments.join(', '));
 		}
 		if (config.bannedWords[room] && config.bannedWords[room][word]) {
-			return this.errorReply(translator.get(1, this.lang) + " \"" + word + "\" " + translator.get(2, this.lang) + " <<" + room + ">>");
+			return this.errorReply(translator.get(1, this.lang) + " \"" + word + "\" " + translator.get(2, this.lang) + " " + Chat.italics(room));
 		}
 		if (!config.bannedWords[room]) config.bannedWords[room] = {};
 		config.bannedWords[room][word] = {};
@@ -61,7 +62,7 @@ module.exports = {
 		config.bannedWords[room][word].val = config.punishments.indexOf(punishment) + 1;
 		App.modules.moderation.system.db.write();
 		App.logCommandAction(this);
-		this.reply(translator.get(1, this.lang) + " \"" + word + "\" " + translator.get(3, this.lang) + " <<" + room + ">>");
+		this.reply(translator.get(1, this.lang) + " \"" + word + "\" " + translator.get(3, this.lang) + " " + Chat.italics(room));
 	},
 
 	unbanword: function () {
@@ -72,7 +73,7 @@ module.exports = {
 		let word = this.args[0].toLowerCase().trim();
 		if (!word) return this.errorReply(this.usage({desc: translator.get('word', this.lang)}));
 		if (!config.bannedWords[room] || !config.bannedWords[room][word]) {
-			return this.errorReply(translator.get(1, this.lang) + " \"" + word + "\" " + translator.get(4, this.lang) + " <<" + room + ">>");
+			return this.errorReply(translator.get(1, this.lang) + " \"" + word + "\" " + translator.get(4, this.lang) + " " + Chat.italics(room));
 		}
 		delete config.bannedWords[room][word];
 		if (Object.keys(config.bannedWords[room]).length === 0) {
@@ -80,7 +81,7 @@ module.exports = {
 		}
 		App.modules.moderation.system.db.write();
 		App.logCommandAction(this);
-		this.reply(translator.get(1, this.lang) + " \"" + word + "\" " + translator.get(5, this.lang) + " <<" + room + ">>");
+		this.reply(translator.get(1, this.lang) + " \"" + word + "\" " + translator.get(5, this.lang) + " " + Chat.italics(room));
 	},
 
 	viewbannedwords: function () {
@@ -93,7 +94,7 @@ module.exports = {
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
 		const config = App.modules.moderation.system.data;
 		let words = config.bannedWords[room];
-		if (!words) return this.pmReply(translator.get(6, this.lang) + " <<" + room + ">>");
+		if (!words) return this.pmReply(translator.get(6, this.lang) + " " + Chat.italics(room));
 		let html = '';
 		html += '<html>';
 		html += '<head><title>Banned Words of ' + tryGetRoomTitle(room) + '</title></head>';

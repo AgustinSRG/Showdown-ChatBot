@@ -8,6 +8,7 @@ const Path = require('path');
 
 const normalize = Tools.get('normalize.js');
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
@@ -35,13 +36,13 @@ module.exports = {
 		}
 
 		if (Available_Languages.indexOf(from) === -1) {
-			return this.errorReply(translator.get(4, this.lang) + ": __" + from + "__. " +
-				translator.get(5, this.lang) + ": __" + Available_Languages.join(', ') + "__");
+			return this.errorReply(translator.get(4, this.lang) + ": " + Chat.italics(from) + ". " +
+				translator.get(5, this.lang) + ": " + Chat.italics(Available_Languages.join(', ')));
 		}
 
 		if (Available_Languages.indexOf(to) === -1) {
-			return this.errorReply(translator.get(4, this.lang) + ": __" + to + "__. " +
-				translator.get(5, this.lang) + ": __" + Available_Languages.join(', ') + "__");
+			return this.errorReply(translator.get(4, this.lang) + ": " + Chat.italics(to) + ". " +
+				translator.get(5, this.lang) + ": " + Chat.italics(Available_Languages.join(', ')));
 		}
 
 		if (args[1] || args[2]) {
@@ -79,16 +80,16 @@ module.exports = {
 		if (normalize(translations[0].from) !== normalize(word)) {
 			text += translator.get(0, this.lang) + ' "' + word + '" ' + translator.get(1, this.lang) + '. ';
 		}
-		text += translator.get(3, this.lang) + ' ' + " **" + (translations[0].from || "").trim() +
-			"** (" + translator.get(from, this.lang) + " - " + translator.get(to, this.lang) + "): ";
+		text += translator.get(3, this.lang) + ' ' + " " + Chat.bold(translations[0].from) +
+			" (" + translator.get(from, this.lang) + " - " + translator.get(to, this.lang) + "): ";
 		let results = [];
 		for (let i = 0; i < translations.length; i++) {
 			if (normalize(translations[0].from) !== normalize(translations[i].from)) continue;
 			if (typeof translations[i].to === "string") {
-				results.push("**" + (translations[i].to || "").trim() + "** (" +
+				results.push(Chat.bold(translations[i].to) + " (" +
 					(translator.get(translations[i].type, this.lang) || translations[i].type) + ")");
 			} else {
-				results.push("**" + (translations[i].to[0] || "").trim() + "** (" +
+				results.push(Chat.bold(translations[i].to[0]) + " (" +
 					(translator.get(translations[i].type, this.lang) || translations[i].type) + ")");
 			}
 		}

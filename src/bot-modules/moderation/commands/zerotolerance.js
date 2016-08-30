@@ -7,6 +7,7 @@
 const Path = require('path');
 
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'zerotolerance.translations'));
@@ -43,8 +44,8 @@ module.exports = {
 		config.zeroTolerance[room][user] = level;
 		App.modules.moderation.system.db.write();
 		App.logCommandAction(this);
-		this.reply(translator.get(1, this.lang) + " __" + user + "__ " + translator.get(2, this.lang) +
-			" (" + translator.get(3, this.lang) + ": " + level + ") " + translator.get(4, this.lang) + " <<" + room + ">>");
+		this.reply(translator.get(1, this.lang) + " " + Chat.italics(user) + " " + translator.get(2, this.lang) +
+			" (" + translator.get(3, this.lang) + ": " + level + ") " + translator.get(4, this.lang) + " " + Chat.italics(room));
 	},
 
 	rmzerotolerance: function () {
@@ -55,7 +56,8 @@ module.exports = {
 		let user = Text.toId(this.args[0]);
 		if (!user) return this.errorReply(this.usage({desc: this.usageTrans('user')}));
 		if (!config.zeroTolerance[room] || !config.zeroTolerance[room][user]) {
-			return this.errorReply(translator.get(1, this.lang) + " __" + user + "__ " + translator.get(5, this.lang) + " <<" + room + ">>");
+			return this.errorReply(translator.get(1, this.lang) + " " + Chat.italics(user) + " " +
+				translator.get(5, this.lang) + " " + Chat.italics(room));
 		}
 		delete config.zeroTolerance[room][user];
 		if (Object.keys(config.zeroTolerance[room]).length === 0) {
@@ -63,7 +65,7 @@ module.exports = {
 		}
 		App.modules.moderation.system.db.write();
 		App.logCommandAction(this);
-		this.reply(translator.get(1, this.lang) + " __" + user + "__ " + translator.get(6, this.lang) + " <<" + room + ">>");
+		this.reply(translator.get(1, this.lang) + " " + Chat.italics(user) + " " + translator.get(6, this.lang) + " " + Chat.italics(room));
 	},
 
 	viewzerotolerance: function () {
@@ -77,7 +79,7 @@ module.exports = {
 		const config = App.modules.moderation.system.data;
 		let zt = config.zeroTolerance[room];
 		if (!zt) {
-			return this.pmReply(translator.get(8, this.lang) + " <<" + room + ">> " + translator.get(9, this.lang));
+			return this.pmReply(translator.get(8, this.lang) + " " + Chat.italics(room) + " " + translator.get(9, this.lang));
 		}
 		let html = '';
 		html += '<html>';
@@ -109,7 +111,7 @@ module.exports = {
 		let user = Text.toId(this.args[1]) || this.byIdent.id;
 		if (!user || !room) return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: this.usageTrans('user'), optional: true}));
 		if (!App.bot.rooms[room] || this.getRoomType(room) !== 'chat') {
-			return this.errorReply(translator.get(10, this.lang) + " __" + room + "__ " + translator.get(11, this.lang));
+			return this.errorReply(translator.get(10, this.lang) + " " + Chat.italics(room) + " " + translator.get(11, this.lang));
 		}
 		if (user.length > 19) {
 			return this.errorReply(translator.get(0, this.lang));
@@ -123,12 +125,12 @@ module.exports = {
 		}
 		let config = App.modules.moderation.system.data;
 		if (!config.zeroTolerance[room] || !config.zeroTolerance[room][user]) {
-			this.pmReply(translator.get(1, this.lang) + " __" + user + "__ " + translator.get(12, this.lang) +
-				" " + translator.get(4, this.lang) + " <<" + room + ">>");
+			this.pmReply(translator.get(1, this.lang) + " " + Chat.italics(user) + " " + translator.get(12, this.lang) +
+				" " + translator.get(4, this.lang) + " " + Chat.italics(room));
 		} else {
 			let level = config.zeroTolerance[room][user];
-			this.pmReply(translator.get(1, this.lang) + " __" + user + "__ " + translator.get(13, this.lang) +
-				" (" + translator.get(3, this.lang) + ": " + level + ") " + translator.get(4, this.lang) + " <<" + room + ">>");
+			this.pmReply(translator.get(1, this.lang) + " " + Chat.italics(user) + " " + translator.get(13, this.lang) +
+				" (" + translator.get(3, this.lang) + ": " + level + ") " + translator.get(4, this.lang) + " " + Chat.italics(room));
 		}
 	},
 };

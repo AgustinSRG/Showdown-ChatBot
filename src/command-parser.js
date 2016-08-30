@@ -14,6 +14,7 @@ const Path = require('path');
 
 const DataBase = Tools.get('json-db.js');
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 const AbuseMonitor = Tools.get('abuse-monitor.js');
 const Translator = Tools.get('translate.js');
 
@@ -485,8 +486,8 @@ class DynamicCommand {
 				if (conf[arg]) {
 					this.execNext(conf[arg], context);
 				} else if (Object.keys(conf).length) {
-					context.errorReply(translator.get(4, context.lang) + ": __" + cmd + "__ | " +
-						translator.get(5, context.lang) + ": __" + Object.keys(conf).join(', ') + "__");
+					context.errorReply(translator.get(4, context.lang) + ": " + Chat.italics(cmd) + " | " +
+						translator.get(5, context.lang) + ": " + Chat.italics(Object.keys(conf).join(', ')));
 				}
 			}
 			break;
@@ -649,7 +650,7 @@ class CommandContext {
 	 */
 	replyAccessDenied(perm) {
 		return this.pmReply(translator.get(0, this.lang) + '. ' +
-			translator.get(1, this.lang) + ' __' + perm + '__ ' + translator.get(2, this.lang) + '.');
+			translator.get(1, this.lang) + ' ' + Chat.italics(perm) + ' ' + translator.get(2, this.lang) + '.');
 	}
 
 	/**
@@ -675,18 +676,19 @@ class CommandContext {
 	 */
 	usage() {
 		let txt = "";
-		txt += "" + translator.get(3, this.lang) + ": __";
+		txt += "" + translator.get(3, this.lang) + ": ";
 		txt += this.token + this.cmd;
 		txt += " ";
+		let args = "";
 		for (let i = 0; i < arguments.length; i++) {
 			if (arguments[i].optional) {
-				txt += "[" + arguments[i].desc + "]";
+				args += "[" + arguments[i].desc + "]";
 			} else {
-				txt += "<" + arguments[i].desc + ">";
+				args += "<" + arguments[i].desc + ">";
 			}
-			if (i < arguments.length - 1) txt += ", ";
+			if (i < arguments.length - 1) args += ", ";
 		}
-		txt += "__";
+		txt += Chat.italics(args);
 		return txt;
 	}
 

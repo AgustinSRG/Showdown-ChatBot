@@ -8,11 +8,12 @@ const Path = require('path');
 
 const Translator = Tools.get('translate.js');
 const normalize = Tools.get('normalize.js');
+const Chat = Tools.get('chat.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'hangman.translations'));
 
 function isNotAlphanumeric(str) {
-	return (/[^a-z0-9�]/g).test(str);
+	return (/[^a-z0-9\u00f1]/g).test(str);
 }
 
 function toWordId(str) {
@@ -73,21 +74,21 @@ class PokeHangman {
 
 	start() {
 		let txt = '';
-		txt += '**Hangman:** ';
+		txt += Chat.bold('Hangman:') + ' ';
 		txt += this.generateHangman();
 		txt += ' | ';
-		txt += '**' + this.clue + '** | ';
-		txt += translator.get(0, this.lang) + " ``" + (App.config.parser.tokens[0] || "") +
-			translator.get(1, this.lang) + "`` " + translator.get(2, this.lang) + ".";
+		txt += Chat.bold(this.clue) + ' | ';
+		txt += translator.get(0, this.lang) + " " + Chat.code((App.config.parser.tokens[0] || "") +
+			translator.get(1, this.lang)) + " " + translator.get(2, this.lang) + ".";
 		this.send(txt);
 	}
 
 	show() {
 		let txt = '';
-		txt += '**Hangman:** ';
+		txt += Chat.bold('Hangman:') + ' ';
 		txt += this.generateHangman();
 		txt += ' | ';
-		txt += '**' + this.clue + '** | ';
+		txt += Chat.bold(this.clue) + ' | ';
 		txt += this.said.sort().join(' ');
 		this.send(txt);
 	}
@@ -135,13 +136,13 @@ class PokeHangman {
 	end(winner, lose) {
 		let txt = '';
 		this.ended = true;
-		txt += translator.get(3, this.lang) + ' ';
+		txt += Chat.bold(translator.get(3, this.lang)) + ' ';
 		if (lose) {
 			txt += winner + ' ' + translator.get(4, this.lang) + '! ';
 		} else if (winner) {
-			txt += translator.get(5, this.lang) + ' ' + winner + ' ' + translator.get(6, this.lang) + '! ';
+			txt += translator.get(5, this.lang) + ' ' + winner + ' ' + translator.get(6, this.lang) + ' ';
 		}
-		txt += translator.get(7, this.lang) + ' __' + this.word + '__';
+		txt += translator.get(7, this.lang) + ' ' + Chat.italics(this.word);
 		this.send(txt);
 		App.modules.games.system.terminateGame(this.room);
 	}

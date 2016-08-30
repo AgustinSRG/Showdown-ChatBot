@@ -8,6 +8,7 @@ const Path = require('path');
 const Util = require('util');
 const Translator = Tools.get('translate.js');
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
@@ -36,14 +37,14 @@ module.exports = {
 				{desc: translator.get('team', this.lang), optional: true}));
 		}
 		if (!App.bot.formats[format] || !App.bot.formats[format].chall) {
-			return this.errorReply(translator.get(0, this.lang) + ' __' + format + '__ ' + translator.get(1, this.lang));
+			return this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(format) + ' ' + translator.get(1, this.lang));
 		}
 		if (!teamId && App.bot.formats[format].team && !mod.TeamBuilder.hasTeam(format)) {
-			return this.errorReply(translator.get(2, this.lang) + ' __' + format + '__');
+			return this.errorReply(translator.get(2, this.lang) + ' ' + Chat.italics(format));
 		}
 		if (mod.ChallManager.challenges && mod.ChallManager.challenges.challengeTo) {
 			return this.errorReply(translator.get(6, this.lang) + ' ' + mod.ChallManager.challenges.challengeTo.to +
-				'. ' + translator.get(7, this.lang) + ' ``' + this.token + 'cancelchallenge`` ' + translator.get(8, this.lang));
+				'. ' + translator.get(7, this.lang) + ' ' + Chat.code(this.token + 'cancelchallenge') + ' ' + translator.get(8, this.lang));
 		}
 		let cmds = [];
 		if (teamId) {
@@ -51,7 +52,7 @@ module.exports = {
 			if (team) {
 				cmds.push('|/useteam ' + team.packed);
 			} else {
-				return this.errorReply(translator.get(3, this.lang) + " __" + teamId + "__ " + translator.get(4, this.lang));
+				return this.errorReply(translator.get(3, this.lang) + " " + Chat.italics(teamId) + " " + translator.get(4, this.lang));
 			}
 		} else {
 			let team = mod.TeamBuilder.getTeam(format);
@@ -81,10 +82,10 @@ module.exports = {
 		let format = parseAliases(this.arg);
 		if (!format) return this.errorReply(this.usage({desc: 'format'}));
 		if (!App.bot.formats[format] || !App.bot.formats[format].ladder) {
-			return this.errorReply(translator.get(0, this.lang) + ' __' + format + '__ ' + translator.get(5, this.lang));
+			return this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(format) + ' ' + translator.get(5, this.lang));
 		}
 		if (App.bot.formats[format].team && !mod.TeamBuilder.hasTeam(format)) {
-			return this.errorReply(translator.get(2, this.lang) + ' __' + format + '__');
+			return this.errorReply(translator.get(2, this.lang) + ' ' + Chat.italics(format));
 		}
 		if (this.room) {
 			mod.LadderManager.reportsRoom = this.room;

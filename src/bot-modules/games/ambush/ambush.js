@@ -7,6 +7,7 @@
 const Path = require('path');
 
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'ambush.translations'));
@@ -32,9 +33,11 @@ class Ambush {
 		this.hand = this.chatHandler.bind(this);
 		App.bot.on('userchat', this.hand);
 		let txt = '';
-		txt += translator.get(0, this.lang) + '! ' + translator.get(1, this.lang) + ' ``/me in`` ' + translator.get(2, this.lang) + '! ';
-		txt += translator.get(3, this.lang) + ' ``' + translator.get(4, this.lang) + '``, ' + translator.get(5, this.lang) + '. ';
-		txt += translator.get(1, this.lang) + ' ``' + (App.config.parser.tokens[0] || "") + 'start`` ' + translator.get(6, this.lang) + '.';
+		txt += Chat.bold(translator.get(0, this.lang)) + ' ' + translator.get(1, this.lang) + ' ' + Chat.code('/me in') + ' ' +
+			translator.get(2, this.lang) + '! ';
+		txt += translator.get(3, this.lang) + ' ' + Chat.code(translator.get(4, this.lang)) + ', ' + translator.get(5, this.lang) + '. ';
+		txt += translator.get(1, this.lang) + ' ' + Chat.code((App.config.parser.tokens[0] || "") + 'start') +
+			' ' + translator.get(6, this.lang) + '.';
 		this.status = 'signups';
 		this.send(txt);
 	}
@@ -84,8 +87,8 @@ class Ambush {
 		}
 		this.status = 'fight';
 		let txt = '';
-		txt += '**' + translator.get(7, this.lang) + '!** ' + translator.get(1, this.lang) +
-			' ``' + translator.get(4, this.lang) + '`` ' + translator.get(8, this.lang) + '!';
+		txt += '' + Chat.bold(translator.get(7, this.lang)) + ' ' + translator.get(1, this.lang) +
+			' ' + Chat.code(translator.get(4, this.lang)) + ' ' + translator.get(8, this.lang);
 		this.send(txt);
 	}
 
@@ -94,8 +97,8 @@ class Ambush {
 		if (!this.players[ident1.id] || !this.players[victim]) return;
 		let name = this.players[victim];
 		delete this.players[victim];
-		this.send('**Ambush:** __' + name + '__ ' + translator.get(9, this.lang) + ' __' +
-			ident1.name + '__ ' + translator.get(10, this.lang) + '!');
+		this.send(Chat.bold('Ambush:') + ' ' + Chat.italics(name) + ' ' + translator.get(9, this.lang) + ' ' +
+			Chat.italics(ident1.name) + ' ' + translator.get(10, this.lang) + '!');
 		let players = Object.keys(this.players);
 		if (players.length <= 1) {
 			this.end(this.players[players[0]]);
@@ -107,7 +110,7 @@ class Ambush {
 		let txt = '';
 		txt += translator.get(11, this.lang) + ' ';
 		if (winner) {
-			txt += translator.get(12, this.lang) + ' **' + winner + '** ' + translator.get(13, this.lang) + '!';
+			txt += translator.get(12, this.lang) + ' ' + Chat.bold(winner) + ' ' + translator.get(13, this.lang) + '!';
 		}
 		this.send(txt);
 		App.modules.games.system.terminateGame(this.room);

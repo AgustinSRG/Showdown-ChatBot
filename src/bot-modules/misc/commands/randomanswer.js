@@ -16,7 +16,7 @@ module.exports = {
 	"8ball": "randomanswer",
 	helix: "randomanswer",
 	randomanswer: function () {
-		let m = translator.get('num', this.lang);
+		let m = parseInt(translator.get('num', this.lang));
 		this.restrictReply(translator.get(Math.floor(Math.random() * m), this.lang), 'randomanswer');
 	},
 };

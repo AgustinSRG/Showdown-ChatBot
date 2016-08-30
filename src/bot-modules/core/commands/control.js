@@ -8,6 +8,7 @@
 const Path = require('path');
 
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'control.translations'));
@@ -107,7 +108,7 @@ module.exports = {
 		if (!this.arg) return this.errorReply(this.usage({desc: 'script'}));
 		try {
 			let res = eval(this.arg);
-			this.reply(JSON.stringify(res));
+			this.reply(Chat.code(JSON.stringify(res)));
 		} catch (err) {
 			this.reply('Error: ' + err.code + ' - ' + err.message);
 		}
@@ -122,13 +123,13 @@ module.exports = {
 	},
 
 	version: function () {
-		let reply = '**Showdown ChatBot v' + Package.version + '** (' + Package.homepage + ')';
+		let reply = Chat.bold('Showdown ChatBot v' + Package.version) + ' (' + Package.homepage + ')';
 		this.restrictReply(reply, 'info');
 	},
 
 	time: function () {
 		let date = new Date();
-		this.restrictReply(translator.get(1, this.lang) + ': __' + date.toString() + '__', 'info');
+		this.restrictReply(translator.get(1, this.lang) + ': ' + Chat.italics(date.toString()), 'info');
 	},
 
 	uptime: function () {
@@ -145,6 +146,6 @@ module.exports = {
 		if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? translator.get(6, this.lang) : translator.get(7, this.lang)));
 		time = Math.floor(time / 24); // Days
 		if (time > 0) times.unshift(time + ' ' + (time === 1 ? translator.get(8, this.lang) : translator.get(9, this.lang)));
-		this.restrictReply('**' + translator.get(10, this.lang) + ':** __' + times.join(', ') + '__', 'info');
+		this.restrictReply(Chat.bold(translator.get(10, this.lang) + ':') + ' ' + Chat.italics(times.join(', ')), 'info');
 	},
 };

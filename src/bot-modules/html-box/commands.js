@@ -7,6 +7,7 @@
 const Path = require('path');
 const Translator = Tools.get('translate.js');
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
@@ -44,7 +45,7 @@ module.exports = {
 				return this.send('/pminfobox  ' + this.byIdent.id + ',' + content, this.room);
 			}
 		} else {
-			return this.errorReply(translator.get(0, this.lang) + " __" + cmd + "__ " + translator.get(1, this.lang));
+			return this.errorReply(translator.get(0, this.lang) + " " + Chat.italics(cmd) + " " + translator.get(1, this.lang));
 		}
 	},
 

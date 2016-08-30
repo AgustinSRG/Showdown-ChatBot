@@ -7,6 +7,7 @@
 const Path = require('path');
 
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
@@ -199,13 +200,13 @@ module.exports = {
 					} else {
 						return this.restrictReply(translator.get('pokeerr1', this.lang) + " \"" + poke + "\" " +
 							translator.get('pokeerr2', this.lang) + " " + tierName(tier) + " " + translator.get('pokeerr3', this.lang) +
-							' | ' + "**" + dataResAux.name + "**, #" + dataResAux.pos + " " + translator.get('in', this.lang) +
-							" **" + tierName(tier) + "**. " + translator.get('pokeusage', this.lang) + ": " + dataResAux.usage + ", " +
+							' | ' + Chat.bold(dataResAux.name) + ", #" + dataResAux.pos + " " + translator.get('in', this.lang) +
+							" " + Chat.bold(tierName(tier)) + ". " + translator.get('pokeusage', this.lang) + ": " + dataResAux.usage + ", " +
 							translator.get('pokeraw', this.lang) + ": " + dataResAux.raw, 'usage');
 					}
 				}
-				this.restrictReply("**" + dataRes.name + "**, #" + dataRes.pos + " " + translator.get('in', this.lang) +
-					" **" + tierName(tier) + "**. " + translator.get('pokeusage', this.lang) + ": " + dataRes.usage + ", " +
+				this.restrictReply(Chat.bold(dataRes.name) + ", #" + dataRes.pos + " " + translator.get('in', this.lang) +
+					" " + Chat.bold(tierName(tier)) + ". " + translator.get('pokeusage', this.lang) + ": " + dataRes.usage + ", " +
 					translator.get('pokeraw', this.lang) + ": " + dataRes.raw, 'usage');
 			}.bind(this));
 		}.bind(this));
@@ -326,9 +327,9 @@ module.exports = {
 						translator.get('usagedata2', this.lang).replace("#NAME", resultName) + " " +
 						translator.get('in', this.lang) + " " + tierName(tier));
 				}
-				let txt = "**" + (translator.get('usagedata1', this.lang).replace("#NAME", resultName) + ' ' + pokeName +
+				let txt = Chat.bold((translator.get('usagedata1', this.lang).replace("#NAME", resultName) + ' ' + pokeName +
 					translator.get('usagedata2', this.lang).replace("#NAME", resultName) + " " +
-					translator.get('in', this.lang) + " " + tierName(tier)).trim() + "**: ";
+					translator.get('in', this.lang) + " " + tierName(tier)).trim()) + ": ";
 				let comma, cmds = [];
 				for (let i = 0; i < result.length; i++) {
 					comma = (i < result.length - 1) ? ", " : "";

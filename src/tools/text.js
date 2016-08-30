@@ -50,7 +50,7 @@ exports.toCmdTokenid = function (str) {
  * @returns {String}
  */
 exports.trim = function (str) {
-	if (!str) return '';
+	str = '' + str;
 	return str.trim();
 };
 

@@ -11,6 +11,7 @@ const Round_Duration_Increment = 8000;
 const Path = require('path');
 
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'passbomb.translations'));
@@ -39,7 +40,9 @@ class PassBomb {
 
 	start() {
 		this.status = 'signups';
-		this.send(translator.get("init", this.lang).replace(/[$]/g, (App.config.parser.tokens[0] || "")));
+		this.send(Chat.bold(translator.get("init", this.lang)) + " " + translator.get("init2", this.lang) + " " +
+			Chat.code((App.config.parser.tokens[0] || "") + "in") + " " + translator.get("init3", this.lang) + " " +
+			Chat.code((App.config.parser.tokens[0] || "") + "start") + " " + translator.get("init4", this.lang));
 	}
 
 	userJoin(ident) {
@@ -79,7 +82,7 @@ class PassBomb {
 		if (players.length < 2) {
 			return this.end(players[0]);
 		} else {
-			let txt = "**Pass-The-Bomb** | " + translator.get("players", this.lang) + " (" + players.length + "): ";
+			let txt = Chat.bold("Pass-The-Bomb") + " | " + translator.get("players", this.lang) + " (" + players.length + "): ";
 			for (let i = 0; i < players.length; i++) {
 				let toAdd = players[i];
 				if (i < players.length - 1) {
@@ -98,8 +101,9 @@ class PassBomb {
 		let playersIds = Object.keys(this.players);
 		this.playerWithBomb = playersIds[Math.floor(Math.random() * playersIds.length)];
 		this.status = 'round';
-		cmds.push("**" + this.players[this.playerWithBomb] + "** " + translator.get("round", this.lang) + " " +
-			translator.get("help", this.lang).replace(/[$]/g, (App.config.parser.tokens[0] || "")));
+		cmds.push(Chat.bold(this.players[this.playerWithBomb]) + " " + translator.get("round", this.lang) + " " +
+			translator.get("help", this.lang) + " " + Chat.code((App.config.parser.tokens[0] || "") + "pass " +
+			translator.get("help2", this.lang)) + " " + translator.get("help3", this.lang));
 		this.send(cmds);
 		this.timer = setTimeout(this.bomb.bind(this), Math.floor(Math.random() * Round_Duration_Increment) + Min_Round_Duration);
 	}
@@ -121,7 +125,7 @@ class PassBomb {
 	bomb() {
 		this.timer = null;
 		this.status = 'bomb';
-		this.send("**BOMB!** " + this.players[this.playerWithBomb] + " " + translator.get("lose", this.lang));
+		this.send(Chat.bold("BOMB!") + " " + this.players[this.playerWithBomb] + " " + translator.get("lose", this.lang));
 		delete this.players[this.playerWithBomb];
 		this.wait();
 	}
@@ -144,9 +148,9 @@ class PassBomb {
 			this.timer = null;
 		}
 		let txt = '';
-		txt += translator.get(11, this.lang) + ' ';
+		txt += Chat.bold(translator.get(11, this.lang)) + ' ';
 		if (winner) {
-			txt += translator.get(12, this.lang) + ' **' + winner + '** ' + translator.get(13, this.lang) + '!';
+			txt += translator.get(12, this.lang) + ' ' + Chat.bold(winner) + ' ' + translator.get(13, this.lang);
 		}
 		this.send(txt);
 		App.modules.games.system.terminateGame(this.room);

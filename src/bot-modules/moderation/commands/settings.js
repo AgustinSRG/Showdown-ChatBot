@@ -7,6 +7,7 @@
 const Path = require('path');
 
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'settings.translations'));
@@ -31,9 +32,9 @@ module.exports = {
 			config.roomSettings[room][mod] = !!(set === 'on');
 			App.modules.moderation.system.db.write();
 			App.logCommandAction(this);
-			this.reply(translator.get(0, this.lang) + " __" + mod + "__ " + translator.get(1, this.lang) +
+			this.reply(translator.get(0, this.lang) + " " + Chat.italics(mod) + " " + translator.get(1, this.lang) +
 				" " + (set === 'on' ? translator.get(2, this.lang) : translator.get(3, this.lang)) + " " +
-				translator.get(4, this.lang) + " <<" + room + ">>");
+				translator.get(4, this.lang) + " " + Chat.italics(room) + "");
 		} else {
 			return this.errorReply(translator.get(5, this.lang) + ": " + Object.keys(modtypes).join(', '));
 		}
@@ -53,14 +54,14 @@ module.exports = {
 			App.logCommandAction(this);
 			switch (rank) {
 			case 'user':
-				this.reply(translator.get(6, this.lang) + " <<" + room + ">>");
+				this.reply(translator.get(6, this.lang) + " " + Chat.italics(room));
 				break;
 			case 'excepted':
-				this.reply(translator.get(7, this.lang) + " <<" + room + ">>");
+				this.reply(translator.get(7, this.lang) + " " + Chat.italics(room));
 				break;
 			default:
-				this.reply(translator.get(8, this.lang) + " " + ' **' + rank + '** ' +
-					translator.get(9, this.lang) + ' ' + translator.get(10, this.lang) + ' <<' + room + '>>');
+				this.reply(translator.get(8, this.lang) + " " + ' ' + Chat.bold(rank) + ' ' +
+					translator.get(9, this.lang) + ' ' + translator.get(10, this.lang) + ' ' + Chat.italics(room));
 			}
 		} else {
 			return this.errorReply(translator.get(11, this.lang) + ": " + groups.join(', '));

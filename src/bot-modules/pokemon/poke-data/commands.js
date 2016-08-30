@@ -10,6 +10,7 @@ const getGeneration = require(Path.resolve(__dirname, 'gen.js'));
 const Moves = require(Path.resolve(__dirname, 'moves.js'));
 
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
@@ -35,10 +36,10 @@ module.exports = {
 			text = translator.get(0, this.lang);
 			break;
 		case 0:
-			text = translator.get(1, this.lang) + " __" + id + "__ " + translator.get(2, this.lang);
+			text = translator.get(1, this.lang) + " " + Chat.italics(id) + " " + translator.get(2, this.lang);
 			break;
 		default:
-			text = translator.get(3, this.lang) + " __" + gen.name + "__: " + translator.get(4, this.lang) + " " + gen.gen;
+			text = translator.get(3, this.lang) + " " + Chat.italics(gen.name) + ": " + translator.get(4, this.lang) + " " + Chat.italics(gen.gen);
 		}
 		this.restrictReply(text, 'pokemon');
 	},
@@ -67,13 +68,13 @@ module.exports = {
 			return this.errorReply(translator.get('error', this.lang));
 		}
 		if (moves === null) {
-			return this.errorReply(translator.get(5, this.lang) + ' __' + id + '__ ' + translator.get(2, this.lang));
+			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + '__ ' + translator.get(2, this.lang));
 		} else if (!moves.length) {
-			return this.errorReply(translator.get(6, this.lang) + ' __' + Moves.getPokeName(id) + '__');
+			return this.errorReply(translator.get(6, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id)));
 		} else if (doubles) {
-			return this.restrictReply(translator.get(7, this.lang) + ' __' + Moves.getPokeName(id) + '__: ' + moves.join(', '), 'pokemon');
+			return this.restrictReply(translator.get(7, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id)) + ': ' + moves.join(', '), 'pokemon');
 		} else {
-			return this.restrictReply(translator.get(8, this.lang) + ' __' + Moves.getPokeName(id) + '__: ' + moves.join(', '), 'pokemon');
+			return this.restrictReply(translator.get(8, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id)) + ': ' + moves.join(', '), 'pokemon');
 		}
 	},
 
@@ -91,11 +92,11 @@ module.exports = {
 			return this.errorReply(translator.get('error', this.lang));
 		}
 		if (moves === null) {
-			return this.errorReply(translator.get(5, this.lang) + ' __' + id + '__ ' + translator.get(2, this.lang));
+			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang));
 		} else if (!moves.length) {
-			return this.errorReply(translator.get(9, this.lang) + ' __' + Moves.getPokeName(id) + '__');
+			return this.errorReply(translator.get(9, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id)));
 		} else {
-			return this.restrictReply(translator.get(10, this.lang) + ' __' + Moves.getPokeName(id) + '__: ' + moves.join(', '), 'pokemon');
+			return this.restrictReply(translator.get(10, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id)) + ': ' + moves.join(', '), 'pokemon');
 		}
 	},
 
@@ -113,11 +114,11 @@ module.exports = {
 			return this.errorReply(translator.get('error', this.lang));
 		}
 		if (moves === null) {
-			return this.errorReply(translator.get(5, this.lang) + ' __' + id + '__ ' + translator.get(2, this.lang));
+			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang));
 		} else if (!moves.length) {
-			return this.errorReply(translator.get(11, this.lang) + ' __' + Moves.getPokeName(id) + '__');
+			return this.errorReply(translator.get(11, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id)));
 		} else {
-			return this.restrictReply(translator.get(12, this.lang) + ' __' + Moves.getPokeName(id) + '__: ' + moves.join(', '), 'pokemon');
+			return this.restrictReply(translator.get(12, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id)) + ': ' + moves.join(', '), 'pokemon');
 		}
 	},
 
@@ -135,11 +136,11 @@ module.exports = {
 			return this.errorReply(translator.get('error', this.lang));
 		}
 		if (moves === null) {
-			return this.errorReply(translator.get(5, this.lang) + ' __' + id + '__ ' + translator.get(2, this.lang));
+			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang));
 		} else if (!moves.length) {
-			return this.errorReply(translator.get(13, this.lang) + ' __' + Moves.getPokeName(id) + '__');
+			return this.errorReply(translator.get(13, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id)));
 		} else {
-			return this.restrictReply(translator.get(14, this.lang) + ' __' + Moves.getPokeName(id) + '__: ' + moves.join(', '), 'pokemon');
+			return this.restrictReply(translator.get(14, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id)) + ': ' + moves.join(', '), 'pokemon');
 		}
 	},
 
@@ -157,11 +158,11 @@ module.exports = {
 			return this.errorReply(translator.get('error', this.lang));
 		}
 		if (moves === null) {
-			return this.errorReply(translator.get(5, this.lang) + ' __' + id + '__ ' + translator.get(2, this.lang));
+			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang));
 		} else if (!moves.length) {
-			return this.errorReply(translator.get(15, this.lang) + ' __' + Moves.getPokeName(id) + '__');
+			return this.errorReply(translator.get(15, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id)) + '');
 		} else {
-			return this.restrictReply(translator.get(16, this.lang) + ' __' + Moves.getPokeName(id) + '__: ' + moves.join(', '), 'pokemon');
+			return this.restrictReply(translator.get(16, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id)) + ': ' + moves.join(', '), 'pokemon');
 		}
 	},
 };

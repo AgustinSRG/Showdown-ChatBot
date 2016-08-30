@@ -8,6 +8,7 @@
 const Path = require('path');
 
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'cmd-admin.translations'));
@@ -31,12 +32,12 @@ module.exports = {
 			return this.errorReply(this.usage({desc: translator.get('alias', this.lang)}, {desc: this.usageTrans('command')}));
 		}
 		if (!App.parser.commandExists(cmd)) {
-			return this.errorReply(translator.get(0, this.lang) + ' __' + cmd + '__ ' + translator.get(1, this.lang));
+			return this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(cmd) + ' ' + translator.get(1, this.lang));
 		}
 		App.parser.data.aliases[alias] = cmd;
 		App.parser.saveData();
 		App.logCommandAction(this);
-		this.reply(translator.get(2, this.lang) + ' __' + alias + '__ ' + translator.get(3, this.lang) + ' __' + cmd + '__');
+		this.reply(translator.get(2, this.lang) + ' ' + Chat.italics(alias) + ' ' + translator.get(3, this.lang) + ' ' + Chat.italics(cmd));
 	},
 
 	rmalias: function () {
@@ -48,9 +49,9 @@ module.exports = {
 			delete App.parser.data.aliases[alias];
 			App.parser.saveData();
 			App.logCommandAction(this);
-			this.reply(translator.get(2, this.lang) + ' __' + alias + '__ ' + translator.get(4, this.lang));
+			this.reply(translator.get(2, this.lang) + ' ' + Chat.italics(alias) + ' ' + translator.get(4, this.lang));
 		} else {
-			this.reply(translator.get(2, this.lang) + ' __' + alias + '__ ' + translator.get(5, this.lang));
+			this.reply(translator.get(2, this.lang) + ' ' + Chat.italics(alias) + ' ' + translator.get(5, this.lang));
 		}
 	},
 
@@ -67,9 +68,9 @@ module.exports = {
 			App.saveConfig();
 			App.logCommandAction(this);
 			this.lang = lang;
-			this.reply(translator.get(7, this.lang) + ' __' + room + '__ ' + translator.get(8, this.lang) + ' __' + lang + '__ ');
+			this.reply(translator.get(7, this.lang) + ' ' + Chat.italics(room) + ' ' + translator.get(8, this.lang) + ' ' + Chat.italics(lang));
 		} else {
-			this.errorReply(translator.get(9, this.lang) + ' __' + lang + '__ ' +
+			this.errorReply(translator.get(9, this.lang) + ' ' + Chat.italics(lang) + ' ' +
 				translator.get(10, this.lang) + ': ' + Object.values(App.languages).join(', '));
 		}
 	},
@@ -86,16 +87,16 @@ module.exports = {
 	setcmd: function () {
 		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
-		if (!Temp_Var) return this.errorReply(translator.get(11, this.lang) + ' ``temp <' + this.usageTrans('text') + '>``');
+		if (!Temp_Var) return this.errorReply(translator.get(11, this.lang) + ' ' + Chat.code(this.token + 'temp <' + this.usageTrans('text') + '>'));
 		let cmd = Text.toCmdid(this.args[0]);
 		if (!cmd) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
 		if (typeof App.parser.data.dyncmds[cmd] === 'object') {
-			return this.errorReply(translator.get(0, this.lang) + ' __' + cmd + '__ ' + translator.get(12, this.lang));
+			return this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(cmd) + ' ' + translator.get(12, this.lang));
 		}
 		App.parser.data.dyncmds[cmd] = Temp_Var;
 		App.parser.saveData();
 		App.logCommandAction(this);
-		this.reply(translator.get(0, this.lang) + ' __' + cmd + '__ ' + translator.get(13, this.lang));
+		this.reply(translator.get(0, this.lang) + ' ' + Chat.italics(cmd) + ' ' + translator.get(13, this.lang));
 	},
 
 	setindexcmd: function () {
@@ -104,28 +105,28 @@ module.exports = {
 		let cmd = Text.toCmdid(this.args[0]);
 		if (!cmd) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
 		if (App.parser.data.dyncmds[cmd]) {
-			return this.errorReply(translator.get(0, this.lang) + ' __' + cmd + '__ ' + translator.get(14, this.lang));
+			return this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(cmd) + ' ' + translator.get(14, this.lang));
 		}
 		App.parser.data.dyncmds[cmd] = {};
 		App.parser.saveData();
 		App.logCommandAction(this);
-		this.reply(translator.get(0, this.lang) + ' __' + cmd + '__ ' + translator.get(15, this.lang));
+		this.reply(translator.get(0, this.lang) + ' ' + Chat.italics(cmd) + ' ' + translator.get(15, this.lang));
 	},
 
 	setsubcmd: function () {
 		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (this.args.length !== 2) return this.errorReply(this.usage({desc: this.usageTrans('command')}, {desc: this.usageTrans('subcmd')}));
-		if (!Temp_Var) return this.errorReply(translator.get(11, this.lang) + ' ``temp <' + this.usageTrans('text') + '>``');
+		if (!Temp_Var) return this.errorReply(translator.get(11, this.lang) + ' ' + Chat.code(this.token + 'temp <' + this.usageTrans('text') + '>'));
 		let cmd = Text.toCmdid(this.args[0]);
 		let sub = Text.toCmdid(this.args[1]);
 		if (!cmd || !sub) return this.errorReply(this.usage({desc: this.usageTrans('command')}, {desc: this.usageTrans('subcmd')}));
 		if (typeof App.parser.data.dyncmds[cmd] !== 'object') {
-			return this.errorReply(translator.get(0, this.lang) + ' __' + cmd + '__ ' + translator.get(16, this.lang));
+			return this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(cmd) + ' ' + translator.get(16, this.lang));
 		}
 		App.parser.data.dyncmds[cmd][sub] = Temp_Var;
 		App.parser.saveData();
 		App.logCommandAction(this);
-		this.reply(translator.get(0, this.lang) + ' __' + cmd + ' ' + sub + '__ ' + translator.get(13, this.lang));
+		this.reply(translator.get(0, this.lang) + ' ' + Chat.italics(cmd + ' ' + sub) + ' ' + translator.get(13, this.lang));
 	},
 
 	rmcmd: function () {
@@ -134,12 +135,12 @@ module.exports = {
 		let cmd = Text.toCmdid(this.arg);
 		if (!cmd) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
 		if (!App.parser.data.dyncmds[cmd]) {
-			return this.errorReply(translator.get(0, this.lang) + ' __' + cmd + '__ ' + translator.get(1, this.lang));
+			return this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(cmd) + ' ' + translator.get(1, this.lang));
 		}
 		delete App.parser.data.dyncmds[cmd];
 		App.parser.saveData();
 		App.logCommandAction(this);
-		this.reply(translator.get(0, this.lang) + ' __' + cmd + '__ ' + translator.get(17, this.lang));
+		this.reply(translator.get(0, this.lang) + ' ' + Chat.italics(cmd) + ' ' + translator.get(17, this.lang));
 	},
 
 	rmsubcmd: function () {
@@ -149,15 +150,15 @@ module.exports = {
 		let sub = Text.toCmdid(this.args[1]);
 		if (!cmd || !sub) return this.errorReply(this.usage({desc: this.usageTrans('command')}, {desc: this.usageTrans('subcmd')}));
 		if (typeof App.parser.data.dyncmds[cmd] !== 'object') {
-			return this.errorReply(translator.get(0, this.lang) + ' __' + cmd + '__ ' + translator.get(16, this.lang));
+			return this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(cmd) + ' ' + translator.get(16, this.lang));
 		}
 		if (!App.parser.data.dyncmds[cmd][sub]) {
-			return this.errorReply(translator.get(0, this.lang) + ' __' + cmd + ' ' + sub + '__ ' + translator.get(1, this.lang));
+			return this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(cmd + ' ' + sub) + ' ' + translator.get(1, this.lang));
 		}
 		delete App.parser.data.dyncmds[cmd][sub];
 		App.parser.saveData();
 		App.logCommandAction(this);
-		this.reply(translator.get(0, this.lang) + ' __' + cmd + ' ' + sub + '__ ' + translator.get(17, this.lang));
+		this.reply(translator.get(0, this.lang) + ' ' + Chat.italics(cmd + ' ' + sub) + ' ' + translator.get(17, this.lang));
 	},
 
 	dyncmdlist: function () {
@@ -184,21 +185,21 @@ module.exports = {
 		let groups = ['user', 'excepted'].concat(App.config.parser.groups);
 		if (groups.indexOf(rank) >= 0) {
 			if (!App.parser.modPermissions[perm]) {
-				return this.errorReply(translator.get(18, this.lang) + ' __' + perm + '__ ' + translator.get(5, this.lang));
+				return this.errorReply(translator.get(18, this.lang) + ' ' + Chat.italics(perm) + ' ' + translator.get(5, this.lang));
 			}
 			App.parser.data.permissions[perm] = rank;
 			App.parser.saveData();
 			App.logCommandAction(this);
 			switch (rank) {
 			case 'user':
-				this.reply(translator.get(18, this.lang) + ' __' + perm + '__ ' + translator.get(19, this.lang));
+				this.reply(translator.get(18, this.lang) + ' ' + Chat.italics(perm) + ' ' + translator.get(19, this.lang));
 				break;
 			case 'excepted':
-				this.reply(translator.get(18, this.lang) + ' __' + perm + '__ ' + translator.get(20, this.lang));
+				this.reply(translator.get(18, this.lang) + ' ' + Chat.italics(perm) + ' ' + translator.get(20, this.lang));
 				break;
 			default:
-				this.reply(translator.get(18, this.lang) + +' __' + perm + '__ ' +
-						translator.get(21, this.lang) + ' **' + rank + '** ' + translator.get(22, this.lang));
+				this.reply(translator.get(18, this.lang) + ' ' + Chat.italics(perm) + ' ' +
+						translator.get(21, this.lang) + ' ' + Chat.bold(rank) + ' ' + translator.get(22, this.lang));
 			}
 		} else {
 			return this.errorReply(translator.get(23, this.lang) + ": " + groups.join(', '));
@@ -220,10 +221,11 @@ module.exports = {
 		let groups = ['user', 'excepted'].concat(App.config.parser.groups);
 		if (groups.indexOf(rank) >= 0) {
 			if (!App.parser.modPermissions[perm]) {
-				return this.errorReply(translator.get(18, this.lang) + ' __' + perm + '__ ' + translator.get(5, this.lang));
+				return this.errorReply(translator.get(18, this.lang) + ' ' + Chat.italics(perm) + ' ' + translator.get(5, this.lang));
 			}
 			if (!App.parser.canSet(this.byIdent, perm, room, rank)) {
-				return this.errorReply(translator.get(24, this.lang) + ' __' + perm + '__ ' + translator.get(25, this.lang) + ' __' + rank + '__');
+				return this.errorReply(translator.get(24, this.lang) + ' ' + Chat.italics(perm) + ' ' +
+					translator.get(25, this.lang) + ' ' + Chat.italics(rank));
 			}
 			if (!App.parser.data.roompermissions[room]) {
 				App.parser.data.roompermissions[room] = {};
@@ -233,16 +235,16 @@ module.exports = {
 			App.logCommandAction(this);
 			switch (rank) {
 			case 'user':
-				this.reply(translator.get(18, this.lang) + ' __' + perm + '__ ' + translator.get(19, this.lang) + ' ' +
-						translator.get(26, this.lang) + ' __' + room + '__');
+				this.reply(translator.get(18, this.lang) + ' ' + Chat.italics(perm) + ' ' + translator.get(19, this.lang) + ' ' +
+						translator.get(26, this.lang) + ' ' + Chat.italics(room));
 				break;
 			case 'excepted':
-				this.reply(translator.get(18, this.lang) + ' __' + perm + '__ ' + translator.get(20, this.lang) + ' ' +
-						translator.get(26, this.lang) + ' __' + room + '__');
+				this.reply(translator.get(18, this.lang) + ' ' + Chat.italics(perm) + ' ' + translator.get(20, this.lang) + ' ' +
+						translator.get(26, this.lang) + ' ' + Chat.italics(room));
 				break;
 			default:
-				this.reply(translator.get(18, this.lang) + ' __' + perm + '__ ' + translator.get(21, this.lang) + ' **' +
-						rank + '** ' + translator.get(22, this.lang) + ' ' + translator.get(26, this.lang) + ' __' + room + '__');
+				this.reply(translator.get(18, this.lang) + ' ' + Chat.italics(perm) + ' ' + translator.get(21, this.lang) + ' ' +
+						Chat.bold(rank) + ' ' + translator.get(22, this.lang) + ' ' + translator.get(26, this.lang) + ' ' + Chat.italics(room));
 			}
 		} else {
 			return this.errorReply(translator.get(23, this.lang) + ": " + groups.join(', '));
@@ -255,11 +257,11 @@ module.exports = {
 		let user = Text.toId(this.arg);
 		if (!user) return this.errorReply(this.usage({desc: this.usageTrans('user')}));
 		if (App.parser.monitor.isLocked(user)) {
-			this.reply(translator.get(27, this.lang) + ' __' + user + '__ ' + translator.get(28, this.lang));
+			this.reply(translator.get(27, this.lang) + ' ' + Chat.italics(user) + ' ' + translator.get(28, this.lang));
 		} else {
 			App.parser.monitor.lock(user);
 			App.logCommandAction(this);
-			this.reply(translator.get(27, this.lang) + ' __' + user + '__ ' + translator.get(29, this.lang));
+			this.reply(translator.get(27, this.lang) + ' ' + Chat.italics(user) + ' ' + translator.get(29, this.lang));
 		}
 	},
 
@@ -269,11 +271,11 @@ module.exports = {
 		let user = Text.toId(this.arg);
 		if (!user) return this.errorReply(this.usage({desc: this.usageTrans('user')}));
 		if (!App.parser.monitor.isLocked(user)) {
-			this.reply(translator.get(27, this.lang) + ' __' + user + '__ ' + translator.get(30, this.lang));
+			this.reply(translator.get(27, this.lang) + ' ' + Chat.italics(user) + ' ' + translator.get(30, this.lang));
 		} else {
 			App.parser.monitor.unlock(user);
 			App.logCommandAction(this);
-			this.reply(translator.get(27, this.lang) + ' __' + user + '__ ' + translator.get(31, this.lang));
+			this.reply(translator.get(27, this.lang) + ' ' + Chat.italics(user) + ' ' + translator.get(31, this.lang));
 		}
 	},
 
@@ -292,7 +294,7 @@ module.exports = {
 		App.parser.data.roomctrl[control] = target;
 		App.parser.saveData();
 		App.logCommandAction(this);
-		this.reply(translator.get(32, this.lang) + ' __' + control + '__ ' + translator.get(33, this.lang) + ' __' + target + '__');
+		this.reply(translator.get(32, this.lang) + ' ' + Chat.italics(control) + ' ' + translator.get(33, this.lang) + ' ' + Chat.italics(target));
 	},
 
 	rmcontrolroom: function () {
@@ -301,11 +303,11 @@ module.exports = {
 		let control = Text.toRoomid(this.arg);
 		if (!control) return this.errorReply(this.usage({desc: translator.get('controlroom', this.lang)}));
 		if (!App.parser.data.roomctrl[control]) {
-			return this.errorReply(translator.get(34, this.lang) + ' __' + control + '__ ' + translator.get(1, this.lang));
+			return this.errorReply(translator.get(34, this.lang) + ' ' + Chat.italics(control) + ' ' + translator.get(1, this.lang));
 		}
 		delete App.parser.data.roomctrl[control];
 		App.parser.saveData();
 		App.logCommandAction(this);
-		this.reply(translator.get(34, this.lang) + ' __' + control + '__ ' + translator.get(17, this.lang));
+		this.reply(translator.get(34, this.lang) + ' ' + Chat.italics(control) + ' ' + translator.get(17, this.lang));
 	},
 };

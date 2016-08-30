@@ -9,6 +9,7 @@ const AutoConfirmed_RegTime = 7 * 24 * 60 * 60;
 const Path = require('path');
 
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 const Cache = Tools.get('cache.js').BufferCache;
 const Translator = Tools.get('translate.js');
 
@@ -50,8 +51,8 @@ module.exports = {
 			regTimestamp += (1000 * 60 * 60 * getESTDiff(regTimestamp)) +
 				(new Date().getTimezoneOffset() * 60 * 1000) - 364000;
 			this.pmReply(translator.get('user', this.lang) + " " + (data.username || target) +
-				" " + translator.get('regdate', this.lang) + " __" +
-				(new Date(regTimestamp)).toString().substr(4, 20).trim() + "__ (EST)");
+				" " + translator.get('regdate', this.lang) + " " +
+				Chat.italics((new Date(regTimestamp)).toString().substr(4, 20)) + " (EST)");
 		}.bind(this);
 		if (cacheData) {
 			return callback(cacheData);
@@ -105,8 +106,8 @@ module.exports = {
 			if (time > 0) times.unshift(time + ' ' + (time === 1 ? translator.get(8, this.lang) : translator.get(9, this.lang)));
 			/* Reply */
 			this.pmReply(translator.get('user', this.lang) + " " + (data.username || target) +
-				" " + translator.get('regtime1', this.lang) + " __" + times.join(', ') +
-				"__ " + translator.get('regtime2', this.lang));
+				" " + translator.get('regtime1', this.lang) + " " + Chat.italics(times.join(', ')) +
+				" " + translator.get('regtime2', this.lang));
 		}.bind(this);
 		if (cacheData) {
 			return callback(cacheData);
@@ -148,9 +149,9 @@ module.exports = {
 			let acCurr = AutoConfirmed_RegTime - time;
 			if (acCurr <= 0) {
 				if (typeof data.ratings !== "object" || Object.keys(data.ratings).length === 0) {
-					this.pmReply(translator.get(10, this.lang) + " **" + (data.username || target) + "** " + translator.get(11, this.lang));
+					this.pmReply(translator.get(10, this.lang) + " " + Chat.bold(data.username || target) + " " + translator.get(11, this.lang));
 				} else {
-					this.pmReply(translator.get(10, this.lang) + " **" + (data.username || target) + "** " + translator.get(12, this.lang));
+					this.pmReply(translator.get(10, this.lang) + " " + Chat.bold(data.username || target) + " " + translator.get(12, this.lang));
 				}
 				return;
 			}
@@ -169,9 +170,9 @@ module.exports = {
 			time = Math.floor(time / 24); // Days
 			if (time > 0) times.unshift(time + ' ' + (time === 1 ? translator.get(8, this.lang) : translator.get(9, this.lang)));
 			/* Reply */
-			this.pmReply(translator.get(14, this.lang) + " **" + (data.username || target) +
-				"** " + translator.get(15, this.lang) + " __" + times.join(', ') +
-				"__ " + translator.get(16, this.lang));
+			this.pmReply(translator.get(14, this.lang) + " " + Chat.bold(data.username || target) +
+				" " + translator.get(15, this.lang) + " " + Chat.italics(times.join(', ')) +
+				" " + translator.get(16, this.lang));
 		}.bind(this);
 		if (cacheData) {
 			return callback(cacheData);
@@ -191,8 +192,8 @@ module.exports = {
 					return this.pmReply(translator.get('err', this.lang) + " " + url);
 				}
 				if (data.registertime <= 0) {
-					return this.pmReply(translator.get(10, this.lang) + " __" +
-						(data.username || target) + "__ " + translator.get(13, this.lang));
+					return this.pmReply(translator.get(10, this.lang) + " " +
+						Chat.italics(data.username || target) + " " + translator.get(13, this.lang));
 				}
 				regdateCache.cache(target, data);
 				return callback(data);

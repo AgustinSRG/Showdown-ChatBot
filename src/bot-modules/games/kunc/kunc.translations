@@ -2,7 +2,7 @@
 
 %english
 
-$0 = A new **Kunc** game was created
+$0 = A new Kunc game was created
 $1 = It will be a max of
 $2 = questions
 $3 = If someone gets
@@ -13,13 +13,14 @@ $7 = Use
 $8 = ka <answer>
 $9 = to play
 
-$10 = **Time is out!** Answer
+$10 = Time is out!
+$10b = Answer
 
 $11 = Correct!
 $12 = answered the question correctly. Answer
 $13 = Current points
 
-$lose = **The Kunc game ended!** But no one got any points so there are no winners
+$lose = But no one got any points so there are no winners
 $end = The Kunc game ended!
 $grats1 = Congratulations to
 $grats2 = for winning the game with
@@ -33,7 +34,7 @@ $18 = Guess the pokemon with the following moves
 
 %spanish
 
-$0 = Se ha creado un juego de **Kunc**
+$0 = Se ha creado un juego de Kunc
 $1 = Serán un total de
 $2 = preguntas
 $3 = Si alguien consigue
@@ -44,14 +45,15 @@ $7 = Usa
 $8 = ka <respuesta>
 $9 = para jugar
 
-$10 = **El tiempo ha terminado!** Respuesta
+$10 = ¡El tiempo ha terminado!
+$10b = Respuesta
 
-$11 = Correcto!
+$11 = ¡Correcto!
 $12 = respondió a la pregunta correctamente. Respuesta
 $13 = Puntos
 
-$lose = **El juego de Kunc ha terminado!** Sin embargo nadie ha conseguido ningún punto, por lo que no hay ganadores
-$end = El juego de Kunc ha terminado!
+$lose = Sin embargo nadie ha conseguido ningún punto, por lo que no hay ganadores
+$end = ¡El juego de Kunc ha terminado!
 $grats1 = Felicidades a
 $grats2 = por ganar el juego con
 $points = puntos

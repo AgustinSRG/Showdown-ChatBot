@@ -10,6 +10,7 @@ const Default_Answer_Time = 30 * 1000;
 const Path = require('path');
 
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 const Translator = Tools.get('translate.js');
 const normalize = Tools.get('normalize.js');
 const PokeRand = require(Path.resolve(__dirname, 'pokerand.js'));
@@ -29,14 +30,14 @@ function getLanguage(room) {
 function parseWinners(winners, lang) {
 	let res = {
 		type: 'win',
-		text: "**" + winners[0] + "**",
+		text: Chat.bold(winners[0]),
 	};
 	if (winners.length < 2) return res;
 	res.type = 'tie';
 	for (let i = 1; i < winners.length - 1; i++) {
-		res.text += ", **" + winners[i] + "**";
+		res.text += ", " + Chat.bold(winners[i]);
 	}
-	res.text += " " + translator.get('and', lang) + " **" + winners[winners.length - 1] + "**";
+	res.text += " " + translator.get('and', lang) + " " + Chat.bold(winners[winners.length - 1]);
 	return res;
 }
 
@@ -65,7 +66,7 @@ class PokeAnagrams {
 	}
 
 	start() {
-		let txt = translator.get(0, this.lang) + ". ";
+		let txt = Chat.bold(translator.get(0, this.lang)) + " ";
 		if (this.games) {
 			txt += translator.get(1, this.lang) + " " + this.games + " " + translator.get(2, this.lang) + ". ";
 		}
@@ -73,8 +74,8 @@ class PokeAnagrams {
 			txt += translator.get(3, this.lang) + " " + this.maxpoints + " " + translator.get(4, this.lang) + ". ";
 		}
 		txt += translator.get(5, this.lang) + " " + Math.floor(this.ansTime / 1000) + " " + translator.get(6, this.lang) + ". ";
-		txt += translator.get(7, this.lang) + " ``" + (App.config.parser.tokens[0] || "") +
-			translator.get(8, this.lang) + "`` " + translator.get(9, this.lang) + ".";
+		txt += translator.get(7, this.lang) + " " + Chat.code((App.config.parser.tokens[0] || "") +
+			translator.get(8, this.lang)) + " " + translator.get(9, this.lang) + ".";
 		this.send(txt);
 		this.status = 'start';
 		this.wait();
@@ -108,14 +109,14 @@ class PokeAnagrams {
 		}
 		this.randomizedChars = this.randomizedChars.randomize();
 		this.status = 'question';
-		this.send("**Poke-Anagrams:** " + this.randomizedChars.join(', ') + ' | **' + this.clue + '**');
+		this.send(Chat.bold("Poke-Anagrams:") + " " + this.randomizedChars.join(', ') + ' | ' + Chat.bold(this.clue) + '');
 		this.timer = setTimeout(this.timeout.bind(this), this.ansTime);
 	}
 
 	timeout() {
 		this.status = 'wait';
 		this.timer = null;
-		this.send(translator.get(10, this.lang) + ": __" + this.word + "__");
+		this.send(Chat.bold(translator.get(10, this.lang)) + " " + translator.get('10b', this.lang) + ": " + Chat.italics(this.word) + "");
 		this.wait();
 	}
 
@@ -130,8 +131,8 @@ class PokeAnagrams {
 			if (!this.points[ident.id]) this.points[ident.id] = 0;
 			this.points[ident.id]++;
 			this.names[ident.id] = ident.name;
-			this.send(translator.get(11, this.lang) + " **" + ident.name + "** " + translator.get(12, this.lang) + ": __" +
-				this.word + "__. " + translator.get(13, this.lang) + ": " + this.points[ident.id]);
+			this.send(translator.get(11, this.lang) + " " + Chat.bold(ident.name) + " " + translator.get(12, this.lang) + ": " +
+				Chat.italics(this.word) + ". " + translator.get(13, this.lang) + ": " + this.points[ident.id]);
 			this.wait();
 		}
 	}
@@ -153,20 +154,20 @@ class PokeAnagrams {
 			}
 		}
 		if (!points) {
-			this.send(translator.get('lose', this.lang) + "!");
+			this.send(Chat.bold(translator.get('end', this.lang)) + " " + translator.get('lose', this.lang));
 			App.modules.games.system.terminateGame(this.room);
 			return;
 		}
 		let t = parseWinners(winners, this.lang);
-		let txt = "**" + translator.get('end', this.lang) + "** ";
+		let txt = Chat.bold(translator.get('end', this.lang)) + " ";
 		switch (t.type) {
 		case 'win':
 			txt += translator.get('grats1', this.lang) + " " + t.text + " " + translator.get('grats2', this.lang) +
-					" __" + points + " " + translator.get('points', this.lang) + "__!";
+					" " + Chat.italics(points + " " + translator.get('points', this.lang)) + "!";
 			break;
 		case 'tie':
-			txt += translator.get('tie1', this.lang) + " __" + points + " " + translator.get('points', this.lang) +
-					"__ " + translator.get('tie2', this.lang) + " " + t.text;
+			txt += translator.get('tie1', this.lang) + " " + Chat.italics(points + " " + translator.get('points', this.lang)) +
+					" " + translator.get('tie2', this.lang) + " " + t.text;
 			break;
 		}
 

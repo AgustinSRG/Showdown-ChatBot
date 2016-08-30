@@ -11,6 +11,7 @@
 const Path = require('path');
 
 const Text = Tools.get('text.js');
+const Chat = Tools.get('chat.js');
 const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'exec-cmd.translations'));
@@ -24,7 +25,7 @@ module.exports = {
 		this.args = this.arg.split(',');
 		if (!App.parser.exec(this)) {
 			if (!App.parser.execDyn(this)) {
-				this.errorReply(translator.get(0, this.lang) + ' __' + this.cmd + '__ ' + translator.get(1, this.lang) + '.');
+				this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(this.cmd) + ' ' + translator.get(1, this.lang) + '.');
 			}
 		}
 	},
@@ -38,7 +39,7 @@ module.exports = {
 		this.wall = true;
 		if (!App.parser.exec(this)) {
 			if (!App.parser.execDyn(this)) {
-				this.errorReply(translator.get(0, this.lang) + ' __' + this.cmd + '__ ' + translator.get(1, this.lang) + '.');
+				this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(this.cmd) + ' ' + translator.get(1, this.lang) + '.');
 			}
 		}
 	},
@@ -50,7 +51,7 @@ module.exports = {
 		this.arg = spl.join(' ');
 		this.args = this.arg.split(',');
 		if (!App.parser.execDyn(this)) {
-			this.errorReply(translator.get(0, this.lang) + ' __' + this.cmd + '__ ' + translator.get(1, this.lang) + '.');
+			this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(this.cmd) + ' ' + translator.get(1, this.lang) + '.');
 		}
 	},
 };

@@ -6,10 +6,10 @@ $0 = Use
 $1 = g <char/word>
 $2 = to play
 
-$3 = **The Poke-Hangman game ended!**
+$3 = The Poke-Hangman game ended!
 $4 = was hanged for failing guessing the word
 $5 = Congratulations to
-$6 = for winning the game
+$6 = for winning the game!
 $7 = The word was
 
 %spanish
@@ -18,8 +18,8 @@ $0 = Usa
 $1 = g <letra/palabra>
 $2 = para jugar
 
-$3 = **El juego de Poke-Hangman ha terminado!**
+$3 = ¡El juego de Poke-Hangman ha terminado!
 $4 = fue ahoracado por no acertar la palabra
-$5 = Felicidades a
-$6 = por ganar el juego
+$5 = ¡Felicidades a
+$6 = por ganar el juego!
 $7 = La palabra era
