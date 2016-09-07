@@ -189,8 +189,8 @@ module.exports = {
 		poke.active = true;
 		poke.slot = slot;
 		for (let i in details) poke[i] = details[i];
-		poke.hp = health.hp;
-		poke.status = health.status;
+		if (health) poke.hp = health.hp;
+		if (health) poke.status = health.status;
 		poke.helpers.sw = this.turn;
 		/* Get the active */
 		let active = this.players[p].active[slot];
@@ -198,6 +198,10 @@ module.exports = {
 			/* Forced switch */
 			this.players[p].active[slot] = poke;
 		} else {
+			if (!health) {
+				 poke.hp = active.hp;
+				 poke.status = active.status;
+			}
 			/* Normal switch */
 			if (active.passing && active.passing === this.turn) {
 				/* Pass the boost and volatiles */

@@ -385,6 +385,7 @@ class Battle {
 	}
 
 	parseStatus(str) {
+		if (!str) return null;
 		let status = {
 			hp: 100,
 			status: false,
