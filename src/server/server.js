@@ -1,5 +1,11 @@
 /**
  * Showdown ChatBot Control Panel Server
+ * Showdown ChatBot is distributed under the terms of the MIT License
+ * (https://github.com/asanrom/Showdown-ChatBot/blob/master/LICENSE)
+ *
+ * This file handles with the control pannel,
+ * the main method to configure the bot and accesing
+ * the information (lists, leaderboards, etc)
  */
 
 'use strict';
@@ -22,10 +28,13 @@ const Text = Tools.get('text.js');
 
 const PageMaker = require(Path.resolve(__dirname, 'html-maker.js'));
 
+/**
+ * Represents the Showdown ChatBot control panel server
+ */
 class Server {
 	/**
-	 * @param path Existing directory where all server configuration is stored
-	 * @param config Configuration object (port, bindaddress, https, httpsPort)
+	 * @param {Path} path - Existing directory where all server configuration is stored
+	 * @param {Object} config - Configuration object (port, bindaddress, https, httpsPort)
 	 */
 	constructor(path, config) {
 		/* Http server */
@@ -96,41 +105,58 @@ class Server {
 
 	/**
 	 * Sets a permission
-	 *
-	 * @param id Permission ID
-	 * @param desc Permission description
+	 * @param {String} id - Permission ID
+	 * @param {String} desc - Permission description
 	 */
 	setPermission(id, desc) {
 		this.permissions[id] = {desc: desc};
 	}
 
 	/**
+	 * @param {String} id
+	 */
+	removePermission(id) {
+		delete this.permissions[id];
+	}
+
+	/**
 	 * Adds a option to the server menu
-	 *
-	 * @param id Option ID
-	 * @param name Option name (It will be shown as literal)
-	 * @param url Href for the menu option
-	 * @param permission Permission required to view the option
+	 * @param {String} id - Option ID
+	 * @param {String} name - Option name (It will be shown as literal)
+	 * @param {String} url - Href for the menu option
+	 * @param {String} permission - Permission required to view the option
 	 */
 	setMenuOption(id, name, url, permission) {
 		this.menu[id] = {name: name, url: url, permission: permission};
 	}
 
 	/**
+	 * @param {String} id
+	 */
+	removeMenuOption(id) {
+		delete this.menu[id];
+	}
+
+	/**
 	 * Sets a server handler
-	 *
-	 * @param id url sub-path where the handler works
-	 * @param func Function (RequestContext, url_parts)
+	 * @param {String} id - url sub-path where the handler works
+	 * @param {function(RequestContext, Array<String>)} func
 	 */
 	setHandler(id, func) {
 		this.handlers[id] = func;
 	}
 
 	/**
+	 * @param {String} id
+	 */
+	removeHandler(id) {
+		delete this.handlers[id];
+	}
+
+	/**
 	 * Gets the available menu options in the context
-	 *
-	 * @param context An instance of RequestContext
-	 * @param selected ID of selected option
+	 * @param {RequestContext} context
+	 * @param {String} selected - ID of selected option
 	 */
 	getMenu(context, selected) {
 		let ret = [];
@@ -162,8 +188,8 @@ class Server {
 
 	/**
 	 * Returns a token for a new session
-	 *
-	 * @param userid User ID
+	 * @param {String} userid - User ID
+	 * @returns {String} token
 	 */
 	makeToken(userid) {
 		let token;
@@ -180,8 +206,7 @@ class Server {
 
 	/**
 	 * Generates the login data for the context
-	 *
-	 * @param context An instance of RequestContext
+	 * @param {RequestContext} context
 	 */
 	applyLogin(context) {
 		let token = context.cookies['usertoken'];
@@ -217,8 +242,8 @@ class Server {
 
 	/**
 	 * Gets the request IP Address
-	 *
-	 * @param request An instance of ClientRequest
+	 * @param {ClientRequest} request
+	 * @returns {String} IP
 	 */
 	getIP(request) {
 		let ip = request.connection.remoteAddress;
@@ -230,9 +255,8 @@ class Server {
 
 	/**
 	 * Handler for server requests
-	 *
-	 * @param request An instance of ClientRequest
-	 * @param response An instance of ServerResponse
+	 * @param {ClientRequest} request
+	 * @param {ServerResponse} response
 	 */
 	requestHandler(request, response) {
 		let ip = this.getIP(request);
@@ -257,8 +281,7 @@ class Server {
 
 	/**
 	 * Selects the server handler and ends the request
-	 *
-	 * @param context An instance of RequestContext
+	 * @param {RequestContext} context
 	 */
 	serve(context) {
 		if (context.url.path in {'/favicon.ico': 1, 'favicon.ico': 1}) {
@@ -297,8 +320,7 @@ class Server {
 
 	/**
 	 * Runs The server
-	 *
-	 * @param callback Function (error)
+	 * @param {function(Error)} callback
 	 */
 	listen(callback) {
 		if (typeof callback === 'function') {
@@ -324,8 +346,8 @@ class Server {
 
 /**
  * Returns the cookies object of a request
- *
- * @param request An instance of ClientRequest
+ * @param {ClientRequest} request
+ * @returns {Object} parsed cookies
  */
 function parseCookies(request) {
 	let list = {}, rc = request.headers.cookie;
@@ -338,9 +360,12 @@ function parseCookies(request) {
 	return list;
 }
 
+/**
+ * Represents a register user of Showdown ChatBot control panel
+ */
 class User {
 	/**
-	 * @param config Configuration object (id, name, group, permissions)
+	 * @param {Object} config - Configuration object (id, name, group, permissions)
 	 */
 	constructor(config) {
 		this.id = config.id;
@@ -349,10 +374,10 @@ class User {
 		this.permissions = config.permissions;
 	}
 
-	/*
+	/**
 	 * Returns true if the user has the permission, false if not
-	 *
-	 * @param permission The permission to check
+	 * @param {String} permission
+	 * @returns {Boolean}
 	 */
 	can(permission) {
 		if (this.permissions['root'] || this.permissions[permission]) {
@@ -363,11 +388,14 @@ class User {
 	}
 }
 
+/**
+ * Represents the circumstances where a server request is handled
+ */
 class RequestContext {
 	/**
-	 * @param request An instance of ClientRequest
-	 * @param response An instance of ServerResponse
-	 * @param ip The IP address of the client request
+	 * @param {ClientRequest} request
+	 * @param {ServerResponse} response
+	 * @param {String} ip - The IP address of the client request
 	 */
 	constructor(request, response, ip) {
 		this.request = request;
@@ -384,9 +412,8 @@ class RequestContext {
 	}
 
 	/**
-	 * Resolves cookies, post and get vars
-	 *
-	 * @param callback Function called when all vars are resolved
+	 * Resolves COOKIES, POST and GET vars
+	 * @param {function} callback - called when all vars are resolved
 	 */
 	resolveVars(callback) {
 		this.cookies = parseCookies(this.request);
@@ -426,8 +453,7 @@ class RequestContext {
 
 	/**
 	 * Sets the logged user
-	 *
-	 * @param user User ID
+	 * @param {String} user - User ID
 	 */
 	setUser(user) {
 		this.user = user;
@@ -435,8 +461,7 @@ class RequestContext {
 
 	/**
 	 * Set the cookie in the headers
-	 *
-	 * @param txt Cookie query string
+	 * @param {String} txt - Cookie query string
 	 */
 	setCookie(txt) {
 		this.headers['Set-Cookie'] = txt + ' Path=/';
@@ -444,8 +469,7 @@ class RequestContext {
 
 	/**
 	 * Sets the menu
-	 *
-	 * @param menu Array of menu options (name, url, selected)
+	 * @param {Array<Object>} menu - Array of menu options (name, url, selected)
 	 */
 	setMenu(menu) {
 		this.menu = menu;
@@ -453,8 +477,7 @@ class RequestContext {
 
 	/**
 	 * Informs that the login credentials were wrong
-	 *
-	 * @param user User ID
+	 * @param {String} user - User ID
 	 */
 	setInvalidLogin(user) {
 		this.invalidLogin = user;
@@ -462,9 +485,8 @@ class RequestContext {
 
 	/**
 	 * Sends a html page to the client
-	 *
-	 * @param html HTML string to send
-	 * @param code Response code (200 by default)
+	 * @param {String} html - HTML string to send
+	 * @param {Number|String} code - Response code (200 by default)
 	 */
 	endWithHtml(html, code) {
 		this.headers['Content-Type'] = 'text/html; charset=utf-8';
@@ -474,9 +496,8 @@ class RequestContext {
 
 	/**
 	 * Sends a plain text to the client
-	 *
-	 * @param text String to be sent
-	 * @param code Response code (200 by default)
+	 * @param {String} text - String to be sent
+	 * @param {Number|String} code - Response code (200 by default)
 	 */
 	endWithText(text, code) {
 		this.headers['Content-Type'] = 'text/plain; charset=utf-8';
@@ -486,10 +507,9 @@ class RequestContext {
 
 	/**
 	 * Sends a pre-formated html page to the client
-	 *
-	 * @param html body string to send
-	 * @param options Options object (title, scripts)
-	 * @param code Response code (200 by default)
+	 * @param {String} body
+	 * @param {Object} options - Options object (title, scripts)
+	 * @param {Number|String} code - Response code (200 by default)
 	 */
 	endWithWebPage(body, options, code) {
 		let loginData = {};
@@ -527,8 +547,7 @@ class RequestContext {
 
 	/**
 	 * Sends an static file to the client
-	 *
-	 * @param file Complete path of the requested file
+	 * @param {Path} file - Complete path of the requested file
 	 */
 	endWithStaticFile(file) {
 		Static.serveFile(file, this.request, this.response);
@@ -536,10 +555,9 @@ class RequestContext {
 
 	/**
 	 * Sends an error page to the client
-	 *
-	 * @param errcode Error Code
-	 * @param title Page Title
-	 * @param msg Error message
+	 * @param {Number|String} errcode - Error Code
+	 * @param {String} title - Page Title
+	 * @param {String} msg - Error description
 	 */
 	endWithError(errcode, title, msg) {
 		let html = "";

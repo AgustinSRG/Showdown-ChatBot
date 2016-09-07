@@ -1,5 +1,8 @@
 /**
- * Dependencies Checker
+ * Dependencies Checker for Showdown ChatBot
+ * Showdown ChatBot is distributed under the terms of the MIT License
+ * (https://github.com/asanrom/Showdown-ChatBot/blob/master/LICENSE)
+ *
  * Require this file to check / install the dependencies
  */
 

@@ -1,5 +1,10 @@
 /**
  * Showdown ChatBot Application
+ * Showdown ChatBot is distributed under the terms of the MIT License
+ * (https://github.com/asanrom/Showdown-ChatBot/blob/master/LICENSE)
+ *
+ * This file loads the server, bot, modules, commands, etc
+ * to generate the Showdown-ChatBot application
  */
 
 'use strict';
@@ -23,8 +28,8 @@ const checkDir = Tools.get('checkdir.js');
 
 class ChatBotApp {
 	/**
-	 * @param confDir A path to store the bot configuration
-	 * @param dataDir A path to store the bot data (dowloaded or temporal data)
+	 * @param {Path} confDir - A path to store the bot configuration
+	 * @param {Path} dataDir - A path to store the bot data (dowloaded or temporal data)
 	 */
 	constructor(confDir, dataDir) {
 		/* Initial Status */
@@ -193,8 +198,7 @@ class ChatBotApp {
 
 	/**
 	 * Starts the application
-	 *
-	 * @param callback Function (error)
+	 * @param {function(Error)} callback
 	 */
 	start(callback) {
 		this.server.listen(callback);
@@ -212,8 +216,7 @@ class ChatBotApp {
 
 	/**
 	 * Loads the modules
-	 *
-	 * @param path Directory where the modules are located
+	 * @param {Path} path - Directory where the modules are located
 	 */
 	loadModules(path) {
 		console.log('Loading bot modules...');
@@ -252,8 +255,7 @@ class ChatBotApp {
 
 	/**
 	 * Reloads the commands from all modules
-	 *
-	 * @param path Directory where the modules are located
+	 * @param {Path} path - Directory where the modules are located
 	 */
 	hotpatchCommands(path) {
 		if (FileSystem.existsSync(path) && FileSystem.statSync(path).isDirectory()) {
@@ -299,8 +301,7 @@ class ChatBotApp {
 
 	/*
 	 * Installs an add-on
-	 *
-	 * @param file Add-on filename
+	 * @param {String} file - Add-on filename
 	 */
 	installAddon(file) {
 		let path = Path.resolve(this.addonsDir, file);
@@ -315,8 +316,7 @@ class ChatBotApp {
 
 	/*
 	 * Uninstalls an add-on
-	 *
-	 * @param file Add-on filename
+	 * @param {String} file - Add-on filename
 	 */
 	removeAddon(file) {
 		if (typeof this.addons[file] === 'object' && typeof this.addons[file].destroy === 'function') {
@@ -337,8 +337,7 @@ class ChatBotApp {
 
 	/**
 	 * Creates the application logger
-	 *
-	 * @param path Directory where logs are stored
+	 * @param {Path} path - Directory where logs are stored
 	 */
 	createLogger(path) {
 		this.logsDir = path;
@@ -352,8 +351,7 @@ class ChatBotApp {
 
 	/**
 	 * Writes a message to the logger
-	 *
-	 * @param text The message to be written
+	 * @param {String} text - The message to be written
 	 */
 	log(text) {
 		if (this.logger) {
@@ -363,6 +361,9 @@ class ChatBotApp {
 		}
 	}
 
+	/**
+	 * @param {String} text
+	 */
 	debug(text) {
 		if (this.config.debug) {
 			this.log("DEBUG: " + text);
@@ -371,8 +372,7 @@ class ChatBotApp {
 
 	/**
 	 * Reports a crash to the logger
-	 *
-	 * @param err Error that causes the crash
+	 * @param {Error} err - Error that causes the crash
 	 */
 	reportCrash(err) {
 		let text = "";
@@ -385,9 +385,8 @@ class ChatBotApp {
 
 	/**
 	 * Logs a server action
-	 *
-	 * @param by User that causes the action
-	 * @param msg Description
+	 * @param {String} by - User ID
+	 * @param {String} msg -  Description
 	 */
 	logServerAction(by, msg) {
 		this.log('[SERVER] [By: ' + by + '] ' + msg);
@@ -395,8 +394,7 @@ class ChatBotApp {
 
 	/**
 	 * Logs a command action
-	 *
-	 * @param context an instance of CommandContext
+	 * @param {CommandContext} context
 	 */
 	logCommandAction(context) {
 		this.log('[COMMAND] [By: ' + context.by + '] [Room: ' + context.room + '] ' +

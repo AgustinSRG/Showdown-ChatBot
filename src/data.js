@@ -1,5 +1,7 @@
 /**
  * Pokemon Showdown Bot Data Manager
+ * Showdown ChatBot is distributed under the terms of the MIT License
+ * (https://github.com/asanrom/Showdown-ChatBot/blob/master/LICENSE)
  *
  * This tool downloads data of pokemon, moves, items, etc
  * from Pokemon Showdown! website and repository
@@ -61,8 +63,8 @@ const Showdown_Data = [
  * This function downloads a file and returns the data
  * via the callback
  *
- * @param url The requested url
- * @param callback Function (downloaded_data, error)
+ * @param {String} url - The requested url
+ * @param {function(String, Error)} callback
  */
 function wget(url, callback) {
 	url = Url.parse(url);
@@ -83,9 +85,12 @@ function wget(url, callback) {
 	});
 }
 
+/**
+ * Represents a manager for Showdown ChatBot data
+ */
 class DataManager {
 	/**
-	 * @param path An existing path to store the data
+	 * @param {Path} path - An existing path to store the data
 	 */
 	constructor(path) {
 		this.path = path;
@@ -111,8 +116,8 @@ class DataManager {
 
 	/**
 	 * Gets a file from the downloaded data
-	 *
-	 * @param file The requested file name
+	 * @param {String} file - The requested file name
+	 * @returns {Object}
 	 */
 	get(file) {
 		return require(Path.resolve(this.path, file));
@@ -120,13 +125,15 @@ class DataManager {
 
 	/**
 	 * Gets the Pokedex
+	 * @returns {Object}
 	 */
 	getPokedex() {
 		return this.get('pokedex.js').BattlePokedex;
 	}
 
 	/**
-	 * Gets the Moves
+	 * Gets the Pokemon Moves
+	 * @returns {Object}
 	 */
 	getMoves() {
 		return this.get('moves.js').BattleMovedex;
@@ -134,34 +141,39 @@ class DataManager {
 
 	/**
 	 * Gets the Items
+	 * @returns {Object}
 	 */
 	getItems() {
 		return this.get('items.js').BattleItems;
 	}
 
 	/**
-	 * Gets the Abilities
+	 * Gets the Pokemon Abilities
+	 * @returns {Object}
 	 */
 	getAbilities() {
 		return this.get('abilities.js').BattleAbilities;
 	}
 
 	/**
-	 * Gets the Aliases
+	 * Gets the Pokemon Showdown official aliases
+	 * @returns {Object}
 	 */
 	getAliases() {
 		return this.get('aliases.js').BattleAliases;
 	}
 
 	/**
-	 * Gets the Formats-Data
+	 * Gets the Pokemon Showdown formats data
+	 * @returns {Object}
 	 */
 	getFormatsData() {
 		return this.get('formats-data.js').BattleFormatsData;
 	}
 
 	/**
-	 * Gets the Learnsets
+	 * Gets the Pokemon Learnsets
+	 * @returns {Object}
 	 */
 	getLearnsets() {
 		return this.get('learnsets-g6.js').BattleLearnsets;
@@ -170,9 +182,8 @@ class DataManager {
 	/**
 	 * Gets an url from the web-cache or
 	 * download it if it is not in the cache
-	 *
-	 * @param url The requested url
-	 * @param callback Function (dowloaded_data, error)
+	 * @param {String} url - The requested url
+	 * @param {function(String, Error)} callback
 	 */
 	wget(url, callback) {
 		this.cache.sweep();
@@ -190,8 +201,8 @@ class DataManager {
 
 	/**
 	 * Gets the marks of an existing url in the cache
-	 *
-	 * @param url An url existing in the cache
+	 * @param {String} url - An url existing in the cache
+	 * @returns {Object} Cache marks
 	 */
 	getCacheMarks(url) {
 		this.cache.sweep();
@@ -200,11 +211,10 @@ class DataManager {
 
 	/**
 	 * Caches an url
-	 *
-	 * @param url Url to add
-	 * @param data Downloaded data corresponding to the url
-	 * @param expires Duration of the cache (in miliseconds)
-	 * @param marks Optional, an Object with flags
+	 * @param {String} url - Url to add
+	 * @param {String} data - Downloaded data corresponding to the url
+	 * @param {Number} expires - Duration of the cache (in miliseconds)
+	 * @param {Object} marks - Optional, an Object with flags
 	 */
 	cacheUrl(url, data, expires, marks) {
 		this.cache.cache(url, data, expires, marks);
@@ -212,8 +222,7 @@ class DataManager {
 
 	/**
 	 * Removes an url fro the cache
-	 *
-	 * @param url Url to remove
+	 * @param {String} url - Url to remove
 	 */
 	uncacheUrl(url) {
 		this.cache.uncache(url);
