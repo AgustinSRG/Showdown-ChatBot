@@ -504,8 +504,8 @@ class DynamicCommand {
 				if (conf[arg]) {
 					this.execNext(conf[arg], context);
 				} else if (Object.keys(conf).length) {
-					context.errorReply(translator.get(4, context.lang) + ": " + Chat.italics(cmd) + " | " +
-						translator.get(5, context.lang) + ": " + Chat.italics(Object.keys(conf).join(', ')));
+					context.errorReply((arg ? (translator.get(4, context.lang) + ". ") : "") + translator.get(5, context.lang) +
+						" " + Chat.bold(cmd) + ": " + Chat.italics(Object.keys(conf).join(', ')));
 				}
 			}
 			break;

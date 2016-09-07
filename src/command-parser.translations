@@ -1,4 +1,4 @@
-# Command Parser translations
+﻿# Command Parser translations
 
 %english
 
@@ -11,8 +11,8 @@ $2 = to use this command
 $3 = Usage
 
 # Dyn Cmd Options
-$4 = Command
-$5 = Options
+$4 = Unknown option
+$5 = Options for command
 
 %spanish
 
@@ -25,5 +25,5 @@ $2 = para usar este comando
 $3 = Uso del Comando
 
 # Dyn Cmd Options
-$4 = Comando
-$5 = Opciones
+$4 = Opción desconocida
+$5 = Opciones para el comando
