@@ -1,5 +1,11 @@
 /**
- * Command Parser
+ * Command Parser for Showdown ChatBot
+ * Showdown ChatBot is distributed under the terms of the MIT License
+ * (https://github.com/asanrom/Showdown-ChatBot/blob/master/LICENSE)
+ *
+ * This file handles with bot commands, the main
+ * ineteraction system between the bot and
+ * Pokemon Showdown users
  */
 
 'use strict';
@@ -16,15 +22,18 @@ const DataBase = Tools.get('json-db.js');
 const Text = Tools.get('text.js');
 const Chat = Tools.get('chat.js');
 const AbuseMonitor = Tools.get('abuse-monitor.js');
-const Translator = Tools.get('translate.js');
 
+const Translator = Tools.get('translate.js');
 const translator = new Translator(Path.resolve(__dirname, 'command-parser.translations'));
 const usageTranslator = new Translator(Path.resolve(__dirname, 'command-usage.translations'));
 
+/**
+ * Represents a Showdown-ChatBot command parser
+ */
 class CommandParser {
 	/**
-	 * @param path Existing directory to store the parser configuration
-	 * @param bot Instance of ShowdownBot
+	 * @param {Path} path - Existing directory to store the parser configuration
+	 * @param {ShowdownBot} bot
 	 */
 	constructor(path, bot) {
 		/* Initial values */
@@ -69,8 +78,8 @@ class CommandParser {
 
 	/**
 	 * Returns true if the command exists, false if not
-	 *
-	 * @param cmd Command ID
+	 * @param {String} cmd - Command ID
+	 * @returns {Boolean}
 	 */
 	commandExists(cmd) {
 		if (this.commands[cmd] || this.data.dyncmds[cmd]) {
@@ -82,8 +91,7 @@ class CommandParser {
 
 	/**
 	 * Adds static commands to the command parser
-	 *
-	 * @param cmds Object key = command id, value = function or string
+	 * @param {Object} cmds - Object key = command id, value = function or string
 	 */
 	addCommands(cmds) {
 		for (let k in cmds) {
@@ -102,8 +110,7 @@ class CommandParser {
 
 	/**
 	 * Removes static commands (to uninstall an add-on
-	 *
-	 * @param cmds Object key = command id, value = function or string
+	 * @param {Object} cmds - Object key = command id, value = function or string
 	 */
 	removeCommands(cmds) {
 		for (let k in cmds) {
@@ -132,9 +139,8 @@ class CommandParser {
 
 	/**
 	 * Adds a command permission
-	 *
-	 * @param id Permission ID
-	 * @param attributes Object with the attributes (execepted, group)
+	 * @param {String} id - Permission ID
+	 * @param {Object} attributes - Object with the attributes (execepted, group)
 	 */
 	addPermission(id, attributes) {
 		if (!this.modPermissions[id]) {
@@ -144,10 +150,9 @@ class CommandParser {
 
 	/**
 	 * Adds a Command parser trigger
-	 *
-	 * @param id Trigger ID
-	 * @param mode It can be "before" (it can interupt the command) or "after"
-	 * @param func Function (CommandContext)
+	 * @param {String} id - Trigger ID
+	 * @param {String} mode - It can be "before" (it can interupt the command) or "after"
+	 * @param {function(CommandContext)} func
 	 */
 	addTrigger(id, mode, func) {
 		if (this.triggers[mode]) {
@@ -157,9 +162,9 @@ class CommandParser {
 
 	/**
 	 * Runs the triggers
-	 *
-	 * @param mode (before/after)
-	 * @param context Instance of CommandContext
+	 * @param {String} mode - (before/after)
+	 * @param {CommandContext} context
+	 * @returns {Boolean} true if the trigger interrups the command
 	 */
 	execTriggers(mode, context) {
 		if (this.triggers[mode]) {
@@ -171,10 +176,20 @@ class CommandParser {
 	}
 
 	/**
+	 * Removes a trigger
+	 * @param {String} id - Trigger ID
+	 * @param {String} mode - It can be "before" (it can interupt the command) or "after"
+	 */
+	removeTrigger(id, mode) {
+		if (this.triggers[mode]) {
+			delete this.triggers[mode][id];
+		}
+	}
+
+	/**
 	 * Sends a help message
-	 *
-	 * @param userid User ID
-	 * @param by User name
+	 * @param {String} userid - User ID
+	 * @param {String} by - User name
 	 */
 	sendHelpMsg(userid, by) {
 		for (let user in this.lastHelpCommand) {
@@ -192,9 +207,9 @@ class CommandParser {
 
 	/**
 	 * Anti Spam System (check method)
-	 *
-	 * @param userid User ID
-	 * @param room Room where the command is used
+	 * @param {String} userid - User ID
+	 * @param {String} room - Room where the command is used
+	 * @returns {Boolean}
 	 */
 	checkAntiSpamSystem(userid, room) {
 		if (!this.data.antispam) return false;
@@ -209,9 +224,8 @@ class CommandParser {
 
 	/**
 	 * Anti Spam System (set method)
-	 *
-	 * @param userid User ID
-	 * @param room Room where the command is used
+	 * @param {String} userid - User ID
+	 * @param {String} room - Room where the command is used
 	 */
 	markPrivateCommand(userid, room) {
 		if (!this.data.antispam) return;
@@ -221,8 +235,8 @@ class CommandParser {
 
 	/**
 	 * Runs a dynamic command if it exists
-	 *
-	 * @param context An instance of CommandContext
+	 * @param {CommandContext} context
+	 * @returns {Boolean} true if a command was executed
 	 */
 	execDyn(context) {
 		let cmds = this.data.dyncmds;
@@ -240,8 +254,8 @@ class CommandParser {
 
 	/**
 	 * Runs a static command if it exists
-	 *
-	 * @param context An instance of CommandContext
+	 * @param {CommandContext} context
+	 * @returns {Boolean} true if a command was executed
 	 */
 	exec(context) {
 		let handler = context.cmd;
@@ -261,10 +275,9 @@ class CommandParser {
 	/**
 	 * Parses a chat or private message to generate
 	 * the command context and run the command
-	 *
-	 * @param msg Message
-	 * @param room Room ID, null if Private message
-	 * @param by User name
+	 * @param {String} msg - Message
+	 * @param {String} room - Room ID, null if Private message
+	 * @param {String} by - User name
 	 */
 	parse(msg, room, by) {
 		if (!room && msg.substr(0, 8) === '/invite ') {
@@ -349,9 +362,9 @@ class CommandParser {
 	/**
 	 * Returns true if a group is equal or higher than another,
 	 * returns false if not
-	 *
-	 * @param ident An object with "group" attribute
-	 * @param group The group you want to compare to
+	 * @param {Object} ident - An object with "group" attribute
+	 * @param {String} group - The group you want to compare to
+	 * @returns {Boolean}
 	 */
 	equalOrHigherGroup(ident, group) {
 		let groups = App.config.parser.groups;
@@ -375,10 +388,10 @@ class CommandParser {
 	/**
 	 * Returns true if the user has the permission,
 	 * false if not.
-	 *
-	 * @param ident Object with "id" and group attributes of the user
-	 * @param perm The permission you want to check
-	 * @param room If it is a room permission, null if it is a global permission
+	 * @param {Object} ident - Object with "id" and group attributes of the user
+	 * @param {String} perm - The permission you want to check
+	 * @param {String} room - If it is a room permission, null if it is a global permission
+	 * @returns {Boolean}
 	 */
 	can(ident, perm, room) {
 		if (this.data.exceptions[ident.id]) return true;
@@ -409,11 +422,11 @@ class CommandParser {
 	/**
 	 * Returns true if the user can set the permission
 	 * in a room. Returns false if not
-	 *
-	 * @param ident Object with "id" and group attributes of the user
-	 * @param perm The permission you want to check
-	 * @param room If it is a room permission, null if it is a global permission
-	 * @param tarGroup The group to set the room permission
+	 * @param {Object} ident - Object with "id" and group attributes of the user
+	 * @param {String} perm - The permission you want to check
+	 * @param {String} room - If it is a room permission, null if it is a global permission
+	 * @param {String} tarGroup - The group to set the room permission
+	 * @returns {Boolean}
 	 */
 	canSet(ident, perm, room, tarGroup) {
 		if (this.data.exceptions[ident.id]) return true;
@@ -424,6 +437,7 @@ class CommandParser {
 
 	/**
 	 * Returns an array with all commands ids
+	 * @returns {Array<String>}
 	 */
 	getCommadsArray() {
 		let commands = Object.keys(this.commands);
@@ -432,10 +446,13 @@ class CommandParser {
 	}
 }
 
+/**
+ * Represents a static command
+ */
 class Command {
 	/**
-	 * @param id Command ID
-	 * @param func Function (id, CommandContext)
+	 * @param {String} id - Command ID
+	 * @param {function(String, CommandContext)} func
 	 */
 	constructor(id, func) {
 		this.id = id;
@@ -444,8 +461,7 @@ class Command {
 
 	/**
 	 * Runs The command
-	 *
-	 * @param context An instance of CommandContext
+	 * @param {CommandContext} context
 	 */
 	exec(context) {
 		context.handler = this.id;
@@ -453,10 +469,13 @@ class Command {
 	}
 }
 
+/**
+ * Represents a dynamic command
+ */
 class DynamicCommand {
 	/**
-	 * @param id Command ID
-	 * @param conf Dynamic command configuration
+	 * @param {String} id - Command ID
+	 * @param {Object|String} conf - Dynamic command configuration
 	 */
 	constructor(id, conf) {
 		this.id = id;
@@ -465,8 +484,7 @@ class DynamicCommand {
 
 	/**
 	 * Runs The command
-	 *
-	 * @param context an instance of CommandContext
+	 * @param {CommandContext} context
 	 */
 	exec(context) {
 		context.handler = this.id;
@@ -495,16 +513,19 @@ class DynamicCommand {
 	}
 }
 
+/**
+ * Represents the circumstances where a command is executed
+ */
 class CommandContext {
 	/**
-	 * @param parser An instance of CommandParser
-	 * @param room Room id where the message was sent or null if pm
-	 * @param by Name of the user that sent the message
-	 * @param token Command token used to run the command
-	 * @param cmd Command id
-	 * @param arg Command argument
-	 * @param targetRoom Target room (control rooms for example)
-	 * @param replyWithWall true to reply with /announce
+	 * @param {CommandParser} parser
+	 * @param {String} room - Room id where the message was sent or null if pm
+	 * @param {String} by - Name of the user that sent the message
+	 * @param {String} token - Command token used to run the command
+	 * @param {String} cmd - Command id
+	 * @param {String} arg - Command argument
+	 * @param {String} targetRoom - Target room (control rooms for example)
+	 * @param {Boolean} replyWithWall - true to reply with /announce
 	 */
 	constructor(parser, room, by, token, cmd, arg, targetRoom, replyWithWall) {
 		/* Initial values */
@@ -541,9 +562,9 @@ class CommandContext {
 
 	/**
 	 * Sends something to the showdown server
-	 *
-	 * @param data Data to be sent
-	 * @param room Room to send the data
+	 * @param {Array<String>|String} data - Data to be sent
+	 * @param {String} room - Room to send the data
+	 * @returns {SendManager}
 	 */
 	send(data, room) {
 		if (room === undefined) {
@@ -555,9 +576,9 @@ class CommandContext {
 
 	/**
 	 * Sends a private message
-	 *
-	 * @param to User to send the message
-	 * @param data Data to be sent
+	 * @param {String} to - User to send the message
+	 * @param {Array<String>|String} data
+	 * @returns {SendManager}
 	 */
 	sendPM(to, data) {
 		return this.parser.bot.pm(to, data);
@@ -565,8 +586,8 @@ class CommandContext {
 
 	/**
 	 * Standard reply method
-	 *
-	 * @param msg Message to reply
+	 * @param {Array<String>|String} msg
+	 * @returns {SendManager}
 	 */
 	reply(msg) {
 		if (this.isPM) {
@@ -580,8 +601,8 @@ class CommandContext {
 
 	/**
 	 * Replies with /announce
-	 *
-	 * @param msg Message to reply
+	 * @param {Array<String>|String} msg
+	 * @returns {SendManager}
 	 */
 	wallReply(msg) {
 		let roomData = this.parser.bot.rooms[this.room];
@@ -602,8 +623,8 @@ class CommandContext {
 
 	/**
 	 * Replies via private message
-	 *
-	 * @param msg Message to reply
+	 * @param {Array<String>|String} msg
+	 * @returns {SendManager}
 	 */
 	pmReply(msg) {
 		return this.sendPM(this.byIdent.id, msg);
@@ -611,9 +632,9 @@ class CommandContext {
 
 	/**
 	 * Replies standard or via pm depending of a permission
-	 *
-	 * @param msg Message to reply
-	 * @param perm Permission to check
+	 * @param {Array<String>|String} msg
+	 * @param {String} perm - Permission to check
+	 * @returns {SendManager}
 	 */
 	restrictReply(msg, perm) {
 		if (this.can(perm, this.room)) {
@@ -625,8 +646,8 @@ class CommandContext {
 
 	/**
 	 * Replies with an error message
-	 *
-	 * @param msg Message to reply
+	 * @param {Array<String>|String} msg
+	 * @returns {SendManager}
 	 */
 	errorReply(msg) {
 		this.wall = false;
@@ -635,9 +656,8 @@ class CommandContext {
 
 	/**
 	 * Checks permission for the current user
-	 *
-	 * @param perm Permission to check
-	 * @param room Room (a room permission) or null (global permission)
+	 * @param {String} perm - Permission to check
+	 * @param {String} room - Room (a room permission) or null (global permission)
 	 */
 	can(perm, room) {
 		return this.parser.can(this.byIdent, perm, room);
@@ -645,8 +665,8 @@ class CommandContext {
 
 	/**
 	 * Replies with an access denied message
-	 *
-	 * @param perm Permission required to use the command
+	 * @param {String} perm - Permission required to use the command
+	 * @returns {SendManager}
 	 */
 	replyAccessDenied(perm) {
 		return this.pmReply(translator.get(0, this.lang) + '. ' +
@@ -655,6 +675,7 @@ class CommandContext {
 
 	/**
 	 * Returns true if the user is excepted, false if not
+	 * @returns {Boolean}
 	 */
 	isExcepted() {
 		return this.parser.data.exceptions[this.byIdent.id];
@@ -662,6 +683,7 @@ class CommandContext {
 
 	/**
 	 * Returns the room configured language
+	 * @returns {String} Room language
 	 */
 	getLanguage() {
 		if (!this.room) {
@@ -673,6 +695,7 @@ class CommandContext {
 
 	/**
 	 * Returns an usage message
+	 * @returns {String} Usage message
 	 */
 	usage() {
 		let txt = "";
@@ -692,10 +715,18 @@ class CommandContext {
 		return txt;
 	}
 
+	/**
+	 * @param {String} key
+	 * @returns {String} Translated Key
+	 */
 	usageTrans(key) {
 		return usageTranslator.get(key, this.lang);
 	}
 
+	/**
+	 * @param {String} room
+	 * @returns {String} Room Type
+	 */
 	getRoomType(room) {
 		if (room === null) {
 			return 'pm';
@@ -709,6 +740,9 @@ class CommandContext {
 		}
 	}
 
+	/**
+	 * @returns {Object} Parsed Arguments
+	 */
 	parseArguments() {
 		let parsedArgs = {};
 		for (let i = 0; i < this.args.length; i++) {
@@ -720,6 +754,9 @@ class CommandContext {
 		return parsedArgs;
 	}
 
+	/**
+	 * @returns {String}
+	 */
 	toString() {
 		return Util.format("[Room: %s] [By: %s] [Target: %s] [Token: %s] [Cmd: %s] [Arg: %s]",
 			this.room, this.by, this.targetRoom, this.token, this.cmd, this.arg);
