@@ -1,13 +1,102 @@
 #!/bin/env node
 
+/**
+ * Showdown ChatBot runner
+ * Showdown ChatBot is distributed under the terms of the MIT License
+ * (https://github.com/asanrom/Showdown-ChatBot/blob/master/LICENSE)
+ *
+ * Run this file in order to start Showdown ChatBot application
+ * Command line arguments options:
+ *  -p [port] to change the http port
+ *  -b [address] to change the bind address
+ *  -d [path] to change the data / configuration path
+ *  -k [ssl-key] to set the ssl key file
+ *  -c [ssl-cert] to set the ssl certificate file
+ */
+
 'use strict';
 
 const Util = require("util");
-global.Package = require('./package.json');
+const Path = require("path");
+
+global.Package = require(Path.resolve(__dirname, 'package.json'));
 
 console.log(Util.format('Showdown-ChatBot %s', Package.version));
 
-require('./src/dependencies.js');
+require(Path.resolve(__dirname, 'src/dependencies.js'));
 
 console.log('Initializing...');
-require('./src/index.js');
+
+/* Shell Options */
+
+let shellOpts = {};
+for (let i = 0; i < process.argv.length; i++) {
+	let tag = process.argv[i].trim();
+	if (tag.charAt(0) === '-') {
+		if (process.argv[i + 1]) {
+			shellOpts[tag] = process.argv[i + 1];
+		} else {
+			shellOpts[tag] = true;
+		}
+	}
+}
+
+global.ShellOptions = {};
+for (let key in shellOpts) {
+	switch (key) {
+	case '-port':
+	case '-p':
+		if (shellOpts[key] !== true && !isNaN(parseInt(shellOpts[key]))) {
+			global.ShellOptions.port = parseInt(shellOpts[key]);
+			console.log("Shell Options: PORT set to " + global.ShellOptions.port);
+		} else {
+			console.log("Invalid PORT set. Usage: node showdown-chatbot [-p] [PORT]");
+			process.exit(1);
+		}
+		break;
+	case '-bindaddress':
+	case '-b':
+		if (shellOpts[key] !== true) {
+			global.ShellOptions.bindaddress = shellOpts[key].trim();
+			console.log("Shell Options: BINADDRESS set to " + global.ShellOptions.bindaddress);
+		} else {
+			console.log("Invalid BINADDRESS set. Usage: node showdown-chatbot [-b] [BINADDRESS]");
+			process.exit(1);
+		}
+		break;
+	case '-dir':
+	case '-d':
+		if (shellOpts[key] !== true) {
+			global.ShellOptions.dir = Path.resolve(__dirname, shellOpts[key]);
+			console.log("Shell Options: DATA-DIRECTORY set to " + global.ShellOptions.dir);
+		} else {
+			console.log("Invalid DATA-DIRECTORY set. Usage: node showdown-chatbot [-d] [DATA-DIRECTORY]");
+			process.exit(1);
+		}
+		break;
+	case '-key':
+	case '-k':
+		if (shellOpts[key] !== true) {
+			global.ShellOptions.sslkey = Path.resolve(__dirname, shellOpts[key]);
+			console.log("Shell Options: SSL-KEY set to " + global.ShellOptions.sslkey);
+		} else {
+			console.log("Invalid SSL-KEY set. Usage: node showdown-chatbot [-k] [SSL-KEY]");
+			process.exit(1);
+		}
+		break;
+	case '-cert':
+	case '-c':
+		if (shellOpts[key] !== true) {
+			global.ShellOptions.sslcert = Path.resolve(__dirname, shellOpts[key]);
+			console.log("Shell Options: SSL-CERT set to " + global.ShellOptions.sslcert);
+		} else {
+			console.log("Invalid SSL-CERT set. Usage: node showdown-chatbot [-c] [SSL-CERT]");
+			process.exit(1);
+		}
+		break;
+	}
+}
+
+/* Require Main File */
+
+require(Path.resolve(__dirname, 'src/index.js'));

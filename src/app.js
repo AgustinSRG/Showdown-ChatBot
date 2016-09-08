@@ -77,12 +77,17 @@ class ChatBotApp {
 			this.config.loadmodules = {};
 		}
 
-		if (process.env['PORT']) {
+		if (global.ShellOptions && global.ShellOptions.port !== undefined) {
+			this.config.server.port = global.ShellOptions.port;
+		} else if (process.env['PORT']) {
 			this.config.server.port = process.env['PORT'];
 		} else if (process.env['OPENSHIFT_NODEJS_PORT']) {
 			this.config.server.port = process.env['OPENSHIFT_NODEJS_PORT'];
 		}
-		if (process.env['BIND_IP']) {
+
+		if (global.ShellOptions && global.ShellOptions.bindaddress !== undefined) {
+			this.config.server.bindaddress = global.ShellOptions.bindaddress;
+		} else if (process.env['BIND_IP']) {
 			this.config.server.bindaddress = process.env['BIND_IP'];
 		} else if (process.env['OPENSHIFT_NODEJS_IP']) {
 			this.config.server.bindaddress = process.env['OPENSHIFT_NODEJS_IP'];

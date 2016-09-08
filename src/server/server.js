@@ -51,13 +51,21 @@ class Server {
 		this.https = null;
 		this.httpsOptions = {};
 		if (config.https) {
+			let sslkey = Path.resolve(path, 'ssl-key.pem');
+			let sslcert = Path.resolve(path, 'ssl-cert.pem');
+			if (global.ShellOptions && global.ShellOptions.sslkey !== undefined) {
+				sslkey = global.ShellOptions.sslkey;
+			}
+			if (global.ShellOptions && global.ShellOptions.sslcert !== undefined) {
+				sslcert = global.ShellOptions.sslcert;
+			}
 			this.httpsOptions = {
 				port: config.httpsPort,
 				bindaddress: config.bindaddress,
 			};
 			try {
-				this.https = new Https.Server({key: FileSystem.readFileSync(Path.resolve(path, 'ssl-key.pem')),
-					cert: FileSystem.readFileSync(Path.resolve(path, 'ssl-cert.pem'))}, this.requestHandler.bind(this));
+				this.https = new Https.Server({key: FileSystem.readFileSync(sslkey),
+					cert: FileSystem.readFileSync(sslcert)}, this.requestHandler.bind(this));
 			} catch (err) {
 				console.log('Could not create a ssl server. Missing key and certificate.');
 			}
