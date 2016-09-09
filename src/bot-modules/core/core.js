@@ -71,6 +71,7 @@ App.bot.on('updateuser', (nick, named) => {
 
 App.bot.on('renamefailure', err => {
 	if (lastLogin.named) return;
+	if (!App.bot.isConnected()) return;
 	if (err === 'wrongpassword') {
 		console.log("Login Error: Wrong password.");
 	} else if (App.config.modules.core.nick) {
