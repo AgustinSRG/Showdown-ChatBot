@@ -128,8 +128,8 @@ App.server.setHandler('admin', (context, parts) => {
 	html += '<tr><td><strong>Application Title</strong>: </td><td><input type="text" name="apptitle" value="' +
 		(App.config.apptitle || 'Showdown ChatBot') + '" /></td></tr>';
 	html += '<tr><td><strong>Websocket Library</strong>: </td><td><select name="wslib">';
-	html += '<option value="websocket"' + (App.config.websocketLibrary === 'websocket' ? 'selected="selected"' : '') + '>Websocket</option>';
 	html += '<option value="sockjs"' + (App.config.websocketLibrary !== 'websocket' ? 'selected="selected"' : '') + '>SockJS</option>';
+	html += '<option value="websocket"' + (App.config.websocketLibrary === 'websocket' ? 'selected="selected"' : '') + '>Websocket</option>';
 	html += '</select></td></tr>';
 	html += '</table>';
 	html += '<p><label><input type="checkbox" name="debugmode" value="true" ' +
