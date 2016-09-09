@@ -86,18 +86,20 @@ exports.generate = function (body, loginData, menu, options) {
 	if (menu) {
 		buf += '<div align="center" class="maindiv">';
 		buf += '<div class="menu">';
+		let levels = [];
 		for (let j = 0; j < menu.length; j++) {
-			if (menu[j].selected) {
-				buf += '<a class="menu-option-selected" href="' + menu[j].url + '">';
-			} else {
-				buf += '<a class="menu-option" href="' + menu[j].url + '">';
+			let menuOpts = menu[j].menu;
+			let auxMenu = [];
+			for (let k = 0; k < menuOpts.length; k++) {
+				if (menuOpts[k].selected) {
+					auxMenu.push('<a class="menu-option-selected" href="' + menuOpts[k].url + '">' + menuOpts[k].name + '</a>');
+				} else {
+					auxMenu.push('<a class="menu-option" href="' + menuOpts[k].url + '">' + menuOpts[k].name + '</a>');
+				}
 			}
-			buf += menu[j].name;
-			buf += '</a>';
-			if (j < menu.length - 1) {
-				buf += '<span class="menu-separator"> | </span>';
-			}
+			levels.push(auxMenu.join('<span class="menu-separator">&nbsp;| </span>'));
 		}
+		buf += levels.join('<hr />');
 		buf += '</div>';
 		buf += '</div>';
 	}

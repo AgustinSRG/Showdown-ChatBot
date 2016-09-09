@@ -12,7 +12,7 @@ const check = Tools.get('check.js');
 
 /* Menu Options */
 
-App.server.setMenuOption('addons', 'Add-ons', '/addons/', 'root');
+App.server.setMenuOption('addons', 'Add-ons', '/addons/', 'root', 2);
 
 /* Handlers */
 

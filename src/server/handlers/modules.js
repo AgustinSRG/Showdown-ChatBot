@@ -6,7 +6,7 @@
 
 /* Menu Options */
 
-App.server.setMenuOption('modules', 'Modules', '/modules/', 'root');
+App.server.setMenuOption('modules', 'Modules', '/modules/', 'root', 2);
 
 /* Handlers */
 

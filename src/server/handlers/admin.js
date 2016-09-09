@@ -11,7 +11,7 @@ const check = Tools.get('check.js');
 
 /* Menu Options */
 
-App.server.setMenuOption('admin', 'Admin', '/admin/', 'root');
+App.server.setMenuOption('admin', 'Admin', '/admin/', 'root', 2);
 
 /* Handlers */
 

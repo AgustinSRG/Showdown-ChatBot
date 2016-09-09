@@ -133,9 +133,10 @@ class Server {
 	 * @param {String} name - Option name (It will be shown as literal)
 	 * @param {String} url - Href for the menu option
 	 * @param {String} permission - Permission required to view the option
+	 * @param {Number} level - Option level (higher for important options, lower for modules)
 	 */
-	setMenuOption(id, name, url, permission) {
-		this.menu[id] = {name: name, url: url, permission: permission};
+	setMenuOption(id, name, url, permission, level) {
+		this.menu[id] = {name: name, url: url, permission: permission, level: (parseInt(level) || 0)};
 	}
 
 	/**
@@ -165,16 +166,30 @@ class Server {
 	 * Gets the available menu options in the context
 	 * @param {RequestContext} context
 	 * @param {String} selected - ID of selected option
+	 * @returns {Array<Object>}
 	 */
 	getMenu(context, selected) {
-		let ret = [];
+		let menu = {};
 		for (let i in this.menu) {
 			if (!this.menu[i].permission || (context.user && context.user.can(this.menu[i].permission))) {
-				ret.push({name: this.menu[i].name, url: this.menu[i].url, selected: (selected === i)});
+				let level = this.menu[i].level || 0;
+				if (!menu[level]) menu[level] = [];
+				menu[level].push({name: this.menu[i].name, url: this.menu[i].url, selected: (selected === i)});
 			}
 		}
+		let ret = [];
+		for (let level in menu) {
+			menu[level] = menu[level].sort((a, b) => {
+				return a.name.localeCompare(b.name);
+			});
+			ret.push({level: level, menu: menu[level]});
+		}
 		ret = ret.sort((a, b) => {
-			return a.name.localeCompare(b.name);
+			if (a.level >= b.level) {
+				return -1;
+			} else {
+				return 1;
+			}
 		});
 		if (ret.length) {
 			return ret;

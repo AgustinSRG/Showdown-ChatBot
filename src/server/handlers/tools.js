@@ -12,7 +12,7 @@ const getEvalResult = Tools.get('eval.js');
 
 /* Menu Options */
 
-App.server.setMenuOption('tools', 'Tools', '/tools/', 'root');
+App.server.setMenuOption('tools', 'Tools', '/tools/', 'root', 2);
 
 /* Handlers */
 

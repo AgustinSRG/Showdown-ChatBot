@@ -12,7 +12,7 @@ App.server.setPermission('parser', 'Permission for changing the command parser c
 
 /* Menu Options */
 
-App.server.setMenuOption('parser', 'Command&nbsp;Parser', '/parser/', 'parser');
+App.server.setMenuOption('parser', 'Command&nbsp;Parser', '/parser/', 'parser', 1);
 
 /* Handlers */
 

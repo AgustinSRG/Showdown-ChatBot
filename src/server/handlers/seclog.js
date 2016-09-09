@@ -14,7 +14,7 @@ App.server.setPermission('seclog', 'Permission for accesing the security log and
 
 /* Menu Options */
 
-App.server.setMenuOption('seclog', 'Security&nbsp;Log', '/seclog/', 'seclog');
+App.server.setMenuOption('seclog', 'Security&nbsp;Log', '/seclog/', 'seclog', 2);
 
 /* Handlers */
 

@@ -8,7 +8,7 @@ const Text = Tools.get('text.js');
 
 /* Menu Options */
 
-App.server.setMenuOption('autojoin', 'Bot&nbsp;AutoJoin', '/autojoin/', 'core');
+App.server.setMenuOption('autojoin', 'Bot&nbsp;AutoJoin', '/autojoin/', 'core', 1);
 
 /* Handlers */
 

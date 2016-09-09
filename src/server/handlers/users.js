@@ -13,7 +13,7 @@ App.server.setPermission('users', 'Permission for managing the server users');
 
 /* Menu Options */
 
-App.server.setMenuOption('users', 'Users', '/users/', 'users');
+App.server.setMenuOption('users', 'Users', '/users/', 'users', 2);
 
 /* Handlers */
 
