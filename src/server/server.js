@@ -44,7 +44,7 @@ class Server {
 			bindaddress: config.bindaddress,
 		};
 		this.http.on('error', error => {
-			App.reportCrash(error);
+			App.log("[SERVER] HTTP ERROR - " + error.code + ":" + error.message);
 		});
 
 		/* Https */
@@ -71,7 +71,7 @@ class Server {
 			}
 			if (this.https) {
 				this.https.on('error', error => {
-					App.reportCrash(error);
+					App.log("[SERVER] HTTPS ERROR - " + error.code + ":" + error.message);
 				});
 			}
 		}

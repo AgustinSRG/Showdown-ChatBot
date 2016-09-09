@@ -59,7 +59,10 @@ console.log('Starting server...');
 
 App.start(err => {
 	if (err) {
-		console.log(err.message + '\n' + err.stack);
+		console.log("FATAL: Cannot start the server. Error code: " + err.code);
+		if (err.code === "EADDRINUSE") {
+			console.log("PORT is in use. You can choose another port with the following syntax: node showdown chatbot -p PORT");
+		}
 		process.exit(1);
 	} else {
 		App.tryRunBot();
