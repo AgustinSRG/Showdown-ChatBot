@@ -30,6 +30,7 @@ exports.refreshLoggers = function () {
 			checkdir(path);
 			loggers[room] = new Logger(path, Text.toId(room), App.config.modules.chatlogger.maxold);
 		}
+		loggers[room].sweep();
 	}
 	if (App.config.modules.chatlogger.logpm) {
 		if (!pmLogger) {
@@ -37,6 +38,7 @@ exports.refreshLoggers = function () {
 			checkdir(path);
 			pmLogger = exports.pmLogger = new Logger(path, 'pm', App.config.modules.chatlogger.maxold);
 		}
+		pmLogger.sweep();
 	}
 };
 
@@ -57,6 +59,10 @@ App.bot.on('line', (room, line, splittedLine, initialMsg) => {
 		}
 		loggers[room].log((initialMsg ? '[INTRO] ' : '') + line);
 	}
+});
+
+App.bot.on('connect', () => {
+	exports.refreshLoggers();
 });
 
 require(Path.resolve(__dirname, 'handlers/logs-view.js'));

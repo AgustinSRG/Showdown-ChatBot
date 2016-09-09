@@ -38,6 +38,13 @@ App.server.setHandler('chatlogger', (context, parts) => {
 			App.config.modules.chatlogger.rooms = rooms;
 			App.config.modules.chatlogger.logpm = !!context.post.logpm;
 			App.config.modules.chatlogger.maxold = maxold;
+			for (let room in App.modules.chatlogger.system.loggers) {
+				App.modules.chatlogger.system.loggers[room].maxOld = maxold;
+			}
+			if (App.modules.chatlogger.system.pmLogger) {
+				App.modules.chatlogger.system.pmLogger.maxOld = maxold;
+			}
+			App.modules.chatlogger.system.refreshLoggers();
 			App.db.write();
 			App.logServerAction(context.user.id, 'Edit Chat-Logger Configuration (ChatLogger Module)');
 			ok = "Chatloogger configuration saved.";
