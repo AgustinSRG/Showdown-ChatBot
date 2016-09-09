@@ -40,6 +40,7 @@ Add-ons
 Add-ons are like optional modules you can install for your bot. They are rather limited and have no translation feature but they can be used to add custom commands and very specific features to your bot. Some public add-ons here:
 
  - [Youtube Link Recognition (for YouTube related rooms)](https://gist.github.com/asanrom/c93eb063a57a6937f235df8ee23c1460)
+ - [Automated Promotion to Voice (for free rooms or groupchats)](https://gist.github.com/asanrom/a9f3b72015830567bee31dd0a2575274)
 
 Useful Documentation
 ------------
