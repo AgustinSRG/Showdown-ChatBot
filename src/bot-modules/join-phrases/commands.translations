@@ -10,7 +10,7 @@ $1 = in room
 $2 = Join-Phrase sucessfully removed for user
 $3 = There is not a Join-Phrase set for user
 $4 = There are not join-phrases set for room
-$5 = Feature not available
+$5 = Upload error. Try again later.
 
 $phrase = phrase
 
@@ -24,6 +24,6 @@ $1 = en la sala
 $2 = Se ha eliminado la Join-Phrase del usuario
 $3 = No hay ninguna Join-Phrase establecida para el usuario
 $4 = No hay ninguna join-phrase establecida en la sala
-$5 = Funcionalidad no disponible
+$5 = Error de subida. Inténtalo de nuevo más tarde.
 
 $phrase = frase

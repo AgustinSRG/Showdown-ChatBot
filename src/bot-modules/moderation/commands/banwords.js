@@ -9,6 +9,7 @@ const Path = require('path');
 const Text = Tools.get('text.js');
 const Chat = Tools.get('chat.js');
 const Translator = Tools.get('translate.js');
+const Hastebin = Tools.get('hastebin.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'banwords.translations'));
 
@@ -33,6 +34,7 @@ module.exports = {
 		let punishment = Text.toId(this.args[2]) || 'mute';
 		let strictMode = Text.toId(this.args[3]) || 'std';
 		let nicks = Text.toId(this.args[4]) || 'std';
+		console.log(word + ' | ' + type + ' | ' + punishment + ' | ' + strictMode + ' | ' + nicks);
 		if (!word || !(type in {'banned': 1, 'inap': 1, 'insult': 1}) || !(strictMode in {'std': 1, 'strict': 1}) || !(nicks in {'std': 1, 'ignorenicks': 1})) {
 			return this.errorReply(this.usage({desc: translator.get('word', this.lang)}, {desc: 'banned/inap/insult', optional: true},
 				{desc: translator.get('punishment', this.lang), optional: true}, {desc: 'std/strict', optional: true},
@@ -88,7 +90,8 @@ module.exports = {
 		if (!this.can('banword', this.room)) return this.replyAccessDenied('banword');
 		let server = App.config.server.url;
 		if (!server) {
-			return this.pmReply(translator.get(7, this.lang));
+			this.cmd = 'viewbannedwordshastebin';
+			return App.parser.exec(this);
 		}
 		let room = this.targetRoom;
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
@@ -139,5 +142,50 @@ module.exports = {
 		} else {
 			return this.pmReply(App.config.server.url + '/temp/' + key);
 		}
+	},
+
+	viewbannedwordshastebin: function () {
+		if (!this.can('banword', this.room)) return this.replyAccessDenied('banword');
+		let room = this.targetRoom;
+		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
+		const config = App.modules.moderation.system.data;
+		let words = config.bannedWords[room];
+		if (!words) return this.pmReply(translator.get(6, this.lang) + " " + Chat.italics(room));
+		let text = '';
+		text += 'Banned Words in ' + room + ':\n\n';
+		words = Object.keys(words).sort();
+		for (let i = 0; i < words.length; i++) {
+			let word = words[i];
+			text += word + ' | ';
+			switch (config.bannedWords[room][word].type) {
+			case 'b':
+				text += 'Type: Banned';
+				break;
+			case 'i':
+				text += 'Type: Inapropiate';
+				break;
+			case 'o':
+				text += 'Type: Insult / Offensive';
+				break;
+			}
+			text += ' | ';
+			text += 'Punishment: ' + App.modules.moderation.system.modBot.getPunishment(config.bannedWords[room][word].val);
+			if (config.bannedWords[room][word].strict) {
+				text += ' | ';
+				text += 'Strict Word';
+			}
+			if (config.bannedWords[room][word].nonicks) {
+				text += ' | ';
+				text += 'Ignore Nicknames';
+			}
+			text += '\n';
+		}
+		Hastebin.upload(text, function (link, err) {
+			if (err) {
+				this.pmReply(translator.get(7, this.lang));
+			} else {
+				this.pmReply(link);
+			}
+		}.bind(this));
 	},
 };

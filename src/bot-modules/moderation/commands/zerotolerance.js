@@ -9,6 +9,7 @@ const Path = require('path');
 const Text = Tools.get('text.js');
 const Chat = Tools.get('chat.js');
 const Translator = Tools.get('translate.js');
+const Hastebin = Tools.get('hastebin.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'zerotolerance.translations'));
 
@@ -72,7 +73,8 @@ module.exports = {
 		if (!this.can('zerotolerance', this.room)) return this.replyAccessDenied('zerotolerance');
 		let server = App.config.server.url;
 		if (!server) {
-			return this.pmReply(translator.get(7, this.lang));
+			this.cmd = 'viewzerotolerancehastebin';
+			return App.parser.exec(this);
 		}
 		let room = this.targetRoom;
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
@@ -104,6 +106,33 @@ module.exports = {
 		} else {
 			return this.pmReply(App.config.server.url + '/temp/' + key);
 		}
+	},
+
+	viewzerotolerancehastebin: function () {
+		if (!this.can('zerotolerance', this.room)) return this.replyAccessDenied('zerotolerance');
+		let room = this.targetRoom;
+		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
+		const config = App.modules.moderation.system.data;
+		let zt = config.zeroTolerance[room];
+		if (!zt) {
+			return this.pmReply(translator.get(8, this.lang) + " " + Chat.italics(room) + " " + translator.get(9, this.lang));
+		}
+		let text = '';
+		text += 'Zero tolerance configuration of ' + room + ':\n\n';
+		let users = Object.keys(zt).sort();
+		for (let i = 0; i < users.length; i++) {
+			let user = users[i];
+			text += user;
+			text += ' (Level: ' + zt[user] + ')';
+			text += '\n';
+		}
+		Hastebin.upload(text, function (link, err) {
+			if (err) {
+				this.pmReply(translator.get(7, this.lang));
+			} else {
+				this.pmReply(link);
+			}
+		}.bind(this));
 	},
 
 	checkzerotolerance: function () {

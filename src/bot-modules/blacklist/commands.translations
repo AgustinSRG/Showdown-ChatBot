@@ -8,7 +8,7 @@ $0 = Users added to the blacklist of
 $1 = Specified users had invalid nicks or were already blacklisted
 $2 = Users removed from the blacklist of
 $3 = Specified users had invalid nicks or were not blacklisted
-$4 = This feature is not available
+$4 = Upload error. Try again later.
 $5 = There are not users blacklisted in
 
 %spanish
@@ -19,5 +19,5 @@ $0 = Usuarios agregados a la lista negra de la sala
 $1 = Los usuarios especificados tenían nicks no válidos o ya estaban presentes en la lista negra
 $2 = Usuarios eliminados de la lista negra de la sala
 $3 = Los usuarios especificados tenían nicks no válidos o no estaban presentes en la lista negra
-$4 = Esta funcionalidad no está disponible
+$4 = Error de subida. Inténtalo de nuevo más tarde.
 $5 = No hay ningún usuario en la lista negra de la sala

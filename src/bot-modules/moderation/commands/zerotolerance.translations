@@ -13,7 +13,7 @@ $4 = in room
 $5 = is not in zero tolerance status in room
 $6 = is no longer on zero tolerance status in room
 
-$7 = Feature not available
+$7 = Upload error. Try again later.
 $8 = Zero tolerance list for room
 $9 = is empty
 
@@ -35,7 +35,7 @@ $4 = en la sala
 $5 = no se encuentra en estado de tolerancia cero en la sala
 $6 = ha dejado de estar en estado de tolerancia cero en la sala
 
-$7 = Funcionalidad no disponible
+$7 = Error de subida. Inténtalo de nuevo más tarde.
 $8 = La lista de tolerancia cero de la sala
 $9 = está vacía
 

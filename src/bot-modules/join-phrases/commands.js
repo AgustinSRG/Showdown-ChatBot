@@ -8,6 +8,7 @@ const Path = require('path');
 const Translator = Tools.get('translate.js');
 const Text = Tools.get('text.js');
 const Chat = Tools.get('chat.js');
+const Hastebin = Tools.get('hastebin.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
@@ -81,7 +82,8 @@ module.exports = {
 		let config = App.modules.joinphrases.system.config;
 		let server = App.config.server.url;
 		if (!server) {
-			return this.pmReply(translator.get(5, this.lang));
+			this.cmd = 'listjoinphraseshastebin';
+			return App.parser.exec(this);
 		}
 		let room = this.targetRoom;
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
@@ -109,5 +111,29 @@ module.exports = {
 		} else {
 			return this.pmReply(App.config.server.url + '/temp/' + key);
 		}
+	},
+
+	listjoinphraseshastebin: function () {
+		if (!this.can('joinphrases', this.room)) return this.replyAccessDenied('joinphrases');
+		let config = App.modules.joinphrases.system.config;
+		let room = this.targetRoom;
+		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
+		if (!config.rooms[room]) {
+			return this.errorReply(translator.get(4, this.lang) + " " + Chat.italics(room));
+		}
+		let text = '';
+		text += 'Join-Phrases in ' + room + ':\n\n';
+		for (let user in config.rooms[room]) {
+			text += user + ' - ';
+			text += config.rooms[room][user];
+			text += '\n';
+		}
+		Hastebin.upload(text, function (link, err) {
+			if (err) {
+				this.pmReply(translator.get(5, this.lang));
+			} else {
+				this.pmReply(link);
+			}
+		}.bind(this));
 	},
 };
