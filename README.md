@@ -32,23 +32,20 @@ To start the bot, use `cd` to reach the directory of the bot and run the command
 node showdown-chatbot
 ```
 
-Once installed, [configure your bot using the control panel](https://github.com/asanrom/Showdown-ChatBot/blob/master/doc/configuration.md)
+Once installed, configure your bot using the control panel. You can use the [Basic Configuration Guide](https://github.com/asanrom/Showdown-ChatBot/wiki/Basic-Configuration-Guide) as help.
 
 Add-ons
 ------------
 
-Add-ons are like optional modules you can install for your bot. They are rather limited and have no translation feature but they can be used to add custom commands and very specific features to your bot. Some public add-ons here:
-
- - [Youtube Link Recognition (for YouTube related rooms)](https://gist.github.com/asanrom/c93eb063a57a6937f235df8ee23c1460)
- - [Automated Promotion to Voice (for free rooms or groupchats)](https://gist.github.com/asanrom/a9f3b72015830567bee31dd0a2575274)
+Add-ons are like optional modules you can install for your bot. They are rather limited and have no translation feature but they can be used to add custom commands and very specific features to your bot. Some public add-ons [here](https://github.com/asanrom/Showdown-ChatBot/wiki#add-ons).
 
 Useful Documentation
 ------------
 
- - [Frequently Asked Questions](https://github.com/asanrom/Showdown-ChatBot/blob/master/doc/faq.md)
- - [Commands List](https://github.com/asanrom/Showdown-ChatBot/blob/master/doc/commands.md)
- - [Development Documentation](https://github.com/asanrom/Showdown-ChatBot/blob/master/doc/development.md)
- - [Add-ons explanation](https://github.com/asanrom/Showdown-ChatBot/blob/master/doc/addons-development.md)
+ - [Frequently Asked Questions](https://github.com/asanrom/Showdown-ChatBot/wiki/Frequently-Asked-Questions)
+ - [Commands List](https://github.com/asanrom/Showdown-ChatBot/wiki/Commands-List)
+
+For more guides and documentation, check the [Showdown-ChatBot Wiki](https://github.com/asanrom/Showdown-ChatBot/wiki)
 
 
 Lisense
