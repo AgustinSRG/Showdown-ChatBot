@@ -291,7 +291,7 @@ class ChatBotApp {
 
 	/* Add-ons */
 
-	/*
+	/**
 	 * Reads the add-ons path and installs the add-ons
 	 */
 	loadAddons() {
@@ -304,7 +304,7 @@ class ChatBotApp {
 		}.bind(this));
 	}
 
-	/*
+	/**
 	 * Installs an add-on
 	 * @param {String} file - Add-on filename
 	 */
@@ -319,7 +319,7 @@ class ChatBotApp {
 		}
 	}
 
-	/*
+	/**
 	 * Uninstalls an add-on
 	 * @param {String} file - Add-on filename
 	 */
