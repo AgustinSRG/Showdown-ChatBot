@@ -10,6 +10,7 @@
  * @returns {String} id
  */
 exports.toId = function (str) {
+	if (!str) return '';
 	return ('' + str).toLowerCase().replace(/[^a-z0-9]/g, '');
 };
 
@@ -19,6 +20,7 @@ exports.toId = function (str) {
  * @returns {String} room id
  */
 exports.toRoomid = function (str) {
+	if (!str) return '';
 	return ('' + str).replace(/[^a-zA-Z0-9-]+/g, '').toLowerCase();
 };
 
@@ -28,6 +30,7 @@ exports.toRoomid = function (str) {
  * @returns {String} command id
  */
 exports.toCmdid = function (str) {
+	if (!str) return '';
 	return ('' + str).replace(/[^_a-zA-Z0-9-]+/g, '').toLowerCase();
 };
 
@@ -37,6 +40,7 @@ exports.toCmdid = function (str) {
  * @returns {String} command token id
  */
 exports.toCmdTokenid = function (str) {
+	if (!str) return '';
 	return ('' + str).replace(/ /g, '').toLowerCase();
 };
 
@@ -46,6 +50,7 @@ exports.toCmdTokenid = function (str) {
  * @returns {String}
  */
 exports.trim = function (str) {
+	if (!str) return '';
 	return ('' + str).trim();
 };
 
@@ -55,6 +60,7 @@ exports.trim = function (str) {
  * @returns {String}
  */
 exports.escapeHTML = function (str) {
+	if (!str) return '';
 	return ('' + str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;').replace(/\//g, '&#x2f;');
 };
 
@@ -64,6 +70,7 @@ exports.escapeHTML = function (str) {
  * @returns {String}
  */
 exports.stripCommands = function (text) {
+	if (!text) return '';
 	text = '' + text;
 	return ((text.trim().charAt(0) === '/') ? '/' : ((text.trim().charAt(0) === '!') ? ' ' : '')) + text.trim();
 };
@@ -74,6 +81,7 @@ exports.stripCommands = function (text) {
  * @returns {String}
  */
 exports.toChatMessage = function (text) {
+	if (!text) return '';
 	return ('' + text).replace(/\n/, '').trim();
 };
 
