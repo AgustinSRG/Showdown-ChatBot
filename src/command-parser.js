@@ -49,7 +49,6 @@ class CommandParser {
 		/* Configuration DataBase */
 		this.db = new DataBase(Path.resolve(path, 'cmd-parser.json'));
 		this.data = this.db.data;
-		if (!this.data.dyncmds) this.data.dyncmds = {}; /* Dynamic Commands */
 		if (!this.data.aliases) this.data.aliases = {}; /* Command Aliases */
 		if (!this.data.exceptions) this.data.exceptions = {}; /* Excepted users */
 		if (!this.data.canExceptions) this.data.canExceptions = []; /* Permission exceptions */
@@ -59,6 +58,12 @@ class CommandParser {
 		if (!this.data.roomctrl) this.data.roomctrl = {}; /* Control rooms */
 		if (!this.data.helpmsg) this.data.helpmsg = ""; /* Help Message */
 		if (!this.data.antispam) this.data.antispam = false; /* Anti-Spam System */
+
+		/* Dynamic Commands */
+		if (!this.data.dyncmds) this.data.dyncmds = {};
+		if (Object.keys(this.data.dyncmds).length === 0) {
+			this.data.dyncmds['help'] = 'https://github.com/asanrom/Showdown-ChatBot/wiki/Commands-List';
+		}
 
 		/* Permissions */
 		this.modPermissions = {
