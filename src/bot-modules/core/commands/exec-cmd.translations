@@ -4,8 +4,10 @@
 
 $0 = Command
 $1 = not found
+$2 = Maybe you mean
 
 %spanish
 
 $0 = El Comando
 $1 = no existe
+$2 = ¿Quizás quisiste decir

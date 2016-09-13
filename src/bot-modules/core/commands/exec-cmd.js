@@ -25,7 +25,9 @@ module.exports = {
 		this.args = this.arg.split(',');
 		if (!App.parser.exec(this)) {
 			if (!App.parser.execDyn(this)) {
-				this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(this.cmd) + ' ' + translator.get(1, this.lang) + '.');
+				let exactCmd = App.parser.searchCommand(this.cmd);
+				this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(this.cmd) + ' ' + translator.get(1, this.lang) + '.' +
+					(exactCmd ? (' ' + translator.get(2, this.lang) + ' ' + Chat.italics(exactCmd) + '?') : ''));
 			}
 		}
 	},
@@ -39,7 +41,9 @@ module.exports = {
 		this.wall = true;
 		if (!App.parser.exec(this)) {
 			if (!App.parser.execDyn(this)) {
-				this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(this.cmd) + ' ' + translator.get(1, this.lang) + '.');
+				let exactCmd = App.parser.searchCommand(this.cmd);
+				this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(this.cmd) + ' ' + translator.get(1, this.lang) + '.' +
+					(exactCmd ? (' ' + translator.get(2, this.lang) + ' ' + Chat.italics(exactCmd) + '?') : ''));
 			}
 		}
 	},

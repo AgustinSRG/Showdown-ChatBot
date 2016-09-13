@@ -95,6 +95,51 @@ class CommandParser {
 	}
 
 	/**
+	 * Inexact search for commands
+	 * @param {String} cmd - Inexact command id
+	 * @returns {String} Exact command or empty string if not found
+	 */
+	searchCommand(cmd) {
+		if (!cmd) return '';
+		let results = [];
+		let maxLd = 3;
+
+		if (cmd.length <= 1) {
+			return '';
+		} else if (cmd.length <= 4) {
+			maxLd = 1;
+		} else if (cmd.length <= 6) {
+			maxLd = 2;
+		}
+
+		for (let command in this.commands) {
+			let ld = Text.levenshtein(command, cmd, maxLd);
+			if (ld <= maxLd) {
+				results.push({cmd: command, ld: ld});
+			}
+		}
+
+		for (let command in this.data.dyncmds) {
+			let ld = Text.levenshtein(command, cmd, maxLd);
+			if (ld <= maxLd) {
+				results.push({cmd: command, ld: ld});
+			}
+		}
+
+		let currLd = 10;
+		let chosen = '';
+
+		for (let i = 0; i < results.length; i++) {
+			if (results[i].ld < currLd) {
+				currLd = results[i].ld;
+				chosen = results[i].cmd;
+			}
+		}
+
+		return chosen;
+	}
+
+	/**
 	 * Adds static commands to the command parser
 	 * @param {Object} cmds - Object key = command id, value = function or string
 	 */
