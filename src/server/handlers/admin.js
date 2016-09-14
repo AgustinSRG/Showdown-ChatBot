@@ -57,10 +57,13 @@ App.server.setHandler('admin', (context, parts) => {
 		/* Save administration options */
 		let newPort = parseInt(context.post.port);
 		let newHttpsPort = parseInt(context.post.sslport);
+		let maxlines = parseInt(context.post.maxlines);
+		let loginserv = (context.post.loginserv || "").trim();
 
 		/* Check */
 		try {
 			check(!isNaN(newPort), "Invalid port.");
+			check(!isNaN(maxlines) && maxlines > 0, "Invalid lines restriction");
 		} catch (err) {
 			error = err.message;
 		}
@@ -78,6 +81,8 @@ App.server.setHandler('admin', (context, parts) => {
 			}
 			App.config.server.url = context.post.appurl || "";
 			App.config.apptitle = context.post.apptitle || "";
+			App.config.bot.loginserv = loginserv || "play.pokemonshowdown.com";
+			App.config.bot.maxlines = maxlines;
 			App.config.debug = !!context.post.debugmode;
 			App.config.useproxy = !!context.post.useproxy;
 			App.config.blockautodownload = !!context.post.blockautodownload;
@@ -131,6 +136,10 @@ App.server.setHandler('admin', (context, parts) => {
 	html += '<option value="sockjs"' + (App.config.websocketLibrary !== 'websocket' ? 'selected="selected"' : '') + '>SockJS</option>';
 	html += '<option value="websocket"' + (App.config.websocketLibrary === 'websocket' ? 'selected="selected"' : '') + '>Websocket</option>';
 	html += '</select></td></tr>';
+	html += '<tr><td><strong>Pokemon Showdown Login Server</strong>: </td><td><input type="text" name="loginserv" value="' +
+		(App.config.bot.loginserv || 'play.pokemonshowdown.com') + '" /></td></tr>';
+	html += '<tr><td><strong>Pokemon Showdown Lines Restriction</strong>: </td><td><input type="text" name="maxlines" value="' +
+		(App.config.bot.maxlines || '3') + '" /></td></tr>';
 	html += '</table>';
 	html += '<p><label><input type="checkbox" name="debugmode" value="true" ' +
 		(App.config.debug ? 'checked="checked"' : '') + ' /></label>&nbsp;Enable debug mode.</p>';

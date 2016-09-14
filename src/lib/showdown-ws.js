@@ -25,12 +25,14 @@ const Url = require('url');
 const WebSocketClient = require('websocket').client;
 const Https = require('https');
 
+const Message_Sent_Delay = 2000; // Delay in order to avoid losing messages because of anti-flood system
+const Default_Room = "lobby"; // If the server sends a message without specifying the room
+const Max_Idle_Interval = 2 * 60 * 1000; // To avoid websocket bugs causes a false active connection
+
 const Default_Login_Server = "play.pokemonshowdown.com";
-const Max_Idle_Interval = 2 * 60 * 1000;
-const Message_Sent_Delay = 2000;
+const Default_Server_Id = "showdown";
 const Default_Retry_Delay = 10 * 1000;
-const Max_Lines = 3;
-const Default_Room = "lobby";
+const Max_Lines_Default = 3;
 
 /**
  * Represents a Pokemon Showdown Bot
@@ -39,20 +41,24 @@ class Bot {
 	/**
 	 * @param {String} server - The Pokemon Showdown sever to connect
 	 * @param {Number} port
-	 * @param {Object} loginOptions - Login Options are: loginServer {String}, serverId {String}
-	 * @param {Object} errOptions - Error Options are: retryDelay {Number}, ckeckInterval {Number}
+	 * @param {String} loginServer - Default: play.pokemonshowdown.com
+	 * @param {Number} maxLinesSend - Pokemon Showdown server lines per message restriction
+	 * @param {Boolean} connectionRetry - true for retrying the connectio on disconnect
+	 * @param {Number} connectionRetryDelay - miliseconds to wait before retrying the connection
 	 */
-	constructor(server, port, loginOptions, errOptions) {
+	constructor(server, port, serverId, loginServer, maxLinesSend, connectionRetry, connectionRetryDelay) {
 		this.server = server;
 		this.port = port;
 
-		this.loginOptions = loginOptions || null;
+		this.loginOptions = {};
+		this.loginOptions.serverId = serverId;
+		this.loginOptions.loginServer = loginServer;
 		this.loginUrl = {
-			loginServer: (loginOptions ? (loginOptions.loginServer || Default_Login_Server) : Default_Login_Server),
-			serverId: (loginOptions ? (loginOptions.serverId || "showdown") : "showdown"),
+			loginServer: (this.loginOptions.loginServer || Default_Login_Server),
+			serverId: (this.loginOptions.serverId || Default_Server_Id),
 		};
 
-		this.errOptions = errOptions || null;
+		this.maxLinesSend = maxLinesSend || Max_Lines_Default;
 
 		this.connection = null;
 		this.connecting = false;
@@ -69,6 +75,9 @@ class Bot {
 
 		this.connectionCheckTimer = null;
 		this.connectionRetryTimer = null;
+
+		this.errOptions = {};
+		this.errOptions.retryDelay = connectionRetryDelay;
 
 		let webSocket = this.webSocket = new WebSocketClient();
 		webSocket.on('connectFailed', function (err) {
@@ -87,14 +96,14 @@ class Bot {
 			this.events.emit('connect', connection);
 		}.bind(this));
 
-		if (errOptions) {
+		if (connectionRetry) {
 			this.on('connectFailed', function () {
 				if (this.closed || this.connecting || this.status.connected) return;
-				this.retryConnect(errOptions.retryDelay || Default_Retry_Delay);
+				this.retryConnect(this.errOptions.retryDelay || Default_Retry_Delay);
 			}.bind(this));
 			this.on('disconnect', function () {
 				if (this.closed || this.connecting || this.status.connected) return;
-				this.retryConnect(errOptions.retryDelay || Default_Retry_Delay);
+				this.retryConnect(this.errOptions.retryDelay || Default_Retry_Delay);
 			}.bind(this));
 		}
 	}
@@ -422,7 +431,7 @@ class Bot {
 	send(data) {
 		if (!this.connection) return null;
 		let id = this.getSendId();
-		let manager = new SendManager(data, Max_Lines,
+		let manager = new SendManager(data, this.maxLinesSend,
 			function (msg) {
 				this.connection.send(msg);
 				this.events.emit('send', msg);
