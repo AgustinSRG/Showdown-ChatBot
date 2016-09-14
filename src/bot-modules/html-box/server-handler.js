@@ -139,7 +139,7 @@ function commandsHandler(context, html) {
 	html += '<form method="post" action="">';
 	html += '<p><strong>Command</strong>:&nbsp;<input name="cmd" type="text" size="40" value="' +
 		(adderror ? (context.post.cmd || '') : '') + '" /></p>';
-	html += '<p><textarea name="content" cols="150" rows="4">' + (adderror ? (context.post.content || '') : '') + '</textarea></p>';
+	html += '<p><textarea name="content" cols="150" rows="4" placeholder="command content (HTML)">' + (adderror ? (context.post.content || '') : '') + '</textarea></p>';
 	html += '<p><input type="submit" name="add" value="Add Html Command" /></p>';
 	html += '</form>';
 

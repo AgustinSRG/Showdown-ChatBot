@@ -387,7 +387,7 @@ function moderationRulesHandler(context, html) {
 	/* Html */
 	html += '<table border="1">';
 	html += '<tr><td width="200"><div align="center"><strong>Room</strong></div></td>' +
-		'<td width="250"><div align="center"><strong>Moderation Exception </strong></div></td>' +
+		'<td width="250"><div align="center"><strong>Rules Link</strong></div></td>' +
 		'<td width="150"><div align="center"><strong>Options</strong></div></td></tr>';
 
 	for (let room in config.rulesLink) {

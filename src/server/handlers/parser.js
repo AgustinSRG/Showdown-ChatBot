@@ -400,7 +400,7 @@ function parserRoomControlHandler(context, html) {
 	html += '<form method="post" action="">';
 	html += '<table border="0">';
 	html += '<tr><td>Control Room: </td><td><label><input name="control" type="text" size="40" /></label></td></tr>';
-	html += '<tr><td>Traget Room: </td><td><label><input name="room" type="text" size="40" /></label></td></tr>';
+	html += '<tr><td>Target Room: </td><td><label><input name="room" type="text" size="40" /></label></td></tr>';
 	html += '</table>';
 	html += '<p><label><input type="submit" name="set" value="Set Control Room" /></label></p>';
 	html += '</form>';
