@@ -85,6 +85,7 @@ App.server.setHandler('bot', (context, parts) => {
 		'if (elem) {elem.innerHTML = \'<form style="display:inline;" method="post" action="">&nbsp;Are you sure?&nbsp;' +
 		'<input type="submit" name="stop" value="Stop Bot" /></form>\';}}</script>';
 
+	html += '<table border="0"><tr><td>';
 	html += '<table border="1">';
 	html += '<tr><td colspan="2"><div align="center"><strong>Bot Status </strong></div></td></tr>';
 	html += '<tr><td width="150"><strong>Connection</strong></td><td width="150">';
@@ -116,11 +117,13 @@ App.server.setHandler('bot', (context, parts) => {
 	html += battles.join(', ');
 	html += '</td></tr>';
 	html += '</table>';
+	html += '</td><td>';
 	html += '<p><a href=""><button>Refresh</button></a></p>';
 	html += '<p><button onclick="showRestartConfirm();">Restart Bot</button><span id="confirm-restart">&nbsp;</span></p>';
 	if (App.status !== 'stopped') {
 		html += '<p><button onclick="showStopConfirm();">Stop Bot</button><span id="confirm-stop">&nbsp;</span></p>';
 	}
+	html += '</td></tr></table>';
 	html += '<hr />';
 
 	html += '<h3>Bot Configuration</h3>';
