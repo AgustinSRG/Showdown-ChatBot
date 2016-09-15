@@ -313,13 +313,17 @@ class Server {
 		} else if (!context.url.path || context.url.path === '/') {
 			/* Main page */
 			context.setMenu(this.getMenu(context));
-			FileSystem.readFile(Path.resolve(__dirname, 'main.html'), (error, data) => {
-				if (error) {
-					context.endWithError(500, 'Internal Server Error', 'Error: ' + error.code + " (" + error.message + ")");
-				} else {
-					context.endWithWebPage(data.toString(), {title: "Showdown ChatBot - Control Panel"});
-				}
-			});
+			if (App.config.mainhtml) {
+				context.endWithWebPage(App.config.mainhtml, {title: "Showdown ChatBot - Control Panel"});
+			} else {
+				FileSystem.readFile(Path.resolve(__dirname, 'main.html'), (error, data) => {
+					if (error) {
+						context.endWithError(500, 'Internal Server Error', 'Error: ' + error.code + " (" + error.message + ")");
+					} else {
+						context.endWithWebPage(data.toString(), {title: "Showdown ChatBot - Control Panel"});
+					}
+				});
+			}
 		} else {
 			/* Handlers */
 			let urlParts = context.url.path.split('/');

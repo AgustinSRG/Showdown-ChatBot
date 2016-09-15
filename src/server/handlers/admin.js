@@ -87,6 +87,7 @@ App.server.setHandler('admin', (context, parts) => {
 			App.config.useproxy = !!context.post.useproxy;
 			App.config.blockautodownload = !!context.post.blockautodownload;
 			App.config.autoremoveuserdata = !!context.post.rmuserdata;
+			App.config.mainhtml = (context.post.mainhtml || '').trim();
 			if (context.post.wslib === 'sockjs') {
 				App.config.websocketLibrary = 'sockjs';
 			} else {
@@ -149,6 +150,8 @@ App.server.setHandler('admin', (context, parts) => {
 		(App.config.blockautodownload ? 'checked="checked"' : '') + ' /></label>&nbsp;Block automated data downloads.</p>';
 	html += '<p><label><input type="checkbox" name="rmuserdata" value="true" ' +
 		(App.config.autoremoveuserdata ? 'checked="checked"' : '') + ' /></label>&nbsp;Remove User-Data on connection reset.</p>';
+	html += '<p><textarea name="mainhtml" cols="80" rows="4" placeholder="Custom HTML for main page. Leave this blank for default page.">' +
+		(App.config.mainhtml || '') + '</textarea></p>';
 	html += '<p><input type="submit" name="savechanges" value="Save Changes" /></p>';
 	html += '</form>';
 
