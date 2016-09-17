@@ -27,8 +27,10 @@
 	function addChat(name, message, msgTime, pm) {
 		group = name.charAt(0);
 		name = name.substr(1);
-		if (message.indexOf('/me') === 0) {
+		if (message.substr(0, 4) === '/me ') {
 			addLine('<span class="timestamp">' + msgTime + '</span>&nbsp;' + '<strong style="' + hashColor(toId(name)) + '">•</strong> <span class="username">' + escapeHTML(group + name) + '</span> ' + (pm ? ('<span class="pm">(Private to ' + escapeHTML(pm) + ') </span>') : '') + '<i>' + parseMessage(escapeHTML(message.substr(3).trim())) + '</i>');
+		} else if (message.substr(0, 5) === '/log ') {
+			addLine('<span class="timestamp">' + msgTime + '</span>&nbsp;' + escapeHTML(message.substr(5)));
 		} else {
 			addLine('<span class="timestamp">' + msgTime + '</span>&nbsp;<span class="group">' + group + '</span><span class="username"><strong style="' + hashColor(toId(name)) + '">' + escapeHTML(name) + '</strong></span>' + (pm ? (' <span class="pm">(Private to ' + escapeHTML(pm) + ')</span>') : '') + ': ' + parseMessage(escapeHTML(message)));
 		}
