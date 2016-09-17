@@ -73,6 +73,7 @@ class ModeratorBot {
 	}
 
 	applyZeroTolerance(context) {
+		if (context.pointVal === 0) return;
 		let config = App.modules.moderation.system.data;
 		if (!config.zeroTolerance[context.room] || !config.zeroTolerance[context.room][context.byIdent.id]) return;
 		let val = config.zeroTolerance[context.room][context.byIdent.id];
