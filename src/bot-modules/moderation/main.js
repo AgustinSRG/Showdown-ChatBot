@@ -60,7 +60,11 @@ exports.modBot = new ModeratorBot(Path.resolve(__dirname, 'filters/'));
 
 App.bot.on('userchat', (room, time, by, msg) => {
 	if (!App.bot.rooms[room] || App.bot.rooms[room].type !== 'chat') return;
-	exports.modBot.parse(room, time, by, msg);
+	if (msg.substr(0, 5) === "/log ") {
+		exports.modBot.parseRaw(room, msg.substr(5));
+	} else {
+		exports.modBot.parse(room, time, by, msg);
+	}
 });
 
 App.bot.on('line', (room, line, spl, isIntro) => {
