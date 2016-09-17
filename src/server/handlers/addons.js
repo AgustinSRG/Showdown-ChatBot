@@ -1,12 +1,13 @@
 /**
  * Server Handler: Add-Ons
+ * This handler allows administrators to install,
+ * edit and uninstall add-ons for Showdown-ChatBot
  */
 
 'use strict';
 
 const Path = require('path');
 const FileSystem = require('fs');
-
 const Text = Tools.get('text.js');
 const check = Tools.get('check.js');
 

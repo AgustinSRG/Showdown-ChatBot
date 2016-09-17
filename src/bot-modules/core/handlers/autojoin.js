@@ -22,22 +22,8 @@ App.server.setHandler('autojoin', (context, parts) => {
 	/* Actions */
 	let ok = null, error = null;
 	if (context.post.edit) {
-		let rooms = [];
-		let aux = (context.post.rooms || "").split(',');
-		for (let i = 0; i < aux.length; i++) {
-			let room = Text.toRoomid(aux[i]);
-			if (room && rooms.indexOf(room) < 0) {
-				rooms.push(room);
-			}
-		}
-		let privaterooms = [];
-		aux = (context.post.privaterooms || "").split(',');
-		for (let i = 0; i < aux.length; i++) {
-			let room = Text.toRoomid(aux[i]);
-			if (room && privaterooms.indexOf(room) < 0) {
-				privaterooms.push(room);
-			}
-		}
+		let rooms = (context.post.rooms || "").split(',').map(Text.toRoomid).filter(room => room);
+		let privaterooms = (context.post.privaterooms || "").split(',').map(Text.toRoomid).filter(room => room);
 		App.config.modules.core.rooms = rooms;
 		App.config.modules.core.privaterooms = privaterooms;
 		App.config.modules.core.avatar = context.post.avatar || '';
@@ -52,9 +38,9 @@ App.server.setHandler('autojoin', (context, parts) => {
 	html += '<form method="post" action="">';
 	html += '<table border="0">';
 	html += ' <tr><td><strong>Public Rooms</strong>:&nbsp;</td><td><label><input name="rooms" type="text" size="70" value="' +
-		(App.config.modules.core.rooms || []).join(', ') + '" />&nbsp;(Separated by commas)</label></td></tr>';
+		(App.config.modules.core.rooms || []).join(', ') + '" autocomplete="off" />&nbsp;(Separated by commas)</label></td></tr>';
 	html += ' <tr><td><strong>Private Rooms</strong>:&nbsp;</td><td><label><input name="privaterooms" type="text" size="70" value="' +
-		(App.config.modules.core.privaterooms || []).join(', ') + '" />&nbsp;(Separated by commas)</label></td></tr>';
+		(App.config.modules.core.privaterooms || []).join(', ') + '" autocomplete="off" />&nbsp;(Separated by commas)</label></td></tr>';
 	html += '<tr><td><strong>Avatar</strong>:&nbsp;</td><td><label><input name="avatar" type="text" size="20" value="' +
 		(App.config.modules.core.avatar || '') + '" /></label></td></tr>';
 	html += '</table>';

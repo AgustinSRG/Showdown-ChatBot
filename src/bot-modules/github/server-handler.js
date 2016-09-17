@@ -34,14 +34,7 @@ App.server.setHandler('github', (context, parts) => {
 		let port = parseInt(context.post.port || 3420);
 		let secret = context.post.secret || '';
 		let enabled = !!context.post.enabled;
-		let aux = (context.post.blacklist || '').split(',');
-		let bl = {};
-		for (let i = 0; i < aux.length; i++) {
-			let user = aux[i].toLowerCase().trim();
-			if (user) {
-				bl[user] = true;
-			}
-		}
+		let bl = Object.createFromKeys((context.post.blacklist || '').split(',').map(Text.trim).filter(u => u));
 
 		if (isNaN(port)) {
 			error = "Invalid port";
@@ -52,7 +45,7 @@ App.server.setHandler('github', (context, parts) => {
 			config.blacklist = bl;
 			config.enabled = enabled;
 
-			App.db.write();
+			App.saveConfig();
 			App.logServerAction(context.user.id, "Edit github-hook configuration");
 
 			if (enabled) {

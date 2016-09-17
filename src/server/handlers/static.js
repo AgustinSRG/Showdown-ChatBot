@@ -1,5 +1,6 @@
 /**
  * Server Handler: Static
+ * Main static path for Showdown-ChatBot
  */
 
 'use strict';

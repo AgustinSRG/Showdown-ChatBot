@@ -1,5 +1,6 @@
 /**
  * Server Handler: Dynamic Commands
+ * Interface to manage dynamic commands
  */
 
 'use strict';
@@ -49,7 +50,7 @@ App.server.setHandler('dyncmd', (context, parts) => {
 		/* Do action */
 		if (!error) {
 			App.parser.data.dyncmds[cmd] = content;
-			App.parser.db.write();
+			App.parser.saveData();
 			App.logServerAction(context.user.id, 'Add dynamic command (Type: Text) cmd: ' + cmd);
 			ok = "The command <strong>" + cmd + "</strong> was added as a text command.";
 		}
@@ -67,7 +68,7 @@ App.server.setHandler('dyncmd', (context, parts) => {
 		/* Do action */
 		if (!error) {
 			App.parser.data.dyncmds[cmd] = {};
-			App.parser.db.write();
+			App.parser.saveData();
 			App.logServerAction(context.user.id, 'Add dynamic command (Type: Index) cmd: ' + cmd);
 			ok = "The command <strong>" + cmd + "</strong> was added as an index command.";
 		}
@@ -83,7 +84,7 @@ App.server.setHandler('dyncmd', (context, parts) => {
 		/* Do action */
 		if (!error) {
 			delete App.parser.data.dyncmds[cmd];
-			App.parser.db.write();
+			App.parser.saveData();
 			App.logServerAction(context.user.id, 'Delete dynamic command. cmd: ' + cmd);
 			ok = "The command <strong>" + cmd + "</strong> was deleted sucessfully.";
 		}
@@ -101,7 +102,7 @@ App.server.setHandler('dyncmd', (context, parts) => {
 		/* Do action */
 		if (!error) {
 			delete App.parser.data.dyncmds[cmd][sub];
-			App.parser.db.write();
+			App.parser.saveData();
 			App.logServerAction(context.user.id, 'Delete dynamic sub-command. cmd: ' + cmd + '. sub: ' + sub);
 			ok = "The command <strong>" + cmd + "&nbsp;" + sub + "</strong> was deleted sucessfully.";
 		}
@@ -120,7 +121,7 @@ App.server.setHandler('dyncmd', (context, parts) => {
 		/* Do action */
 		if (!error) {
 			App.parser.data.dyncmds[cmd] = content;
-			App.parser.db.write();
+			App.parser.saveData();
 			App.logServerAction(context.user.id, 'Edit dynamic command. cmd: ' + cmd);
 			ok = "The command <strong>" + cmd + "</strong> was editted sucessfully.";
 		}
@@ -144,7 +145,7 @@ App.server.setHandler('dyncmd', (context, parts) => {
 		/* Do action */
 		if (!error) {
 			App.parser.data.dyncmds[cmd][sub] = content;
-			App.parser.db.write();
+			App.parser.saveData();
 			App.logServerAction(context.user.id, 'Add dynamic sub-command (Type: Text) cmd: ' + cmd + '. sub: ' + sub);
 			ok = "The command <strong>" + cmd + "&nbsp;" + sub + "</strong> was added as a text subcommand.";
 		}
@@ -165,7 +166,7 @@ App.server.setHandler('dyncmd', (context, parts) => {
 		/* Do action */
 		if (!error) {
 			App.parser.data.dyncmds[cmd][sub] = content;
-			App.parser.db.write();
+			App.parser.saveData();
 			App.logServerAction(context.user.id, 'Edit dynamic sub-command. cmd: ' + cmd + '. sub: ' + sub);
 			ok = "The command <strong>" + cmd + "&nbsp;" + sub + "</strong> was editted sucessfully.";
 		}

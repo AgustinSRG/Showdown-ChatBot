@@ -58,7 +58,7 @@ App.server.setHandler('chatlogger', (context, parts) => {
 	html += '<h2>Chat-Logger Configuration</h2>';
 	html += '<form method="post" action="">';
 	html += '<table border="0">';
-	html += '<tr><td><strong>Rooms To Log</strong>: </td><td><label><input name="rooms" type="text" size="70" value="' + Object.keys(App.config.modules.chatlogger.rooms).join(', ') + '" /> (Separated by commas) </label></td></tr>';
+	html += '<tr><td><strong>Rooms To Log</strong>: </td><td><label><input name="rooms" type="text" size="70" value="' + Object.keys(App.config.modules.chatlogger.rooms).join(', ') + '" autocomplete="off" /> (Separated by commas) </label></td></tr>';
 	html += '<tr><td colspan="2"><label><input type="checkbox" name="logpm" value="true" + ' + (App.config.modules.chatlogger.logpm ? ' checked="checked"' : '') + ' /><strong>Log Private Messages </strong></label></td></tr>';
 	html += '<tr><td><strong>Max age of logs (days)</strong>: </td><td><input name="age" type="text" size="20" value="' + App.config.modules.chatlogger.maxold + '" /> (0 days to keep logs indefinitely) </td></tr>';
 	html += '</table>';

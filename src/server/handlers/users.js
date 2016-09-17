@@ -1,5 +1,7 @@
 /**
  * Server Handler: Users
+ * Allows administrators add new users to the control panel
+ * and edit their permissions
  */
 
 'use strict';

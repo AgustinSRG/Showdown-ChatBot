@@ -1,5 +1,6 @@
 /**
  * Server Handler: Modules
+ * Allows administrators enable or disable bot modules
  */
 
 'use strict';
@@ -36,7 +37,7 @@ App.server.setHandler('modules', (context, parts) => {
 	let html = '';
 
 	html += '<h2>Bot Modules</h2>';
-	html += '<p>Note: Changes here requires a restart to be effective.</p>';
+	html += '<p>Note: Changes here require an application restart to be effective.</p>';
 	html += '<form method="post" action="">';
 	html += '<table border="0">';
 	for (let id in App.modules) {

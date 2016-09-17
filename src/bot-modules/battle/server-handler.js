@@ -143,7 +143,7 @@ App.server.setHandler('battle', (context, parts) => {
 	html += '<p><strong>Max number of ladder battles</strong>:&nbsp;<input name="maxladder" type="text" size="10" value="' +
 		Config.ladderBattles + '" /></p>';
 	html += '<p><strong>Rooms to join tournaments</strong>:&nbsp;<input name="jointours" type="text" size="50" value="' +
-		Object.keys(Config.joinTours).join(', ') + '" /> (separated by commas)</p>';
+		Object.keys(Config.joinTours).join(', ') + '" autocomplete="off" /> (separated by commas)</p>';
 	html += '<p><strong>Battle Initial Messages</strong>:</p><p><textarea name="initmsg" cols="60" rows="3">' +
 		Config.initBattleMsg.join('\n') + '</textarea></p>';
 	html += '<p><strong>Win Messages</strong>:</p><p><textarea name="winmsg" cols="60" rows="3">' +

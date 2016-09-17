@@ -63,16 +63,11 @@ function parserConfigurationHandler(context, html) {
 	/* Actions */
 	let ok = null, error = null;
 	if (context.post.edit) {
-		let auxGroups = (context.post.groups || "").split(',');
-		let groups = [];
-		for (let i = 0; i < auxGroups.length; i++) {
-			auxGroups[i] = auxGroups[i].trim();
-			if (auxGroups[i]) groups.push(auxGroups[i]);
-		}
+		let groups = (context.post.groups || "").split(',').map(Text.trim).filter(group => group);
 		let defGroups = ['voice', 'driver', 'mod', 'bot', 'owner', 'admin'];
-		for (let i = 0; i < defGroups.length; i++) {
-			if (groups.indexOf(context.post[defGroups[i]]) < 0) {
-				error = 'Group corresponding to defined group <strong>' + defGroups[i] + '</strong> must be defined.';
+		for (let group of defGroups) {
+			if (groups.indexOf(context.post[group]) < 0) {
+				error = 'Group corresponding to defined group <strong>' + group + '</strong> must be defined.';
 				break;
 			}
 		}
@@ -81,33 +76,16 @@ function parserConfigurationHandler(context, html) {
 			error = "The help message must not be longer than 300 characters.";
 		}
 		if (!error) {
-			let aux;
-			let tokens = [];
-			aux = (context.post.tokens || "").split(' ');
-			for (let i = 0; i < aux.length; i++) {
-				let id = Text.toCmdTokenid(aux[i]);
-				if (id) {
-					tokens.push(id);
-				}
-			}
-			App.config.parser.tokens = tokens;
+			App.config.parser.tokens = (context.post.tokens || "").split(' ').map(Text.toCmdTokenid).filter(id => id);
 			App.config.parser.groups = groups;
-			for (let i = 0; i < defGroups.length; i++) {
-				App.config.parser[defGroups[i]] = context.post[defGroups[i]];
+			for (let group of defGroups) {
+				App.config.parser[group] = context.post[group];
 			}
 			App.parser.data.helpmsg = context.post.helpmsg;
 			App.parser.data.antispam = !!context.post.antispam;
-			let rooms = {};
-			aux = (context.post.sleep || "").split(',');
-			for (let i = 0; i < aux.length; i++) {
-				let id = Text.toRoomid(aux[i]);
-				if (id) {
-					rooms[id] = true;
-				}
-			}
-			App.parser.data.sleep = rooms;
-			App.db.write();
-			App.parser.db.write();
+			App.parser.data.sleep = Object.createFromKeys((context.post.sleep || "").split(',').map(Text.toRoomid).filter(room => room));
+			App.saveConfig();
+			App.parser.saveData();
 			ok = 'Command parser configuration editted sucessfully.';
 			App.logServerAction(context.user.id, "Edit command-parser configuration");
 		}
@@ -117,25 +95,25 @@ function parserConfigurationHandler(context, html) {
 	html += '<form method="post" action="">';
 	html += '<table border="0">';
 	html += '<tr><td>Command Tokens: </td><td><label><input name="tokens" type="text" size="50" value="' +
-		App.config.parser.tokens.join(' ') + '"/> (Separated by spaces) </label></td></tr>';
+		App.config.parser.tokens.join(' ') + '" autocomplete="off" /> (Separated by spaces) </label></td></tr>';
 	html += '<tr><td>Groups: </td><td><label><input name="groups" type="text" size="50" value="' +
-		App.config.parser.groups.join(', ') + '"/> (Separated by commas, ordered from lowest to higher rank) </label></td></tr>';
+		App.config.parser.groups.join(', ') + '" autocomplete="off" /> (Separated by commas, ordered from lowest to higher rank) </label></td></tr>';
 	html += '<tr><td>Voice Group: </td><td><label><input name="voice" type="text" size="10" value="' +
-		App.config.parser.voice + '"/></label></td></tr>';
+		App.config.parser.voice + '" autocomplete="off" /></label></td></tr>';
 	html += '<tr><td>Driver Group: </td><td><label><input name="driver" type="text" size="10" value="' +
-		App.config.parser.driver + '"/></label></td></tr>';
+		App.config.parser.driver + '" autocomplete="off" /></label></td></tr>';
 	html += '<tr><td>Moderator Group: </td><td><label><input name="mod" type="text" size="10" value="' +
-		App.config.parser.mod + '"/></label></td></tr>';
+		App.config.parser.mod + '" autocomplete="off" /></label></td></tr>';
 	html += '<tr><td>Bot Group: </td><td><label><input name="bot" type="text" size="10" value="' +
-		App.config.parser.bot + '"/></label></td></tr>';
+		App.config.parser.bot + '" autocomplete="off" /></label></td></tr>';
 	html += '<tr><td>Room Owner Group: </td><td><label><input name="owner" type="text" size="10" value="' +
-		App.config.parser.owner + '"/></label></td></tr>';
+		App.config.parser.owner + '" autocomplete="off" /></label></td></tr>';
 	html += '<tr><td>Administrator Group: </td><td><label><input name="admin" type="text" size="10" value="' +
-		App.config.parser.admin + '"/></label></td></tr>';
+		App.config.parser.admin + '" autocomplete="off" /></label></td></tr>';
 	html += '<tr><td>Help Message: </td><td><label><input name="helpmsg" type="text" size="80" ' +
-		'placeholder="Hi $USER, I am a bot for Pokemon Showdown." value="' + App.parser.data.helpmsg + '"/></label></td></tr>';
+		'placeholder="Hi $USER, I am a bot for Pokemon Showdown." value="' + App.parser.data.helpmsg + '" autocomplete="off" /></label></td></tr>';
 	html += '<tr><td>Sleeping Rooms: </td><td><label><input name="sleep" type="text" size="80" value="' +
-		Object.keys(App.parser.data.sleep).join(', ') + '"/> (Separated by commas) </label></td></tr>';
+		Object.keys(App.parser.data.sleep).join(', ') + '" autocomplete="off" /> (Separated by commas) </label></td></tr>';
 	html += '<tr><td colspan="2"><input name="antispam" type="checkbox" value="checkbox"' +
 		(App.parser.data.antispam ? ' checked="checked"' : '') + ' />&nbsp;Use Anti-Spam system for private commands</td></tr>';
 	html += '</table>';
@@ -159,7 +137,7 @@ function parserAliasesHandler(context, html) {
 			if (cmd) {
 				if (App.parser.commandExists(cmd)) {
 					App.parser.data.aliases[alias] = cmd;
-					App.parser.db.write();
+					App.parser.saveData();
 					App.logServerAction(context.user.id, "Set alias: " + alias + " to the command: " + cmd);
 					ok = 'Command "' + alias + '" is now alias of "' + cmd +
 						'" (Note: If the original command does not exists, the alias will be useless)';
@@ -177,7 +155,7 @@ function parserAliasesHandler(context, html) {
 		if (alias) {
 			if (App.parser.data.aliases[alias]) {
 				delete App.parser.data.aliases[alias];
-				App.parser.db.write();
+				App.parser.saveData();
 				App.logServerAction(context.user.id, "Delete alias: " + alias);
 				ok = 'Alias <strong>' + alias + '</strong> was deleted sucessfully.';
 			} else {
@@ -235,7 +213,7 @@ function parserPermissionsHandler(context, html) {
 		} else {
 			if (!App.parser.data.roompermissions[room]) {
 				App.parser.data.roompermissions[room] = {};
-				App.parser.db.write();
+				App.parser.saveData();
 				App.logServerAction(context.user.id, "Add custom perrmission room: " + room);
 				ok = 'Room <strong>' + room + '</strong> added to the custom permission configuration list.';
 			} else {
@@ -249,7 +227,7 @@ function parserPermissionsHandler(context, html) {
 		} else {
 			if (App.parser.data.roompermissions[room]) {
 				delete App.parser.data.roompermissions[room];
-				App.parser.db.write();
+				App.parser.saveData();
 				App.logServerAction(context.user.id, "Delete custom perrmission room: " + room);
 				ok = 'Room <strong>' + room + '</strong> removed from the custom permission configuration list.';
 			} else {
@@ -280,21 +258,14 @@ function parserPermissionsHandler(context, html) {
 					data[i] = 'excepted';
 				}
 			}
-			App.parser.db.write();
+			App.parser.saveData();
 			App.logServerAction(context.user.id, "Edit custom perrmission room: " + room);
 			ok = 'Configuration for room <strong>' + room + '</strong> was editted sucessfully.';
 		}
 	} else if (context.post.editexp) {
-		let expusers = {}, expcmds = [];
-		let aux;
-		aux = (context.post.expusers || "").split(',');
-		for (let i = 0; i < aux.length; i++) {
-			let id = Text.toId(aux[i]);
-			if (id) {
-				expusers[id] = true;
-			}
-		}
-		aux = (context.post.canexp || "").split('\n');
+		let expcmds = [];
+		let expusers = Object.createFromKeys((context.post.expusers || "").split(',').map(Text.toId).filter(u => u));
+		let aux = (context.post.canexp || "").split('\n');
 		for (let i = 0; i < aux.length; i++) {
 			let line = aux[i].split(',');
 			let perm = Text.toId(line[0]);
@@ -305,7 +276,7 @@ function parserPermissionsHandler(context, html) {
 		}
 		App.parser.data.exceptions = expusers;
 		App.parser.data.canExceptions = expcmds;
-		App.parser.db.write();
+		App.parser.saveData();
 		App.logServerAction(context.user.id, "Edit Permission Exceptions");
 		ok = 'Permission exceptions configuration editted sucessfully.';
 	}
@@ -318,7 +289,7 @@ function parserPermissionsHandler(context, html) {
 	html += '<h3>Exceptions</h3>';
 	html += '<form method="post" action="">';
 	html += '<p><label><strong>Excepted Users</strong>:&nbsp;<input name="expusers" type="text" size="50" value="' +
-		Object.keys(App.parser.data.exceptions).join(', ') + '"/></label>&nbsp;(Separated by commas)</p>';
+		Object.keys(App.parser.data.exceptions).join(', ') + '" autocomplete="off" /></label>&nbsp;(Separated by commas)</p>';
 	html += '<p><strong>Command Exceptions</strong></p>';
 	let exceptions = [];
 	for (let i = 0; i < App.parser.data.canExceptions.length; i++) {
@@ -360,7 +331,7 @@ function parserRoomControlHandler(context, html) {
 		if (room) {
 			if (control) {
 				App.parser.data.roomctrl[control] = room;
-				App.parser.db.write();
+				App.parser.saveData();
 				App.logServerAction(context.user.id, "Set control room: " + control + " for: " + room);
 				ok = 'Control room "' + control + '" was set for the room "' + room + '.';
 			} else {
@@ -374,7 +345,7 @@ function parserRoomControlHandler(context, html) {
 		if (control) {
 			if (App.parser.data.roomctrl[control]) {
 				delete App.parser.data.roomctrl[control];
-				App.parser.db.write();
+				App.parser.saveData();
 				App.logServerAction(context.user.id, "Delete control room: " + control);
 				ok = 'Control room <strong>' + control + '</strong> was deleted sucessfully.';
 			} else {

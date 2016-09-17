@@ -93,7 +93,7 @@ App.server.setHandler('admin', (context, parts) => {
 			} else {
 				App.config.websocketLibrary = 'websocket';
 			}
-			App.db.write();
+			App.saveConfig();
 			ok = "Changes made successfuly.";
 			App.logServerAction(context.user.id, 'Administration options were editted');
 		}
@@ -107,7 +107,7 @@ App.server.setHandler('admin', (context, parts) => {
 		'Are you sure?&nbsp;<input type="submit" name="exit" value="Confirm Exit" />' +
 		'</form>\';}return false;}</script>';
 	html += '<h2>Administration Options</h2>';
-	html += '<p>Note: Changes here requires a restart to be effective.</p>';
+	html += '<p>Note: Changes here require an application restart to be effective.</p>';
 
 	html += '<input type="hidden" name="uptime" id="uptime" value="' + Math.floor(process.uptime() * 1000) + '" />';
 	html += '<p><span id="show-uptime">&nbsp;</span></p>';

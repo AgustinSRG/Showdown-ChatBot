@@ -1,5 +1,6 @@
 /**
  * Server Handler: Temp
+ * Temporal files system
  */
 
 'use strict';

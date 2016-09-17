@@ -29,15 +29,15 @@ App.server.setHandler('autoinvite', (context, parts) => {
 	if (context.post.edit) {
 		let room = Text.toRoomid(context.post.room);
 		let publicRoom = Text.toRoomid(context.post.public);
-		let rank = context.post.rank || "excepted";
+		let rank = context.post.rank || "voice";
 		if (rank.length > 1 && App.config.parser[rank]) {
 			rank = App.config.parser[rank];
 		}
-		if (rank === 'user' || rank === 'excepted' || App.config.parser.groups.indexOf(rank) >= 0) {
+		if (App.config.parser.groups.indexOf(rank) >= 0) {
 			App.config.modules.autoinvite.room = room;
 			App.config.modules.autoinvite.public = publicRoom;
 			App.config.modules.autoinvite.rank = rank;
-			App.db.write();
+			App.saveConfig();
 			App.modules.autoinvite.system.roomAuth = {};
 			App.modules.autoinvite.system.roomAuthChanged = true;
 			App.logServerAction(context.user.id, "Edit autoinvite configuration");
@@ -78,8 +78,6 @@ function getRankSelect(name, rank) {
 	}
 	let html = '';
 	html += '<select name="' + name + '">';
-	html += '<option value="user"' + (rank === 'user' ? ' selected="selected"' : '') + '>Regular Users</option>';
-	html += '<option value="excepted"' + (rank === 'excepted' ? ' selected="selected"' : '') + '>Excepted Users</option>';
 	for (let j = 0; j < App.config.parser.groups.length; j++) {
 		html += '<option value="' + App.config.parser.groups[j] + '"' +
 			(rank === App.config.parser.groups[j] ? ' selected="selected"' : '') + '>Group ' + App.config.parser.groups[j] + '</option>';

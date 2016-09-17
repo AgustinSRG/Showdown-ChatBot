@@ -1,5 +1,6 @@
 /**
  * Server Handler: Change Password
+ * Allows users to change their password
  */
 
 'use strict';

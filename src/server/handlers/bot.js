@@ -1,5 +1,7 @@
 /**
  * Server Handler: Bot Configuration
+ * Allows administrator to configure the connection options
+ * for Showdown-ChatBot: server, port, serverId and retyConnectionDelay
  */
 
 'use strict';
@@ -70,7 +72,7 @@ App.server.setHandler('bot', (context, parts) => {
 			if (App.bot.errOptions) {
 				App.bot.errOptions.retryDelay = App.config.bot.retrydelay;
 			}
-			App.db.write();
+			App.saveConfig();
 			App.logServerAction(context.user.id, 'Edit Bot configuration');
 			ok = "Bot configuration changed sucessfully. Restart the bot to make the changes effective.";
 		}

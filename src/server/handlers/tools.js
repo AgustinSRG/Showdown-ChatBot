@@ -1,5 +1,5 @@
 /**
- * Server Handler: Dev Tools
+ * Server Handler: Development Tools
  */
 
 'use strict';

@@ -16,6 +16,8 @@ try {
 	require('child_process').spawnSync('sh', ['-c', 'npm install --production'], {stdio: 'inherit'});
 }
 
+/* Object extensions */
+
 if (!Object.merge) {
 	Object.merge = function (object, source) {
 		if (!object) object = {};
@@ -32,3 +34,9 @@ if (!Object.values) {
 		return values;
 	};
 }
+
+Object.createFromKeys = function (keys, value) {
+	let object = {};
+	for (let key of keys) object[key] = value;
+	return object;
+};
