@@ -260,6 +260,9 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 
 	if (gen >= 3 && pokeA.ability) {
 		switch (pokeA.ability.id) {
+		case "normalize":
+			moveType = "Normal";
+			break;
 		case "aerilate":
 			if (moveType === "Normal") moveType = "Flying";
 			break;
