@@ -67,6 +67,7 @@ App.bot.on('updateuser', (nick, named) => {
 	lastLogin.nick = nick;
 	lastLogin.named = named;
 	console.log('Nick Changed: ' + nick);
+	App.log('[Bot Core] Nick Changed: ' + nick);
 });
 
 App.bot.on('renamefailure', err => {
@@ -74,8 +75,10 @@ App.bot.on('renamefailure', err => {
 	if (!App.bot.isConnected()) return;
 	if (err === 'wrongpassword') {
 		console.log("Login Error: Wrong password.");
+		App.log("[Bot Core] Login Error: Wrong password.");
 	} else if (App.config.modules.core.nick) {
 		console.log("Login Error: Heavy Load / Connection error. Retrying in 5 seconds");
+		App.log("[Bot Core] Login Error: Heavy Load / Connection error. Retrying in 5 seconds");
 		App.bot.retryRename(5000, App.config.modules.core.nick, App.config.modules.core.pass);
 	}
 });
