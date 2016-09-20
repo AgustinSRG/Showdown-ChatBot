@@ -235,6 +235,11 @@ function toolEval(context, html, parts) {
 		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
 		return;
 	}
+	if (global.ShellOptions && global.ShellOptions.staticmode) {
+		html += '<p><span class="error-msg">Error: Static mode does not allow eval.</span></p>';
+		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
+		return;
+	}
 	if (context.post.scriptdata) {
 		App.logServerAction(context.user.id, "Tool Eval used: " + context.post.scriptdata);
 		context.endWithText(getEvalResult(context.post.scriptdata));

@@ -94,6 +94,10 @@ for (let key in shellOpts) {
 			process.exit(1);
 		}
 		break;
+	case '--static':
+		console.log("MODE: Static Mode");
+		global.ShellOptions.staticmode = true;
+		break;
 	}
 }
 

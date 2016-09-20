@@ -104,6 +104,7 @@ module.exports = {
 
 	"eval": function () {
 		if (!App.config.debug) return;
+		if (global.ShellOptions && global.ShellOptions.staticmode) return;
 		if (!this.isExcepted()) return;
 		if (!this.arg) return this.errorReply(this.usage({desc: 'script'}));
 		try {

@@ -179,3 +179,7 @@ function editAddonHandler(context, parts) {
 	context.endWithWebPage(html, {title: "Add-ons - Showdown ChatBot"});
 }
 
+if (global.ShellOptions && global.ShellOptions.staticmode) {
+	App.server.removeMenuOption('addons');
+	App.server.removeHandler('addons');
+}
