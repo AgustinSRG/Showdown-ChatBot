@@ -12,6 +12,7 @@
  *  -d [path] to change the data / configuration path
  *  -k [ssl-key] to set the ssl key file
  *  -c [ssl-cert] to set the ssl certificate file
+ *  --static to set static mode
  */
 
 'use strict';

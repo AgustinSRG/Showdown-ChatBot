@@ -104,6 +104,7 @@ module.exports = {
 
 	evalbattle: function () {
 		if (!App.config.debug) return;
+		if (global.ShellOptions && global.ShellOptions.staticmode) return;
 		if (!this.isExcepted()) return;
 		if (!this.arg) return this.errorReply(this.usage({desc: 'script'}));
 		if (App.modules.battle.system.BattleBot.battles[this.room]) {
