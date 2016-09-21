@@ -13,6 +13,7 @@
 const Max_Request_Flood = 100;
 const Flood_Interval = 30 * 1000;
 const Token_Max_Duration = 24 * 60 * 60 * 1000;
+const Encrypt_Algo = "aes-256-ctr";
 
 const Path = require('path');
 const Url = require('url');
@@ -20,6 +21,7 @@ const Http = require('http');
 const Https = require('https');
 const FileSystem = require('fs');
 const QueryString = require('querystring');
+const Crypto = require('crypto');
 
 const Static = Tools.get('server-static.js');
 const DataBase = Tools.get('crypto-json.js');
@@ -27,6 +29,34 @@ const AbuseMonitor = Tools.get('abuse-monitor.js');
 const Text = Tools.get('text.js');
 
 const PageMaker = require(Path.resolve(__dirname, 'html-maker.js'));
+
+/**
+ * Encrypts a text
+ * @param {String} text
+ * @param {String} algorithm
+ * @param {String} password
+ * @returns {String} Encrypted text
+ */
+function encrypt(text, algorithm, password) {
+	let cipher = Crypto.createCipher(algorithm, password);
+	let crypted = cipher.update(text, 'utf8', 'hex');
+	crypted += cipher.final('hex');
+	return crypted;
+}
+
+/**
+ * Decrypts a text
+ * @param {String} text - Encrypted text
+ * @param {String} algorithm
+ * @param {String} password
+ * @returns {String} Decrypted text
+ */
+function decrypt(text, algorithm, password) {
+	let decipher = Crypto.createDecipher(algorithm, password);
+	let data = decipher.update(text, 'hex', 'utf8');
+	data += decipher.final('utf8');
+	return data;
+}
 
 /**
  * Represents the Showdown ChatBot control panel server
@@ -92,7 +122,8 @@ class Server {
 		if (!FileSystem.existsSync(Path.resolve(path, 'users.key'))) {
 			FileSystem.writeFileSync(Path.resolve(path, 'users.key'), Text.randomToken(20));
 		}
-		this.userdb = new DataBase(Path.resolve(path, 'users.crypto'), FileSystem.readFileSync(Path.resolve(path, 'users.key')).toString());
+		this.privatekey = FileSystem.readFileSync(Path.resolve(path, 'users.key')).toString();
+		this.userdb = new DataBase(Path.resolve(path, 'users.crypto'), this.privatekey);
 		this.users = this.userdb.data;
 		if (Object.keys(this.users).length === 0) {
 			console.log('Users Database empty. Creating initial admin account');
@@ -103,6 +134,11 @@ class Server {
 				group: 'Administrator',
 				permissions: {root: true},
 			};
+		}
+		for (let user in this.users) {
+			if (typeof this.users[user].password === "string") {
+				this.users[user].password = this.encryptPassword(this.users[user].password);
+			}
 		}
 
 		/* Other initial values */
@@ -250,7 +286,7 @@ class Server {
 			}
 		} else if (user && context.post.login) {
 			user = Text.toId(user);
-			if (this.users[user] && this.users[user].password === pass) {
+			if (this.users[user] && this.checkPassword(this.users[user].password, pass)) {
 				App.log('[LOGIN] Userid: ' + user + ' | IP: ' + context.ip);
 				token = this.makeToken(user);
 				context.setCookie('usertoken=' + token + ';');
@@ -261,6 +297,32 @@ class Server {
 				context.setInvalidLogin(user);
 			}
 		}
+	}
+
+	/**
+	 * @param {Object|String} pass
+	 * @param {String} str
+	 * @returns {Boolean}
+	 */
+	checkPassword(pass, str) {
+		if (typeof pass === "object") {
+			return (decrypt(pass.hash, pass.encrypted || Encrypt_Algo, str) === this.privatekey);
+		} else if (typeof pass === "string") {
+			return (str === pass);
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * @param {String} str - Password
+	 * @returns {Object} Encrypted password
+	 */
+	encryptPassword(str) {
+		return {
+			encrypted: Encrypt_Algo,
+			hash: encrypt(this.privatekey, Encrypt_Algo, str),
+		};
 	}
 
 	/**

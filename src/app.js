@@ -15,9 +15,10 @@ const Default_Server_Port = 8080;
 const Path = require('path');
 const FileSystem = require('fs');
 
-const JSONDataBase = Tools.get('json-db.js');
+const CryptoDataBase = Tools.get('crypto-json.js');
 const Logger = Tools.get('logs.js');
 const BotMod = Tools.get('bot-mod.js');
+const Text = Tools.get('text.js');
 
 const Server = require(Path.resolve(__dirname, 'server/server.js')).Server;
 const DataManager = require(Path.resolve(__dirname, 'data.js'));
@@ -45,7 +46,24 @@ class ChatBotApp {
 		this.data = new DataManager(dataDir);
 
 		/* Configuration DataBase */
-		this.db = new JSONDataBase(Path.resolve(confDir, 'config.json'));
+		if (!FileSystem.existsSync(Path.resolve(confDir, 'config.key'))) {
+			FileSystem.writeFileSync(Path.resolve(confDir, 'config.key'), Text.randomToken(20));
+		}
+		this.privatekey = FileSystem.readFileSync(Path.resolve(confDir, 'config.key')).toString();
+		this.db = new CryptoDataBase(Path.resolve(confDir, 'config.crypto'), this.privatekey);
+
+		if (Object.keys(this.db.data).length === 0 && FileSystem.existsSync(Path.resolve(confDir, 'config.json'))) {
+			try {
+				let oldConfig = JSON.parse(FileSystem.readFileSync(Path.resolve(confDir, 'config.json')).toString());
+				this.db.set(oldConfig);
+				this.db.write();
+				FileSystem.unlinkSync(Path.resolve(confDir, 'config.json'));
+				console.log("Configuration was encryped");
+			} catch (err) {
+				this.reportCrash(err);
+			}
+		}
+
 		this.config = this.db.data;
 		if (!this.config.modules) {
 			this.config.modules = {};

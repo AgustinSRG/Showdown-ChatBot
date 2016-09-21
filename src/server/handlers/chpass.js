@@ -29,7 +29,8 @@ App.server.setHandler('chpass', (context, parts) => {
 
 		/* Check */
 		try {
-			check(App.server.users[context.user.id] && App.server.users[context.user.id].password === pass, "Wrong Password.");
+			check(App.server.users[context.user.id], "You are not a registered user.");
+			check(App.server.checkPassword(App.server.users[context.user.id].password, pass), "Invalid Password");
 			check(newPass, "You must specify a password");
 			check(newPass === newPass2, "The passwords do not match.");
 		} catch (err) {
@@ -38,7 +39,7 @@ App.server.setHandler('chpass', (context, parts) => {
 
 		/* Save Changes */
 		if (!error) {
-			App.server.users[context.user.id].password = newPass;
+			App.server.users[context.user.id].password = App.server.encryptPassword(newPass);
 			App.server.userdb.write();
 			ok = "Your password has been changed.";
 			App.logServerAction(context.user.id, 'Change Password. IP: ' + context.ip);

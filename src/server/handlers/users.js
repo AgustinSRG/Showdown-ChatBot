@@ -46,7 +46,7 @@ App.server.setHandler('users', (context, parts) => {
 		if (!error) {
 			App.server.users[userid] = {
 				id: userid,
-				password: pass,
+				password: App.server.encryptPassword(pass),
 				name: (name || userid),
 				group: (group || ""),
 				permissions: {chpass: true},
