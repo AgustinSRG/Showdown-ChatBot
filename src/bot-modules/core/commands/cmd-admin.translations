@@ -37,6 +37,8 @@ $31 = has been uningnored by the command parser
 $32 = The room
 $33 = has been set as a control room for
 $34 = The control room
+$35 = There are no dynamic commands to show
+$36 = Dynamic Commands
 
 $alias = alias
 $language = language
@@ -81,6 +83,8 @@ $31 = he dejado de ser ignorado por el gestor de comandos
 $32 = La sala
 $33 = ha sido configurada como la sala de control para
 $34 = La sala de control
+$35 = No hay comandos dinámicos que mostrar
+$36 = Comandos Dinámicos
 
 $alias = alias
 $language = idioma

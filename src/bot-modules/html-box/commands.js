@@ -50,12 +50,21 @@ module.exports = {
 	},
 
 	htmlcmdlist: function () {
-		if (!App.config.server.url) return; // Feature not available
-		let server = App.config.server.url;
-		if (server.charAt(server.length - 1) === '/') {
-			return this.restrictReply(App.config.server.url + 'htmlbox/list', 'info');
-		} else {
-			return this.restrictReply(App.config.server.url + '/htmlbox/list', 'info');
+		let list = Object.keys(App.modules.htmlbox.system.data.commands).sort();
+		if (list.length === 0) {
+			return this.errorReply(translator.get(2, this.lang));
 		}
+		let txt = Chat.bold(translator.get(3, this.lang) + ":");
+		let cmds = [];
+		for (let i = 0; i < list.length; i++) {
+			let toAdd = " " + list[i] + (i < (list.length - 1) ? ',' : '');
+			if (txt.length + toAdd.length > 300) {
+				cmds.push(txt);
+				txt = '';
+			}
+			txt += toAdd;
+		}
+		if (txt.length > 0) cmds.push(txt);
+		return this.restrictReply(cmds, 'htmlboxcmd');
 	},
 };

@@ -162,13 +162,22 @@ module.exports = {
 	},
 
 	dyncmdlist: function () {
-		if (!App.config.server.url) return; // Feature not available
-		let server = App.config.server.url;
-		if (server.charAt(server.length - 1) === '/') {
-			return this.restrictReply(App.config.server.url + 'dyncmd/list', 'info');
-		} else {
-			return this.restrictReply(App.config.server.url + '/dyncmd/list', 'info');
+		let dyn = Object.keys(App.parser.data.dyncmds).sort();
+		if (dyn.length === 0) {
+			return this.errorReply(translator.get(35, this.lang));
 		}
+		let txt = Chat.bold(translator.get(36, this.lang) + ":");
+		let cmds = [];
+		for (let i = 0; i < dyn.length; i++) {
+			let toAdd = " " + dyn[i] + (i < (dyn.length - 1) ? ',' : '');
+			if (txt.length + toAdd.length > 300) {
+				cmds.push(txt);
+				txt = '';
+			}
+			txt += toAdd;
+		}
+		if (txt.length > 0) cmds.push(txt);
+		return this.restrictReply(cmds, 'info');
 	},
 
 	/* Permissions */
