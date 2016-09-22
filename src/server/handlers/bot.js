@@ -25,6 +25,31 @@ App.server.setHandler('bot', (context, parts) => {
 		return;
 	}
 
+	if (context.get.getbotstatus) {
+		let data = {};
+		if (App.bot.status.connected) {
+			data.con = '<font color="green"><strong>CONNECTED</strong></font>';
+		} else if (App.bot.connecting) {
+			data.con = '<font color="orange"><strong>CONNECTING...</strong></font>';
+		} else {
+			data.con = '<font color="red"><strong>NOT CONNECTED</strong></font>';
+		}
+		data.nick = (App.bot.getBotNick() || "-");
+		data.rooms = [];
+		for (let r in App.bot.rooms) {
+			if (App.bot.rooms[r].type === 'chat') {
+				data.rooms.push(App.bot.rooms[r].id);
+			}
+		}
+		data.battles = [];
+		for (let r in App.bot.rooms) {
+			if (App.bot.rooms[r].type === 'battle') {
+				data.battles.push(App.bot.rooms[r].id);
+			}
+		}
+		return context.endWithText(JSON.stringify(data));
+	}
+
 	/* Actions */
 	let ok = null, error = null;
 	if (context.post.restart) {
@@ -80,6 +105,20 @@ App.server.setHandler('bot', (context, parts) => {
 
 	/* Generate HTML */
 	let html = '';
+	html += '<script type="text/javascript">';
+	html += 'function escapeHtml(text) {return text.replace(/[\"&<>]/g,' +
+		' function (a) {return { \'"\': \'&quot;\', \'&\': \'&amp;\', \'<\': \'&lt;\', \'>\': \'&gt;\' }[a];});}';
+	html += 'var req = null;function updateBotStatus() {if (req) {try {req.abort()} catch (err) {} req = null;}' +
+		'var rp = document.getElementById(\'refresh-progress\');rp.innerHTML = "&nbsp;";' +
+		'req = $.get(\'/bot/?getbotstatus=\' + Date.now(), function(data) {try {data = JSON.parse(data);' +
+		'document.getElementById(\'bot-connection\').innerHTML = data.con;' +
+		'document.getElementById(\'bot-nick\').innerHTML = data.nick;' +
+		'document.getElementById(\'bot-rooms\').innerHTML = escapeHtml(data.rooms.join(\', \'));' +
+		'document.getElementById(\'bot-battles\').innerHTML = escapeHtml(data.battles.join(\', \'));' +
+		'rp.innerHTML = \'&nbsp;\';} catch (err) {rp.innerHTML = \'<small><span class="error-msg">' +
+		'Refresh failure</span></small>\';}}).fail(function () {rp.innerHTML = \'<small><span class="error-msg">' +
+		'Refresh failure</span></small>\';});}';
+	html += '</script>';
 	html += '<script type="text/javascript">function showRestartConfirm() {var elem = document.getElementById(\'confirm-restart\');' +
 		'if (elem) {elem.innerHTML = \'<form style="display:inline;" method="post" action="">&nbsp;Are you sure?&nbsp;' +
 		'<input type="submit" name="restart" value="Restart Bot" /></form>\';}}</script>';
@@ -92,15 +131,15 @@ App.server.setHandler('bot', (context, parts) => {
 	html += '<tr><td colspan="2"><div align="center"><strong>Bot Status </strong></div></td></tr>';
 	html += '<tr><td width="150"><strong>Connection</strong></td><td width="150">';
 	if (App.bot.status.connected) {
-		html += '<font color="green"><strong>CONNECTED</strong></font>';
+		html += '<span id="bot-connection"><font color="green"><strong>CONNECTED</strong></font></span>';
 	} else if (App.bot.connecting) {
-		html += '<font color="orange"><strong>CONNECTING...</strong></font>';
+		html += '<span id="bot-connection"><font color="orange"><strong>CONNECTING...</strong></font></span>';
 	} else {
-		html += '<font color="red"><strong>NOT CONNECTED</strong></font>';
+		html += '<span id="bot-connection"><font color="red"><strong>NOT CONNECTED</strong></font></span>';
 	}
 	html += '</td></tr>';
-	html += '<tr><td><strong>Nickname</strong></td><td>' + (App.bot.getBotNick() || "-") + '</td></tr>';
-	html += '<tr><td><strong>Rooms</strong></td><td>';
+	html += '<tr><td><strong>Nickname</strong></td><td><span id="bot-nick">' + (App.bot.getBotNick() || "-") + '</span></td></tr>';
+	html += '<tr><td><strong>Rooms</strong></td><td><span id="bot-rooms">';
 	let rooms = [];
 	for (let r in App.bot.rooms) {
 		if (App.bot.rooms[r].type === 'chat') {
@@ -108,8 +147,8 @@ App.server.setHandler('bot', (context, parts) => {
 		}
 	}
 	html += rooms.join(', ');
-	html += '</td></tr>';
-	html += '<tr><td><strong>Battles</strong></td><td>';
+	html += '</span></td></tr>';
+	html += '<tr><td><strong>Battles</strong></td><td><span id="bot-battles">';
 	let battles = [];
 	for (let r in App.bot.rooms) {
 		if (App.bot.rooms[r].type === 'battle') {
@@ -117,10 +156,10 @@ App.server.setHandler('bot', (context, parts) => {
 		}
 	}
 	html += battles.join(', ');
-	html += '</td></tr>';
+	html += '</span></td></tr>';
 	html += '</table>';
 	html += '</td><td>';
-	html += '<p><a href=""><button>Refresh</button></a></p>';
+	html += '<p><button onclick="updateBotStatus();">Refresh</button>&nbsp;<span id="refresh-progress">&nbsp;</span></p>';
 	html += '<p><button onclick="showRestartConfirm();">Restart Bot</button><span id="confirm-restart">&nbsp;</span></p>';
 	if (App.status !== 'stopped') {
 		html += '<p><button onclick="showStopConfirm();">Stop Bot</button><span id="confirm-stop">&nbsp;</span></p>';
@@ -152,5 +191,5 @@ App.server.setHandler('bot', (context, parts) => {
 		html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
 	}
 
-	context.endWithWebPage(html, {title: "Bot Configuration - Showdown ChatBot"});
+	context.endWithWebPage(html, {title: "Bot Configuration - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js']});
 });
