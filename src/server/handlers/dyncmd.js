@@ -175,33 +175,34 @@ App.server.setHandler('dyncmd', (context, parts) => {
 	/* Generate HTML */
 	let html = '';
 	html += '<script type="text/javascript">function deleteCommand(cmd) {var elem = document.getElementById(\'confirm-delcmd-\' + cmd);' +
-		'if (elem) {elem.innerHTML = \'<form style="display:inline;" id="confirm-delete-form" method="post" action="">' +
+		'if (elem) {elem.innerHTML = \'<form style="display:inline;" id="confirm-delete-form" method="post" action="./">' +
 		'<input type="hidden" name="cmd" value="\' + cmd + \'" />Are you sure?&nbsp;' +
 		'<input type="submit" name="delcmd" value="Confirm Delete" /></form>\';}return false;}</script>';
 	html += '<script type="text/javascript">function deleteSubCommand(cmd, sub)' +
 		'{var elem = document.getElementById(\'confirm-delsubcmd-\' + cmd + \'-\' + sub);' +
-		'if (elem) {elem.innerHTML = \'<form style="display:inline;" id="confirm-delete-form" method="post" action="">' +
+		'if (elem) {elem.innerHTML = \'<form style="display:inline;" id="confirm-delete-form" method="post" action="#Cmd-\' + cmd + \'">' +
 		'<input type="hidden" name="cmd" value="\' + cmd + \'" /><input type="hidden" name="subcmd" value="\' + sub + \'" />' +
 		'Are you sure?&nbsp;<input type="submit" name="delsubcmd" value="Confirm Delete" /></form>\';}return false;}</script>';
 
 	html += '<h2>Dynamic Commands</h2>';
 	html += '<p><a href="/dyncmd/list" target="_blank">View Dynamic commands current list</a></p>';
 
-	/* Command tables */
-	for (let cmd in App.parser.data.dyncmds) {
-		html += getCommandTable(cmd, addFail);
-		html += '<br />';
-	}
-
-	html += '<hr />';
-	html += '<form method="post" action=""><p>ID:&nbsp;<label><input name="cmd" type="text" size="30" value="' +
+	html += '<form method="post" action="./"><p>ID:&nbsp;<label><input name="cmd" type="text" size="30" value="' +
 		((!addFail.cmd) ? addFail.id : '') + '"/></label></p><p><textarea name="content" cols="80" rows="2">' +
 		((!addFail.cmd) ? addFail.content : '') + '</textarea></p><p><label>' +
 		'<input type="submit" name="addtextcmd" value="Add Text Command" /></label></p></form>';
 	html += '<hr />';
-	html += '<form method="post" action=""><p>ID:&nbsp;<label><input name="cmd" type="text" size="30" value="' +
+	html += '<form method="post" action="./"><p>ID:&nbsp;<label><input name="cmd" type="text" size="30" value="' +
 		(addFail.index ? addFail.id : '') + '" /></label></p><p><label>' +
 		'<input type="submit" name="addindexcmd" value="Add Index Command" /></label></p></form>';
+	html += '<hr />';
+
+	/* Command tables */
+	for (let cmd in App.parser.data.dyncmds) {
+		html += '<a id="a" name="Cmd-' + cmd + '"></a>';
+		html += getCommandTable(cmd, addFail);
+		html += '<br />';
+	}
 
 	if (error) {
 		html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
@@ -250,7 +251,7 @@ function getCommandTable(cmdid, addFail) {
 	html += '<tr><td width="300"><strong>Command</strong></td><td width="300">' + cmdid + '</td></tr>';
 	html += '<tr><td colspan="2">';
 	if (typeof dynCmds[cmdid] === 'string') {
-		html += '<form method="post" action="">';
+		html += '<form method="post" action="#Cmd-' + cmdid + '">';
 		html += '<input type="hidden" name="cmd" value="' + cmdid + '" />';
 		html += '<p><label><textarea name="content" cols="80" rows="2">' + dynCmds[cmdid] + '</textarea></label></p>';
 		html += '<p><label><input type="submit" name="editcmd" value="Edit Command" /></label></p>';
@@ -260,7 +261,7 @@ function getCommandTable(cmdid, addFail) {
 			html += '<table border="1">';
 			html += '<tr><td width="250"><strong>SubCommand</strong></td><td width="250">' + k + '</td></tr>';
 			html += '<tr><td colspan="2">';
-			html += '<form method="post" action="">';
+			html += '<form method="post" action="#Cmd-' + cmdid + '">';
 			html += '<input type="hidden" name="cmd" value="' + cmdid + '" />';
 			html += '<input type="hidden" name="subcmd" value="' + k + '" />';
 			html += '<p><label><textarea name="content" cols="80" rows="2">' + dynCmds[cmdid][k] + '</textarea></label></p>';
@@ -272,7 +273,7 @@ function getCommandTable(cmdid, addFail) {
 			html += '</table>';
 			html += '<br />';
 		}
-		html += '<form method="post" action="">';
+		html += '<form method="post" action="#Cmd-' + cmdid + '">';
 		html += '<input type="hidden" name="cmd" value="' + cmdid + '" />';
 		html += '<p>ID:&nbsp;<label><input name="subcmd" type="text" size="30" value="' +
 			(addFail.cmd === cmdid ? addFail.id : '') + '"/></label></p>';
