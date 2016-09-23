@@ -57,7 +57,6 @@ class ChatBotApp {
 				let oldConfig = JSON.parse(FileSystem.readFileSync(Path.resolve(confDir, 'config.json')).toString());
 				this.db.set(oldConfig);
 				this.db.write();
-				FileSystem.unlinkSync(Path.resolve(confDir, 'config.json'));
 				console.log("Configuration was encryped");
 			} catch (err) {
 				this.reportCrash(err);

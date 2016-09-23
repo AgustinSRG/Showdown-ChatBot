@@ -135,10 +135,16 @@ class Server {
 				permissions: {root: true},
 			};
 		}
+
+		let usersChange = false;
 		for (let user in this.users) {
 			if (typeof this.users[user].password === "string") {
 				this.users[user].password = this.encryptPassword(this.users[user].password);
+				usersChange = true;
 			}
+		}
+		if (usersChange) {
+			this.userdb.write();
 		}
 
 		/* Other initial values */
