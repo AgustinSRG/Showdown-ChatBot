@@ -92,6 +92,17 @@ App.bot.on('userrename', (room, old, by) => {
 	}
 });
 
+App.bot.on('userchat', (room, time, by, msg) => {
+	if (!App.bot.rooms[room] || App.bot.rooms[room].type !== 'chat') return;
+	if (!App.config.modules.autoinvite.room || App.config.modules.autoinvite.room !== room) return;
+	if (msg.substr(0, 5) === "/log ") {
+		let line = msg.substr(5);
+		if (line.indexOf(" was promoted ") >= 0 || line.indexOf(" was demoted ") >= 0) {
+			exports.roomAuthChanged = true;
+		}
+	}
+});
+
 App.bot.on('line', (room, line, spl, isIntro) => {
 	if (isIntro) return;
 	if (!App.bot.rooms[room] || App.bot.rooms[room].type !== "chat") return;
