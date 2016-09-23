@@ -22,6 +22,7 @@ const DataBase = Tools.get('json-db.js');
 const Text = Tools.get('text.js');
 const Chat = Tools.get('chat.js');
 const AbuseMonitor = Tools.get('abuse-monitor.js');
+const LineSplitter = Tools.get('line-splitter.js');
 
 const Translator = Tools.get('translate.js');
 const translator = new Translator(Path.resolve(__dirname, 'command-parser.translations'));
@@ -554,8 +555,14 @@ class DynamicCommand {
 				if (conf[arg]) {
 					this.execNext(conf[arg], context);
 				} else if (Object.keys(conf).length) {
-					context.errorReply((arg ? (translator.get(4, context.lang) + ". ") : "") + translator.get(5, context.lang) +
-						" " + Chat.bold(cmd) + ": " + Chat.italics(Object.keys(conf).join(', ')));
+					let spl = new LineSplitter(App.config.bot.maxMessageLength);
+					spl.add((arg ? (translator.get(4, context.lang) + ". ") : "") +
+						translator.get(5, context.lang) + " " + Chat.bold(cmd) + ":");
+					let subCmds = Object.keys(conf);
+					for (let i = 0; i < subCmds.length; i++) {
+						spl.add(" " + subCmds[i] + (i < (subCmds.length - 1) ? ',' : ''));
+					}
+					context.errorReply(spl.getLines());
 				}
 			}
 			break;

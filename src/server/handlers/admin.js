@@ -59,11 +59,13 @@ App.server.setHandler('admin', (context, parts) => {
 		let newHttpsPort = parseInt(context.post.sslport);
 		let maxlines = parseInt(context.post.maxlines);
 		let loginserv = (context.post.loginserv || "").trim();
+		let maxMsgLength = parseInt(context.post.maxmsglen);
 
 		/* Check */
 		try {
 			check(!isNaN(newPort), "Invalid port.");
 			check(!isNaN(maxlines) && maxlines > 0, "Invalid lines restriction");
+			check(!isNaN(maxMsgLength) && maxMsgLength > 0, "Invialid message length restriction");
 		} catch (err) {
 			error = err.message;
 		}
@@ -83,6 +85,7 @@ App.server.setHandler('admin', (context, parts) => {
 			App.config.apptitle = context.post.apptitle || "";
 			App.config.bot.loginserv = loginserv || "play.pokemonshowdown.com";
 			App.config.bot.maxlines = maxlines;
+			App.config.bot.maxMessageLength = maxMsgLength;
 			App.config.debug = !!context.post.debugmode;
 			App.config.useproxy = !!context.post.useproxy;
 			App.config.blockautodownload = !!context.post.blockautodownload;
@@ -141,6 +144,8 @@ App.server.setHandler('admin', (context, parts) => {
 		(App.config.bot.loginserv || 'play.pokemonshowdown.com') + '" /></td></tr>';
 	html += '<tr><td><strong>Pokemon Showdown Lines Restriction</strong>: </td><td><input type="text" name="maxlines" value="' +
 		(App.config.bot.maxlines || '3') + '" /></td></tr>';
+	html += '<tr><td><strong>Message Length Restriction</strong>: </td><td><input type="text" name="maxmsglen" value="' +
+		(App.config.bot.maxMessageLength || '300') + '" /></td></tr>';
 	html += '</table>';
 	html += '<p><label><input type="checkbox" name="debugmode" value="true" ' +
 		(App.config.debug ? 'checked="checked"' : '') + ' /></label>&nbsp;Enable debug mode.</p>';

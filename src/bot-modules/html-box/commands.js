@@ -8,6 +8,7 @@ const Path = require('path');
 const Translator = Tools.get('translate.js');
 const Text = Tools.get('text.js');
 const Chat = Tools.get('chat.js');
+const LineSplitter = Tools.get('line-splitter.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
@@ -54,17 +55,11 @@ module.exports = {
 		if (list.length === 0) {
 			return this.errorReply(translator.get(2, this.lang));
 		}
-		let txt = Chat.bold(translator.get(3, this.lang) + ":");
-		let cmds = [];
+		let spl = new LineSplitter(App.config.bot.maxMessageLength);
+		spl.add(Chat.bold(translator.get(3, this.lang) + ":"));
 		for (let i = 0; i < list.length; i++) {
-			let toAdd = " " + list[i] + (i < (list.length - 1) ? ',' : '');
-			if (txt.length + toAdd.length > 300) {
-				cmds.push(txt);
-				txt = '';
-			}
-			txt += toAdd;
+			spl.add(" " + list[i] + (i < (list.length - 1) ? ',' : ''));
 		}
-		if (txt.length > 0) cmds.push(txt);
-		return this.restrictReply(cmds, 'htmlboxcmd');
+		return this.restrictReply(spl.getLines(), 'htmlboxcmd');
 	},
 };

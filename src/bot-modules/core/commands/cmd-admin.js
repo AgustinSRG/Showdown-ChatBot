@@ -10,6 +10,7 @@ const Path = require('path');
 const Text = Tools.get('text.js');
 const Chat = Tools.get('chat.js');
 const Translator = Tools.get('translate.js');
+const LineSplitter = Tools.get('line-splitter.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'cmd-admin.translations'));
 
@@ -166,18 +167,12 @@ module.exports = {
 		if (dyn.length === 0) {
 			return this.errorReply(translator.get(35, this.lang));
 		}
-		let txt = Chat.bold(translator.get(36, this.lang) + ":");
-		let cmds = [];
+		let spl = new LineSplitter(App.config.bot.maxMessageLength);
+		spl.add(Chat.bold(translator.get(36, this.lang) + ":"));
 		for (let i = 0; i < dyn.length; i++) {
-			let toAdd = " " + dyn[i] + (i < (dyn.length - 1) ? ',' : '');
-			if (txt.length + toAdd.length > 300) {
-				cmds.push(txt);
-				txt = '';
-			}
-			txt += toAdd;
+			spl.add(" " + dyn[i] + (i < (dyn.length - 1) ? ',' : ''));
 		}
-		if (txt.length > 0) cmds.push(txt);
-		return this.restrictReply(cmds, 'info');
+		return this.restrictReply(spl.getLines(), 'info');
 	},
 
 	/* Permissions */
