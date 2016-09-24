@@ -33,6 +33,8 @@ App.server.setHandler('tools', (context, parts) => {
 	html += ' | ';
 	html += '<a class="submenu-option' + (opt in {'botsend': 1} ? '-selected' : '') + '" href="/tools/botsend/">Bot-Send</a>';
 	html += ' | ';
+	html += '<a class="submenu-option' + (opt in {'botlogin': 1} ? '-selected' : '') + '" href="/tools/botlogin/">Bot-Login</a>';
+	html += ' | ';
 	html += '<a class="submenu-option' + (opt in {'seen': 1} ? '-selected' : '') + '" href="/tools/seen/">Seen</a>';
 	html += ' | ';
 	html += '<a class="submenu-option' + (opt in {'clearusers': 1} ? '-selected' : '') + '" href="/tools/clearusers/">Clear&nbsp;User-Data</a>';
@@ -55,6 +57,9 @@ App.server.setHandler('tools', (context, parts) => {
 		break;
 	case 'botsend':
 		toolBotSend(context, html, parts);
+		break;
+	case 'botlogin':
+		toolBotLogin(context, html, parts);
 		break;
 	case 'seen':
 		toolSeen(context, html, parts);
@@ -150,6 +155,43 @@ function toolBotSend(context, html, parts) {
 		'<input id="room" type="text" name="room" /><p><strong>Message</strong>:</p>' +
 		'<p><textarea id="message" name="msg" cols="100" rows="4"></textarea></p>' +
 		'<p><label><button onclick="sendMessage();">Send Message</button></p>';
+	html += '<div id="result">&nbsp;</div>';
+	context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js']});
+}
+
+function toolBotLogin(context, html, parts) {
+	if (context.post.snd) {
+		/* Bot-Login action */
+		let result = '';
+		if (context.post.botuser) {
+			if (App.bot.isConnected()) {
+				App.bot.rename(context.post.botuser, context.post.botpass);
+				App.logServerAction(context.user.id, "Tool Bot-Login used. Bot Username: " + context.post.botuser);
+				result += '<p style="padding:5px;"><span class="ok-msg">Login request sucessfully sent.</span></p>';
+			} else {
+				result += '<p style="padding:5px;"><span class="error-msg">Error: The bot is not connected.</span></p>';
+			}
+		} else {
+			result += '<p style="padding:5px;"><span class="error-msg">Cannot login using a blanck username.</span></p>';
+		}
+		return context.endWithText(result);
+	}
+	html += '<script type="text/javascript">';
+	html += 'function escapeHtml(text) {return text.replace(/[\"&<>]/g,' +
+		' function (a) {return { \'"\': \'&quot;\', \'&\': \'&amp;\', \'<\': \'&lt;\', \'>\': \'&gt;\' }[a];});}';
+	html += 'var req = null;';
+	html += 'function sendRequest () {var botuser = document.getElementById("botuser").value;var botpass = document.getElementById("botpass").value;' +
+		'if (!botuser) {return;}if (req) {try {req.abort()} catch (err) {} req = null;}' +
+		'document.getElementById("result").innerHTML = \'<p><i>Sending Message...</i></p>\';document.getElementById("botuser").value = "";' +
+		'document.getElementById("botpass").value = "";req = $.post(\'/tools/botlogin/\', {botuser: botuser, botpass: botpass, snd: "true"}, ' +
+		'function (data) {document.getElementById("result").innerHTML = data;}).fail(' +
+		'function () {document.getElementById("result").innerHTML = \'<p><span class="error-msg">Request error. ' +
+		'Try again later or refresh the page.</span></p>\';});}';
+	html += '</script>';
+	html += '<h2>Bot-Login Tool</h2><p><strong>Bot Username</strong>:&nbsp;' +
+		'<input id="botuser" type="text" name="botuser" /></p><p><strong>Password</strong>:&nbsp;' +
+		'<input id="botpass" type="password" name="botpass" /></p>' +
+		'<p><label><button onclick="sendRequest();">Send Login Request</button></p>';
 	html += '<div id="result">&nbsp;</div>';
 	context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js']});
 }
