@@ -39,7 +39,7 @@ App.server.setHandler('trivia', (context, parts) => {
 		}
 
 		try {
-			check(text, "Question can be blank");
+			check(text, "Question cannot be blank");
 			check(text.length < 250, "Question cannot be longer than 250 characters");
 			check(aux.length > 0, "You must specify at least one answer");
 		} catch (err) {
@@ -103,13 +103,14 @@ App.server.setHandler('trivia', (context, parts) => {
 	let html = '';
 	html += '<h2>Trivia Answers</h2>';
 
-	html += '<form method="post" action=""><p><strong>Question</strong>:&nbsp;<input name="clue" type="text" size="80" /></p>' +
+	html += '<form method="post" action="./"><p><strong>Question</strong>:&nbsp;<input name="clue" type="text" size="80" /></p>' +
 		'<p><strong>Answers</strong>:&nbsp;<input name="answers" type="text" size="80" /></p>' +
 		'<p><input type="submit" name="add" value="Add" /></p></form>';
 
 	for (let id in mod.data) {
 		html += '<hr />';
-		html += '<form method="post" action="">';
+		html += '<a id="a" name="' + id + '"></a>';
+		html += '<form method="post" action="#' + id + '">';
 		html += '<input type="hidden" name="id" value="' + id + '" />';
 		html += '<p><strong>Question</strong>:&nbsp;<input name="clue" type="text" size="80" value="' +
 			mod.data[id].clue + '" /></p>';
