@@ -9,6 +9,7 @@ const Path = require('path');
 const Text = Tools.get('text.js');
 const Chat = Tools.get('chat.js');
 const Translator = Tools.get('translate.js');
+const LineSplitter = Tools.get('line-splitter.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
@@ -327,20 +328,14 @@ module.exports = {
 						translator.get('usagedata2', this.lang).replace("#NAME", resultName) + " " +
 						translator.get('in', this.lang) + " " + tierName(tier));
 				}
-				let txt = Chat.bold((translator.get('usagedata1', this.lang).replace("#NAME", resultName) + ' ' + pokeName +
+				let spl = new LineSplitter(App.config.bot.maxMessageLength);
+				spl.add(Chat.bold((translator.get('usagedata1', this.lang).replace("#NAME", resultName) + ' ' + pokeName +
 					translator.get('usagedata2', this.lang).replace("#NAME", resultName) + " " +
-					translator.get('in', this.lang) + " " + tierName(tier)).trim()) + ": ";
-				let comma, cmds = [];
+					translator.get('in', this.lang) + " " + tierName(tier)).trim()) + ":");
 				for (let i = 0; i < result.length; i++) {
-					comma = (i < result.length - 1) ? ", " : "";
-					if ((txt.length + result[i].length + comma.length) > 300) {
-						cmds.push(txt);
-						txt = "";
-					}
-					txt += result[i] + comma;
+					spl.add(" " + result[i] + (i < (result.length - 1) ? ',' : ''));
 				}
-				if (txt.length > 0) cmds.push(txt);
-				this.restrictReply(cmds, 'usagedata');
+				this.restrictReply(spl.getLines(), 'usagedata');
 			}.bind(this));
 		}.bind(this));
 	},
