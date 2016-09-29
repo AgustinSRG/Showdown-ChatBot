@@ -13,8 +13,9 @@ class BotMod {
 	/**
 	 * @param {Path} path - Location of the module in the file system
 	 * @param {Object} config - Module Configuration
+	 * @param {ChatBotApp} app - Showdown ChatBot App
 	 */
-	constructor(path, config) {
+	constructor(path, config, app) {
 		this.enabled = true;
 		this.id = config.id;
 		this.name = config.name;
@@ -22,6 +23,9 @@ class BotMod {
 		this.version = config.version;
 		if (config.main) {
 			this.system = require(Path.resolve(path, config.main));
+			if (typeof this.system.setup === "function") {
+				this.system = this.system.setup(app);
+			}
 		} else {
 			this.system = null;
 		}

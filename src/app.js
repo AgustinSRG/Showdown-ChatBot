@@ -31,10 +31,12 @@ class ChatBotApp {
 	/**
 	 * @param {Path} confDir - A path to store the bot configuration
 	 * @param {Path} dataDir - A path to store the bot data (dowloaded or temporal data)
+	 * @param {Object} env
 	 */
-	constructor(confDir, dataDir) {
+	constructor(confDir, dataDir, env) {
 		/* Initial Status */
 		this.status = 'stopped';
+		this.env = env;
 
 		/* Check paths */
 		this.confDir = confDir;
@@ -43,7 +45,10 @@ class ChatBotApp {
 		checkDir(dataDir);
 
 		/* Data */
-		this.data = new DataManager(dataDir);
+		this.data = new DataManager(dataDir, this);
+		this.data.events.on('msg', function (str) {
+			this.log(str);
+		}.bind(this));
 
 		/* Configuration DataBase */
 		if (!FileSystem.existsSync(Path.resolve(confDir, 'config.key'))) {
@@ -95,7 +100,7 @@ class ChatBotApp {
 			this.config.loadmodules = {};
 		}
 
-		if (global.ShellOptions && global.ShellOptions.port !== undefined) {
+		if (env.port !== undefined) {
 			this.config.server.port = global.ShellOptions.port;
 		} else if (process.env['PORT']) {
 			this.config.server.port = process.env['PORT'];
@@ -103,7 +108,7 @@ class ChatBotApp {
 			this.config.server.port = process.env['OPENSHIFT_NODEJS_PORT'];
 		}
 
-		if (global.ShellOptions && global.ShellOptions.bindaddress !== undefined) {
+		if (env.bindaddress !== undefined) {
 			this.config.server.bindaddress = global.ShellOptions.bindaddress;
 		} else if (process.env['BIND_IP']) {
 			this.config.server.bindaddress = process.env['BIND_IP'];
@@ -164,10 +169,10 @@ class ChatBotApp {
 			this.config.bot.loginserv, this.config.bot.maxlines, true, this.config.bot.retrydelay);
 
 		/* Create the server */
-		this.server = new Server(this.confDir, this.config.server);
+		this.server = new Server(this.confDir, this);
 
 		/* Create the command parser */
-		this.parser = new CommandParser(this.confDir, this.bot);
+		this.parser = new CommandParser(this.confDir, this);
 
 		/* Command parser bot events */
 		this.bot.on('userchat', function (room, time, by, msg) {
@@ -326,6 +331,9 @@ class ChatBotApp {
 		let path = Path.resolve(this.addonsDir, file);
 		try {
 			this.addons[file] = require(path);
+			if (typeof this.addons[file].setup === "function") {
+				this.addons[file].setup(this);
+			}
 			return true;
 		} catch (err) {
 			this.reportCrash(err);
@@ -340,7 +348,7 @@ class ChatBotApp {
 	removeAddon(file) {
 		if (typeof this.addons[file] === 'object' && typeof this.addons[file].destroy === 'function') {
 			try {
-				this.addons[file].destroy();
+				this.addons[file].destroy(this);
 			} catch (err) {
 				this.reportCrash(err);
 			}

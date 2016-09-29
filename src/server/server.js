@@ -64,18 +64,20 @@ function decrypt(text, algorithm, password) {
 class Server {
 	/**
 	 * @param {Path} path - Existing directory where all server configuration is stored
-	 * @param {Object} config - Configuration object (port, bindaddress, https, httpsPort)
+	 * @param {ChatBotApp} app - Application that uses this control panel
 	 */
-	constructor(path, config) {
+	constructor(path, app) {
+		let config = app.config.server;
+		this.app = app;
 		/* Http server */
 		this.http = new Http.Server(this.requestHandler.bind(this));
 		this.httpOptions = {
 			port: config.port,
 			bindaddress: config.bindaddress,
 		};
-		this.http.on('error', error => {
-			App.log("[SERVER] HTTP ERROR - " + error.code + ":" + error.message);
-		});
+		this.http.on('error', function (error) {
+			this.app.log("[SERVER] HTTP ERROR - " + error.code + ":" + error.message);
+		}.bind(this));
 
 		/* Https */
 		this.https = null;
@@ -83,10 +85,10 @@ class Server {
 		if (config.https) {
 			let sslkey = Path.resolve(path, 'ssl-key.pem');
 			let sslcert = Path.resolve(path, 'ssl-cert.pem');
-			if (global.ShellOptions && global.ShellOptions.sslkey !== undefined) {
+			if (app.env.sslkey !== undefined) {
 				sslkey = global.ShellOptions.sslkey;
 			}
-			if (global.ShellOptions && global.ShellOptions.sslcert !== undefined) {
+			if (app.env.sslcert !== undefined) {
 				sslcert = global.ShellOptions.sslcert;
 			}
 			this.httpsOptions = {
@@ -100,20 +102,20 @@ class Server {
 				console.log('Could not create a ssl server. Missing key and certificate.');
 			}
 			if (this.https) {
-				this.https.on('error', error => {
-					App.log("[SERVER] HTTPS ERROR - " + error.code + ":" + error.message);
-				});
+				this.https.on('error', function (error) {
+					this.app.log("[SERVER] HTTPS ERROR - " + error.code + ":" + error.message);
+				}.bind(this));
 			}
 		}
 
 		/* Server abuse monitor */
 		this.monitor = new AbuseMonitor(Max_Request_Flood, Flood_Interval);
-		this.monitor.on('lock', (user, msg) => {
-			App.log('[SERVER - ABUSE] [LOCK: ' + user + '] ' + msg);
-		});
-		this.monitor.on('unlock', user => {
-			App.log('[SERVER - ABUSE] [UNLOCK: ' + user + ']');
-		});
+		this.monitor.on('lock', function (user, msg) {
+			this.app.log('[SERVER - ABUSE] [LOCK: ' + user + '] ' + msg);
+		}.bind(this));
+		this.monitor.on('unlock', function (user) {
+			this.app.log('[SERVER - ABUSE] [UNLOCK: ' + user + ']');
+		}.bind(this));
 		this.permissions = {
 			root: {desc: "Full access permission"},
 		};
@@ -280,7 +282,7 @@ class Server {
 		this.sweepTokens();
 		if (token && this.tokens[token]) {
 			if (context.post.logout) {
-				App.log('[LOGOUT] Userid: ' + this.tokens[token].user + ' | IP: ' + context.ip);
+				this.app.log('[LOGOUT] Userid: ' + this.tokens[token].user + ' | IP: ' + context.ip);
 				delete this.tokens[token];
 				context.setCookie('usertoken=;');
 			} else {
@@ -293,13 +295,13 @@ class Server {
 		} else if (user && context.post.login) {
 			user = Text.toId(user);
 			if (this.users[user] && this.checkPassword(this.users[user].password, pass)) {
-				App.log('[LOGIN] Userid: ' + user + ' | IP: ' + context.ip);
+				this.app.log('[LOGIN] Userid: ' + user + ' | IP: ' + context.ip);
 				token = this.makeToken(user);
 				context.setCookie('usertoken=' + token + ';');
 				user = new User(this.users[user]);
 				context.setUser(user);
 			} else {
-				App.log('[INVALID PASSWORD] Userid: ' + user + ' | IP: ' + context.ip);
+				this.app.log('[INVALID PASSWORD] Userid: ' + user + ' | IP: ' + context.ip);
 				context.setInvalidLogin(user);
 			}
 		}
@@ -338,7 +340,7 @@ class Server {
 	 */
 	getIP(request) {
 		let ip = request.connection.remoteAddress;
-		if (App.config.useproxy && request.headers['x-forwarded-for']) {
+		if (this.app.config.useproxy && request.headers['x-forwarded-for']) {
 			ip = request.headers['x-forwarded-for'].split(',')[0];
 		}
 		return ip;
@@ -358,13 +360,13 @@ class Server {
 			}
 			this.monitor.count(ip);
 		}
-		let context = new RequestContext(request, response, ip);
+		let context = new RequestContext(this, request, response, ip);
 		context.resolveVars(function () {
 			this.applyLogin(context);
 			try {
 				this.serve(context);
 			} catch (error) {
-				App.reportCrash(error);
+				this.app.reportCrash(error);
 				context.endWithError(500, 'Internal Server Error', 'Error: ' + error.code + " (" + error.message + ")");
 			}
 		}.bind(this));
@@ -381,8 +383,8 @@ class Server {
 		} else if (!context.url.path || context.url.path === '/') {
 			/* Main page */
 			context.setMenu(this.getMenu(context));
-			if (App.config.mainhtml) {
-				context.endWithWebPage(App.config.mainhtml, {title: "Showdown ChatBot - Control Panel"});
+			if (this.app.config.mainhtml) {
+				context.endWithWebPage(this.app.config.mainhtml, {title: "Showdown ChatBot - Control Panel"});
 			} else {
 				FileSystem.readFile(Path.resolve(__dirname, 'main.html'), (error, data) => {
 					if (error) {
@@ -404,7 +406,7 @@ class Server {
 				try {
 					this.handlers[opt](context, urlParts);
 				} catch (error) {
-					App.reportCrash(error);
+					this.app.reportCrash(error);
 					context.endWithError(500, 'Internal Server Error', 'Error: ' + error.code + " (" + error.message + ")");
 				}
 			} else {
@@ -488,11 +490,13 @@ class User {
  */
 class RequestContext {
 	/**
+	 * @param {Server} server
 	 * @param {ClientRequest} request
 	 * @param {ServerResponse} response
 	 * @param {String} ip - The IP address of the client request
 	 */
-	constructor(request, response, ip) {
+	constructor(server, request, response, ip) {
+		this.server = server;
 		this.request = request;
 		this.response = response;
 		this.user = null;
@@ -613,6 +617,9 @@ class RequestContext {
 			loginData.group = this.user.group;
 		} else {
 			loginData.invalid = this.invalidLogin;
+		}
+		if (!options.banner) {
+			options.banner = this.server.app.config.apptitle;
 		}
 		let html = PageMaker.generate(body, loginData, this.menu, options);
 		this.headers['Content-Type'] = 'text/html; charset=utf-8';

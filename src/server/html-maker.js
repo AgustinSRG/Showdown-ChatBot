@@ -51,7 +51,7 @@ exports.generate = function (body, loginData, menu, options) {
 	buf += '<br /><div class="header">';
 	buf += '<table width="100%" border="0"><tr>';
 	buf += '<td width="60%"><a class="home-link" href="/"><div class="banner" align="center"><h1>' +
-		(App.config.apptitle || 'Showdown ChatBot') + '</h1></div></a></td>';
+		(options.banner || 'Showdown ChatBot') + '</h1></div></a></td>';
 
 	buf += '<td width="30%"><div align="right">';
 	if (loginData.name) {
