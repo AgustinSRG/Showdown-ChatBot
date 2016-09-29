@@ -80,7 +80,7 @@ exports.userCanBeInvited = function (room, ident) {
 App.bot.on('userjoin', (room, by) => {
 	let user = Text.parseUserIdent(by);
 	if (exports.userCanBeInvited(room, user)) {
-		App.bot.sendTo('', '/invite ' + user.id + ', ' + App.config.modules.autoinvite.room);
+		App.bot.sendTo(App.config.modules.autoinvite.room, '/invite ' + user.id);
 	}
 });
 
@@ -88,7 +88,7 @@ App.bot.on('userrename', (room, old, by) => {
 	let user = Text.parseUserIdent(by);
 	if (user.id === Text.toId(old)) return;
 	if (exports.userCanBeInvited(room, user)) {
-		App.bot.sendTo('', '/invite ' + user.id + ', ' + App.config.modules.autoinvite.room);
+		App.bot.sendTo(App.config.modules.autoinvite.room, '/invite ' + user.id);
 	}
 });
 
