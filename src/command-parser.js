@@ -56,6 +56,7 @@ class CommandParser {
 		if (!this.data.permissions) this.data.permissions = {}; /* Permission configuration */
 		if (!this.data.roompermissions) this.data.roompermissions = {}; /* Permission configuration in rooms */
 		if (!this.data.sleep) this.data.sleep = {}; /* Sleeping rooms */
+		if (!this.data.lockedUsers) this.data.lockedUsers = {}; /* Locked users */
 		if (!this.data.roomctrl) this.data.roomctrl = {}; /* Control rooms */
 		if (!this.data.helpmsg) this.data.helpmsg = ""; /* Help Message */
 		if (!this.data.antispam) this.data.antispam = false; /* Anti-Spam System */
@@ -75,7 +76,7 @@ class CommandParser {
 		/* Abuse Monitor */
 		this.monitor = new AbuseMonitor(Max_Cmd_Flood, Flood_Interval);
 		this.monitor.on('lock', (user, msg) => {
-			App.log("[PARSER - ABUSE] [LOCK: " + user + "]" + msg);
+			App.log("[PARSER - ABUSE] [LOCK: " + user + "]" + (msg ? (' ' + msg) : ''));
 		});
 		this.monitor.on('unlock', user => {
 			App.log("[PARSER - ABUSE] [UNLOCK: " + user + "]");
@@ -339,7 +340,7 @@ class CommandParser {
 		}
 		let userid = Text.toId(by);
 		if (room && this.data.sleep[room]) return; /* Sleeping room */
-		if (!this.data.exceptions[userid] && this.monitor.isLocked(userid)) return; /* User locked */
+		if (!this.data.exceptions[userid] && (this.monitor.isLocked(userid) || this.data.lockedUsers[userid])) return; /* User locked */
 		if (!this.data.exceptions[userid] && this.checkAntiSpamSystem(userid, room)) return;
 
 		/* Target Room */

@@ -36,6 +36,8 @@ App.server.setHandler('parser', (context, parts) => {
 	html += '<a class="submenu-option' + (opt in {'permissions': 1} ? '-selected' : '') + '" href="/parser/permissions/">Permissions</a>';
 	html += ' | ';
 	html += '<a class="submenu-option' + (opt in {'roomctrl': 1} ? '-selected' : '') + '" href="/parser/roomctrl/">Control Rooms</a>';
+	html += ' | ';
+	html += '<a class="submenu-option' + (opt in {'monitor': 1} ? '-selected' : '') + '" href="/parser/monitor/">Abuse Monitor</a>';
 	html += '</div>';
 	html += '<hr />';
 
@@ -53,6 +55,9 @@ App.server.setHandler('parser', (context, parts) => {
 		break;
 	case 'roomctrl':
 		parserRoomControlHandler(context, html);
+		break;
+	case 'monitor':
+		parserAbuseMonitorHandler(context, html);
 		break;
 	default:
 		context.endWith404();
@@ -84,6 +89,7 @@ function parserConfigurationHandler(context, html) {
 			App.parser.data.helpmsg = context.post.helpmsg;
 			App.parser.data.antispam = !!context.post.antispam;
 			App.parser.data.sleep = Object.createFromKeys((context.post.sleep || "").split(',').map(Text.toRoomid).filter(room => room));
+			App.parser.data.lockedUsers = Object.createFromKeys((context.post.locklist || "").split(',').map(Text.toId).filter(u => u));
 			App.saveConfig();
 			App.parser.saveData();
 			ok = 'Command parser configuration editted sucessfully.';
@@ -114,6 +120,8 @@ function parserConfigurationHandler(context, html) {
 		'placeholder="Hi $USER, I am a bot for Pokemon Showdown." value="' + App.parser.data.helpmsg + '" autocomplete="off" /></label></td></tr>';
 	html += '<tr><td>Sleeping Rooms: </td><td><label><input name="sleep" type="text" size="80" value="' +
 		Object.keys(App.parser.data.sleep).join(', ') + '" autocomplete="off" /> (Separated by commas) </label></td></tr>';
+	html += '<tr><td>Locked Users: </td><td><label><input name="locklist" type="text" size="80" value="' +
+		Object.keys(App.parser.data.lockedUsers).join(', ') + '" autocomplete="off" /> (Separated by commas) </label></td></tr>';
 	html += '<tr><td colspan="2"><input name="antispam" type="checkbox" value="checkbox"' +
 		(App.parser.data.antispam ? ' checked="checked"' : '') + ' />&nbsp;Use Anti-Spam system for private commands</td></tr>';
 	html += '</table>';
@@ -374,6 +382,60 @@ function parserRoomControlHandler(context, html) {
 	html += '<tr><td>Target Room: </td><td><label><input name="room" type="text" size="40" /></label></td></tr>';
 	html += '</table>';
 	html += '<p><label><input type="submit" name="set" value="Set Control Room" /></label></p>';
+	html += '</form>';
+	if (error) {
+		html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
+	} else if (ok) {
+		html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
+	}
+	context.endWithWebPage(html, {title: "Control Rooms - Showdown ChatBot"});
+}
+
+function parserAbuseMonitorHandler(context, html) {
+	let ok = null, error = null;
+	if (context.post.addlock) {
+		let locked = Text.toId(context.post.locked);
+		if (locked) {
+			if (!App.parser.monitor.isLocked(locked)) {
+				App.parser.monitor.lock(locked, "Locked via control panel");
+				App.logServerAction(context.user.id, "PARSER LOCK: " + locked);
+				ok = "User <strong>" + locked + "<strong> was locked from using commands";
+			} else {
+				error = "Error: User already locked";
+			}
+		} else {
+			error = "You must specify an user.";
+		}
+	} else if (context.post.unlock) {
+		let locked = Text.toId(context.post.locked);
+		if (locked) {
+			if (App.parser.monitor.isLocked(locked)) {
+				App.parser.monitor.unlock(locked);
+				App.logServerAction(context.user.id, "PARSER UNLOCK: " + locked);
+				ok = "User <strong>" + locked + "<strong> was unlocked";
+			} else {
+				error = "Error: User not locked";
+			}
+		} else {
+			error = "You must specify an user.";
+		}
+	}
+	/* Generate HTML */
+	html += '<table border="1">';
+	html += '<tr><td width="300"><div align="center"><strong>User ID</strong></div></td>' +
+		'<td width="200"><div align="center"><strong>Options</strong></div></td></tr>';
+	for (let locked in App.parser.monitor.locked) {
+		html += '<tr><td>' + locked + '</td>' + '<td><div align="center"><form style="display:inline;" method="post" action="">' +
+			'<input type="hidden" name="locked" value="' + locked +
+			'" /><input type="submit" name="unlock" value="Unlock" /></form></div></td></tr>';
+	}
+	html += '</table>';
+	html += '<hr />';
+	html += '<form method="post" action="">';
+	html += '<table border="0">';
+	html += '<tr><td>User ID: </td><td><label><input name="locked" type="text" size="40" /></label></td></tr>';
+	html += '</table>';
+	html += '<p><label><input type="submit" name="addlock" value="Lock User" /></label></p>';
 	html += '</form>';
 	if (error) {
 		html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
