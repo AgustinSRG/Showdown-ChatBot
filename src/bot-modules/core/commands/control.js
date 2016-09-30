@@ -13,10 +13,6 @@ const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'control.translations'));
 
-App.parser.addPermission('joinroom', {group: 'admin'});
-App.parser.addPermission('send', {group: 'admin'});
-App.parser.addPermission('say', {group: 'mod'});
-
 module.exports = {
 	/* Joining / Leaving Rooms */
 
@@ -33,8 +29,8 @@ module.exports = {
 			rooms.push(roomid);
 		}
 		if (rooms.length > 0) {
-			App.bot.joinRooms(rooms);
-			App.logCommandAction(this);
+			this.parser.bot.joinRooms(rooms);
+			this.parser.app.logCommandAction(this);
 		}
 	},
 
@@ -51,8 +47,8 @@ module.exports = {
 			rooms.push(roomid);
 		}
 		if (rooms.length > 0) {
-			App.bot.leaveRooms(rooms);
-			App.logCommandAction(this);
+			this.parser.bot.leaveRooms(rooms);
+			this.parser.app.logCommandAction(this);
 		}
 	},
 
@@ -62,7 +58,7 @@ module.exports = {
 		if (!this.can('send', this.room)) return this.replyAccessDenied('send');
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('message')}));
 		this.send(this.arg, this.targetRoom);
-		App.logCommandAction(this);
+		this.addToSecurityLog();
 	},
 
 	send: function () {
@@ -76,7 +72,7 @@ module.exports = {
 			return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: this.usageTrans('message')}));
 		}
 		this.send(msg, room);
-		App.logCommandAction(this);
+		this.addToSecurityLog();
 	},
 
 	pm: 'sendpm',
@@ -87,7 +83,7 @@ module.exports = {
 		let msg = this.args[1].trim();
 		if (!user || !msg) return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: this.usageTrans('message')}));
 		this.sendPM(user, msg);
-		App.logCommandAction(this);
+		this.addToSecurityLog();
 	},
 
 	say: function () {
@@ -102,9 +98,9 @@ module.exports = {
 		return;
 	},
 
-	"eval": function () {
-		if (!App.config.debug) return;
-		if (global.ShellOptions && global.ShellOptions.staticmode) return;
+	"eval": function (App) {
+		if (!this.parser.app.config.debug) return;
+		if (this.parser.app.env.staticmode) return;
 		if (!this.isExcepted()) return;
 		if (!this.arg) return this.errorReply(this.usage({desc: 'script'}));
 		try {
@@ -113,14 +109,14 @@ module.exports = {
 		} catch (err) {
 			this.reply('Error: ' + err.code + ' - ' + err.message);
 		}
-		App.logCommandAction(this);
+		this.addToSecurityLog();
 	},
 
 	hotpatch: function () {
 		if (!this.isExcepted()) return;
-		App.hotpatchCommands(Path.resolve(__dirname, '../../'));
+		this.parser.app.hotpatchCommands(Path.resolve(__dirname, '../../'));
 		this.reply(translator.get(0, this.lang));
-		App.logCommandAction(this);
+		this.addToSecurityLog();
 	},
 
 	version: function () {

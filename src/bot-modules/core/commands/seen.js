@@ -16,7 +16,7 @@ const Translator = Tools.get('translate.js');
 const translator = new Translator(Path.resolve(__dirname, 'seen.translations'));
 
 module.exports = {
-	seen: function () {
+	seen: function (App) {
 		let targetUser = Text.toId(this.arg);
 		if (!targetUser) {
 			this.pmReply(this.usage({desc: this.usageTrans('user')}));
@@ -76,7 +76,7 @@ module.exports = {
 		}
 	},
 
-	alts: function () {
+	alts: function (App) {
 		let targetUser = Text.toId(this.arg);
 		if (!targetUser) {
 			this.pmReply(this.usage({desc: this.usageTrans('user')}));

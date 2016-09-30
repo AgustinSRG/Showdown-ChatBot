@@ -14,15 +14,11 @@ const LineSplitter = Tools.get('line-splitter.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'cmd-admin.translations'));
 
-App.parser.addPermission('commands', {excepted: true});
-App.parser.addPermission('grant', {excepted: true});
-App.parser.addPermission('set', {group: 'owner'});
-
 let Temp_Var = "";
 
 module.exports = {
 	/* Aliases */
-	setalias: function () {
+	setalias: function (App) {
 		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (this.args.length !== 2) {
 			return this.errorReply(this.usage({desc: translator.get('alias', this.lang)}, {desc: this.usageTrans('command')}));
@@ -37,11 +33,11 @@ module.exports = {
 		}
 		App.parser.data.aliases[alias] = cmd;
 		App.parser.saveData();
-		App.logCommandAction(this);
+		this.addToSecurityLog();
 		this.reply(translator.get(2, this.lang) + ' ' + Chat.italics(alias) + ' ' + translator.get(3, this.lang) + ' ' + Chat.italics(cmd));
 	},
 
-	rmalias: function () {
+	rmalias: function (App) {
 		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (!this.arg) return this.errorReply(this.usage({desc: translator.get('alias', this.lang)}));
 		let alias = Text.toCmdid(this.arg);
@@ -49,7 +45,7 @@ module.exports = {
 		if (App.parser.data.aliases[alias]) {
 			delete App.parser.data.aliases[alias];
 			App.parser.saveData();
-			App.logCommandAction(this);
+			this.addToSecurityLog();
 			this.reply(translator.get(2, this.lang) + ' ' + Chat.italics(alias) + ' ' + translator.get(4, this.lang));
 		} else {
 			this.reply(translator.get(2, this.lang) + ' ' + Chat.italics(alias) + ' ' + translator.get(5, this.lang));
@@ -57,7 +53,7 @@ module.exports = {
 	},
 
 	/* Language */
-	lang: function () {
+	lang: function (App) {
 		if (!this.can('set', this.room)) return this.replyAccessDenied('set');
 		if (!this.arg) return this.errorReply(this.usage({desc: translator.get('language', this.lang)}));
 		let room = this.targetRoom;
@@ -67,7 +63,7 @@ module.exports = {
 		if (lang in App.languages) {
 			App.config.language.rooms[room] = lang;
 			App.saveConfig();
-			App.logCommandAction(this);
+			this.addToSecurityLog();
 			this.lang = lang;
 			this.reply(translator.get(7, this.lang) + ' ' + Chat.italics(room) + ' ' + translator.get(8, this.lang) + ' ' + Chat.italics(lang));
 		} else {
@@ -85,7 +81,7 @@ module.exports = {
 		this.reply('Temp: ' + Temp_Var);
 	},
 
-	setcmd: function () {
+	setcmd: function (App) {
 		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
 		if (!Temp_Var) return this.errorReply(translator.get(11, this.lang) + ' ' + Chat.code(this.token + 'temp <' + this.usageTrans('text') + '>'));
@@ -96,11 +92,11 @@ module.exports = {
 		}
 		App.parser.data.dyncmds[cmd] = Temp_Var;
 		App.parser.saveData();
-		App.logCommandAction(this);
+		this.addToSecurityLog();
 		this.reply(translator.get(0, this.lang) + ' ' + Chat.italics(cmd) + ' ' + translator.get(13, this.lang));
 	},
 
-	setindexcmd: function () {
+	setindexcmd: function (App) {
 		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
 		let cmd = Text.toCmdid(this.args[0]);
@@ -110,11 +106,11 @@ module.exports = {
 		}
 		App.parser.data.dyncmds[cmd] = {};
 		App.parser.saveData();
-		App.logCommandAction(this);
+		this.addToSecurityLog();
 		this.reply(translator.get(0, this.lang) + ' ' + Chat.italics(cmd) + ' ' + translator.get(15, this.lang));
 	},
 
-	setsubcmd: function () {
+	setsubcmd: function (App) {
 		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (this.args.length !== 2) return this.errorReply(this.usage({desc: this.usageTrans('command')}, {desc: this.usageTrans('subcmd')}));
 		if (!Temp_Var) return this.errorReply(translator.get(11, this.lang) + ' ' + Chat.code(this.token + 'temp <' + this.usageTrans('text') + '>'));
@@ -126,11 +122,11 @@ module.exports = {
 		}
 		App.parser.data.dyncmds[cmd][sub] = Temp_Var;
 		App.parser.saveData();
-		App.logCommandAction(this);
+		this.addToSecurityLog();
 		this.reply(translator.get(0, this.lang) + ' ' + Chat.italics(cmd + ' ' + sub) + ' ' + translator.get(13, this.lang));
 	},
 
-	rmcmd: function () {
+	rmcmd: function (App) {
 		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
 		let cmd = Text.toCmdid(this.arg);
@@ -140,11 +136,11 @@ module.exports = {
 		}
 		delete App.parser.data.dyncmds[cmd];
 		App.parser.saveData();
-		App.logCommandAction(this);
+		this.addToSecurityLog();
 		this.reply(translator.get(0, this.lang) + ' ' + Chat.italics(cmd) + ' ' + translator.get(17, this.lang));
 	},
 
-	rmsubcmd: function () {
+	rmsubcmd: function (App) {
 		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (this.args.length !== 2) return this.errorReply(this.usage({desc: this.usageTrans('command')}, {desc: this.usageTrans('subcmd')}));
 		let cmd = Text.toCmdid(this.args[0]);
@@ -158,11 +154,11 @@ module.exports = {
 		}
 		delete App.parser.data.dyncmds[cmd][sub];
 		App.parser.saveData();
-		App.logCommandAction(this);
+		this.addToSecurityLog();
 		this.reply(translator.get(0, this.lang) + ' ' + Chat.italics(cmd + ' ' + sub) + ' ' + translator.get(17, this.lang));
 	},
 
-	dyncmdlist: function () {
+	dyncmdlist: function (App) {
 		let dyn = Object.keys(App.parser.data.dyncmds).sort();
 		if (dyn.length === 0) {
 			return this.errorReply(translator.get(35, this.lang));
@@ -176,7 +172,7 @@ module.exports = {
 	},
 
 	/* Permissions */
-	grant: function () {
+	grant: function (App) {
 		if (!this.can('grant', this.room)) return this.replyAccessDenied('grant');
 		if (this.args.length !== 2) {
 			return this.errorReply(this.usage({desc: translator.get('permission', this.lang)}, {desc: this.usageTrans('rank')}));
@@ -193,7 +189,7 @@ module.exports = {
 			}
 			App.parser.data.permissions[perm] = rank;
 			App.parser.saveData();
-			App.logCommandAction(this);
+			this.addToSecurityLog();
 			switch (rank) {
 			case 'user':
 				this.reply(translator.get(18, this.lang) + ' ' + Chat.italics(perm) + ' ' + translator.get(19, this.lang));
@@ -210,7 +206,7 @@ module.exports = {
 		}
 	},
 
-	set: function () {
+	set: function (App) {
 		if (!this.can('set', this.room)) return this.replyAccessDenied('set');
 		if (this.args.length !== 2) {
 			return this.errorReply(this.usage({desc: translator.get('permission', this.lang)}, {desc: this.usageTrans('rank')}));
@@ -236,7 +232,7 @@ module.exports = {
 			}
 			App.parser.data.roompermissions[room][perm] = rank;
 			App.parser.saveData();
-			App.logCommandAction(this);
+			this.addToSecurityLog();
 			switch (rank) {
 			case 'user':
 				this.reply(translator.get(18, this.lang) + ' ' + Chat.italics(perm) + ' ' + translator.get(19, this.lang) + ' ' +
@@ -255,7 +251,7 @@ module.exports = {
 		}
 	},
 
-	parserignore: function () {
+	parserignore: function (App) {
 		if (!this.isExcepted()) return;
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('user')}));
 		let user = Text.toId(this.arg);
@@ -264,12 +260,12 @@ module.exports = {
 			this.reply(translator.get(27, this.lang) + ' ' + Chat.italics(user) + ' ' + translator.get(28, this.lang));
 		} else {
 			App.parser.monitor.lock(user);
-			App.logCommandAction(this);
+			this.addToSecurityLog();
 			this.reply(translator.get(27, this.lang) + ' ' + Chat.italics(user) + ' ' + translator.get(29, this.lang));
 		}
 	},
 
-	parserunignore: function () {
+	parserunignore: function (App) {
 		if (!this.isExcepted()) return;
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('user')}));
 		let user = Text.toId(this.arg);
@@ -278,14 +274,14 @@ module.exports = {
 			this.reply(translator.get(27, this.lang) + ' ' + Chat.italics(user) + ' ' + translator.get(30, this.lang));
 		} else {
 			App.parser.monitor.unlock(user);
-			App.logCommandAction(this);
+			this.addToSecurityLog();
 			this.reply(translator.get(27, this.lang) + ' ' + Chat.italics(user) + ' ' + translator.get(31, this.lang));
 		}
 	},
 
 	/* Control rooms */
 
-	setcontrolroom: function () {
+	setcontrolroom: function (App) {
 		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (this.args.length !== 2) {
 			return this.errorReply(this.usage({desc: translator.get('controlroom', this.lang)}, {desc: translator.get('targetroom', this.lang)}));
@@ -297,11 +293,11 @@ module.exports = {
 		}
 		App.parser.data.roomctrl[control] = target;
 		App.parser.saveData();
-		App.logCommandAction(this);
+		this.addToSecurityLog();
 		this.reply(translator.get(32, this.lang) + ' ' + Chat.italics(control) + ' ' + translator.get(33, this.lang) + ' ' + Chat.italics(target));
 	},
 
-	rmcontrolroom: function () {
+	rmcontrolroom: function (App) {
 		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
 		if (!this.arg) return this.errorReply(this.usage({desc: translator.get('controlroom', this.lang)}));
 		let control = Text.toRoomid(this.arg);
@@ -311,7 +307,7 @@ module.exports = {
 		}
 		delete App.parser.data.roomctrl[control];
 		App.parser.saveData();
-		App.logCommandAction(this);
+		this.addToSecurityLog();
 		this.reply(translator.get(34, this.lang) + ' ' + Chat.italics(control) + ' ' + translator.get(17, this.lang));
 	},
 };

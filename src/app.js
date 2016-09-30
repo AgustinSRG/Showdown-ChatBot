@@ -252,7 +252,7 @@ class ChatBotApp {
 					try {
 						let conf = require(absFile);
 						if (conf.id && this.config.loadmodules[conf.id] !== false) {
-							let mod = new BotMod(Path.resolve(path, file), conf);
+							let mod = new BotMod(Path.resolve(path, file), conf, this);
 							this.modules[mod.id] = mod;
 							this.parser.addCommands(mod.commands);
 							console.log('NEW MODULE: ' + mod.name + ' (v' + mod.version + ')');

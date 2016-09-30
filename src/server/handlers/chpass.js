@@ -7,67 +7,62 @@
 
 const check = Tools.get('check.js');
 
-/* Permissions */
+exports.setup = function (App) {
+	/* Permissions */
+	App.server.setPermission('chpass', 'Permission for changing the password of the user account');
 
-App.server.setPermission('chpass', 'Permission for changing the password of the user account');
-
-/* Handlers */
-
-App.server.setHandler('chpass', (context, parts) => {
-	/* Permission check */
-	if (!context.user || !context.user.can('chpass')) {
-		context.endWith403();
-		return;
-	}
-
-	/* Actions */
-	let error = null, ok = null;
-	if (context.post.chpass) {
-		let pass = context.post.password;
-		let newPass = context.post.newpassword;
-		let newPass2 = context.post.newpasswordconfirm;
-
-		/* Check */
-		try {
-			check(App.server.users[context.user.id], "You are not a registered user.");
-			check(App.server.checkPassword(App.server.users[context.user.id].password, pass), "Invalid Password");
-			check(newPass, "You must specify a password");
-			check(newPass === newPass2, "The passwords do not match.");
-		} catch (err) {
-			error = err.message();
+	/* Handlers */
+	App.server.setHandler('chpass', (context, parts) => {
+		if (!context.user || !context.user.can('chpass')) {
+			context.endWith403();
+			return;
 		}
 
-		/* Save Changes */
-		if (!error) {
-			App.server.users[context.user.id].password = App.server.encryptPassword(newPass);
-			App.server.userdb.write();
-			ok = "Your password has been changed.";
-			App.logServerAction(context.user.id, 'Change Password. IP: ' + context.ip);
+		let error = null, ok = null;
+		if (context.post.chpass) {
+			let pass = context.post.password;
+			let newPass = context.post.newpassword;
+			let newPass2 = context.post.newpasswordconfirm;
+
+			try {
+				check(App.server.users[context.user.id], "You are not a registered user.");
+				check(App.server.checkPassword(App.server.users[context.user.id].password, pass), "Invalid Password");
+				check(newPass, "You must specify a password");
+				check(newPass === newPass2, "The passwords do not match.");
+			} catch (err) {
+				error = err.message();
+			}
+
+			if (!error) {
+				App.server.users[context.user.id].password = App.server.encryptPassword(newPass);
+				App.server.userdb.write();
+				ok = "Your password has been changed.";
+				App.logServerAction(context.user.id, 'Change Password. IP: ' + context.ip);
+			}
 		}
-	}
 
-	/* Generate HTML */
-	let html = '';
-	html += '<h2>Change password for your account</h2>';
-	html += '<form id="chpass-form" name="chpass-form" method="post" action="">';
-	html += '<table border="0">';
-	html += '<tr><td style="padding:5px;">Current password: </td>';
-	html += '<td><input type="password" name="password" /></td></tr>';
-	html += '<tr><td style="padding:5px;">New password: </td>';
-	html += '<td><input type="password" name="newpassword" /></td></tr>';
-	html += '<tr><td style="padding:5px;">Confirm new password: </td>';
-	html += '<td><input type="password" name="newpasswordconfirm" /></td></tr>';
-	html += '</table><br />';
-	html += ' <label style="padding:5px;">';
-	html += ' <input type="submit" name="chpass" value="Change Password" />';
-	html += ' </label>';
-	html += '</form>';
+		let html = '';
+		html += '<h2>Change password for your account</h2>';
+		html += '<form id="chpass-form" name="chpass-form" method="post" action="">';
+		html += '<table border="0">';
+		html += '<tr><td style="padding:5px;">Current password: </td>';
+		html += '<td><input type="password" name="password" /></td></tr>';
+		html += '<tr><td style="padding:5px;">New password: </td>';
+		html += '<td><input type="password" name="newpassword" /></td></tr>';
+		html += '<tr><td style="padding:5px;">Confirm new password: </td>';
+		html += '<td><input type="password" name="newpasswordconfirm" /></td></tr>';
+		html += '</table><br />';
+		html += ' <label style="padding:5px;">';
+		html += ' <input type="submit" name="chpass" value="Change Password" />';
+		html += ' </label>';
+		html += '</form>';
 
-	if (error) {
-		html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-	} else if (ok) {
-		html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-	}
+		if (error) {
+			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
+		} else if (ok) {
+			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
+		}
 
-	context.endWithWebPage(html, {title: "Change Password - Showdown ChatBot"});
-});
+		context.endWithWebPage(html, {title: "Change Password - Showdown ChatBot"});
+	});
+};

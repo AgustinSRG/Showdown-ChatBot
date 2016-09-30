@@ -12,6 +12,7 @@ const Path = require('path');
 class SourceLoader {
 	constructor(path, app) {
 		this.path = path;
+		this.app = app;
 	}
 
 	load(file) {

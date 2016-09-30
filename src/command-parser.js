@@ -505,7 +505,7 @@ class CommandParser {
 class Command {
 	/**
 	 * @param {String} id - Command ID
-	 * @param {function(String, CommandContext)} func
+	 * @param {function} func
 	 */
 	constructor(id, func) {
 		this.id = id;
@@ -518,7 +518,7 @@ class Command {
 	 */
 	exec(context) {
 		context.handler = this.id;
-		this.func.call(context, this.id, context);
+		this.func.call(context, context.parser.app, context);
 	}
 }
 
@@ -811,6 +811,13 @@ class CommandContext {
 			parsedArgs[id] = val || true;
 		}
 		return parsedArgs;
+	}
+
+	/**
+	 * Logs command action
+	 */
+	addToSecurityLog() {
+		this.parser.app.logCommandAction(this);
 	}
 
 	/**
