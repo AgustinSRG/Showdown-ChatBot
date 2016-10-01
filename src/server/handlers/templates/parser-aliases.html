@@ -1,0 +1,21 @@
+<table border="1">
+	<tr>
+		<td width="200"><div align="center"><strong>Alias</strong></div></td>
+		<td width="200"><div align="center"><strong>Original Command </strong></div></td>
+		<td width="150"><div align="center"><strong>Options</strong></div></td>
+	</tr>
+	${ALIASES}
+</table>
+<hr />
+<form method="post" action="">
+	<table border="0">
+		<tr><td>Alias: </td><td><label><input name="alias" type="text" size="40" /></label></td></tr>
+		<tr><td>Command: </td><td>
+		<select name="cmd">
+			${CMD_LIST}
+		</select>
+		</td></tr>
+	</table>
+	<p><input type="submit" name="set" value="Set Alias" /></p>
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

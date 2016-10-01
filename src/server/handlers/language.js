@@ -4,8 +4,12 @@
 
 'use strict';
 
+const Path = require('path');
 const Text = Tools.get('text.js');
 const check = Tools.get('check.js');
+const Template = Tools.get('html-template.js');
+
+const mainTemplate = new Template(Path.resolve(__dirname, 'templates', 'language.html'));
 
 exports.setup = function (App) {
 	/* Menu Options */
@@ -63,40 +67,22 @@ exports.setup = function (App) {
 			}
 		}
 
-		let html = '';
-		html += '<h2>Bot Language Configuration</h2>';
-		html += '<form  method="post" action="">';
-		html += '<strong>Default Language</strong>:&nbsp;<label>' + getLanguageComboBox(App.config.language['default']) + '</label>';
-		html += '<p><label><input type="submit" name="setdefault" value="Set Default Language" /></label></p>';
-		html += '</form>';
-		html += '<hr />';
+		let htmlVars = {};
 
-		html += '<table border="1">';
-		html += '<tr><td width="200px"><div align="center"><strong>Room</strong></div></td><td width="200px">' +
-		'<div align="center"><strong>Language</strong></div></td>' +
-		'<td width="150px"><div align="center"><strong>Options</strong></div></td></tr>';
+		htmlVars.list_a = getLanguageComboBox(App.config.language['default']);
+		htmlVars.list_b = getLanguageComboBox();
+
+		htmlVars.rooms = '';
 		for (let room in App.config.language.rooms) {
-			html += '<tr><td>' + room + '</td><td>' + App.config.language.rooms[room] +
+			htmlVars.rooms += '<tr><td>' + room + '</td><td>' + App.config.language.rooms[room] +
 			'</td><td><div align="center"><form method="post" action="" style="display:inline;"><input type="hidden" name="room" value="' +
 			room + '" /><label><input type="submit" name="deleteroom" value="Use Default" /></label></form></div></td></tr>';
 		}
-		html += '</table>';
-		html += '<hr />';
-		html += '<form method="post" action="">';
-		html += '<table border="0">';
-		html += '<tr><td><strong>Room</strong>:&nbsp;</td><td><label><input name="room" type="text" size="30" /></label></td></tr>';
-		html += '<tr><td><strong>Language</strong>:&nbsp;</td><td>' + getLanguageComboBox() + '</td></tr>';
-		html += '</table>';
-		html += '<p><label><input type="submit" name="addroom" value="Set Room Language" /></label></p>';
-		html += '</form>';
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(html, {title: "Bot language - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Bot language - Showdown ChatBot"});
 	});
 
 	/* Auxiliar Functions */

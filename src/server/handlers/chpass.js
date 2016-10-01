@@ -5,11 +5,15 @@
 
 'use strict';
 
+const Path = require('path');
 const check = Tools.get('check.js');
+const Template = Tools.get('html-template.js');
+
+const mainTemplate = new Template(Path.resolve(__dirname, 'templates', 'chpass.html'));
 
 exports.setup = function (App) {
 	/* Permissions */
-	App.server.setPermission('chpass', 'Permission for changing the password of the user account');
+	App.server.setPermission('chpass', 'Permission for changing the password of your own account');
 
 	/* Handlers */
 	App.server.setHandler('chpass', (context, parts) => {
@@ -41,28 +45,10 @@ exports.setup = function (App) {
 			}
 		}
 
-		let html = '';
-		html += '<h2>Change password for your account</h2>';
-		html += '<form id="chpass-form" name="chpass-form" method="post" action="">';
-		html += '<table border="0">';
-		html += '<tr><td style="padding:5px;">Current password: </td>';
-		html += '<td><input type="password" name="password" /></td></tr>';
-		html += '<tr><td style="padding:5px;">New password: </td>';
-		html += '<td><input type="password" name="newpassword" /></td></tr>';
-		html += '<tr><td style="padding:5px;">Confirm new password: </td>';
-		html += '<td><input type="password" name="newpasswordconfirm" /></td></tr>';
-		html += '</table><br />';
-		html += ' <label style="padding:5px;">';
-		html += ' <input type="submit" name="chpass" value="Change Password" />';
-		html += ' </label>';
-		html += '</form>';
+		let htmlVars = {};
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
-
-		context.endWithWebPage(html, {title: "Change Password - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Change Password - Showdown ChatBot"});
 	});
 };

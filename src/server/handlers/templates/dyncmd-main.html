@@ -1,0 +1,33 @@
+<script type="text/javascript">
+	function deleteCommand(cmd) {
+		var elem = document.getElementById('confirm-delcmd-' + cmd);
+		if (elem) {
+			elem.innerHTML = '<form style="display:inline;" id="confirm-delete-form" method="post" action="./"><input type="hidden" name="cmd" value="' + cmd + '" />Are you sure?&nbsp;<input type="submit" name="delcmd" value="Confirm Delete" /></form>';
+		}
+		return false;
+	}
+</script>
+<script type="text/javascript">
+	function deleteSubCommand(cmd, sub) {
+		var elem = document.getElementById('confirm-delsubcmd-' + cmd + '-' + sub);
+		if (elem) {
+			elem.innerHTML = '<form style="display:inline;" id="confirm-delete-form" method="post" action="#Cmd-' + cmd + '"><input type="hidden" name="cmd" value="' + cmd + '" /><input type="hidden" name="subcmd" value="' + sub + '" />Are you sure?&nbsp;<input type="submit" name="delsubcmd" value="Confirm Delete" /></form>';
+		}
+		return false;
+	}
+</script>
+<h2>Dynamic Commands</h2>
+<p><a href="/dyncmd/list" target="_blank">View Dynamic commands current list</a></p>
+<form method="post" action="./">
+	<p>ID:&nbsp;<input name="cmd" type="text" size="30" value="${FAIL_ID}"/></p>
+	<p><textarea name="content" cols="80" rows="2">${FAIL_TEXT}</textarea></p>
+	<p><input type="submit" name="addtextcmd" value="Add Text Command" /></p>
+</form>
+<hr />
+<form method="post" action="./">
+	<p>ID:&nbsp;<input name="cmd" type="text" size="30" value="${FAIL_INDEX_ID}" /></p>
+	<p><input type="submit" name="addindexcmd" value="Add Index Command" /></p>
+</form>
+<hr />
+${COMMANDS}
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

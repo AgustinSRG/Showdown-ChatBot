@@ -1,0 +1,26 @@
+<script type="text/javascript">
+	function escapeHtml(text) {
+		return text.replace(/[\"&<>]/g, function (a) {return {'"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;'}[a];});
+	}
+	var req = null;
+	function updateSeen () {
+		if (req) {try {req.abort()} catch (err) {} req = null;}
+		var user = document.getElementById("userseen").value;
+		if (!user) {return;}
+		document.getElementById("seenresult").innerHTML = "<p><i>Getting seen data for " + escapeHtml(user) + "...</i></p>";
+		req = $.get('/tools/seen/?user=' + encodeURI(user) + '&time=' + Date.now(), function (data) {
+			var res = document.getElementById("seenresult");
+			res.innerHTML = '<p><strong>' + escapeHtml(data).replace(/\\n/g, "<br />") + '</strong></p>';
+		}).fail(function () {
+			document.getElementById("seenresult").innerHTML = '<p><span class="error-msg">Error: Could not get seen data</span></p>';
+		});
+	}
+</script>
+<h2>Seen Tool</h2>
+<p><input id="userseen" name="userseen" type="text" size="30" maxlength="19" placeholder="Username" />&nbsp;&nbsp;
+<button id="getseen" onclick="updateSeen();">Get Last Seen</button></p>
+<div id="seenresult">&nbsp;</div>
+<script type="text/javascript">
+	var obj = document.getElementById("userseen");
+	obj.addEventListener("keydown", function (e) {if (e.keyCode == 13) {updateSeen();}});
+</script>

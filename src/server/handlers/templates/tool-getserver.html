@@ -1,0 +1,27 @@
+<script type="text/javascript">
+	function escapeHtml(text) {
+		return text.replace(/[\"&<>]/g, function (a) {return {'"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;'}[a];});
+	}
+	var req = null;
+	function updateServer() {
+		var server = document.getElementById("clienturl").value;
+		if (!server) {
+			return;
+		}
+		if (req) {try {req.abort()} catch (err) {} req = null;}
+		document.getElementById("resultdiv").innerHTML = "<p><i>Getting server configuration for " + escapeHtml(server) + "...</i></p>";
+		req = $.get("/tools/getserver/?server=" + encodeURI(server), function (data) {
+			document.getElementById("resultdiv").innerHTML = data;
+		}).fail(function () {
+			document.getElementById("resultdiv").innerHTML = '<p><span class="error-msg">Request error. Try again later or refresh the page.</span></p>';
+		});
+	}
+</script>
+<h2>Get-Server Tool</h2><strong>Insert the client url</strong>: 
+<input id="clienturl" name="url" type="text" size="60" placeholder="example.psim.us" value="" />&nbsp;&nbsp;
+<button id="getserver" onclick="updateServer();">Get Server</button>
+<div id="resultdiv">&nbsp;</div>
+<script type="text/javascript">
+	var obj = document.getElementById("clienturl");
+	obj.addEventListener("keydown", function (e) {if (e.keyCode == 13) {updateServer();}});
+</script>

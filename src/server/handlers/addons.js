@@ -10,8 +10,16 @@ const Path = require('path');
 const FileSystem = require('fs');
 const Text = Tools.get('text.js');
 const check = Tools.get('check.js');
+const Template = Tools.get('html-template.js');
+
+const listTemplate = new Template(Path.resolve(__dirname, 'templates', 'addons-list.html'));
+const addonItemTemplate = new Template(Path.resolve(__dirname, 'templates', 'addons-item.html'));
+const addingTemplate = new Template(Path.resolve(__dirname, 'templates', 'addons-new.html'));
+const editTemplate = new Template(Path.resolve(__dirname, 'templates', 'addons-edit.html'));
 
 exports.setup = function (App) {
+	if (App.env.staticmode) return;
+
 	/* Menu Options */
 	App.server.setMenuOption('addons', 'Add-ons', '/addons/', 'root', 2);
 
@@ -31,7 +39,6 @@ exports.setup = function (App) {
 		}
 
 		let ok = null, error = null;
-
 		if (context.post.remove) {
 			let addon = context.post.addon;
 			if (addon && App.addons[addon]) {
@@ -48,35 +55,20 @@ exports.setup = function (App) {
 			}
 		}
 
-		let html = '';
-
-		html += '<h2>Add-ons</h2>';
-		html += '<script type="text/javascript">function removeAddon(addon) {var elem = document.getElementById(\'confirm-\' + addon);' +
-		'if (elem) {elem.innerHTML = \'<form style="display:inline;" id="confirm-delete-form" method="post" action="">' +
-		'<input type="hidden" name="addon" value="\' + addon + \'" />Are you sure?&nbsp;' +
-		'<input type="submit" name="remove" value="Delete" /></form>\';}return false;}</script>';
+		let htmlVars = {};
+		htmlVars.addons_list = '';
 
 		for (let file in App.addons) {
-			html += '<p><strong>Add-on | File: ' + file + '</strong></p>';
-			if (typeof App.addons[file].desc === 'string') {
-				html += '<p>' + Text.escapeHtml(App.addons[file].desc) + '</p>';
-			}
-			html += '<p><a href="/addons/edit/' + file + '/set/"><button>Edit Add-on</button></a></p>';
-			html += '<p><button onclick="removeAddon(\'' + file +
-			'\');">Delete Add-on</button>&nbsp;<span id="confirm-' + file + '">&nbsp;</span></p>';
-			html += '<hr />';
+			htmlVars.addons_list += addonItemTemplate.make({
+				file: file,
+				desc: (App.addons[file].desc ? ('<p>' + Text.escapeHtml(App.addons[file].desc) + '</p>') : ""),
+			});
 		}
 
-		html += '<p><strong>Note:</strong> Addons can cause several damage to your bot. Only install them if you know they are safe.</p>';
-		html += '<a href="/addons/new/"><button>Install New Add-on</button></a>';
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
-
-		context.endWithWebPage(html, {title: "Add-ons - Showdown ChatBot"});
+		context.endWithWebPage(listTemplate.make(htmlVars), {title: "Add-ons - Showdown ChatBot"});
 	});
 
 	function newAddonHandler(context, parts) {
@@ -105,26 +97,15 @@ exports.setup = function (App) {
 			}
 		}
 
-		let html = '';
-		html += '<p><a href="/addons/">Back to Add-ons list</a></p>';
-		html += '<form method="post" action="">';
-		html += '<p><strong>File (without ext):</strong>&nbsp;<input name="addon" type="text" size="30" /></p>';
-		html += '<p>Copy in the following textarea the full script file.</p>';
-		html += '<p><textarea name="content" cols="140" rows="20">' + (context.post.content || '') + '</textarea></p>';
-		html += '<p><input type="submit" name="add" value="Install Add-on" /></p>';
-		html += '</form>';
+		let htmlVars = {};
+		htmlVars.content = (context.post.content || '');
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
-
-		context.endWithWebPage(html, {title: "New Add-on - Showdown ChatBot"});
+		context.endWithWebPage(addingTemplate.make(htmlVars), {title: "New Add-on - Showdown ChatBot"});
 	}
 
 	function editAddonHandler(context, parts) {
-		let html = '';
 		let file = parts[1];
 		if (!file) {
 			return context.endWith404();
@@ -160,25 +141,12 @@ exports.setup = function (App) {
 
 		let content = FileSystem.readFileSync(path).toString();
 
-		html += '<p><a href="/addons/">Back to Add-ons list</a></p>';
-		html += '<form method="post" action="">';
-		html += '<input type="hidden" name="addon" value="' + file + '" />';
-		html += '<p><strong>File: ' + file + '</strong></p>';
-		html += '<p><textarea name="content" cols="140" rows="20">' + content + '</textarea></p>';
-		html += '<p><input type="submit" name="edit" value="Save Changes" /></p>';
-		html += '</form>';
+		let htmlVars = {};
+		htmlVars.content = content;
+		htmlVars.file = file;
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
-
-		context.endWithWebPage(html, {title: "Add-ons - Showdown ChatBot"});
-	}
-
-	if (global.ShellOptions && global.ShellOptions.staticmode) {
-		App.server.removeMenuOption('addons');
-		App.server.removeHandler('addons');
+		context.endWithWebPage(editTemplate.make(htmlVars), {title: "Add-ons - Showdown ChatBot"});
 	}
 };

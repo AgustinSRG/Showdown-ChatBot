@@ -1,0 +1,69 @@
+<script type="text/javascript">
+	function confirmExit() {
+		var elem = document.getElementById('confirm-exit');
+		if (elem) {
+			elem.innerHTML = '<form style="display:inline;" method="post" action="">' + 
+			'Are you sure?&nbsp;<input type="submit" name="exit" value="Confirm Exit" /></form>';
+		}
+		return false;
+	}
+</script>
+<h2>Administration Options</h2>
+<p>Note: Changes here require an application restart to be effective.</p>
+<input type="hidden" name="uptime" id="uptime" value="${UPTIME}" />
+<p><span id="show-uptime">&nbsp;</span></p>
+<script type="text/javascript">
+	var n = Date.now();
+	function updateUptime() {
+		var d = Date.now();
+		var times = [];
+		var time = parseInt(document.getElementById("uptime").value) + (d - n);time = Math.round(time / 1000);
+		var aux = time % 60;
+		if (aux > 0 || time === 0) {
+			times.unshift(aux + " " + (aux === 1 ? "second" : "seconds"));
+		}
+		time = Math.floor(time / 60);aux = time % 60;
+		if (aux > 0) {
+			times.unshift(aux + " " + (aux === 1 ? "minute" : "minutes"));
+		}
+		time = Math.floor(time / 60);
+		aux = time % 24;
+		if (aux > 0) {
+			times.unshift(aux + " " + (aux === 1 ? "hour" : "hours"));
+		}
+		time = Math.floor(time / 24);
+		if (time > 0) {
+			times.unshift(time + " " + (time === 1 ? "day" : "days"));
+		}
+		document.getElementById("show-uptime").innerHTML = "<strong>Uptime</strong>: <i>" + times.join(", ") + "</i>";
+	}
+	setInterval(updateUptime, 1000);
+	updateUptime();
+</script>
+<form method="post" action="">
+	<table border="0">
+		<tr><td><strong>Http Port</strong>: </td><td><input type="text" name="port" value="${PORT}" /></td></tr>
+		<tr><td><strong>Https Port (optional)</strong>: </td><td><input type="text" name="sslport" value="${SSLPORT}" /></td></tr>
+		<tr><td><strong>Bind Address</strong>: </td><td><input type="text" name="bindaddress" value="${BINDADDRESS}" /></td></tr>
+		<tr><td><strong>Current Server Url</strong>: </td><td><input type="text" name="appurl" value="${APPURL}" /></td></tr>
+		<tr><td><strong>Application Title</strong>: </td><td><input type="text" name="apptitle" value="${APPTITLE}" /></td></tr>
+		<tr><td><strong>Websocket Library</strong>: </td><td><select name="wslib">
+			<option value="sockjs"${SOCKJS_SELECTED}>SockJS</option>
+			<option value="websocket"${WEBSOCKET_SELECTED}>Websocket</option>
+		</select></td></tr>
+		<tr><td><strong>Pokemon Showdown Login Server</strong>: </td><td><input type="text" name="loginserv" value="${LOGINSERV}" /></td></tr>
+		<tr><td><strong>Pokemon Showdown Lines Restriction</strong>: </td><td><input type="text" name="maxlines" value="${MAXLINES}" /></td></tr>
+		<tr><td><strong>Message Length Restriction</strong>: </td><td><input type="text" name="maxmsglen" value="${MAXMSGLEN}" /></td></tr>
+	</table>
+	<p><input type="checkbox" name="debugmode" value="true" ${DEBUGMODE} />&nbsp;Enable debug mode.</p>
+	<p><input type="checkbox" name="useproxy" value="true" ${USEPROXY} />&nbsp;Check this option if you are using a proxy for your application.</p>
+	<p><input type="checkbox" name="blockautodownload" value="true" ${BLOCKAUTODOWNLOAD} />&nbsp;Block automated data downloads.</p>
+	<p><input type="checkbox" name="rmuserdata" value="true" ${RMUSERDATA} />&nbsp;Remove User-Data on connection reset.</p>
+	<p><textarea name="mainhtml" cols="80" rows="4" placeholder="Custom HTML for main page. Leave this blank for default page.">${MAINHTML}</textarea></p>
+	<p><input type="submit" name="savechanges" value="Save Changes" /></p>
+</form>
+<form method="post" action="">
+	<p><input type="submit" name="genssl" value="Generate SSL Certificate" /></p>
+</form>
+<p><button onclick="confirmExit();">Exit Process</button>&nbsp;<span id="confirm-exit"></span></p>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

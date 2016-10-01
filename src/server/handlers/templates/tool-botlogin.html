@@ -1,0 +1,25 @@
+<script type="text/javascript">
+	function escapeHtml(text) {
+		return text.replace(/[\"&<>]/g, function (a) {return {'"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;'}[a];});
+	}
+	var req = null;
+	function sendRequest () {
+		var botuser = document.getElementById("botuser").value;
+		var botpass = document.getElementById("botpass").value;
+		if (!botuser) {return;}
+		if (req) {try {req.abort()} catch (err) {} req = null;}
+		document.getElementById("result").innerHTML = '<p><i>Sending Message...</i></p>';
+		document.getElementById("botuser").value = "";
+		document.getElementById("botpass").value = "";
+		req = $.post('/tools/botlogin/', {botuser: botuser, botpass: botpass, snd: "true"}, function (data) {
+			document.getElementById("result").innerHTML = data;
+		}).fail(function () {
+			document.getElementById("result").innerHTML = '<p><span class="error-msg">Request error. Try again later or refresh the page.</span></p>';
+		});
+	}
+</script>
+<h2>Bot-Login Tool</h2><p><strong>Bot Username</strong>:&nbsp;
+<input id="botuser" type="text" name="botuser" /></p><p><strong>Password</strong>:&nbsp;
+<input id="botpass" type="password" name="botpass" /></p>
+<p><label><button onclick="sendRequest();">Send Login Request</button></p>
+<div id="result">&nbsp;</div>

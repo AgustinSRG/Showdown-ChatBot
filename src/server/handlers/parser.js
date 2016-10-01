@@ -4,7 +4,16 @@
 
 'use strict';
 
+const Path = require('path');
 const Text = Tools.get('text.js');
+const SubMenu = Tools.get('submenu.js');
+const Template = Tools.get('html-template.js');
+
+const configTemplate = new Template(Path.resolve(__dirname, 'templates', 'parser-config.html'));
+const aliasesTemplate = new Template(Path.resolve(__dirname, 'templates', 'parser-aliases.html'));
+const permissionsTemplate = new Template(Path.resolve(__dirname, 'templates', 'parser-perm.html'));
+const roomControlTemplate = new Template(Path.resolve(__dirname, 'templates', 'parser-controlrooms.html'));
+const abuseMonitorTemplate = new Template(Path.resolve(__dirname, 'templates', 'parser-monitor.html'));
 
 exports.setup = function (App) {
 	/* Permissions */
@@ -20,44 +29,15 @@ exports.setup = function (App) {
 			return;
 		}
 
-		let html = '';
-		let opt = '';
-		if (parts[0]) {
-			opt = parts.shift();
-		}
-		html += '<div align="center"><h2>Command Parser</h2>';
-		html += '<a class="submenu-option' + (opt in {'': 1, 'config': 1} ? '-selected' : '') + '" href="/parser/">Configuration</a>';
-		html += ' | ';
-		html += '<a class="submenu-option' + (opt in {'aliases': 1} ? '-selected' : '') + '" href="/parser/aliases/">Aliases</a>';
-		html += ' | ';
-		html += '<a class="submenu-option' + (opt in {'permissions': 1} ? '-selected' : '') + '" href="/parser/permissions/">Permissions</a>';
-		html += ' | ';
-		html += '<a class="submenu-option' + (opt in {'roomctrl': 1} ? '-selected' : '') + '" href="/parser/roomctrl/">Control Rooms</a>';
-		html += ' | ';
-		html += '<a class="submenu-option' + (opt in {'monitor': 1} ? '-selected' : '') + '" href="/parser/monitor/">Abuse Monitor</a>';
-		html += '</div>';
-		html += '<hr />';
+		let submenu = new SubMenu("Command&nbsp;Parser", parts, context, [
+			{id: 'config', title: 'Configuration', url: '/parser/', handler: parserConfigurationHandler},
+			{id: 'aliases', title: 'Aliases', url: '/parser/aliases/', handler: parserAliasesHandler},
+			{id: 'permissions', title: 'Permissions', url: '/parser/permissions/', handler: parserPermissionsHandler},
+			{id: 'roomctrl', title: 'Control&nbsp;Rooms', url: '/parser/roomctrl/', handler: parserRoomControlHandler},
+			{id: 'monitor', title: 'Abuse&nbsp;Monitor', url: '/parser/monitor/', handler: parserAbuseMonitorHandler},
+		], 'config');
 
-		switch (opt) {
-		case '':
-		case 'config':
-			parserConfigurationHandler(context, html);
-			break;
-		case 'aliases':
-			parserAliasesHandler(context, html);
-			break;
-		case 'permissions':
-			parserPermissionsHandler(context, html);
-			break;
-		case 'roomctrl':
-			parserRoomControlHandler(context, html);
-			break;
-		case 'monitor':
-			parserAbuseMonitorHandler(context, html);
-			break;
-		default:
-			context.endWith404();
-		}
+		return submenu.run();
 	});
 
 	function parserConfigurationHandler(context, html) {
@@ -92,40 +72,25 @@ exports.setup = function (App) {
 			}
 		}
 
-		html += '<form method="post" action="">';
-		html += '<table border="0">';
-		html += '<tr><td>Command Tokens: </td><td><label><input name="tokens" type="text" size="50" value="' +
-		App.config.parser.tokens.join(' ') + '" autocomplete="off" /> (Separated by spaces) </label></td></tr>';
-		html += '<tr><td>Groups: </td><td><label><input name="groups" type="text" size="50" value="' +
-		App.config.parser.groups.join(', ') + '" autocomplete="off" /> (Separated by commas, ordered from lowest to higher rank) </label></td></tr>';
-		html += '<tr><td>Voice Group: </td><td><label><input name="voice" type="text" size="10" value="' +
-		App.config.parser.voice + '" autocomplete="off" /></label></td></tr>';
-		html += '<tr><td>Driver Group: </td><td><label><input name="driver" type="text" size="10" value="' +
-		App.config.parser.driver + '" autocomplete="off" /></label></td></tr>';
-		html += '<tr><td>Moderator Group: </td><td><label><input name="mod" type="text" size="10" value="' +
-		App.config.parser.mod + '" autocomplete="off" /></label></td></tr>';
-		html += '<tr><td>Bot Group: </td><td><label><input name="bot" type="text" size="10" value="' +
-		App.config.parser.bot + '" autocomplete="off" /></label></td></tr>';
-		html += '<tr><td>Room Owner Group: </td><td><label><input name="owner" type="text" size="10" value="' +
-		App.config.parser.owner + '" autocomplete="off" /></label></td></tr>';
-		html += '<tr><td>Administrator Group: </td><td><label><input name="admin" type="text" size="10" value="' +
-		App.config.parser.admin + '" autocomplete="off" /></label></td></tr>';
-		html += '<tr><td>Help Message: </td><td><label><input name="helpmsg" type="text" size="80" ' +
-		'placeholder="Hi $USER, I am a bot for Pokemon Showdown." value="' + App.parser.data.helpmsg + '" autocomplete="off" /></label></td></tr>';
-		html += '<tr><td>Sleeping Rooms: </td><td><label><input name="sleep" type="text" size="80" value="' +
-		Object.keys(App.parser.data.sleep).join(', ') + '" autocomplete="off" /> (Separated by commas) </label></td></tr>';
-		html += '<tr><td>Locked Users: </td><td><label><input name="locklist" type="text" size="80" value="' +
-		Object.keys(App.parser.data.lockedUsers).join(', ') + '" autocomplete="off" /> (Separated by commas) </label></td></tr>';
-		html += '<tr><td colspan="2"><input name="antispam" type="checkbox" value="checkbox"' +
-		(App.parser.data.antispam ? ' checked="checked"' : '') + ' />&nbsp;Use Anti-Spam system for private commands</td></tr>';
-		html += '</table>';
-		html += '<p><label><input type="submit" name="edit" value="Save Changes" /></label></p>';
-		html += '</form>';
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+		let htmlVars = {};
+
+		htmlVars.tokens = App.config.parser.tokens.join(' ');
+		htmlVars.groups = App.config.parser.groups.join(', ');
+		htmlVars.voice = App.config.parser.voice;
+		htmlVars.driver = App.config.parser.driver;
+		htmlVars.mod = App.config.parser.mod;
+		htmlVars.bot = App.config.parser.bot;
+		htmlVars.owner = App.config.parser.owner;
+		htmlVars.admin = App.config.parser.admin;
+		htmlVars.helpmsg = App.parser.data.helpmsg;
+		htmlVars.sleep = Object.keys(App.parser.data.sleep).join(', ');
+		htmlVars.locklist = Object.keys(App.parser.data.lockedUsers).join(', ');
+		htmlVars.antispam = (App.parser.data.antispam ? ' checked="checked"' : '');
+
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
+
+		html += configTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Command Parser Configuration - Showdown ChatBot"});
 	}
 
@@ -167,39 +132,26 @@ exports.setup = function (App) {
 			}
 		}
 
-		html += '<table border="1">';
-		html += '<tr><td width="200"><div align="center"><strong>Alias</strong></div></td>' +
-		'<td width="200"><div align="center"><strong>Original Command </strong></div></td>' +
-		'<td width="150"><div align="center"><strong>Options</strong></div></td></tr>';
+		let htmlVars = {};
+
+		htmlVars.aliases = '';
 		for (let alias in App.parser.data.aliases) {
-			html += '<tr><td>' + alias + '</td><td>' + App.parser.data.aliases[alias] +
+			htmlVars.aliases += '<tr><td>' + alias + '</td><td>' + App.parser.data.aliases[alias] +
 			'</td><td><div align="center"><form style="display:inline;" method="post" action="">' +
 			'<input type="hidden" name="alias" value="' + alias +
 			'" /><input type="submit" name="remove" value="Remove Alias" /></form></div></td></tr>';
 		}
-		html += '</table>';
-		html += '<hr />';
-		html += '<form method="post" action="">';
-		html += '<table border="0">';
-		html += '<tr><td>Alias: </td><td><label><input name="alias" type="text" size="40" /></label></td></tr>';
 
-		html += '<tr><td>Command: </td><td><select name="cmd">';
+		htmlVars.cmd_list = '';
 		let cmds = App.parser.getCommadsArray().sort();
 		for (let i = 0; i < cmds.length; i++) {
-			html += '<option value="' + cmds[i] + '">' + cmds[i] + '</option>';
-		}
-		html += '</select></td></tr>';
-
-		html += '</table>';
-		html += '<p><label><input type="submit" name="set" value="Set Alias" /></label></p>';
-		html += '</form>';
-
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
+			htmlVars.cmd_list += '<option value="' + cmds[i] + '">' + cmds[i] + '</option>';
 		}
 
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
+
+		html += aliasesTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Commands Aliases - Showdown ChatBot"});
 	}
 
@@ -280,43 +232,28 @@ exports.setup = function (App) {
 			ok = 'Permission exceptions configuration editted sucessfully.';
 		}
 
-		html += '<script type="text/javascript">function removeRoom(room) {var elem = document.getElementById(\'confirm-\' + room);' +
-		'if (elem) {elem.innerHTML = \'<form style="display:inline;" id="confirm-delete-form" method="post" action="">' +
-		'<input type="hidden" name="room" value="\' + room + \'" />Are you sure?&nbsp;' +
-		'<input type="submit" name="delroom" value="Delete Configuration" /></form>\';}return false;}</script>';
-		html += '<h3>Exceptions</h3>';
-		html += '<form method="post" action="">';
-		html += '<p><label><strong>Excepted Users</strong>:&nbsp;<input name="expusers" type="text" size="50" value="' +
-		Object.keys(App.parser.data.exceptions).join(', ') + '" autocomplete="off" /></label>&nbsp;(Separated by commas)</p>';
-		html += '<p><strong>Command Exceptions</strong></p>';
+		let htmlVars = {};
+
+		htmlVars.expusers = Object.keys(App.parser.data.exceptions).join(', ');
 		let exceptions = [];
 		for (let i = 0; i < App.parser.data.canExceptions.length; i++) {
 			exceptions.push(App.parser.data.canExceptions[i].perm + ", " +
 			App.parser.data.canExceptions[i].user +
 				(App.parser.data.canExceptions[i].room ? (", " + App.parser.data.canExceptions[i].room) : ""));
 		}
-		html += '<textarea name="canexp" cols="80" rows="3">' + exceptions.join('\n') + '</textarea>';
-		html += '<p>(Format: <em>permission, user, room</em>)</p>';
-		html += '<p><label><input type="submit" name="editexp" value="Save Changes" /></label></p>';
-		html += '</form>';
-		html += '<hr />';
-		html += getPermissionChart('global-room', 'Global Configuration');
+		htmlVars.canexp = exceptions.join('\n');
+
+		htmlVars.global_chart = getPermissionChart('global-room', 'Global Configuration');
+		htmlVars.rooms_charts = '';
 		for (let r in App.parser.data.roompermissions) {
-			html += '<hr />';
-			html += getPermissionChart(r, 'Room: ' + r);
-		}
-		html += '<hr />';
-		html += '<form method="post" action="">';
-		html += '<label><input name="room" type="text" size="30" /></label>';
-		html += '<label>&nbsp;&nbsp;<input type="submit" name="addroom" value="Add Room" /></label>';
-		html += '</form>';
-
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
+			htmlVars.rooms_charts += '<hr />';
+			htmlVars.rooms_charts += getPermissionChart(r, 'Room: ' + r);
 		}
 
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
+
+		html += permissionsTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Commands Permisions - Showdown ChatBot"});
 	}
 
@@ -353,29 +290,19 @@ exports.setup = function (App) {
 			}
 		}
 
-		html += '<table border="1">';
-		html += '<tr><td width="200"><div align="center"><strong>Control Room</strong></div></td>' +
-		'<td width="200"><div align="center"><strong>Target Room</strong></div></td>' +
-		'<td width="200"><div align="center"><strong>Options</strong></div></td></tr>';
+		let htmlVars = {};
+
+		htmlVars.rooms = '';
 		for (let control in App.parser.data.roomctrl) {
-			html += '<tr><td>' + control + '</td><td>' + App.parser.data.roomctrl[control] +
+			htmlVars.rooms += '<tr><td>' + control + '</td><td>' + App.parser.data.roomctrl[control] +
 			'</td><td><div align="center"><form style="display:inline;" method="post" action=""><input type="hidden" name="control" value="' +
 			control + '" /><input type="submit" name="remove" value="Remove Control Room" /></form></div></td></tr>';
 		}
-		html += '</table>';
-		html += '<hr />';
-		html += '<form method="post" action="">';
-		html += '<table border="0">';
-		html += '<tr><td>Control Room: </td><td><label><input name="control" type="text" size="40" /></label></td></tr>';
-		html += '<tr><td>Target Room: </td><td><label><input name="room" type="text" size="40" /></label></td></tr>';
-		html += '</table>';
-		html += '<p><label><input type="submit" name="set" value="Set Control Room" /></label></p>';
-		html += '</form>';
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
+
+		html += roomControlTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Control Rooms - Showdown ChatBot"});
 	}
 
@@ -409,27 +336,19 @@ exports.setup = function (App) {
 			}
 		}
 
-		html += '<table border="1">';
-		html += '<tr><td width="300"><div align="center"><strong>User ID</strong></div></td>' +
-		'<td width="200"><div align="center"><strong>Options</strong></div></td></tr>';
+		let htmlVars = {};
+
+		htmlVars.locklist = '';
 		for (let locked in App.parser.monitor.locked) {
-			html += '<tr><td>' + locked + '</td>' + '<td><div align="center"><form style="display:inline;" method="post" action="">' +
+			htmlVars.locklist += '<tr><td>' + locked + '</td>' + '<td><div align="center"><form style="display:inline;" method="post" action="">' +
 			'<input type="hidden" name="locked" value="' + locked +
 			'" /><input type="submit" name="unlock" value="Unlock" /></form></div></td></tr>';
 		}
-		html += '</table>';
-		html += '<hr />';
-		html += '<form method="post" action="">';
-		html += '<table border="0">';
-		html += '<tr><td>User ID: </td><td><label><input name="locked" type="text" size="40" /></label></td></tr>';
-		html += '</table>';
-		html += '<p><label><input type="submit" name="addlock" value="Lock User" /></label></p>';
-		html += '</form>';
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
+
+		html += abuseMonitorTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Control Rooms - Showdown ChatBot"});
 	}
 

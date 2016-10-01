@@ -8,6 +8,18 @@ const Path = require('path');
 const ServerGet = Tools.get('ps-cross-server.js');
 const Text = Tools.get('text.js');
 const getEvalResult = Tools.get('eval.js');
+const SubMenu = Tools.get('submenu.js');
+const Template = Tools.get('html-template.js');
+
+const getServerTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-getserver.html'));
+const botSendTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-botsend.html'));
+const botLoginTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-botlogin.html'));
+const seenTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-seen.html'));
+const clearUsersTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-clearusers.html'));
+const hotpatchTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-hotpatch.html'));
+const dowloadDataTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-ddata.html'));
+const cacheTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-cache.html'));
+const evalTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-eval.html'));
 
 exports.setup = function (App) {
 	/* Menu Options */
@@ -20,64 +32,19 @@ exports.setup = function (App) {
 			return;
 		}
 
-		let html = '';
-		let opt = '';
-		if (parts[0]) {
-			opt = parts.shift();
-		}
-		html += '<div align="center"><h2>Develoment Tools</h2>';
-		html += '<a class="submenu-option' + (opt in {'': 1, 'getserver': 1} ? '-selected' : '') + '" href="/tools/getserver">Get-Server</a>';
-		html += ' | ';
-		html += '<a class="submenu-option' + (opt in {'botsend': 1} ? '-selected' : '') + '" href="/tools/botsend/">Bot-Send</a>';
-		html += ' | ';
-		html += '<a class="submenu-option' + (opt in {'botlogin': 1} ? '-selected' : '') + '" href="/tools/botlogin/">Bot-Login</a>';
-		html += ' | ';
-		html += '<a class="submenu-option' + (opt in {'seen': 1} ? '-selected' : '') + '" href="/tools/seen/">Seen</a>';
-		html += ' | ';
-		html += '<a class="submenu-option' + (opt in {'clearusers': 1} ? '-selected' : '') + '" href="/tools/clearusers/">Clear&nbsp;User-Data</a>';
-		html += ' | ';
-		html += '<a class="submenu-option' + (opt in {'hotpatch': 1} ? '-selected' : '') + '" href="/tools/hotpatch/">Hotpatch</a>';
-		html += ' | ';
-		html += '<a class="submenu-option' + (opt in {'ddata': 1} ? '-selected' : '') + '" href="/tools/ddata/">Reload&nbsp;Data</a>';
-		html += ' | ';
-		html += '<a class="submenu-option' + (opt in {'cache': 1} ? '-selected' : '') + '" href="/tools/cache/">Clear&nbsp;Cache</a>';
-		html += ' | ';
-		html += '<a class="submenu-option' + (opt in {'eval': 1} ? '-selected' : '') + '" href="/tools/eval/">Eval&nbsp;(JavaScript)</a>';
-		html += '</div>';
-		html += '<hr />';
+		let submenu = new SubMenu("Develoment&nbsp;Tools", parts, context, [
+			{id: 'getserver', title: 'Get-Server', url: '/tools/', handler: toolGetServer},
+			{id: 'botsend', title: 'Bot-Send', url: '/tools/botsend/', handler: toolBotSend},
+			{id: 'botlogin', title: 'Bot-Login', url: '/tools/botlogin/', handler: toolBotLogin},
+			{id: 'seen', title: 'Seen', url: '/tools/seen/', handler: toolSeen},
+			{id: 'clearusers', title: 'Clear&nbsp;User-Data', url: '/tools/clearusers/', handler: toolClearUsers},
+			{id: 'hotpatch', title: 'Hotpatch', url: '/tools/hotpatch/', handler: toolHotpatch},
+			{id: 'ddata', title: 'Reload&nbsp;Data', url: '/tools/ddata/', handler: toolDownloadData},
+			{id: 'cache', title: 'Clear&nbsp;Cache', url: '/tools/cache/', handler: toolClearCache},
+			{id: 'eval', title: 'Eval&nbsp;(JavaScript)', url: '/tools/eval/', handler: toolEval},
+		], 'getserver');
 
-		switch (opt) {
-		case '':
-		case 'getserver':
-			toolGetServer(context, html, parts);
-			break;
-		case 'botsend':
-			toolBotSend(context, html, parts);
-			break;
-		case 'botlogin':
-			toolBotLogin(context, html, parts);
-			break;
-		case 'seen':
-			toolSeen(context, html, parts);
-			break;
-		case 'clearusers':
-			toolClearUsers(context, html, parts);
-			break;
-		case 'hotpatch':
-			toolHotpatch(context, html, parts);
-			break;
-		case 'ddata':
-			toolDownloadData(context, html, parts);
-			break;
-		case 'cache':
-			toolClearCache(context, html, parts);
-			break;
-		case 'eval':
-			toolEval(context, html, parts);
-			break;
-		default:
-			context.endWith404();
-		}
+		return submenu.run();
 	});
 
 
@@ -97,24 +64,8 @@ exports.setup = function (App) {
 			});
 			return;
 		}
-		html += '<script type="text/javascript">';
-		html += 'function escapeHtml(text) {return text.replace(/[\"&<>]/g,' +
-		' function (a) {return { \'"\': \'&quot;\', \'&\': \'&amp;\', \'<\': \'&lt;\', \'>\': \'&gt;\' }[a];});}';
-		html += 'var req = null;';
-		html += 'function updateServer() {var server = document.getElementById("clienturl").value; if (!server) {return;}' +
-		' if (req) {try {req.abort()} catch (err) {}' +
-		'req = null;}document.getElementById("resultdiv").innerHTML = "<p><i>Getting server configuration for " + escapeHtml(server)' +
-		'+ "...</i></p>";req = $.get("/tools/getserver/?server=" + encodeURI(server), ' +
-		'function (data) {document.getElementById("resultdiv").innerHTML = data;}).fail(function () {' +
-		'document.getElementById("resultdiv").innerHTML = \'<p><span class="error-msg">Request error. ' +
-		'Try again later or refresh the page.</span></p>\';});}';
-		html += '</script>';
-		html += '<h2>Get-Server Tool</h2><label><strong>Insert the client url</strong>: ' +
-		'<input id="clienturl" name="url" type="text" size="60" placeholder="example.psim.us" value="' + (context.post.url || '') +
-		'" /></label>&nbsp;&nbsp;<button id="getserver" onclick="updateServer();">Get Server</button>';
-		html += '<div id="resultdiv">&nbsp;</div>';
-		html += '<script type="text/javascript"> var obj = document.getElementById("clienturl");' +
-			' obj.addEventListener("keydown", function (e) {if (e.keyCode == 13) {updateServer();}});</script>';
+
+		html += getServerTemplate.get();
 		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js']});
 	}
 
@@ -135,23 +86,7 @@ exports.setup = function (App) {
 			}
 			return context.endWithText(result);
 		}
-		html += '<script type="text/javascript">';
-		html += 'function escapeHtml(text) {return text.replace(/[\"&<>]/g,' +
-		' function (a) {return { \'"\': \'&quot;\', \'&\': \'&amp;\', \'<\': \'&lt;\', \'>\': \'&gt;\' }[a];});}';
-		html += 'var req = null;';
-		html += 'function sendMessage () {var room = document.getElementById("room").value;var msg = document.getElementById("message").value;' +
-		'if (!msg) {return;}if (req) {try {req.abort()} catch (err) {} req = null;}' +
-		'document.getElementById("result").innerHTML = \'<p><i>Sending Message...</i></p>\';document.getElementById("message").value = "";' +
-		'req = $.post(\'/tools/botsend/\', {room: room, msg: msg, snd: "true"}, ' +
-		'function (data) {document.getElementById("result").innerHTML = data;}).fail(' +
-		'function () {document.getElementById("result").innerHTML = \'<p><span class="error-msg">Request error. ' +
-		'Try again later or refresh the page.</span></p>\';});}';
-		html += '</script>';
-		html += '<h2>Bot-Send Tool</h2><strong>Room</strong>:&nbsp;' +
-		'<input id="room" type="text" name="room" /><p><strong>Message</strong>:</p>' +
-		'<p><textarea id="message" name="msg" cols="100" rows="4"></textarea></p>' +
-		'<p><label><button onclick="sendMessage();">Send Message</button></p>';
-		html += '<div id="result">&nbsp;</div>';
+		html += botSendTemplate.get();
 		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js']});
 	}
 
@@ -171,23 +106,7 @@ exports.setup = function (App) {
 			}
 			return context.endWithText(result);
 		}
-		html += '<script type="text/javascript">';
-		html += 'function escapeHtml(text) {return text.replace(/[\"&<>]/g,' +
-		' function (a) {return { \'"\': \'&quot;\', \'&\': \'&amp;\', \'<\': \'&lt;\', \'>\': \'&gt;\' }[a];});}';
-		html += 'var req = null;';
-		html += 'function sendRequest () {var botuser = document.getElementById("botuser").value;var botpass = document.getElementById("botpass").value;' +
-		'if (!botuser) {return;}if (req) {try {req.abort()} catch (err) {} req = null;}' +
-		'document.getElementById("result").innerHTML = \'<p><i>Sending Message...</i></p>\';document.getElementById("botuser").value = "";' +
-		'document.getElementById("botpass").value = "";req = $.post(\'/tools/botlogin/\', {botuser: botuser, botpass: botpass, snd: "true"}, ' +
-		'function (data) {document.getElementById("result").innerHTML = data;}).fail(' +
-		'function () {document.getElementById("result").innerHTML = \'<p><span class="error-msg">Request error. ' +
-		'Try again later or refresh the page.</span></p>\';});}';
-		html += '</script>';
-		html += '<h2>Bot-Login Tool</h2><p><strong>Bot Username</strong>:&nbsp;' +
-		'<input id="botuser" type="text" name="botuser" /></p><p><strong>Password</strong>:&nbsp;' +
-		'<input id="botpass" type="password" name="botpass" /></p>' +
-		'<p><label><button onclick="sendRequest();">Send Login Request</button></p>';
-		html += '<div id="result">&nbsp;</div>';
+		html += botLoginTemplate.get();
 		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js']});
 	}
 
@@ -244,24 +163,7 @@ exports.setup = function (App) {
 				context.endWithText("User \"" + user + "\" has never been seen, at least since the last restart");
 			}
 		} else {
-			html += '<script type="text/javascript">';
-			html += 'function escapeHtml(text) {return text.replace(/[\"&<>]/g,' +
-			' function (a) {return { \'"\': \'&quot;\', \'&\': \'&amp;\', \'<\': \'&lt;\', \'>\': \'&gt;\' }[a];});}';
-			html += 'var req = null; function updateSeen () {if (req) {try {req.abort()} catch (err) {} req = null;}' +
-			' var user = document.getElementById("userseen").value; if (!user) {return;}' +
-			' document.getElementById("seenresult").innerHTML = "<p><i>Getting seen data for " + escapeHtml(user) + "...</i></p>";' +
-			' req = $.get(\'/tools/seen/?user=\' + encodeURI(user) + \'&time=\' + Date.now(), ' +
-			'function (data) {var res = document.getElementById("seenresult");' +
-			'res.innerHTML = \'<p><strong>\' + escapeHtml(data).replace(/\\n/g, "<br />") + \'</strong></p>\';}).fail(' +
-			'function () {document.getElementById("seenresult").innerHTML = \'<p><span class="error-msg">' +
-			'Error: Could not get seen data</span></p>\';});}';
-			html += '</script>';
-			html += '<h2>Seen Tool</h2>';
-			html += '<p><input id="userseen" name="userseen" type="text" size="30" maxlength="19" placeholder="Username" />&nbsp;&nbsp;';
-			html += '<button id="getseen" onclick="updateSeen();">Get Last Seen</button></p>';
-			html += '<div id="seenresult">&nbsp;</div>';
-			html += '<script type="text/javascript"> var obj = document.getElementById("userseen");' +
-			' obj.addEventListener("keydown", function (e) {if (e.keyCode == 13) {updateSeen();}});</script>';
+			html += seenTemplate.get();
 			context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js']});
 		}
 	}
@@ -272,7 +174,7 @@ exports.setup = function (App) {
 			context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
 			return;
 		}
-		if (global.ShellOptions && global.ShellOptions.staticmode) {
+		if (App.env.staticmode) {
 			html += '<p><span class="error-msg">Error: Static mode does not allow eval.</span></p>';
 			context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
 			return;
@@ -282,25 +184,7 @@ exports.setup = function (App) {
 			context.endWithText(getEvalResult(context.post.scriptdata, App));
 			return;
 		}
-		html += '<script type="text/javascript">';
-		html += 'function escapeHtml(text) {return text.replace(/[\"&<>]/g,' +
-		' function (a) {return { \'"\': \'&quot;\', \'&\': \'&amp;\', \'<\': \'&lt;\', \'>\': \'&gt;\' }[a];});}';
-		html += 'var req = null;';
-		html += 'function updateEvalResult () {var scriptdata = document.getElementById("scriptdata").value;if (!scriptdata) {return;}' +
-		'if (req) {try {req.abort()} catch (err) {} req = null;}document.getElementById("evalresult").innerHTML = \'<p><i>' +
-		'Getting eval result...</i></p>\';req = $.post(\'/tools/eval/\', {scriptdata: scriptdata}, function (data) ' +
-		'{document.getElementById("evalresult").innerHTML = \'<p>\' + escapeHtml(data) + \'</p>\';}).fail(function () ' +
-		'{document.getElementById("evalresult").innerHTML = \'<p><span class="error-msg">Request error. ' +
-		'Try again later or refresh the page.</span></p>\';});}';
-		html += '</script>';
-		html += '<h2>Eval Tool</h2>';
-		html += '<p><strong>Warning: </strong>This tool is extremely dangerous and can cause several damage to your bot if used wrong. ' +
-		'Use it only if you know what are you doing.</p>';
-		html += '<p><input id="scriptdata" name="scriptdata" type="text" size="70" />&nbsp;&nbsp;' +
-		'<button onclick="updateEvalResult();">Eval</button></p>';
-		html += '<div id="evalresult">&nbsp;</div>';
-		html += '<script type="text/javascript"> var obj = document.getElementById("scriptdata");' +
-			' obj.addEventListener("keydown", function (e) {if (e.keyCode == 13) {updateEvalResult();}});</script>';
+		html += evalTemplate.get();
 		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js']});
 	}
 
@@ -316,18 +200,11 @@ exports.setup = function (App) {
 			}
 		}
 
-		html += '<h2>Hotpatch Commands</h2>';
-		html += '<p>This is a develoment tool used to reaload the commands without restart the application. ' +
-		'Note: If you are not a developer, just restart the application intead of using this tool.</p>';
-		html += '<form method="post" action="">';
-		html += '<p><label><input type="submit" name="hotpatch" value="Hotpatch Commands" /></label></p>';
-		html += '</form>';
+		let htmlVars = {};
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+		html += hotpatchTemplate.make(htmlVars);
 
 		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
 	}
@@ -340,17 +217,11 @@ exports.setup = function (App) {
 			ok = "Downloading data. It will be realoaded in a few seconds. For more information watch security log";
 		}
 
-		html += '<h2>Reload Data</h2>';
-		html += '<p>Data is reloaded every time the bot connects to the server, but you can manually reaload it with this option.</p>';
-		html += '<form method="post" action="">';
-		html += '<p><label><input type="submit" name="reloaddata" value="Reload Data" /></label></p>';
-		html += '</form>';
+		let htmlVars = {};
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+		html += dowloadDataTemplate.make(htmlVars);
 
 		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
 	}
@@ -367,18 +238,11 @@ exports.setup = function (App) {
 			ok = "Web Cache cleared sucessfully.";
 		}
 
-		html += '<h2>Clear Web Cache</h2>';
-		html += '<p>Some features use a web cache system to reduce network consumption. ' +
-		'Use this option if you want to remove the data from the web cache.</p>';
-		html += '<form method="post" action="">';
-		html += '<p><input type="submit" name="clearcache" value="Clear Web Cache" /></p>';
-		html += '</form>';
+		let htmlVars = {};
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+		html += cacheTemplate.make(htmlVars);
 
 		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
 	}
@@ -391,18 +255,11 @@ exports.setup = function (App) {
 			ok = "User-Data cleared sucessfully.";
 		}
 
-		html += '<h2>Clear User-Data</h2>';
-		html += '<p>Clears temporal data stored about pokemon showdown users. ' +
-		'This includes name, last seen date, last action and alts.</p>';
-		html += '<form method="post" action="">';
-		html += '<p><input type="submit" name="clearusers" value="Clear User-Data" /></p>';
-		html += '</form>';
+		let htmlVars = {};
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+		html += clearUsersTemplate.make(htmlVars);
 
 		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
 	}

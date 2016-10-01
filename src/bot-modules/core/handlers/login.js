@@ -4,24 +4,24 @@
 
 'use strict';
 
+const Path = require('path');
 const Text = Tools.get('text.js');
 const check = Tools.get('check.js');
+const Template = Tools.get('html-template.js');
+
+const mainTemplate = new Template(Path.resolve(__dirname, 'templates', 'login.html'));
 
 function setup(App) {
 	/* Menu Options */
-
 	App.server.setMenuOption('botlogin', 'Bot&nbsp;Login', '/botlogin/', 'core', 1);
 
 	/* Handlers */
-
 	App.server.setHandler('botlogin', (context, parts) => {
-		/* Permission Check */
 		if (!context.user || !context.user.can('core')) {
 			context.endWith403();
 			return;
 		}
 
-		/* Actions */
 		let ok = null, error = null;
 		if (context.post.setlogin) {
 			let nick = context.post.nick || '';
@@ -43,31 +43,16 @@ function setup(App) {
 			}
 		}
 
-		/* Generate HTML */
-		let html = '';
-		html += '<h3>Bot Login Credentials</h3>';
-		html += '<table border="0">';
-		html += '<tr><td><strong>Nick</strong>:</td><td>' + Text.escapeHTML(App.config.modules.core.nick || '-') + '</td></tr>';
-		html += '<tr><td><strong>Password</strong>: </td><td>' + (App.config.modules.core.pass ? 'Yes' : 'No') + '</td></tr>';
-		html += '</table>';
-		html += '<br />';
-		html += '<form method="post" action="">';
-		html += '<table border="0">';
-		html += '<tr><td>Bot Nickname: </td><td><label><input name="nick" type="text" size="30" maxlength="20" value="' +
-			(context.post.nick || '') + '" /></label></td></tr>';
-		html += '<tr><td>Password:</td><td><input name="pass" type="password" size="30" /></td></tr>';
-		html += '<tr><td>Password (confirm):</td><td><input name="passconfirm" type="password" size="30" /></td></tr>';
-		html += '</table>';
-		html += '<p><label><input type="submit" name="setlogin" value="Set Credentials" /></label></p>';
-		html += '</form>';
+		let htmlVars = {};
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+		htmlVars.nick = Text.escapeHTML(App.config.modules.core.nick || '-');
+		htmlVars.pass = (App.config.modules.core.pass ? 'Yes' : 'No');
+		htmlVars.nick_fail = (context.post.nick || '');
 
-		context.endWithWebPage(html, {title: "Bot Login - Showdown ChatBot"});
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
+
+		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Bot Login - Showdown ChatBot"});
 	});
 }
 

@@ -6,6 +6,9 @@
 
 const Path = require('path');
 const check = Tools.get('check.js');
+const Template = Tools.get('html-template.js');
+
+const mainTemplate = new Template(Path.resolve(__dirname, 'templates', 'seclog.html'));
 
 exports.setup = function (App) {
 	/* Permissions */
@@ -49,37 +52,20 @@ exports.setup = function (App) {
 			}
 		}
 
-		let html = '';
-		html += '<h3>Logger Configuration</h3>';
-		html += '<form method="post" action=""><table border="0">';
-		html += '<tr><td>Security logs max old (in days): </td><td><label><input type="text" name="oldsec" value="' +
-		(App.config.logMaxOld || '0') + '" /></label></td></tr>';
-		html += '</table>';
-		html += '<p>Specify <em>0 days</em> to keep the logs indefinitely</p>';
-		html += '<p><label><input type="submit" name="editlogconfig" value="Save Changes" /></label></p>';
-		html += '</form>';
+		let htmlVars = {};
+		htmlVars.oldsec = (App.config.logMaxOld || '0');
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		html += '<hr />';
-		html += '<h3>Security Log - Files</h3>';
-		html += '<blockquote><table border="1">';
-		html += '<tr><td width="200px"><div align="center"><strong>File</strong></div></td>' +
-		'<td width="200px"><div align="center"><strong>Size</strong></div></td>' +
-		'<td width="200px"><div align="center"><strong>Date</strong></div></td>' +
-		'<td width="150px"><div align="center"><strong>Options</strong></div></td></tr>';
+		htmlVars.log_files = '';
 		let logs = App.logger.getFilesList();
 		for (let i = 0; i < logs.length; i++) {
-			html += '<tr><td>' + logs[i].file + '</td><td>' + logs[i].size + ' KB</td><td>' + logs[i].date +
+			htmlVars.log_files += '<tr><td>' + logs[i].file + '</td><td>' + logs[i].size + ' KB</td><td>' + logs[i].date +
 			'</td><td><a href="/seclog/' + logs[i].file +
 			'" target="_blank"><div align="center"><button>View Log</button></div></a></td></tr>';
 		}
-		html += '</table></blockquote>';
 
-		context.endWithWebPage(html, {title: "Security Log - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Security Log - Showdown ChatBot"});
 	});
 };

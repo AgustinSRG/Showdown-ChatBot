@@ -1,0 +1,16 @@
+<table border="1">
+	<tr>
+		<td width="300"><div align="center"><strong>User ID</strong></div></td>
+		<td width="200"><div align="center"><strong>Options</strong></div></td>
+	</tr>
+	${LOCKLIST}
+</table>
+<hr />
+<form method="post" action="">
+	<table border="0">
+		<tr><td>User ID: </td><td><input name="locked" type="text" size="40" /></td></tr>
+	</table>
+	<p><input type="submit" name="addlock" value="Lock User" /></p>
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
+		

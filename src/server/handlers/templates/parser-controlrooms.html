@@ -1,0 +1,17 @@
+<table border="1">
+	<tr>
+		<td width="200"><div align="center"><strong>Control Room</strong></div></td>
+		<td width="200"><div align="center"><strong>Target Room</strong></div></td>
+		<td width="200"><div align="center"><strong>Options</strong></div></td>
+	</tr>
+	${ROOMS}
+</table>
+<hr />
+<form method="post" action="">
+	<table border="0">
+		<tr><td>Control Room: </td><td><label><input name="control" type="text" size="40" /></label></td></tr>
+		<tr><td>Target Room: </td><td><label><input name="room" type="text" size="40" /></label></td></tr>
+	</table>
+	<p><label><input type="submit" name="set" value="Set Control Room" /></label></p>
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

@@ -424,7 +424,7 @@ class CommandParser {
 		if (group.length > 1) {
 			if (group === 'excepted') return false;
 			if (group === 'user') return true;
-			group = this.parser.app.config.parser[group];
+			group = this.app.config.parser[group];
 		}
 		let i, j;
 		i = groups.indexOf(group);

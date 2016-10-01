@@ -5,8 +5,16 @@
 
 'use strict';
 
+const Path = require('path');
 const Text = Tools.get('text.js');
 const check = Tools.get('check.js');
+const Template = Tools.get('html-template.js');
+
+const mainTemplate = new Template(Path.resolve(__dirname, 'templates', 'dyncmd-main.html'));
+const indexCommandTemplate = new Template(Path.resolve(__dirname, 'templates', 'dyncmd-indexcmd.html'));
+const textCommandTemplate = new Template(Path.resolve(__dirname, 'templates', 'dyncmd-textcmd.html'));
+const subCommandTemplate = new Template(Path.resolve(__dirname, 'templates', 'dyncmd-subcmd.html'));
+const listTemplate = new Template(Path.resolve(__dirname, 'templates', 'dyncmd-list.html'));
 
 exports.setup = function (App) {
 	/* Permissions */
@@ -167,52 +175,26 @@ exports.setup = function (App) {
 			}
 		}
 
-		let html = '';
-		html += '<script type="text/javascript">function deleteCommand(cmd) {var elem = document.getElementById(\'confirm-delcmd-\' + cmd);' +
-		'if (elem) {elem.innerHTML = \'<form style="display:inline;" id="confirm-delete-form" method="post" action="./">' +
-		'<input type="hidden" name="cmd" value="\' + cmd + \'" />Are you sure?&nbsp;' +
-		'<input type="submit" name="delcmd" value="Confirm Delete" /></form>\';}return false;}</script>';
-		html += '<script type="text/javascript">function deleteSubCommand(cmd, sub)' +
-		'{var elem = document.getElementById(\'confirm-delsubcmd-\' + cmd + \'-\' + sub);' +
-		'if (elem) {elem.innerHTML = \'<form style="display:inline;" id="confirm-delete-form" method="post" action="#Cmd-\' + cmd + \'">' +
-		'<input type="hidden" name="cmd" value="\' + cmd + \'" /><input type="hidden" name="subcmd" value="\' + sub + \'" />' +
-		'Are you sure?&nbsp;<input type="submit" name="delsubcmd" value="Confirm Delete" /></form>\';}return false;}</script>';
+		let htmlVars = {};
+		htmlVars.fail_id = ((!addFail.cmd) ? addFail.id : '');
+		htmlVars.fail_text = ((!addFail.cmd) ? addFail.content : '');
+		htmlVars.fail_index_id = (addFail.index ? addFail.id : '');
 
-		html += '<h2>Dynamic Commands</h2>';
-		html += '<p><a href="/dyncmd/list" target="_blank">View Dynamic commands current list</a></p>';
-
-		html += '<form method="post" action="./"><p>ID:&nbsp;<label><input name="cmd" type="text" size="30" value="' +
-		((!addFail.cmd) ? addFail.id : '') + '"/></label></p><p><textarea name="content" cols="80" rows="2">' +
-		((!addFail.cmd) ? addFail.content : '') + '</textarea></p><p><label>' +
-		'<input type="submit" name="addtextcmd" value="Add Text Command" /></label></p></form>';
-		html += '<hr />';
-		html += '<form method="post" action="./"><p>ID:&nbsp;<label><input name="cmd" type="text" size="30" value="' +
-		(addFail.index ? addFail.id : '') + '" /></label></p><p><label>' +
-		'<input type="submit" name="addindexcmd" value="Add Index Command" /></label></p></form>';
-		html += '<hr />';
-
+		htmlVars.commands = '';
 		for (let cmd in App.parser.data.dyncmds) {
-			html += '<a id="a" name="Cmd-' + cmd + '"></a>';
-			html += getCommandTable(cmd, addFail);
-			html += '<br />';
+			htmlVars.commands += '<a id="a" name="Cmd-' + cmd + '"></a>';
+			htmlVars.commands += getCommandTable(cmd, addFail);
+			htmlVars.commands += '<br />';
 		}
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(html, {title: "Dynamic Commands - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Dynamic Commands - Showdown ChatBot"});
 	});
 
 	function serveDynCmdList(context) {
 		let html = '';
-		html += '<html>';
-		html += '<head><title>Dynamic Commands - Showdown ChatBot</title></head>';
-		html += '<body>';
-		html += '<div align="center" style="padding:10px;"><h2>Dynamic Commands List</h2></div>';
-		html += '<div align="left" style="padding:10px;">';
 		let cmds = App.parser.data.dyncmds;
 		for (let cmd in cmds) {
 			switch (typeof cmds[cmd]) {
@@ -229,54 +211,30 @@ exports.setup = function (App) {
 				break;
 			}
 		}
-		html += '</div>';
-		html += '</body>';
-		html += '</html>';
-		context.endWithHtml(html);
+		context.endWithHtml(listTemplate.make({list: html}));
 	}
 
 	/* Auxiliar Functions */
 	function getCommandTable(cmdid, addFail) {
 		let dynCmds = App.parser.data.dyncmds;
-		let html = '';
-		html += '<table border="1">';
-		html += '<tr><td width="300"><strong>Command</strong></td><td width="300">' + cmdid + '</td></tr>';
-		html += '<tr><td colspan="2">';
+		let htmlVars = {};
+		htmlVars.cmdid = cmdid;
 		if (typeof dynCmds[cmdid] === 'string') {
-			html += '<form method="post" action="#Cmd-' + cmdid + '">';
-			html += '<input type="hidden" name="cmd" value="' + cmdid + '" />';
-			html += '<p><label><textarea name="content" cols="80" rows="2">' + dynCmds[cmdid] + '</textarea></label></p>';
-			html += '<p><label><input type="submit" name="editcmd" value="Edit Command" /></label></p>';
-			html += '</form>';
+			htmlVars.text = dynCmds[cmdid];
+			return textCommandTemplate.make(htmlVars);
 		} else if (typeof dynCmds[cmdid] === 'object') {
+			htmlVars.subcmds = '';
 			for (let k in dynCmds[cmdid]) {
-				html += '<table border="1">';
-				html += '<tr><td width="250"><strong>SubCommand</strong></td><td width="250">' + k + '</td></tr>';
-				html += '<tr><td colspan="2">';
-				html += '<form method="post" action="#Cmd-' + cmdid + '">';
-				html += '<input type="hidden" name="cmd" value="' + cmdid + '" />';
-				html += '<input type="hidden" name="subcmd" value="' + k + '" />';
-				html += '<p><label><textarea name="content" cols="80" rows="2">' + dynCmds[cmdid][k] + '</textarea></label></p>';
-				html += '<p><label><input type="submit" name="editsubcmd" value="Edit SubCommand" /></label></p>';
-				html += '</form>';
-				html += '<p><button onclick="deleteSubCommand(\'' + cmdid + '\', \'' + k + '\')">Delete SubCommand</button>' +
-				'&nbsp;<span id="confirm-delsubcmd-' + cmdid + '-' + k + '">&nbsp;</span></p>';
-				html += '</td></tr>';
-				html += '</table>';
-				html += '<br />';
+				htmlVars.subcmds += subCommandTemplate.make({
+					cmdid: cmdid,
+					subcmd: k,
+					text: dynCmds[cmdid][k],
+				});
 			}
-			html += '<form method="post" action="#Cmd-' + cmdid + '">';
-			html += '<input type="hidden" name="cmd" value="' + cmdid + '" />';
-			html += '<p>ID:&nbsp;<label><input name="subcmd" type="text" size="30" value="' +
-			(addFail.cmd === cmdid ? addFail.id : '') + '"/></label></p>';
-			html += '<p><textarea name="content" cols="80" rows="2">' + (addFail.cmd === cmdid ? addFail.content : '') + '</textarea></p>';
-			html += '<p><label><input type="submit" name="addsubcmd" value="Add SubCommand" /></label></p>';
-			html += '</form>';
+			htmlVars.fail_id = (addFail.cmd === cmdid ? addFail.id : '');
+			htmlVars.fail_text = (addFail.cmd === cmdid ? addFail.content : '');
+			return indexCommandTemplate.make(htmlVars);
 		}
-		html += '<p><button onclick="deleteCommand(\'' + cmdid + '\')">Delete Command</button>&nbsp;' +
-		'<span id="confirm-delcmd-' + cmdid + '">&nbsp;</span></p>';
-		html += '</td></tr>';
-		html += '</table>';
-		return html;
+		return textCommandTemplate.make(htmlVars);
 	}
 };

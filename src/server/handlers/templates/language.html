@@ -1,0 +1,20 @@
+<h2>Bot Language Configuration</h2>
+<form  method="post" action="">
+	<p><strong>Default Language</strong>:&nbsp;${LIST_A}</p>
+	<p><input type="submit" name="setdefault" value="Set Default Language" /></p>
+</form>
+<hr />
+<table border="1">
+	<tr><td width="200px"><div align="center"><strong>Room</strong></div></td><td width="200px"><div align="center"><strong>Language</strong></div></td><td width="150px"><div align="center"><strong>Options</strong></div></td></tr>
+	${ROOMS}
+</table>
+<hr />
+<form method="post" action="">
+	<table border="0">
+		<tr><td><strong>Room</strong>:&nbsp;</td><td><label><input name="room" type="text" size="30" /></label></td></tr>
+		<tr><td><strong>Language</strong>:&nbsp;</td><td>${LIST_B}</td></tr>
+	</table>
+	<p><input type="submit" name="addroom" value="Set Room Language" /></p>
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
+		

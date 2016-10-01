@@ -5,6 +5,11 @@
 
 'use strict';
 
+const Path = require('path');
+const Template = Tools.get('html-template.js');
+
+const mainTemplate = new Template(Path.resolve(__dirname, 'templates', 'modules.html'));
+
 exports.setup = function (App) {
 	/* Menu Options */
 	App.server.setMenuOption('modules', 'Modules', '/modules/', 'root', 2);
@@ -30,31 +35,23 @@ exports.setup = function (App) {
 			App.logServerAction(context.user.id, 'Modules configuration was editted');
 		}
 
-		let html = '';
+		let htmlVars = {};
 
-		html += '<h2>Bot Modules</h2>';
-		html += '<p>Note: Changes here require an application restart to be effective.</p>';
-		html += '<form method="post" action="">';
-		html += '<table border="0">';
+		htmlVars.modules = '<table border="0">';
 		for (let id in App.modules) {
-			html += '<tr>';
-			html += '<td><strong>' + App.modules[id].name + '</strong>&nbsp;</td>';
-			html += '<td><select name="' + id + '">';
-			html += '<option value="e"' + (App.config.loadmodules[id] !== false ? ' selected="selected"' : '') + '>Enabled</option>';
-			html += '<option value="d"' + (App.config.loadmodules[id] === false ? ' selected="selected"' : '') + '>Disabled</option>';
-			html += '</select></td>';
-			html += '</tr>';
+			htmlVars.modules += '<tr>';
+			htmlVars.modules += '<td><strong>' + App.modules[id].name + '</strong>&nbsp;</td>';
+			htmlVars.modules += '<td><select name="' + id + '">';
+			htmlVars.modules += '<option value="e"' + (App.config.loadmodules[id] !== false ? ' selected="selected"' : '') + '>Enabled</option>';
+			htmlVars.modules += '<option value="d"' + (App.config.loadmodules[id] === false ? ' selected="selected"' : '') + '>Disabled</option>';
+			htmlVars.modules += '</select></td>';
+			htmlVars.modules += '</tr>';
 		}
-		html += '</table>';
-		html += '<p><input type="submit" name="savechanges" value="Save Changes" /></p>';
-		html += '</form>';
+		htmlVars.modules += '</table>';
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(html, {title: "Modules - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Modules - Showdown ChatBot"});
 	});
 };

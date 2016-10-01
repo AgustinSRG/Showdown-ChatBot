@@ -1,0 +1,13 @@
+<table border="1">
+	<tr><td width="300"><strong>Command</strong></td><td width="300">${CMDID}</td></tr>
+	<tr><td colspan="2">
+	${SUBCMDS}
+	<form method="post" action="#Cmd-${CMDID}">
+		<input type="hidden" name="cmd" value="${CMDID}" />
+		<p>ID:&nbsp;<input name="subcmd" type="text" size="30" value="${FAIL_ID}"/></p>
+		<p><textarea name="content" cols="80" rows="2">${FAIL_TEXT}</textarea></p>
+		<p><input type="submit" name="addsubcmd" value="Add SubCommand" /></p>
+	</form>
+	<p><button onclick="deleteCommand('${CMDID}')">Delete Command</button>&nbsp;<span id="confirm-delcmd-${CMDID}">&nbsp;</span></p>
+	</td></tr>
+</table>
