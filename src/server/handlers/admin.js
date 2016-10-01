@@ -99,6 +99,7 @@ exports.setup = function (App) {
 		let htmlVars = {};
 
 		htmlVars.uptime = Math.floor(process.uptime() * 1000);
+		htmlVars.memusage = (Math.floor(((process.memoryUsage().rss / 1024) / 1024) * 1000) / 1000) + ' MB';
 		htmlVars.port = App.config.server.port;
 		htmlVars.sslport = (App.config.server.https ? App.config.server.httpsPort : "");
 		htmlVars.bindaddress = (App.config.server.bindaddress || '');
