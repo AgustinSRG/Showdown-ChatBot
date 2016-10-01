@@ -12,8 +12,6 @@ const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
-App.parser.addPermission('timer', {group: 'driver'});
-
 module.exports = {
 	timer: 'starttimer',
 	starttimer: function () {

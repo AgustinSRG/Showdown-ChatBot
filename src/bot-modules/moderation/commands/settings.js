@@ -12,8 +12,6 @@ const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'settings.translations'));
 
-App.parser.addPermission('moderation', {group: 'owner'});
-
 module.exports = {
 	setmoderation: function () {
 		if (!this.can('moderation', this.room)) return this.replyAccessDenied('moderation');

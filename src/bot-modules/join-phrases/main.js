@@ -23,5 +23,3 @@ App.bot.on('userjoin', (room, user) => {
 		App.bot.sendTo(room, Text.stripCommands(config.rooms[room][user]));
 	}
 });
-
-require(Path.resolve(__dirname, 'server-handler.js'));

@@ -11,9 +11,6 @@ const Chat = Tools.get('chat.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
-App.parser.addPermission('tourofficial', {group: 'mod'});
-App.parser.addPermission('toursrank', {group: 'driver'});
-
 const Config = App.config.modules.tourleaderboards;
 
 function tryGetRoomTitle(room) {

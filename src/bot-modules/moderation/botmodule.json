@@ -6,5 +6,16 @@
   "commands": [
      "commands.js"
   ],
+  "permissions": {
+	"moderation": {"group": "owner"},
+	"banword": {"group": "owner"},
+	"zerotolerance": {"group": "owner"},
+	"checkzerotol": {"group": "driver"}
+  },
+  "handlers": [
+    "handlers/moderation.js",
+	"handlers/bannedwords.js",
+	"handlers/zerotolerance.js"
+  ],
   "description": "Automated moderation for chat rooms"
 }

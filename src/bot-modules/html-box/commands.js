@@ -12,8 +12,6 @@ const LineSplitter = Tools.get('line-splitter.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
-App.parser.addPermission('htmlboxcmd', {group: 'mod'});
-
 function botCanHtml(room) {
 	let roomData = App.bot.rooms[room];
 	let botid = Text.toId(App.bot.getBotNick());

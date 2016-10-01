@@ -280,5 +280,3 @@ App.bot.on('disconnect', () => {
 		delete isOfficial[room];
 	}
 });
-
-require(Path.resolve(__dirname, 'server-handler.js'));

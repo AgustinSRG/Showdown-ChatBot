@@ -92,5 +92,3 @@ App.bot.on('disconnect', () => {
 		delete tournaments[room];
 	}
 });
-
-require(Path.resolve(__dirname, 'server-handler.js'));

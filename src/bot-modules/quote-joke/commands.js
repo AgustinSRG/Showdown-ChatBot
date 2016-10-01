@@ -10,9 +10,6 @@ const Text = Tools.get('text.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
-App.parser.addPermission('quote', {group: 'driver'});
-App.parser.addPermission('editquote', {group: 'admin'});
-
 module.exports = {
 	randomquote: "quote",
 	quote: function () {

@@ -64,6 +64,3 @@ App.bot.on('line', (room, line, splittedLine, initialMsg) => {
 App.bot.on('connect', () => {
 	exports.refreshLoggers();
 });
-
-require(Path.resolve(__dirname, 'handlers/logs-view.js'));
-require(Path.resolve(__dirname, 'handlers/logs-config.js'));

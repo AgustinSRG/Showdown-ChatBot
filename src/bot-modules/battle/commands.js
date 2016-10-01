@@ -12,8 +12,6 @@ const Chat = Tools.get('chat.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
-App.parser.addPermission('searchbattle', {group: 'admin'});
-
 function parseAliases(format) {
 	if (!format) return '';
 	format = Text.toId(format);
@@ -104,7 +102,7 @@ module.exports = {
 
 	evalbattle: function () {
 		if (!App.config.debug) return;
-		if (global.ShellOptions && global.ShellOptions.staticmode) return;
+		if (App.env.staticmode) return;
 		if (!this.isExcepted()) return;
 		if (!this.arg) return this.errorReply(this.usage({desc: 'script'}));
 		if (App.modules.battle.system.BattleBot.battles[this.room]) {

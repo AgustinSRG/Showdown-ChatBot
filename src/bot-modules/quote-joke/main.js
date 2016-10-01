@@ -86,5 +86,3 @@ class QuoteMod {
 }
 
 module.exports = new QuoteMod();
-
-require(Path.resolve(__dirname, 'server-handler.js'));

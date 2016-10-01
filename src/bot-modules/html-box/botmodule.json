@@ -6,5 +6,11 @@
   "commands": [
     "commands.js"
   ],
+  "permissions": {
+	"htmlboxcmd": {"group": "mod"}
+  },
+  "handlers": [
+    "server-handler.js"
+  ],
   "description": "Special subcommands using /htmlbox showdown feature"
 }

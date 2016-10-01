@@ -13,9 +13,6 @@ const Hastebin = Tools.get('hastebin.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'zerotolerance.translations'));
 
-App.parser.addPermission('zerotolerance', {group: 'owner'});
-App.parser.addPermission('checkzerotol', {group: 'driver'});
-
 function tryGetRoomTitle(room) {
 	if (App.bot.rooms[room]) {
 		return Text.escapeHTML(App.bot.rooms[room].title || room);

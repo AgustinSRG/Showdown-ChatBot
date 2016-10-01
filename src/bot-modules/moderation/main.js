@@ -75,7 +75,3 @@ App.bot.on('line', (room, line, spl, isIntro) => {
 });
 
 App.server.setPermission('moderation', 'Permission for changing moderation configuration');
-
-require(Path.resolve(__dirname, 'handlers', 'moderation.js'));
-require(Path.resolve(__dirname, 'handlers', 'bannedwords.js'));
-require(Path.resolve(__dirname, 'handlers', 'zerotolerance.js'));

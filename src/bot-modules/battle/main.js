@@ -64,5 +64,3 @@ App.bot.on('line', (room, line, spl, isIntro) => {
 exports.getInitCmds = function () {
 	return BattleBot.tryJoinAbandonedBattles();
 };
-
-require(Path.resolve(__dirname, 'server-handler.js'));

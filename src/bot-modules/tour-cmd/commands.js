@@ -10,8 +10,6 @@ const Text = Tools.get('text.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
-App.parser.addPermission('tour', {group: 'mod'});
-
 function parseAliases(format) {
 	const Config = App.config.modules.tourcmd;
 	format = Text.toId(format);

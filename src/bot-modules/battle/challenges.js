@@ -10,8 +10,6 @@ const Config = App.config.modules.battle;
 
 exports.challenges = {};
 
-App.parser.addPermission('chall', {group: 'admin'});
-
 function canChallenge(i, nBattles) {
 	if (Config.maxBattles > nBattles) return true;
 	let ident = Text.parseUserIdent(i);

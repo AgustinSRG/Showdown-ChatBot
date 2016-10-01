@@ -15,8 +15,6 @@ const translator = new Translator(Path.resolve(__dirname, 'commands.translations
 
 const getTranslations = require(Path.resolve(__dirname, 'translate.js'));
 
-App.parser.addPermission('translate', {group: 'driver'});
-
 const Available_Languages = ['english', 'spanish'];
 
 module.exports = {

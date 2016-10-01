@@ -10,8 +10,6 @@ const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
-App.parser.addPermission('games', {group: 'owner'});
-
 let commands = {
 	endgame: "terminategame",
 	terminategame: function () {

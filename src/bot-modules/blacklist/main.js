@@ -85,5 +85,3 @@ App.bot.on('userrename', (room, old, by) => {
 		App.bot.sendTo(room, '/roomban ' + user.id + ', ' + translator.get('ban', getLanguage(room)));
 	}
 });
-
-require(Path.resolve(__dirname, 'server-handler.js'));

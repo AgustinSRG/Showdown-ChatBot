@@ -4,7 +4,6 @@
 
 'use strict';
 
-const Path = require('path');
 const Text = Tools.get('text.js');
 
 if (!App.config.modules.github) {
@@ -110,8 +109,6 @@ exports.stopWebHook = function (callback) {
 		exports.running = false;
 	}
 };
-
-require(Path.resolve(__dirname, 'server-handler.js'));
 
 if (App.config.modules.github.enabled) {
 	exports.createWebHook();

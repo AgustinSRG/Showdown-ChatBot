@@ -4,5 +4,8 @@
   "version": "2.0",
   "main": "main.js",
   "commands": [],
+  "handlers": [
+    "server-handler.js"
+  ],
   "description": "Automatically sends /invite to auth of a private room"
 }

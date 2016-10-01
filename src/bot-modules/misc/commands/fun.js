@@ -13,9 +13,6 @@ const Chat = Tools.get('chat.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'fun.translations'));
 
-App.parser.addPermission('random', {group: 'voice'});
-App.parser.addPermission('randpoke', {group: 'voice'});
-
 module.exports = {
 	choose: "pick",
 	pick: function () {

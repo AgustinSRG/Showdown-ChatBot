@@ -6,8 +6,6 @@
 
 const Roomauth_Check_Interval = 30 * 1000;
 
-const Path = require('path');
-
 const Text = Tools.get('text.js');
 
 if (!App.config.modules.autoinvite) {
@@ -128,5 +126,3 @@ App.bot.on('disconnect', () => {
 		exports.timer = null;
 	}
 });
-
-require(Path.resolve(__dirname, 'server-handler.js'));

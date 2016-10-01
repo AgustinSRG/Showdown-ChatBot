@@ -4,5 +4,9 @@
   "version": "1.0",
   "main": "chat-logger.js",
   "commands": [],
+  "handlers": [
+    "handlers/logs-config.js",
+	"handlers/logs-view.js"
+  ],
   "description": "Logs Chat Rooms"
 }

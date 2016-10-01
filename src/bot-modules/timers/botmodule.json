@@ -6,5 +6,8 @@
   "commands": [
     "commands.js"
   ],
+  "permissions": {
+	"timer": {"group": "driver"}
+  },
   "description": "Timeout commands for chat rooms"
 }

@@ -6,5 +6,12 @@
   "commands": [
     "commands.js"
   ],
+  "handlers": [
+    "server-handler.js"
+  ],
+  "permissions": {
+	"quote": {"group": "driver"},
+	"editquote": {"group": "admin"}
+  },
   "description": "A database of quotes an jokes"
 }

@@ -12,8 +12,6 @@ const Hastebin = Tools.get('hastebin.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
-App.parser.addPermission('joinphrases', {group: 'owner'});
-
 function tryGetRoomTitle(room) {
 	if (App.bot.rooms[room]) {
 		return Text.escapeHTML(App.bot.rooms[room].title || room);

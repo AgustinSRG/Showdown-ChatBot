@@ -94,9 +94,6 @@ const Default_Rank = 1630;
 const Rank_Exceptions = {'randombattle': 1695, 'ou': 1695, 'oususpecttest': 1695, 'doublesou': 1695};
 const Tier_Error_Expires = 2 * 60 * 60 * 1000;
 
-App.parser.addPermission('usage', {group: 'voice'});
-App.parser.addPermission('usagedata', {group: 'driver'});
-
 /* Commands */
 
 module.exports = {

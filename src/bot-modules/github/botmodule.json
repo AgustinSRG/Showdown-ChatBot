@@ -4,5 +4,8 @@
   "version": "1.0",
   "main": "main.js",
   "commands": ["commands.js"],
+  "handlers": [
+    "server-handler.js"
+  ],
   "description": "Provides notifications of repositories updates"
 }

@@ -36,5 +36,3 @@ App.parser.addTrigger('htmlbox', 'after', context => {
 		App.parser.monitor.count(context.byIdent.id);
 	}
 });
-
-require(Path.resolve(__dirname, 'server-handler.js'));

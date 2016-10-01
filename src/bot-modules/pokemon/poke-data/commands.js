@@ -15,8 +15,6 @@ const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
-App.parser.addPermission('pokemon', {group: 'voice'});
-
 module.exports = {
 	gen: function () {
 		let id = Text.toId(this.arg);

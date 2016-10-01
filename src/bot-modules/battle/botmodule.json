@@ -6,5 +6,12 @@
   "commands": [
      "commands.js"
   ],
+  "permissions": {
+	"chall": {"group": "admin"},
+	"searchbattle": {"group": "admin"}
+  },
+  "handlers": [
+    "server-handler.js"
+  ],
   "description": "Automated battle bot for ladder, challenges and tournaments"
 }

@@ -13,8 +13,6 @@ const Hastebin = Tools.get('hastebin.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'banwords.translations'));
 
-App.parser.addPermission('banword', {group: 'owner'});
-
 function tryGetRoomTitle(room) {
 	if (App.bot.rooms[room]) {
 		return Text.escapeHTML(App.bot.rooms[room].title || room);

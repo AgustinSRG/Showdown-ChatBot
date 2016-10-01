@@ -6,5 +6,8 @@
   "commands": [
      "commands.js"
   ],
+  "permissions": {
+	"games": {"group": "owner"}
+  },
   "description": "A collection of chat games for a PS bot"
 }
