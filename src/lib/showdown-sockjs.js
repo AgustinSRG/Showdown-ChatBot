@@ -934,6 +934,8 @@ class SendManager {
 		let data = this.data;
 		if (!(data instanceof Array)) {
 			data = [data.toString()];
+		} else {
+			data = data.slice();
 		}
 		let nextToSend = function () {
 			if (!data.length) {
@@ -942,9 +944,21 @@ class SendManager {
 				this.finalize();
 				return;
 			}
-			let toSend = data.splice(0, this.msgMaxLines);
-			for (let i = 1; i < toSend.length; i++) {
-				toSend[i] = toSend[i].split('|').slice(1).join('|');
+			let toSend = [];
+			let firstMsg = data.shift();
+			toSend.push(firstMsg);
+			let roomToSend = "";
+			if (firstMsg.indexOf('|') >= 0) {
+				roomToSend = firstMsg.split('|')[0];
+			}
+			while (data.length > 0 && toSend.length < this.msgMaxLines) {
+				let subMsg = data[0];
+				if (subMsg.split('|')[0] !== roomToSend) {
+					break;
+				} else {
+					toSend.push(subMsg.split('|').slice(1).join('|'));
+					data.shift();
+				}
 			}
 			this.sendFunc(toSend.join('\n'));
 		};
