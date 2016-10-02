@@ -1,0 +1,20 @@
+<script type="text/javascript">
+	function removeTeam(team) {
+		var elem = document.getElementById('confirm-' + team);
+		if (elem) {
+			elem.innerHTML = '<form style="display:inline;" method="post" action=""><input type="hidden" name="id" value="' + team + '" />Are you sure?&nbsp;<input type="submit" name="delteam" value="Delete Team" /></form>';
+		}
+		return false;
+	}
+</script>
+<h2>Bot Teams</h2>
+${TEAMS}
+<hr />
+<form method="post" action="">
+	<p><strong>Id</strong>:&nbsp;<input name="id" type="text" size="40" /></p>
+	<p><strong>Format</strong>:&nbsp;${FORMATS}</p>
+	<p><strong>Exportable</strong>:</p>
+	<p><textarea name="exportable" cols="100" rows="5">${EXPORTABLE}</textarea></p>
+	<p><input type="submit" name="add" value="Add New Team" /></p>
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
