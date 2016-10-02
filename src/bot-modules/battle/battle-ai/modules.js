@@ -9,8 +9,9 @@ const modFiles = ['singles-eff.js', 'ingame-nostatus.js'];
 const Path = require('path');
 const Text = Tools.get('text.js');
 
-exports.setup = function (BattleData) {
-	const modules = exports.modules = {};
+exports.setup = function (App, BattleData) {
+	const BattleModulesManager = {};
+	const modules = BattleModulesManager.modules = {};
 
 	modFiles.forEach(function (file) {
 		let mod;
@@ -23,7 +24,7 @@ exports.setup = function (BattleData) {
 		}
 	});
 
-	exports.choose = function (battle) {
+	BattleModulesManager.choose = function (battle) {
 		if (!battle.tier) return null;
 
 		/* Module decision by default */
@@ -52,5 +53,5 @@ exports.setup = function (BattleData) {
 		return null;
 	};
 
-	return module.exports;
+	return BattleModulesManager;
 };

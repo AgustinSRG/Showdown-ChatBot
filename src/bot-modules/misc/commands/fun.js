@@ -28,7 +28,7 @@ module.exports = {
 	},
 
 	rpoke: 'poke',
-	poke: function () {
+	poke: function (App) {
 		let pokedex;
 		try {
 			pokedex = App.data.getPokedex();
@@ -48,7 +48,7 @@ module.exports = {
 	},
 
 	hpoke: "hashpoke",
-	hashpoke: function () {
+	hashpoke: function (App) {
 		let pokedex;
 		try {
 			pokedex = App.data.getPokedex();

@@ -12,16 +12,8 @@ const Hastebin = Tools.get('hastebin.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
-function tryGetRoomTitle(room) {
-	if (App.bot.rooms[room]) {
-		return Text.escapeHTML(App.bot.rooms[room].title || room);
-	} else {
-		return Text.escapeHTML(room);
-	}
-}
-
 module.exports = {
-	joinphrase: function () {
+	joinphrase: function (App) {
 		if (!this.can('joinphrases', this.room)) return this.replyAccessDenied('joinphrases');
 		let config = App.modules.joinphrases.system.config;
 		let room = this.targetRoom;
@@ -75,7 +67,7 @@ module.exports = {
 		}
 	},
 
-	listjoinphrases: function () {
+	listjoinphrases: function (App) {
 		if (!this.can('joinphrases', this.room)) return this.replyAccessDenied('joinphrases');
 		let config = App.modules.joinphrases.system.config;
 		let server = App.config.server.url;
@@ -90,9 +82,9 @@ module.exports = {
 		}
 		let html = '';
 		html += '<html>';
-		html += '<head><title>Join-Phrases of ' + tryGetRoomTitle(room) + '</title></head>';
+		html += '<head><title>Join-Phrases of ' + Text.escapeHTML(this.parser.getRoomTitle(room)) + '</title></head>';
 		html += '<body>';
-		html += '<h3>Join-Phrases in ' + tryGetRoomTitle(room) + '</h3>';
+		html += '<h3>Join-Phrases in ' + Text.escapeHTML(this.parser.getRoomTitle(room)) + '</h3>';
 		html += '<ul>';
 		for (let user in config.rooms[room]) {
 			html += '<li>';
@@ -111,7 +103,7 @@ module.exports = {
 		}
 	},
 
-	listjoinphraseshastebin: function () {
+	listjoinphraseshastebin: function (App) {
 		if (!this.can('joinphrases', this.room)) return this.replyAccessDenied('joinphrases');
 		let config = App.modules.joinphrases.system.config;
 		let room = this.targetRoom;

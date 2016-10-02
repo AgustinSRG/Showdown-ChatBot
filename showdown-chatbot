@@ -20,7 +20,7 @@
 const Util = require("util");
 const Path = require("path");
 
-global.Package = require(Path.resolve(__dirname, 'package.json'));
+const Package = require(Path.resolve(__dirname, 'package.json'));
 
 console.log(Util.format('Showdown-ChatBot %s', Package.version));
 
@@ -101,6 +101,8 @@ for (let key in shellOpts) {
 		break;
 	}
 }
+
+env.package = Package;
 
 /* Require Main File */
 

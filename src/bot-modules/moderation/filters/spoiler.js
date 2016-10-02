@@ -7,7 +7,6 @@
 const Spoiler_Default_Value = 2;
 
 const Path = require('path');
-
 const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'spoiler.translations'));

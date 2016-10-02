@@ -105,6 +105,12 @@ class DataManager {
 		this.temp = new TempManager(Path.resolve(path, 'temp/'), Temp_Size);
 
 		this.events = new EventManager();
+		this.cache.events.on('error', function (err, url) {
+			this.events.emit('msg', "Error (" + err.code + ") " + err.message + " | Cache " + url);
+		}.bind(this));
+		this.temp.events.on('error', function (err) {
+			this.events.emit('msg', "Error (" + err.code + ") " + err.message);
+		}.bind(this));
 	}
 
 	/**

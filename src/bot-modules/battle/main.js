@@ -18,11 +18,13 @@ exports.setup = function (App) {
 		};
 	}
 
-	const BattleBot = exports.BattleBot = require(Path.resolve(__dirname, 'battle-ai', 'index.js')).setup(App);
-	const TeamBuilder = exports.TeamBuilder = require(Path.resolve(__dirname, 'teambuilder.js')).setup(App);
-	const ChallManager = exports.ChallManager = require(Path.resolve(__dirname, 'challenges.js')).setup(App);
-	const TourManager = exports.TourManager = require(Path.resolve(__dirname, 'tournaments.js')).setup(App);
-	const LadderManager = exports.LadderManager = require(Path.resolve(__dirname, 'ladder.js')).setup(App);
+	const BattleModule = {};
+
+	const BattleBot = BattleModule.BattleBot = require(Path.resolve(__dirname, 'battle-ai', 'index.js')).setup(App);
+	const TeamBuilder = BattleModule.TeamBuilder = require(Path.resolve(__dirname, 'teambuilder.js')).setup(App);
+	const ChallManager = BattleModule.ChallManager = require(Path.resolve(__dirname, 'challenges.js')).setup(App);
+	const TourManager = BattleModule.TourManager = require(Path.resolve(__dirname, 'tournaments.js')).setup(App);
+	const LadderManager = BattleModule.LadderManager = require(Path.resolve(__dirname, 'ladder.js')).setup(App);
 
 	TeamBuilder.loadTeamList();
 
@@ -62,9 +64,9 @@ exports.setup = function (App) {
 		}
 	});
 
-	exports.getInitCmds = function () {
+	BattleModule.getInitCmds = function () {
 		return BattleBot.tryJoinAbandonedBattles();
 	};
 
-	return module.exports;
+	return BattleModule;
 };

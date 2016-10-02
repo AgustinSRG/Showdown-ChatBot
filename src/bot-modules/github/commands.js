@@ -9,11 +9,8 @@ const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
-App.parser.addPermission('gitban', {group: 'admin'});
-
-
 module.exports = {
-	gitban: function () {
+	gitban: function (App) {
 		if (!this.can('gitban', this.room)) return this.replyAccessDenied('gitban');
 		const bl = App.config.modules.github.blacklist;
 		let target = this.arg.toLowerCase().trim();
@@ -30,7 +27,7 @@ module.exports = {
 		}
 	},
 
-	gitunban: function () {
+	gitunban: function (App) {
 		if (!this.can('gitban', this.room)) return this.replyAccessDenied('gitban');
 		const bl = App.config.modules.github.blacklist;
 		let target = this.arg.toLowerCase().trim();

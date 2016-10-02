@@ -14,7 +14,7 @@ const Text = Tools.get('text.js');
 
 exports.setup = function (App) {
 	const BattleData = require(Path.resolve(__dirname, "battle-data.js")).setup(App);
-	const Modules = require(Path.resolve(__dirname, "modules.js")).setup(BattleData);
+	const Modules = require(Path.resolve(__dirname, "modules.js")).setup(App, BattleData);
 	const DecisionMaker = require(Path.resolve(__dirname, "decision.js"));
 	const Calc = require(Path.resolve(__dirname, "calc.js"));
 

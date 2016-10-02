@@ -14,7 +14,7 @@ const translator = new Translator(Path.resolve(__dirname, 'commands.translations
 
 module.exports = {
 	timer: 'starttimer',
-	starttimer: function () {
+	starttimer: function (App) {
 		if (!this.can('timer', this.room)) return this.replyAccessDenied('timer');
 		if (this.getRoomType(this.room) !== 'chat') {
 			return this.errorReply(translator.get('nochat', this.lang));
@@ -38,7 +38,7 @@ module.exports = {
 		}
 	},
 
-	stoptimer: function () {
+	stoptimer: function (App) {
 		if (!this.can('timer', this.room)) return this.replyAccessDenied('timer');
 		if (this.getRoomType(this.room) !== 'chat') {
 			return this.errorReply(translator.get('nochat', this.lang));

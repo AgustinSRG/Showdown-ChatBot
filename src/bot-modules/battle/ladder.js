@@ -19,26 +19,28 @@ exports.setup = function (App) {
 		return App.config.language.rooms[room] || App.config.language['default'];
 	}
 
-	exports.reportsRoom = false;
+	const LadderManager = {};
 
-	exports.reportBattle = function (room) {
-		if (!exports.reportsRoom) return;
-		if (exports.reportsRoom.charAt(0) === ',') {
-			App.bot.pm(exports.reportsRoom, translator.get(0, getLanguage(room)) + ": <<" + room + ">>");
+	LadderManager.reportsRoom = false;
+
+	LadderManager.reportBattle = function (room) {
+		if (!LadderManager.reportsRoom) return;
+		if (LadderManager.reportsRoom.charAt(0) === ',') {
+			App.bot.pm(LadderManager.reportsRoom, translator.get(0, getLanguage(room)) + ": <<" + room + ">>");
 		} else {
-			App.bot.sendTo(exports.reportsRoom, translator.get(0, getLanguage(room)) + ": <<" + room + ">>");
+			App.bot.sendTo(LadderManager.reportsRoom, translator.get(0, getLanguage(room)) + ": <<" + room + ">>");
 		}
-		exports.reportsRoom = false;
+		LadderManager.reportsRoom = false;
 	};
 
-	exports.laddering = false;
-	exports.format = '';
-	exports.interv = 0;
-	exports.ladderTimer = null;
+	LadderManager.laddering = false;
+	LadderManager.format = '';
+	LadderManager.interv = 0;
+	LadderManager.ladderTimer = null;
 
-	exports.start = function (format, checkInterv) {
+	LadderManager.start = function (format, checkInterv) {
 		if (!format) return false;
-		if (exports.laddering) return false;
+		if (LadderManager.laddering) return false;
 		let mod = App.modules.battle.system;
 		format = Text.toId(format);
 		let check = function () {
@@ -60,29 +62,29 @@ exports.setup = function (App) {
 			cmds.push('|/search ' + format);
 			App.bot.send(cmds);
 		};
-		exports.laddering = true;
-		exports.format = format;
-		exports.interv = checkInterv;
-		exports.ladderTimer = setInterval(check, checkInterv || Ladder_Check_Interval);
+		LadderManager.laddering = true;
+		LadderManager.format = format;
+		LadderManager.interv = checkInterv;
+		LadderManager.ladderTimer = setInterval(check, checkInterv || Ladder_Check_Interval);
 		check();
 		return true;
 	};
 
-	exports.stop = function () {
-		if (!exports.laddering) return false;
-		exports.laddering = false;
-		if (exports.ladderTimer) clearTimeout(exports.ladderTimer);
-		exports.ladderTimer = null;
-		exports.format = '';
-		exports.interv = 0;
+	LadderManager.stop = function () {
+		if (!LadderManager.laddering) return false;
+		LadderManager.laddering = false;
+		if (LadderManager.ladderTimer) clearTimeout(LadderManager.ladderTimer);
+		LadderManager.ladderTimer = null;
+		LadderManager.format = '';
+		LadderManager.interv = 0;
 		return true;
 	};
 
-	exports.destroy = function () {
-		exports.laddering = false;
-		if (exports.ladderTimer) clearTimeout(exports.ladderTimer);
-		exports.ladderTimer = null;
+	LadderManager.destroy = function () {
+		LadderManager.laddering = false;
+		if (LadderManager.ladderTimer) clearTimeout(LadderManager.ladderTimer);
+		LadderManager.ladderTimer = null;
 	};
 
-	return module.exports;
+	return LadderManager;
 };

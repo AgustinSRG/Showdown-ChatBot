@@ -274,7 +274,7 @@ class ChatBotApp {
 							};
 						}
 					} catch (err) {
-						console.log('Error: Cannot load module "' + file + '" - ' + err.message);
+						console.log('Error: Cannot load module "' + file + '" - ' + err.message + '\n' + err.stack);
 					}
 				}
 			}.bind(this));

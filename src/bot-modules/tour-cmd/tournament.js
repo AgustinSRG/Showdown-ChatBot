@@ -5,7 +5,8 @@
 'use strict';
 
 class Tournament {
-	constructor(room, details) {
+	constructor(app, room, details) {
+		this.app = app;
 		this.format = details.format || 'randombattle';
 		this.type = details.type || 'elimination';
 		this.users = 0;
@@ -20,7 +21,7 @@ class Tournament {
 	}
 
 	create() {
-		App.bot.sendTo(this.room, '/tournament create ' + this.format + ', ' + this.type);
+		this.app.bot.sendTo(this.room, '/tournament create ' + this.format + ', ' + this.type);
 	}
 
 	startTimeout() {
@@ -30,10 +31,10 @@ class Tournament {
 		if (this.scoutProtect) {
 			cmds.push('/tournament setscouting disallow');
 		}
-		if (App.config.modules.tourcmd.createMessage) {
-			cmds.push(App.config.modules.tourcmd.createMessage);
+		if (this.app.config.modules.tourcmd.createMessage) {
+			cmds.push(this.app.config.modules.tourcmd.createMessage);
 		}
-		if (cmds.length > 0) App.bot.sendTo(this.room, cmds);
+		if (cmds.length > 0) this.app.bot.sendTo(this.room, cmds);
 		this.startTimer = setTimeout(function () {
 			this.start();
 			this.started = true;
@@ -47,16 +48,16 @@ class Tournament {
 	}
 
 	start() {
-		App.bot.sendTo(this.room, '/tournament start');
+		this.app.bot.sendTo(this.room, '/tournament start');
 	}
 
 	setAutodq() {
 		if (!this.autodq) return;
-		App.bot.sendTo(this.room, '/tournament autodq ' + this.autodq);
+		this.app.bot.sendTo(this.room, '/tournament autodq ' + this.autodq);
 	}
 
 	end() {
-		App.bot.sendTo(this.room, '/tournament end');
+		this.app.bot.sendTo(this.room, '/tournament end');
 	}
 }
 

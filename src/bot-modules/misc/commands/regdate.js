@@ -39,7 +39,7 @@ function markDownload(user, b) {
 }
 
 module.exports = {
-	regdate: function () {
+	regdate: function (App) {
 		let target = Text.toId(this.arg) || Text.toId(this.by);
 		if (!target || target.length > 18) return this.pmReply(translator.get('inv', this.lang));
 		let url = "http://pokemonshowdown.com/users/" + target + ".json";
@@ -81,7 +81,7 @@ module.exports = {
 		}
 	},
 
-	regtime: function () {
+	regtime: function (App) {
 		let target = Text.toId(this.arg) || Text.toId(this.by);
 		if (!target || target.length > 18) return this.pmReply(translator.get('inv', this.lang));
 		let url = "http://pokemonshowdown.com/users/" + target + ".json";
@@ -136,7 +136,7 @@ module.exports = {
 		}
 	},
 
-	autoconfirmedhelp: function () {
+	autoconfirmedhelp: function (App) {
 		let target = Text.toId(this.arg) || Text.toId(this.by);
 		if (!target || target.length > 18) return this.pmReply(translator.get('inv', this.lang));
 		let url = "http://pokemonshowdown.com/users/" + target + ".json";

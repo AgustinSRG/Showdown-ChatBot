@@ -9,7 +9,6 @@ const Min_Caps_Proportion = 0.8;
 const Caps_Default_Value = 1;
 
 const Path = require('path');
-
 const Text = Tools.get('text.js');
 const Translator = Tools.get('translate.js');
 

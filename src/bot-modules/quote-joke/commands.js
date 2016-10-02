@@ -12,7 +12,7 @@ const translator = new Translator(Path.resolve(__dirname, 'commands.translations
 
 module.exports = {
 	randomquote: "quote",
-	quote: function () {
+	quote: function (App) {
 		let text = App.modules.quote.system.getRandomQuote();
 		if (text) {
 			return this.restrictReply(Text.stripCommands(text), 'quote');
@@ -22,7 +22,7 @@ module.exports = {
 	},
 
 	randomjoke: "joke",
-	joke: function () {
+	joke: function (App) {
 		let text = App.modules.quote.system.getRandomJoke();
 		if (text) {
 			return this.restrictReply(Text.stripCommands(text), 'quote');
@@ -31,7 +31,7 @@ module.exports = {
 		}
 	},
 
-	addquote: function () {
+	addquote: function (App) {
 		if (!this.can('editquote', this.room)) return this.replyAccessDenied('editquote');
 		let quote = this.arg.trim();
 		if (!quote) return this.errorReply(this.usage({desc: translator.get(10, this.lang)}));
@@ -45,7 +45,7 @@ module.exports = {
 		}
 	},
 
-	rmquote: function () {
+	rmquote: function (App) {
 		if (!this.can('editquote', this.room)) return this.replyAccessDenied('editquote');
 		let quote = this.arg.trim();
 		if (!quote) return this.errorReply(this.usage({desc: translator.get(10, this.lang)}));
@@ -60,7 +60,7 @@ module.exports = {
 		}
 	},
 
-	addjoke: function () {
+	addjoke: function (App) {
 		if (!this.can('editquote', this.room)) return this.replyAccessDenied('editquote');
 		let joke = this.arg.trim();
 		if (!joke) return this.errorReply(this.usage({desc: translator.get(11, this.lang)}));
@@ -74,7 +74,7 @@ module.exports = {
 		}
 	},
 
-	rmjoke: function () {
+	rmjoke: function (App) {
 		if (!this.can('editquote', this.room)) return this.replyAccessDenied('editquote');
 		let joke = this.arg.trim();
 		if (!joke) return this.errorReply(this.usage({desc: translator.get(11, this.lang)}));

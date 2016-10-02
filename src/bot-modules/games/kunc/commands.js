@@ -8,12 +8,12 @@ const Path = require('path');
 const Translator = Tools.get('translate.js');
 const Text = Tools.get('text.js');
 
-const Kunc = require(Path.resolve(__dirname, 'kunc.js'));
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 const trigger = require(Path.resolve(__dirname, 'cmd-trigger.js'));
 
 module.exports = {
-	kunc: function () {
+	kunc: function (App) {
+		const Kunc = App.modules.games.system.templates.kunc;
 		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		if (!this.arg) {
 			return this.errorReply(this.usage({desc: translator.get('games', this.lang)},

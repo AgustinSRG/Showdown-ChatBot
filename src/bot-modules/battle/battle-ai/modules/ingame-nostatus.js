@@ -24,7 +24,8 @@ const Pokemon = Calc.Pokemon;
 const Conditions = Calc.Conditions;
 
 exports.setup = function (Data) {
-	exports.id = "ingame-nostatus";
+	const BattleModule = {};
+	BattleModule.id = "ingame-nostatus";
 
 	/* Bad moves for 1v1 */
 	const BadMoves = ['focuspunch', 'explosion', 'selfdestruct', 'lastresort', 'futuresight'];
@@ -226,7 +227,7 @@ exports.setup = function (Data) {
 		}
 	}
 
-	exports.decide = function (battle, decisions) {
+	BattleModule.decide = function (battle, decisions) {
 		let dTable = [];
 		let p, maxP;
 		maxP = null;
@@ -247,5 +248,5 @@ exports.setup = function (Data) {
 		return chosen[Math.floor(Math.random() * chosen.length)];
 	};
 
-	return module.exports;
+	return BattleModule;
 };

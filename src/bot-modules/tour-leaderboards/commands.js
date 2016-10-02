@@ -11,19 +11,10 @@ const Chat = Tools.get('chat.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
-const Config = App.config.modules.tourleaderboards;
-
-function tryGetRoomTitle(room) {
-	if (App.bot.rooms[room]) {
-		return App.bot.rooms[room].title || room;
-	} else {
-		return room;
-	}
-}
-
 module.exports = {
 	rank: "toursrank",
-	toursrank: function () {
+	toursrank: function (App) {
+		const Config = App.config.modules.tourleaderboards;
 		let mod = App.modules.tourleaderboards.system;
 		let user = Text.toId(this.args[0]) || this.byIdent.id;
 		let room = Text.toRoomid(this.args[1]) || this.room;
@@ -38,7 +29,7 @@ module.exports = {
 		}
 		let rank = mod.getUserPoints(room, user);
 		let txt = translator.get(2, this.lang) + " " + Chat.bold(rank.name) + " " +
-			translator.get('in', this.lang) + " " + Chat.italics(tryGetRoomTitle(room)) + " | ";
+			translator.get('in', this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)) + " | ";
 		txt += translator.get(3, this.lang) + ": " + rank.points + " | ";
 		txt += translator.get(4, this.lang) + ": " + rank.wins + ", " + translator.get(5, this.lang) +
 			": " + rank.finals + ", " + translator.get(6, this.lang) + ": " + rank.semis + ". ";
@@ -47,7 +38,8 @@ module.exports = {
 		this.restrictReply(txt, 'toursrank');
 	},
 
-	top: function () {
+	top: function (App) {
+		const Config = App.config.modules.tourleaderboards;
 		let mod = App.modules.tourleaderboards.system;
 		let room = Text.toRoomid(this.arg) || this.room;
 		if (!room) {
@@ -64,10 +56,11 @@ module.exports = {
 		for (let i = 0; i < 5 && i < top.length; i++) {
 			topResults.push(Chat.italics("#" + (i + 1)) + " " + Chat.bold(top[i][0]) + " (" + top[i][6] + ")");
 		}
-		this.restrictReply(Chat.bold(tryGetRoomTitle(room)) + " | " + topResults.join(", "), "toursrank");
+		this.restrictReply(Chat.bold(this.parser.getRoomTitle(room)) + " | " + topResults.join(", "), "toursrank");
 	},
 
-	tourleaderboards: function () {
+	tourleaderboards: function (App) {
+		const Config = App.config.modules.tourleaderboards;
 		let server = App.config.server.url;
 		if (!server) {
 			return this.pmReply(translator.get(13, this.lang));
@@ -86,7 +79,8 @@ module.exports = {
 		}
 	},
 
-	official: function () {
+	official: function (App) {
+		const Config = App.config.modules.tourleaderboards;
 		if (!this.can('tourofficial', this.room)) return this.replyAccessDenied('tourofficial');
 		let mod = App.modules.tourleaderboards.system;
 		let room = this.room;
@@ -107,7 +101,8 @@ module.exports = {
 		}
 	},
 
-	unofficial: function () {
+	unofficial: function (App) {
+		const Config = App.config.modules.tourleaderboards;
 		if (!this.can('tourofficial', this.room)) return this.replyAccessDenied('tourofficial');
 		let mod = App.modules.tourleaderboards.system;
 		let room = this.room;

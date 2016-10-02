@@ -8,12 +8,14 @@ const Path = require('path');
 
 const DataBase = Tools.get('json-db.js');
 const Text = Tools.get('text.js');
-const Teams = Tools.get('teams.js');
-
-const teamsDataBase = new DataBase(Path.resolve(App.confDir, 'teams.json'));
+const randomize = Tools.get('randomize.js');
 
 exports.setup = function (App) {
-	module.exports = {
+	const Teams = require(Path.resolve(__dirname, 'teams.js')).setup(App);
+	const teamsDataBase = new DataBase(Path.resolve(App.confDir, 'teams.json'));
+
+	return {
+		tools: Teams,
 		teams: {},
 		dynTeams: {},
 
@@ -63,13 +65,13 @@ exports.setup = function (App) {
 			let teamStr = '';
 			try {
 				if (typeof teamChosen === 'string') {
-				//already parsed
+					//already parsed
 					teamStr = teamChosen;
 				} else if (typeof teamChosen === 'object') {
 					if (teamChosen.maxPokemon && teamChosen.pokemon) {
-					//generate random team
+						//generate random team
 						let team = [];
-						let pokes = teamChosen.pokemon.randomize();
+						let pokes = randomize(teamChosen.pokemon);
 						let k = 0;
 						for (let i = 0; i < pokes.length; i++) {
 							if (k++ >= teamChosen.maxPokemon) break;
@@ -77,7 +79,7 @@ exports.setup = function (App) {
 						}
 						teamStr = this.packTeam(team);
 					} else if (teamChosen.length) {
-					//parse team
+						//parse team
 						teamStr = this.packTeam(teamChosen);
 					} else {
 						App.log("invalid team data type: " + JSON.stringify(teamChosen));
@@ -105,6 +107,4 @@ exports.setup = function (App) {
 			return Teams.packTeam(team);
 		},
 	};
-
-	return module.exports;
 };

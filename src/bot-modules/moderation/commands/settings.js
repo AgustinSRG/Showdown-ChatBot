@@ -13,7 +13,7 @@ const Translator = Tools.get('translate.js');
 const translator = new Translator(Path.resolve(__dirname, 'settings.translations'));
 
 module.exports = {
-	setmoderation: function () {
+	setmoderation: function (App) {
 		if (!this.can('moderation', this.room)) return this.replyAccessDenied('moderation');
 		if (this.args.length !== 2) return this.errorReply(this.usage({desc: 'mod-type'}, {desc: 'on/off'}));
 		let room = this.targetRoom;
@@ -38,7 +38,7 @@ module.exports = {
 		}
 	},
 
-	modexception: function () {
+	modexception: function (App) {
 		if (!this.can('moderation', this.room)) return this.replyAccessDenied('moderation');
 		let room = this.targetRoom;
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));

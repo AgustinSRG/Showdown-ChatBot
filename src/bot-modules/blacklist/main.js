@@ -12,10 +12,6 @@ const Translator = Tools.get('translate.js');
 const translator = new Translator(Path.resolve(__dirname, 'blacklist.translations'));
 
 exports.setup = function (App) {
-	const db = exports.db = new DataBase(Path.resolve(App.confDir, 'blacklist.json'));
-
-	const data = exports.data = db.data;
-
 	function getLanguage(room) {
 		return App.config.language.rooms[room] || App.config.language['default'];
 	}
@@ -26,47 +22,57 @@ exports.setup = function (App) {
 		return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({group: roomData.users[botid]}, 'mod'));
 	}
 
-	exports.blacklist = function (room, user) {
-		user = Text.toId(user);
-		if (!user) return false;
-		if (!data[room]) data[room] = {};
-		if (data[room][user]) {
-			return false;
-		} else {
-			data[room][user] = true;
-			return true;
+	class BacklistModule {
+		constructor() {
+			this.db = new DataBase(Path.resolve(App.confDir, 'blacklist.json'));
+			this.data = this.db.data;
 		}
-	};
 
-	exports.unblacklist = function (room, user) {
-		user = Text.toId(user);
-		if (!user || !data[room]) return false;
-		if (data[room][user]) {
-			delete data[room][user];
-			if (Object.keys(data[room]).length === 0) {
-				delete data[room];
+		blacklist(room, user) {
+			user = Text.toId(user);
+			if (!user) return false;
+			if (!this.data[room]) this.data[room] = {};
+			if (this.data[room][user]) {
+				return false;
+			} else {
+				this.data[room][user] = true;
+				return true;
 			}
-			return true;
-		} else {
-			return false;
 		}
-	};
 
-	exports.getInitCmds = function () {
-		let cmds = [];
-		for (let room in App.bot.rooms) {
-			let users = App.bot.rooms[room].users;
-			for (let id in users) {
-				let group = users[id];
-				if (App.parser.equalOrHigherGroup({group: group}, 'driver')) continue; // Do not ban staff
-				if (!botCanBan(room)) continue; // Bot cannot ban
-				if (data[room] && data[room][id]) {
-					cmds.push(room + '|/roomban ' + id + ', ' + translator.get('ban', getLanguage(room)));
+		unblacklist(room, user) {
+			user = Text.toId(user);
+			if (!user || !this.data[room]) return false;
+			if (this.data[room][user]) {
+				delete this.data[room][user];
+				if (Object.keys(this.data[room]).length === 0) {
+					delete this.data[room];
+				}
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		getInitCmds() {
+			let cmds = [];
+			for (let room in App.bot.rooms) {
+				let users = App.bot.rooms[room].users;
+				for (let id in users) {
+					let group = users[id];
+					if (App.parser.equalOrHigherGroup({group: group}, 'driver')) continue; // Do not ban staff
+					if (!botCanBan(room)) continue; // Bot cannot ban
+					if (this.data[room] && this.data[room][id]) {
+						cmds.push(room + '|/roomban ' + id + ', ' + translator.get('ban', getLanguage(room)));
+					}
 				}
 			}
+			return cmds;
 		}
-		return cmds;
-	};
+	}
+
+	const Blacklist = new BacklistModule();
+	const data = Blacklist.data;
 
 	App.bot.on('userjoin', (room, by) => {
 		let user = Text.parseUserIdent(by);
@@ -86,5 +92,5 @@ exports.setup = function (App) {
 		}
 	});
 
-	return module.exports;
+	return Blacklist;
 };

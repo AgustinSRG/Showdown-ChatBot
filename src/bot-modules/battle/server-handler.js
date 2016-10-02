@@ -7,10 +7,8 @@
 const Path = require('path');
 const Text = Tools.get('text.js');
 const check = Tools.get('check.js');
-const Teams = Tools.get('teams.js');
 const SubMenu = Tools.get('submenu.js');
 const Template = Tools.get('html-template.js');
-
 
 const configTemplate = new Template(Path.resolve(__dirname, 'templates', 'config.html'));
 const teamsMainTemplate = new Template(Path.resolve(__dirname, 'templates', 'teams-main.html'));
@@ -228,6 +226,7 @@ exports.setup = function (App) {
 		}
 
 		let mod = App.modules.battle.system;
+		const Teams = mod.TeamBuilder.tools;
 
 		let ok = null, error = null;
 		if (context.post.delteam) {
@@ -338,6 +337,7 @@ exports.setup = function (App) {
 
 	function serveTeam(context, parts) {
 		let mod = App.modules.battle.system;
+		const Teams = mod.TeamBuilder.tools;
 		let teams = mod.TeamBuilder.dynTeams;
 		let team = Text.toId(parts[1]);
 		if (team && teams[team]) {

@@ -9,14 +9,14 @@ const MAX_MODTIME_RELEVANCE = 60 * 60 * 1000;
 
 const Path = require('path');
 const FileSystem = require('fs');
-
 const Text = Tools.get('text.js');
 const Translator = Tools.get('translate.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'mod.translations'));
 
 class ModeratorBot {
-	constructor(path) {
+	constructor(app, path) {
+		this.app = app;
 		this.chatLog = {};
 		this.chatData = {};
 		this.filters = {};
@@ -64,17 +64,17 @@ class ModeratorBot {
 	}
 
 	isExcepted(ident, room) {
-		let config = App.modules.moderation.system.data;
+		let config = this.app.modules.moderation.system.data;
 		if (config.modexception.rooms[room]) {
-			return App.parser.equalOrHigherGroup(ident, config.modexception.rooms[room]);
+			return this.app.parser.equalOrHigherGroup(ident, config.modexception.rooms[room]);
 		} else {
-			return App.parser.equalOrHigherGroup(ident, config.modexception.global);
+			return this.app.parser.equalOrHigherGroup(ident, config.modexception.global);
 		}
 	}
 
 	applyZeroTolerance(context) {
 		if (context.pointVal === 0) return;
-		let config = App.modules.moderation.system.data;
+		let config = this.app.modules.moderation.system.data;
 		if (!config.zeroTolerance[context.room] || !config.zeroTolerance[context.room][context.byIdent.id]) return;
 		let val = config.zeroTolerance[context.room][context.byIdent.id];
 		if (val === 'min' || val === 'low') {
@@ -90,19 +90,19 @@ class ModeratorBot {
 	}
 
 	botCanModerate(room) {
-		let roomData = App.bot.rooms[room];
-		let botid = Text.toId(App.bot.getBotNick());
-		return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({group: roomData.users[botid]}, 'driver'));
+		let roomData = this.app.bot.rooms[room];
+		let botid = Text.toId(this.app.bot.getBotNick());
+		return (roomData && roomData.users[botid] && this.app.parser.equalOrHigherGroup({group: roomData.users[botid]}, 'driver'));
 	}
 
 	botCanBan(room) {
-		let roomData = App.bot.rooms[room];
-		let botid = Text.toId(App.bot.getBotNick());
-		return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({group: roomData.users[botid]}, 'mod'));
+		let roomData = this.app.bot.rooms[room];
+		let botid = Text.toId(this.app.bot.getBotNick());
+		return (roomData && roomData.users[botid] && this.app.parser.equalOrHigherGroup({group: roomData.users[botid]}, 'mod'));
 	}
 
 	modEnabled(modType, room) {
-		let config = App.modules.moderation.system.data;
+		let config = this.app.modules.moderation.system.data;
 		if (config.roomSettings[room] && config.roomSettings[room][modType] === true) {
 			return true;
 		} else if (config.roomSettings[room] && config.roomSettings[room][modType] === false) {
@@ -113,11 +113,11 @@ class ModeratorBot {
 	}
 
 	getLanguage(room) {
-		return App.config.language.rooms[room] || App.config.language['default'];
+		return this.app.config.language.rooms[room] || this.app.config.language['default'];
 	}
 
 	getRulesLink(room) {
-		let config = App.modules.moderation.system.data;
+		let config = this.app.modules.moderation.system.data;
 		if (config.rulesLink[room]) {
 			return '. ' + config.rulesLink[room];
 		} else {
@@ -126,7 +126,7 @@ class ModeratorBot {
 	}
 
 	getPunishment(val) {
-		let config = App.modules.moderation.system.data;
+		let config = this.app.modules.moderation.system.data;
 		let punishments = config.punishments;
 		if (val <= 0) return null;
 		if (val > punishments.length) {
@@ -137,12 +137,12 @@ class ModeratorBot {
 	}
 
 	getModTypeValue(modType, defaultVal) {
-		let config = App.modules.moderation.system.data;
+		let config = this.app.modules.moderation.system.data;
 		return config.values[modType] || defaultVal;
 	}
 
 	parse(room, time, by, msg) {
-		let context = new ModerationContext(room, time, by, msg);
+		let context = new ModerationContext(this.app, room, time, by, msg);
 		let user = context.byIdent.id;
 
 		if (!this.chatLog[room]) {
@@ -200,9 +200,9 @@ class ModeratorBot {
 
 			let cmd = this.getPunishment(context.pointVal);
 			if (cmd === 'roomban' && !this.botCanBan(room)) cmd = 'hourmute'; // Bot cannot ban
-			if (App.config.modules.core.privaterooms.indexOf(room) >= 0 && cmd === 'warn') cmd = 'mute'; // Cannot warn in private rooms
+			if (this.app.config.modules.core.privaterooms.indexOf(room) >= 0 && cmd === 'warn') cmd = 'mute'; // Cannot warn in private rooms
 
-			App.bot.sendTo(room, '/' + cmd + ' ' + user + ', ' + translator.get('mod', this.getLanguage(room)) +
+			this.app.bot.sendTo(room, '/' + cmd + ' ' + user + ', ' + translator.get('mod', this.getLanguage(room)) +
 				': ' + context.muteMessage + this.getRulesLink(room));
 		}
 	}
@@ -213,7 +213,7 @@ class ModeratorBot {
 		let indexmute = raw.indexOf(" was muted by ");
 		if (indexmute !== -1) {
 			let mutemsg = raw.split(" was muted by ");
-			if (mutemsg.length > 1 && mutemsg[1].indexOf(App.bot.getBotNick()) === -1) {
+			if (mutemsg.length > 1 && mutemsg[1].indexOf(this.app.bot.getBotNick()) === -1) {
 				by = Text.toId(mutemsg[0]);
 				if (raw.indexOf("for 7 minutes") !== -1) {
 					val = 2;
@@ -223,13 +223,13 @@ class ModeratorBot {
 			}
 		} else if (indexwarn !== -1) {
 			let warnmsg = raw.split(" was warned by ");
-			if (warnmsg.length > 1 && warnmsg[1].indexOf(App.bot.getBotNick()) === -1) {
+			if (warnmsg.length > 1 && warnmsg[1].indexOf(this.app.bot.getBotNick()) === -1) {
 				by = Text.toId(warnmsg[0]);
 				val = 1;
 			}
 		}
 		if (by && val > 0) {
-			let config = App.modules.moderation.system.data;
+			let config = this.app.modules.moderation.system.data;
 			if (!config.zeroTolerance[room] || !config.zeroTolerance[room][by]) return;
 			let zt = config.zeroTolerance[room][by];
 			if (zt === 'normal') {
@@ -243,9 +243,9 @@ class ModeratorBot {
 			}
 			let cmd = this.getPunishment(val);
 			if (cmd === 'roomban' && !this.botCanBan(room)) cmd = 'hourmute'; // Bot cannot ban
-			if (App.config.modules.core.privaterooms.indexOf(room) >= 0 && cmd === 'warn') cmd = 'mute'; // Cannot warn in private rooms
+			if (this.app.config.modules.core.privaterooms.indexOf(room) >= 0 && cmd === 'warn') cmd = 'mute'; // Cannot warn in private rooms
 
-			App.bot.sendTo(room, '/' + cmd + ' ' + by + ', ' + translator.get('mod', this.getLanguage(room)) +
+			this.app.bot.sendTo(room, '/' + cmd + ' ' + by + ', ' + translator.get('mod', this.getLanguage(room)) +
 				': ' + translator.get('ztmsg', this.getLanguage(room)));
 		}
 	}
@@ -256,7 +256,8 @@ class ModeratorBot {
 }
 
 class ModerationContext {
-	constructor(room, time, by, msg) {
+	constructor(app, room, time, by, msg) {
+		this.app = app;
 		this.room = room;
 		this.time = time;
 		this.by = by;
@@ -272,12 +273,12 @@ class ModerationContext {
 
 		/* No-Nicks Msg */
 		this.noNicksMsg = " " + this.msg + " ";
-		if (App.bot.rooms[room]) {
+		if (this.app.bot.rooms[room]) {
 			let usernum = 0;
-			for (let userid in App.bot.rooms[room].users) {
+			for (let userid in this.app.bot.rooms[room].users) {
 				usernum++;
-				if (!App.bot.users[userid]) continue;
-				let name = App.bot.users[userid].name.replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&");
+				if (!this.app.bot.users[userid]) continue;
+				let name = this.app.bot.users[userid].name.replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&");
 				let regex = new RegExp("[^a-z0-9A-Z]" + name + "[^a-z0-9A-Z]", 'g');
 				this.noNicksMsg = this.noNicksMsg.replace(regex, " %" + usernum + "% ");
 			}

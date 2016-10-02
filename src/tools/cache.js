@@ -8,6 +8,7 @@ const Path = require('path');
 const FileSystem = require('fs');
 const Text = Tools.get('text.js');
 const DataBase = Tools.get('json-db.js');
+const EventManager = Tools.get('events.js');
 
 /**
  * Represents a limited cache
@@ -71,6 +72,7 @@ class WebCache {
 		this.path = path;
 		this.db = new DataBase(Path.resolve(path, 'cache.json'));
 		this.data = this.db.data;
+		this.events = new EventManager();
 	}
 
 	write() {
@@ -112,7 +114,7 @@ class WebCache {
 		FileSystem.writeFile(Path.resolve(this.path, cacheFile), data, function (err) {
 			if (err) {
 				delete this.data[url];
-				App.log("Error (" + err.code + ") " + err.message + " | Cache " + url);
+				this.events.emit('error', err, url);
 			}
 			this.write();
 		}.bind(this));

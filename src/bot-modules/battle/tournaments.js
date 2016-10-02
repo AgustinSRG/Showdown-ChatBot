@@ -9,25 +9,26 @@ const ACTION_INTERVAL = 1500;
 const Text = Tools.get('text.js');
 
 exports.setup = function (App) {
-	const tourData = exports.tourData = {};
-	const lastAction = exports.lastAction = {};
+	const TornamentsManager = {};
+	const tourData = TornamentsManager.tourData = {};
+	const lastAction = TornamentsManager.lastAction = {};
 
 	const Config = App.config.modules.battle;
 
-	const canSendCommands = exports.canSendCommands = function (room) {
+	const canSendCommands = TornamentsManager.canSendCommands = function (room) {
 		let res = true;
 		if (lastAction[room] && Date.now() - lastAction[room] < ACTION_INTERVAL) res = false;
 		lastAction[room] = Date.now();
 		return res;
 	};
 
-	exports.clearData = function () {
+	TornamentsManager.clearData = function () {
 		for (let i in tourData) {
 			delete tourData[i];
 		}
 	};
 
-	exports.parse = function (room, message, isIntro, spl) {
+	TornamentsManager.parse = function (room, message, isIntro, spl) {
 		if (spl[0] !== 'tournament') return;
 		if (!tourData[room]) tourData[room] = {};
 		let mod = App.modules.battle.system;
@@ -84,5 +85,5 @@ exports.setup = function (App) {
 		}
 	};
 
-	return module.exports;
+	return TornamentsManager;
 };

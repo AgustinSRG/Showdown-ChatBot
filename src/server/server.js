@@ -625,6 +625,9 @@ class RequestContext {
 		if (!options.banner) {
 			options.banner = this.server.app.config.apptitle;
 		}
+		if (!options.package) {
+			options.package = this.server.app.env.package;
+		}
 		let html = PageMaker.generate(body, loginData, this.menu, options);
 		this.headers['Content-Type'] = 'text/html; charset=utf-8';
 		this.response.writeHead(code || 200, this.headers);

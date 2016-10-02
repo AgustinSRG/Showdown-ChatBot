@@ -12,7 +12,8 @@ const Pokemon = Calc.Pokemon;
 const Conditions = Calc.Conditions;
 
 exports.setup = function (Data) {
-	exports.id = "singles-eff";
+	const BattleModule = {};
+	BattleModule.id = "singles-eff";
 
 	function suposeActiveFoe(battle) {
 		let target = battle.foe.active[0];
@@ -141,7 +142,7 @@ exports.setup = function (Data) {
 		return false;
 	}
 
-	let getViableSupportMoves = exports.getViableSupportMoves = function (battle, decisions) {
+	let getViableSupportMoves = BattleModule.getViableSupportMoves = function (battle, decisions) {
 		let res = {
 			viable: [],
 			unviable: [],
@@ -492,7 +493,7 @@ exports.setup = function (Data) {
 		return res;
 	};
 
-	let getViableDamageMoves = exports.getViableDamageMoves = function (battle, decisions) {
+	let getViableDamageMoves = BattleModule.getViableDamageMoves = function (battle, decisions) {
 		let res = {
 			ohko: [], // +90% -> replace status moves
 			thko: [], // +50% -> No switch
@@ -588,8 +589,8 @@ exports.setup = function (Data) {
 		}
 	}
 
-	let getBestMove = exports.getBestMove = function (battle, decisions) {
-		let bestSW = exports.getBestSwitch(battle, decisions);
+	let getBestMove = BattleModule.getBestMove = function (battle, decisions) {
+		let bestSW = BattleModule.getBestSwitch(battle, decisions);
 		let damageMoves = getViableDamageMoves(battle, decisions);
 		let supportMoves = getViableSupportMoves(battle, decisions);
 
@@ -666,7 +667,7 @@ exports.setup = function (Data) {
 
 	/* Switches */
 
-	let getBestSwitch = exports.getBestSwitch = function (battle, decisions) {
+	let getBestSwitch = BattleModule.getBestSwitch = function (battle, decisions) {
 		let chosen = null;
 		let tmp, maxi = null;
 		for (let i = 0; i < decisions.length; i++) {
@@ -690,7 +691,7 @@ exports.setup = function (Data) {
 
 	/* Swapper */
 
-	exports.decide = function (battle, decisions) {
+	BattleModule.decide = function (battle, decisions) {
 		if (battle.gametype !== "singles") throw new Error("This module only works for singles gametype");
 		if (battle.request.forceSwitch) {
 			return getBestSwitch(battle, decisions);
@@ -701,5 +702,5 @@ exports.setup = function (Data) {
 		}
 	};
 
-	return module.exports;
+	return BattleModule;
 };

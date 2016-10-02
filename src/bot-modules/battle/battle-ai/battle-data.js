@@ -10,23 +10,25 @@ const Text = Tools.get('text.js');
 const BAT_DATA_DIR = Path.resolve(__dirname, '..', 'data');
 
 exports.setup = function (App) {
-	exports.getEffect = function (effect, gen) {
+	const BattleDataManager = {};
+
+	BattleDataManager.getEffect = function (effect, gen) {
 		if (!effect || typeof effect === 'string') {
 			let name = (effect || '').trim();
 			if (name.substr(0, 5) === 'item:') {
-				return exports.getItem(name.substr(5), gen);
+				return BattleDataManager.getItem(name.substr(5), gen);
 			} else if (name.substr(0, 8) === 'ability:') {
-				return exports.getAbility(name.substr(8), gen);
+				return BattleDataManager.getAbility(name.substr(8), gen);
 			} else if (name.substr(0, 5) === 'move:') {
-				return exports.getMove(name.substr(5), gen);
+				return BattleDataManager.getMove(name.substr(5), gen);
 			}
 
 			let id = Text.toId(name);
 			effect = {};
 
-			let pMove = exports.getMove(id, gen);
-			let pAbility = exports.getAbility(id, gen);
-			let pItem = exports.getItem(id, gen);
+			let pMove = BattleDataManager.getMove(id, gen);
+			let pAbility = BattleDataManager.getAbility(id, gen);
+			let pItem = BattleDataManager.getItem(id, gen);
 			let statuses = require(Path.resolve(BAT_DATA_DIR, "statuses.js")).BattleStatuses;
 
 			if (id && statuses && statuses[id]) {
@@ -60,7 +62,7 @@ exports.setup = function (App) {
 		return effect;
 	};
 
-	exports.getPokemon = exports.getTemplate = function (poke, gen) {
+	BattleDataManager.getPokemon = BattleDataManager.getTemplate = function (poke, gen) {
 		if (!gen || gen > 6 || gen < 1) gen = 6;
 		poke = Text.toId(poke || "");
 		let pokemon = {};
@@ -97,7 +99,7 @@ exports.setup = function (App) {
 		return pokemon;
 	};
 
-	exports.getMove = function (move, gen) {
+	BattleDataManager.getMove = function (move, gen) {
 		if (!gen || gen > 6 || gen < 1) gen = 6;
 		move = Text.toId(move || "");
 		if (move.indexOf("hiddenpower") === 0) {
@@ -143,7 +145,7 @@ exports.setup = function (App) {
 		return moveData;
 	};
 
-	exports.getItem = function (item, gen) {
+	BattleDataManager.getItem = function (item, gen) {
 		if (!gen || gen > 6 || gen < 1) gen = 6;
 		item = Text.toId(item || "");
 		let itemData = {};
@@ -181,7 +183,7 @@ exports.setup = function (App) {
 		return itemData;
 	};
 
-	exports.getAbility = function (ab, gen) {
+	BattleDataManager.getAbility = function (ab, gen) {
 		if (!gen || gen > 6 || gen < 1) gen = 6;
 		ab = Text.toId(ab || "");
 		let ability = {};
@@ -239,7 +241,7 @@ exports.setup = function (App) {
 		}
 	}
 
-	exports.Move = Move;
+	BattleDataManager.Move = Move;
 
 	class Pokemon {
 		constructor(template, properties) {
@@ -323,7 +325,7 @@ exports.setup = function (App) {
 		}
 
 		markAbility(id, isNotBase) {
-			this.ability = exports.getAbility(id);
+			this.ability = BattleDataManager.getAbility(id);
 			if ((!this.baseAbility || this.baseAbility === "&unknown") && !isNotBase) {
 				this.baseAbility = this.ability;
 				this.abilityStack.push(this.ability.id);
@@ -333,7 +335,7 @@ exports.setup = function (App) {
 						this.abilityStack.pop();
 					}
 					if (this.abilityStack[this.abilityStack.length - 1]) {
-						this.baseAbility = exports.getAbility(this.abilityStack[this.abilityStack.length - 1]);
+						this.baseAbility = BattleDataManager.getAbility(this.abilityStack[this.abilityStack.length - 1]);
 					} else {
 						this.baseAbility = "&unknown";
 					}
@@ -408,7 +410,7 @@ exports.setup = function (App) {
 		}
 	}
 
-	exports.Pokemon = Pokemon;
+	BattleDataManager.Pokemon = Pokemon;
 
 	class Player {
 		constructor(id, name, avatar) {
@@ -439,9 +441,9 @@ exports.setup = function (App) {
 		}
 	}
 
-	exports.Player = Player;
+	BattleDataManager.Player = Player;
 
-	exports.getFormatsData = function (gen) {
+	BattleDataManager.getFormatsData = function (gen) {
 		if (!gen || gen > 6 || gen < 1) gen = 6;
 		try {
 			return require(Path.resolve(BAT_DATA_DIR, "gen" + gen, "formats-data.js")).BattleFormatsData;
@@ -454,5 +456,5 @@ exports.setup = function (App) {
 		}
 	};
 
-	return module.exports;
+	return BattleDataManager;
 };

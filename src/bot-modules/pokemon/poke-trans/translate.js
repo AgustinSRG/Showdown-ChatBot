@@ -5,7 +5,6 @@
 'use strict';
 
 const Path = require('path');
-
 const normalize = Tools.get('normalize.js');
 const Text = Tools.get('text.js');
 

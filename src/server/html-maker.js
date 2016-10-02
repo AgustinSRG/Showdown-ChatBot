@@ -112,10 +112,10 @@ exports.generate = function (body, loginData, menu, options) {
 	buf += '<div align="center" class="maindiv">';
 	buf += '<div align="center" class="copyright">';
 	buf += '<i>This is a Pokemon Showdown Bot for Node JS - ';
-	if (Package.homepage) {
-		buf += '<a href="' + Package.homepage + '" target="_blank">Showdown-ChatBot' + '</a> v' + Package.version;
+	if (options.package) {
+		buf += '<a href="' + options.package.homepage + '" target="_blank">Showdown-ChatBot' + '</a> v' + options.package.version;
 	} else {
-		buf += 'Showdown-ChatBot v' + Package.version;
+		buf += 'Showdown-ChatBot v' + options.package.version;
 	}
 	buf += '</i>';
 	buf += '</div>';

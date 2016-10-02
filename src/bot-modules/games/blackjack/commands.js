@@ -8,12 +8,12 @@ const Path = require('path');
 const Translator = Tools.get('translate.js');
 const Text = Tools.get('text.js');
 
-const Blackjack = require(Path.resolve(__dirname, 'blackjack.js'));
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 const trigger = require(Path.resolve(__dirname, 'cmd-trigger.js'));
 
 module.exports = {
-	blackjack: function () {
+	blackjack: function (App) {
+		const Blackjack = App.modules.games.system.templates.blackjack;
 		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		if (this.getRoomType(this.room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
 		let maxPlayers = parseInt(this.args[0]);

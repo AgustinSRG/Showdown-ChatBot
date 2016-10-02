@@ -5,73 +5,80 @@
 'use strict';
 
 const Path = require('path');
-
 const DataBase = Tools.get('json-db.js');
 const ModeratorBot = require(Path.resolve(__dirname, 'moderator-bot.js')).ModeratorBot;
 
-const db = exports.db = new DataBase(Path.resolve(App.confDir, 'moderation.json'));
+exports.setup = function (App) {
+	class ModerationModule {
+		constructor() {
+			this.db = new DataBase(Path.resolve(App.confDir, 'moderation.json'));
+			let data = this.data = this.db.data;
+			if (!data.punishments) {
+				data.punishments = ['warn', 'mute', 'hourmute', 'roomban'];
+			}
 
-const data = exports.data = db.data;
+			if (!data.values) {
+				data.values = {};
+			}
 
-if (!data.punishments) {
-	data.punishments = ['warn', 'mute', 'hourmute', 'roomban'];
-}
+			if (!data.settings) {
+				data.settings = {};
+			}
 
-if (!data.values) {
-	data.values = {};
-}
+			if (!data.roomSettings) {
+				data.roomSettings = {};
+			}
 
-if (!data.settings) {
-	data.settings = {};
-}
+			if (!data.modexception) {
+				data.modexception = {
+					global: 'driver',
+					rooms: {},
+				};
+			}
 
-if (!data.roomSettings) {
-	data.roomSettings = {};
-}
+			if (!data.rulesLink) {
+				data.rulesLink = {};
+			}
 
-if (!data.modexception) {
-	data.modexception = {
-		global: 'driver',
-		rooms: {},
-	};
-}
+			if (!data.bannedWords) {
+				data.bannedWords = {};
+			}
 
-if (!data.rulesLink) {
-	data.rulesLink = {};
-}
+			if (!data.zeroTolerance) {
+				data.zeroTolerance = {};
+			}
 
-if (!data.bannedWords) {
-	data.bannedWords = {};
-}
+			if (!data.enableZeroTol) {
+				data.enableZeroTol = {};
+			}
 
-if (!data.zeroTolerance) {
-	data.zeroTolerance = {};
-}
+			if (!data.serversWhitelist) {
+				data.serversWhitelist = ['sim', 'showdown', 'smogtours'];
+			}
 
-if (!data.enableZeroTol) {
-	data.enableZeroTol = {};
-}
-
-if (!data.serversWhitelist) {
-	data.serversWhitelist = ['sim', 'showdown', 'smogtours'];
-}
-
-exports.modBot = new ModeratorBot(Path.resolve(__dirname, 'filters/'));
-
-App.bot.on('userchat', (room, time, by, msg) => {
-	if (!App.bot.rooms[room] || App.bot.rooms[room].type !== 'chat') return;
-	if (msg.substr(0, 5) === "/log ") {
-		exports.modBot.parseRaw(room, msg.substr(5));
-	} else {
-		exports.modBot.parse(room, time, by, msg);
+			this.modBot = new ModeratorBot(App, Path.resolve(__dirname, 'filters/'));
+		}
 	}
-});
 
-App.bot.on('line', (room, line, spl, isIntro) => {
-	if (isIntro) return;
-	if (!App.bot.rooms[room] || App.bot.rooms[room].type !== 'chat') return;
-	if (!data.enableZeroTol[room]) return;
-	if (line.charAt(0) !== '|') exports.modBot.parseRaw(room, line);
-});
+	const ModerationMod = new ModerationModule();
 
-App.server.setPermission('moderation', 'Permission for changing moderation configuration');
+	App.bot.on('userchat', (room, time, by, msg) => {
+		if (!App.bot.rooms[room] || App.bot.rooms[room].type !== 'chat') return;
+		if (msg.substr(0, 5) === "/log ") {
+			ModerationMod.modBot.parseRaw(room, msg.substr(5));
+		} else {
+			ModerationMod.modBot.parse(room, time, by, msg);
+		}
+	});
+
+	App.bot.on('line', (room, line, spl, isIntro) => {
+		if (isIntro) return;
+		if (!App.bot.rooms[room] || App.bot.rooms[room].type !== 'chat') return;
+		if (!ModerationMod.data.enableZeroTol[room]) return;
+		if (line.charAt(0) !== '|') ModerationMod.modBot.parseRaw(room, line);
+	});
+
+	App.server.setPermission('moderation', 'Permission for changing moderation configuration');
+
+	return ModerationMod;
+};

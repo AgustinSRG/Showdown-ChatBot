@@ -119,8 +119,8 @@ module.exports = {
 		this.addToSecurityLog();
 	},
 
-	version: function () {
-		let reply = Chat.bold('Showdown ChatBot v' + Package.version) + ' (' + Package.homepage + ')';
+	version: function (App) {
+		let reply = Chat.bold('Showdown ChatBot v' + App.env.package.version) + ' (' + App.env.package.homepage + ')';
 		this.restrictReply(reply, 'info');
 	},
 

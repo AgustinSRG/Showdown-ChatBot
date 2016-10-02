@@ -7,7 +7,7 @@
 const Text = Tools.get('text.js');
 
 exports.setup = function (App, BattleData) {
-	module.exports = {
+	return {
 		"-damage": function (args, kwargs) {
 			let poke = this.getActive(args[1]);
 			let hp = this.parseHealth(args[2]);
@@ -612,6 +612,4 @@ exports.setup = function (App, BattleData) {
 			}
 		},
 	};
-
-	return module.exports;
 };

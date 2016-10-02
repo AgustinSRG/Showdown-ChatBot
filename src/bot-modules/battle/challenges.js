@@ -9,7 +9,8 @@ const Text = Tools.get('text.js');
 exports.setup = function (App) {
 	const Config = App.config.modules.battle;
 
-	exports.challenges = {};
+	const ChallManager = {};
+	ChallManager.challenges = {};
 
 	function canChallenge(i, nBattles) {
 		if (Config.maxBattles > nBattles) return true;
@@ -18,21 +19,21 @@ exports.setup = function (App) {
 		return false;
 	}
 
-	exports.parse = function (room, message, isIntro, spl) {
+	ChallManager.parse = function (room, message, isIntro, spl) {
 		let mod = App.modules.battle.system;
 		if (spl[0] !== 'updatechallenges') return;
 		let nBattles = Object.keys(mod.BattleBot.battles).length;
 		try {
-			exports.challenges = JSON.parse(message.substr(18));
+			ChallManager.challenges = JSON.parse(message.substr(18));
 		} catch (e) {
 			App.reportCrash(e);
 			return;
 		}
-		if (exports.challenges.challengesFrom) {
+		if (ChallManager.challenges.challengesFrom) {
 			let cmds = [];
-			for (let i in exports.challenges.challengesFrom) {
+			for (let i in ChallManager.challenges.challengesFrom) {
 				if (canChallenge(i, nBattles)) {
-					let format = exports.challenges.challengesFrom[i];
+					let format = ChallManager.challenges.challengesFrom[i];
 
 					if (!(format in App.bot.formats) || !App.bot.formats[format].chall) {
 						cmds.push('/reject ' + i);
@@ -50,12 +51,12 @@ exports.setup = function (App) {
 					cmds.push('/accept ' + i);
 					nBattles++;
 					if (App.config.debug) {
-						App.log("acepted battle: " + i + " | " + exports.challenges.challengesFrom[i]);
+						App.log("acepted battle: " + i + " | " + ChallManager.challenges.challengesFrom[i]);
 					}
 				} else {
 					cmds.push('/reject ' + i);
 					if (App.config.debug) {
-						App.log("rejected battle: " + i + " | " + exports.challenges.challengesFrom[i]);
+						App.log("rejected battle: " + i + " | " + ChallManager.challenges.challengesFrom[i]);
 					}
 					continue;
 				}
@@ -66,8 +67,9 @@ exports.setup = function (App) {
 		}
 	};
 
-	exports.clean = function () {
-		exports.challenges = {};
+	ChallManager.clean = function () {
+		ChallManager.challenges = {};
 	};
-	return module.exports;
+
+	return ChallManager;
 };

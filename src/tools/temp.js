@@ -6,8 +6,8 @@
 
 const Path = require('path');
 const FileSystem = require('fs');
-
 const Text = Tools.get('text.js');
+const EventManager = Tools.get('events.js');
 
 /**
  * Represents a temporal files manager
@@ -33,6 +33,7 @@ class TempManager {
 				} catch (e) {}
 			}
 		}
+		this.events = new EventManager();
 	}
 
 	/**
@@ -57,7 +58,7 @@ class TempManager {
 		try {
 			FileSystem.writeFileSync(file.path, data);
 		} catch (err) {
-			App.reportCrash(err);
+			this.events.emit('error', err);
 			this.files.push(null);
 			return null;
 		}

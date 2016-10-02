@@ -4,10 +4,21 @@
   "version": "3.0",
   "main": "main.js",
   "commands": [
-     "commands.js"
+     "commands.js",
+	 "ambush/commands.js",
+	 "blackjack/commands.js",
+	 "kunc/commands.js",
+	 "pass-the-bomb/commands.js",
+	 "poke-games/commands.js",
+	 "trivia/commands.js",
+	 "wordgames/commands.js"
   ],
   "permissions": {
 	"games": {"group": "owner"}
   },
+  "handlers": [
+    "trivia/server-handler.js",
+	"wordgames/server-handler.js"
+  ],
   "description": "A collection of chat games for a PS bot"
 }

@@ -5,44 +5,48 @@
 'use strict';
 
 const Path = require('path');
-
 const DataBase = Tools.get('json-db.js');
 
-const db = exports.db = new DataBase(Path.resolve(App.confDir, 'trivia.json'));
+exports.setup = function (App) {
+	const TriviaSystem = {};
 
-const data = exports.data = db.data;
+	const db = TriviaSystem.db = new DataBase(Path.resolve(App.confDir, 'trivia.json'));
+	const data = TriviaSystem.data = db.data;
 
-exports.getQuestionId = function (text) {
-	for (let i in data) {
-		if (data[i].clue === text) {
-			return i;
+	TriviaSystem.getQuestionId = function (text) {
+		for (let i in data) {
+			if (data[i].clue === text) {
+				return i;
+			}
 		}
-	}
-	return -1;
-};
-
-exports.getFreeId = function () {
-	let i = -1;
-	do {
-		i++;
-	} while (data[i]);
-	return i;
-};
-
-exports.addQuestion = function (text, answers) {
-	let i = exports.getFreeId();
-	data[i] = {
-		clue: text,
-		answers: answers,
+		return -1;
 	};
-};
 
-exports.rmQuestion = function (id) {
-	delete data[id];
-};
+	TriviaSystem.getFreeId = function () {
+		let i = -1;
+		do {
+			i++;
+		} while (data[i]);
+		return i;
+	};
 
-exports.isDataEmpty = function () {
-	return (Object.keys(data).length === 0);
-};
+	TriviaSystem.addQuestion = function (text, answers) {
+		let i = TriviaSystem.getFreeId();
+		data[i] = {
+			clue: text,
+			answers: answers,
+		};
+	};
 
-require(Path.resolve(__dirname, 'server-handler.js'));
+	TriviaSystem.rmQuestion = function (id) {
+		delete data[id];
+	};
+
+	TriviaSystem.isDataEmpty = function () {
+		return (Object.keys(data).length === 0);
+	};
+
+	TriviaSystem.trivia = require(Path.resolve(__dirname, 'trivia.js')).setup(App);
+
+	return TriviaSystem;
+};

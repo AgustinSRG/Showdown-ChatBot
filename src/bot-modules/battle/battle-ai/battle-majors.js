@@ -9,7 +9,7 @@ const Text = Tools.get('text.js');
 exports.setup = function (App, BattleData) {
 	const Move = BattleData.Move;
 
-	module.exports = {
+	return {
 		rated: function (args, kwargs) {
 			this.rated = true;
 		},
@@ -380,6 +380,4 @@ exports.setup = function (App, BattleData) {
 			this.makeDecision(true);
 		},
 	};
-
-	return module.exports;
 };

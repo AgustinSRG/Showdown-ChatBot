@@ -12,9 +12,7 @@
 		"node": true
 	},
 	"globals": {
-		"App": false,
-		"Tools": false,
-		"Package": false
+		"Tools": false
 	},
 	"rules": {
 		"comma-dangle": [2, "always-multiline"],

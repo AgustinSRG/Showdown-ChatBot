@@ -504,8 +504,8 @@ class CommandParser {
 	 * @returns {String}
 	 */
 	getRoomTitle(room) {
-		if (App.bot.rooms[room]) {
-			return (App.bot.rooms[room].title || room);
+		if (this.app.bot.rooms[room]) {
+			return (this.app.bot.rooms[room].title || room);
 		} else {
 			return Text.escapeHTML(room);
 		}

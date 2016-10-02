@@ -7,7 +7,6 @@
 const Servers_Default_Value = 2;
 
 const Path = require('path');
-
 const Text = Tools.get('text.js');
 const Translator = Tools.get('translate.js');
 
@@ -19,11 +18,11 @@ exports.parse = function (context) {
 	let msg = context.msgLow;
 	let val = this.getModTypeValue(exports.id, Servers_Default_Value);
 	let servers = getServersAds(msg);
-	let whitelistedServers = App.modules.moderation.system.data.serversWhitelist || [];
+	let whitelistedServers = context.app.modules.moderation.system.data.serversWhitelist || [];
 	for (let i = 0; i < servers.length; i++) {
 		let server = servers[i];
 		if (whitelistedServers.indexOf(server) >= 0) continue;
-		if (server !== App.bot.loginUrl.serverId) {
+		if (server !== context.app.bot.loginUrl.serverId) {
 			context.infractions.push(exports.id);
 			context.totalPointVal += val;
 			if (context.pointVal < val) {

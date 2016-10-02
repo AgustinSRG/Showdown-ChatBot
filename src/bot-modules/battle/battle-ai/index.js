@@ -11,7 +11,7 @@ exports.setup = function (App) {
 	const Battle = require(Path.resolve(__dirname, 'battle.js')).setup(App);
 	const autoJoinDataBase = new DataBase(Path.resolve(App.confDir, "battle-autojoin-tmp.json"));
 
-	module.exports = {
+	return {
 		battles: {},
 		battlesCount: 0,
 
@@ -88,6 +88,4 @@ exports.setup = function (App) {
 			}
 		},
 	};
-
-	return module.exports;
 };
