@@ -497,6 +497,19 @@ class CommandParser {
 		commands = commands.concat(Object.keys(this.data.dyncmds));
 		return commands;
 	}
+
+	/**
+	 * Returns a room title
+	 * @param {String} room
+	 * @returns {String}
+	 */
+	getRoomTitle(room) {
+		if (App.bot.rooms[room]) {
+			return (App.bot.rooms[room].title || room);
+		} else {
+			return Text.escapeHTML(room);
+		}
+	}
 }
 
 /**

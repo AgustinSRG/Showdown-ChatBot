@@ -12,17 +12,9 @@ const Hastebin = Tools.get('hastebin.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
-function tryGetRoomTitle(room) {
-	if (App.bot.rooms[room]) {
-		return Text.escapeHTML(App.bot.rooms[room].title || room);
-	} else {
-		return Text.escapeHTML(room);
-	}
-}
-
 module.exports = {
 	ab: "blacklist",
-	blacklist: function () {
+	blacklist: function (App) {
 		if (!this.can('blacklist', this.room)) return this.replyAccessDenied('blacklist');
 		let room = this.targetRoom;
 		if (!room || this.getRoomType(room) !== 'chat') {
@@ -51,7 +43,7 @@ module.exports = {
 	},
 
 	unab: "unblacklist",
-	unblacklist: function () {
+	unblacklist: function (App) {
 		if (!this.can('blacklist', this.room)) return this.replyAccessDenied('blacklist');
 		let room = this.targetRoom;
 		if (!room || this.getRoomType(room) !== 'chat') {
@@ -75,7 +67,7 @@ module.exports = {
 	},
 
 	vab: "viewblacklist",
-	viewblacklist: function () {
+	viewblacklist: function (App) {
 		if (!this.can('blacklist', this.room)) return this.replyAccessDenied('blacklist');
 		let room = this.targetRoom;
 		if (!room || this.getRoomType(room) !== 'chat') {
@@ -92,9 +84,9 @@ module.exports = {
 		}
 		let html = '';
 		html += '<html>';
-		html += '<head><title>Blacklist of ' + tryGetRoomTitle(room) + '</title></head>';
+		html += '<head><title>Blacklist of ' + Text.escapeHTML(this.parser.getRoomTitle(room)) + '</title></head>';
 		html += '<body>';
-		html += '<h3>Users blaclisted in ' + tryGetRoomTitle(room) + '</h3>';
+		html += '<h3>Users blaclisted in ' + Text.escapeHTML(this.parser.getRoomTitle(room)) + '</h3>';
 		html += '<ul>';
 		let blUsers = Object.keys(bl).sort();
 		for (let i = 0; i < blUsers.length; i++) {
@@ -111,7 +103,7 @@ module.exports = {
 		}
 	},
 
-	viewblacklisthastebin: function () {
+	viewblacklisthastebin: function (App) {
 		if (!this.can('blacklist', this.room)) return this.replyAccessDenied('blacklist');
 		let room = this.targetRoom;
 		if (!room || this.getRoomType(room) !== 'chat') {
