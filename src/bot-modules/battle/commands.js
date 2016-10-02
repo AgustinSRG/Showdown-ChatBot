@@ -12,7 +12,7 @@ const Chat = Tools.get('chat.js');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
-function parseAliases(format) {
+function parseAliases(format, App) {
 	if (!format) return '';
 	format = Text.toId(format);
 	if (App.bot.formats[format]) return format;
@@ -24,11 +24,11 @@ function parseAliases(format) {
 }
 
 module.exports = {
-	chall: function () {
+	chall: function (App) {
 		if (!this.can('chall', this.room)) return this.replyAccessDenied('chall');
 		let mod = App.modules.battle.system;
 		let user = Text.toId(this.args[0]) || this.byIdent.id;
-		let format = parseAliases(this.args[1]);
+		let format = parseAliases(this.args[1], App);
 		let teamId = Text.toId(this.args[2]);
 		if (!user || !format) {
 			return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: translator.get('format', this.lang)},
@@ -63,7 +63,7 @@ module.exports = {
 		App.logCommandAction(this);
 	},
 
-	cancelchallenge: function () {
+	cancelchallenge: function (App) {
 		if (!this.can('chall', this.room)) return this.replyAccessDenied('chall');
 		let mod = App.modules.battle.system;
 		if (mod.ChallManager.challenges && mod.ChallManager.challenges.challengeTo) {
@@ -74,10 +74,10 @@ module.exports = {
 		}
 	},
 
-	searchbattle: function () {
+	searchbattle: function (App) {
 		if (!this.can('searchbattle', this.room)) return this.replyAccessDenied('searchbattle');
 		let mod = App.modules.battle.system;
-		let format = parseAliases(this.arg);
+		let format = parseAliases(this.arg, App);
 		if (!format) return this.errorReply(this.usage({desc: 'format'}));
 		if (!App.bot.formats[format] || !App.bot.formats[format].ladder) {
 			return this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(format) + ' ' + translator.get(5, this.lang));
@@ -100,7 +100,7 @@ module.exports = {
 		App.logCommandAction(this);
 	},
 
-	evalbattle: function () {
+	evalbattle: function (App) {
 		if (!App.config.debug) return;
 		if (App.env.staticmode) return;
 		if (!this.isExcepted()) return;
