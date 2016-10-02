@@ -199,7 +199,7 @@ function evaluateMoveDecision(battle, desEnv, des, act) {
 		}
 		if (!targets[i].supressedAbility) {
 			if (targets[i].ability === "&unknown") {
-				pokeB.ability = pokeB.template.abilities ? pokeB.template.abilities[0] : null;
+				pokeB.ability = pokeB.template.abilities ? Data.getAbility(pokeB.template.abilities[0]) : null;
 			} else {
 				pokeB.ability = targets[i].ability;
 			}

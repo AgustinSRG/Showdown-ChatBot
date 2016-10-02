@@ -5,7 +5,6 @@
 'use strict';
 
 const Path = require('path');
-const Util = require('util');
 const Translator = Tools.get('translate.js');
 const Text = Tools.get('text.js');
 const Chat = Tools.get('chat.js');
@@ -110,9 +109,9 @@ module.exports = {
 		if (App.modules.battle.system.BattleBot.battles[this.room]) {
 			try {
 				let result = App.modules.battle.system.BattleBot.battles[this.room].evalBattle(this.arg);
-				this.reply(JSON.stringify(result));
+				this.reply('' + JSON.stringify(result));
 			} catch (err) {
-				this.reply(Util.inspect(err));
+				this.reply("Error: " + err.code + " - " + err.message);
 			}
 		}
 	},
