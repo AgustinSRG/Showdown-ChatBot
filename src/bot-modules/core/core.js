@@ -18,10 +18,12 @@ function setup(App) {
 		};
 	}
 
-	let lastLogin = exports.lastLogin = {nick: '', named: false};
+	const CoreMod = {};
 
-	let manager = exports.manager = new RoomManager(Path.resolve(App.confDir, 'rooms/'));
-	exports.loginTimer = null;
+	let lastLogin = CoreMod.lastLogin = {nick: '', named: false};
+
+	let manager = CoreMod.manager = new RoomManager(Path.resolve(App.confDir, 'rooms/'));
+	CoreMod.loginTimer = null;
 
 	function execInitCmds() {
 		let cmds = [];
@@ -36,21 +38,21 @@ function setup(App) {
 	}
 
 	function setLoginTimer(time) {
-		exports.loginTimer = setTimeout(() => {
-			exports.loginTimer = null;
-			console.log("Login Timeout. Retrying in 5 seconds");
+		CoreMod.loginTimer = setTimeout(() => {
+			CoreMod.loginTimer = null;
+			App.logToConsole("Login Timeout. Retrying in 5 seconds");
 			App.log("[Bot Core] Login Timeout. Retrying in 5 seconds");
 			App.bot.retryRename(5000, App.config.modules.core.nick, App.config.modules.core.pass);
 		}, time);
 	}
 
 	App.bot.on('updateuser', (nick, named) => {
-		if (named && exports.loginTimer) {
-			clearTimeout(exports.loginTimer);
-			exports.loginTimer = null;
+		if (named && CoreMod.loginTimer) {
+			clearTimeout(CoreMod.loginTimer);
+			CoreMod.loginTimer = null;
 		}
 		if (!lastLogin.named && named) {
-		/* First login - Join the rooms */
+			/* First login - Join the rooms */
 			let rooms = [];
 			rooms = rooms.concat(App.config.modules.core.rooms || []);
 			let tempRooms = App.config.modules.core.privaterooms || [];
@@ -80,22 +82,22 @@ function setup(App) {
 		}
 		lastLogin.nick = nick;
 		lastLogin.named = named;
-		console.log('Nick Changed: ' + nick);
+		App.logToConsole('Nick Changed: ' + nick);
 		App.log('[Bot Core] Nick Changed: ' + nick);
 	});
 
 	App.bot.on('renamefailure', err => {
 		if (lastLogin.named) return;
 		if (!App.bot.isConnected()) return;
-		if (exports.loginTimer) {
-			clearTimeout(exports.loginTimer);
-			exports.loginTimer = null;
+		if (CoreMod.loginTimer) {
+			clearTimeout(CoreMod.loginTimer);
+			CoreMod.loginTimer = null;
 		}
 		if (err === 'wrongpassword') {
-			console.log("Login Error: Wrong password.");
+			App.logToConsole("Login Error: Wrong password.");
 			App.log("[Bot Core] Login Error: Wrong password.");
 		} else if (App.config.modules.core.nick) {
-			console.log("Login Error: Heavy Load / Connection error. Retrying in 5 seconds");
+			App.logToConsole("Login Error: Heavy Load / Connection error. Retrying in 5 seconds");
 			App.log("[Bot Core] Login Error: Heavy Load / Connection error. Retrying in 5 seconds");
 			App.bot.retryRename(5000, App.config.modules.core.nick, App.config.modules.core.pass);
 			setLoginTimer(35 * 1000);
@@ -104,7 +106,7 @@ function setup(App) {
 
 	App.bot.on('challstr', () => {
 		if (App.config.modules.core.nick) {
-			console.log('Logging into ' + App.config.modules.core.nick + '...');
+			App.logToConsole('Logging into ' + App.config.modules.core.nick + '...');
 			setLoginTimer(30 * 1000);
 			App.bot.rename(App.config.modules.core.nick, App.config.modules.core.pass);
 		}
@@ -126,19 +128,19 @@ function setup(App) {
 
 	App.bot.on('send', msg => {
 		if (App.config.debug) {
-			console.log('SENT: ' + msg);
+			App.logToConsole('SENT: ' + msg);
 		}
 	});
 
 	App.bot.on('line', (room, msg) => {
 		if (App.config.debug) {
-			console.log('LINE: ' + msg);
+			App.logToConsole('LINE: ' + msg);
 		}
 	});
 
 	App.server.setPermission('core', 'Permission for changing the bot autojoin and login configuration');
 
-	return module.exports;
+	return CoreMod;
 }
 
 exports.setup = setup;

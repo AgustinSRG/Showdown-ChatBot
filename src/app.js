@@ -210,6 +210,7 @@ class ChatBotApp {
 		}.bind(this));
 
 		/* Other initial values */
+		this.console = null;
 		this.logger = null;
 		this.logsDir = null;
 		this.modules = {};
@@ -383,6 +384,29 @@ class ChatBotApp {
 	log(text) {
 		if (this.logger) {
 			this.logger.log(text);
+		} else {
+			this.logToConsole(text);
+		}
+	}
+
+	/**
+	 * Sets the application console
+	 * @param {Object} con - The new console
+	 */
+	setConsole(con) {
+		if (typeof con !== "object" || typeof con.log !== "function") {
+			throw new Error("Invalid Console.");
+		}
+		this.console = con;
+	}
+
+	/**
+	 * Writes a message to the console
+	 * @param {String} text - The message to be written
+	 */
+	logToConsole(text) {
+		if (this.console) {
+			this.console.log(text);
 		} else {
 			console.log(text);
 		}
