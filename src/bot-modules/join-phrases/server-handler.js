@@ -13,7 +13,7 @@ App.server.setPermission('joinphrases', 'Permission for managing Join-Phrases');
 
 /* Menu Options */
 
-App.server.setMenuOption('joinphrases', 'Join-Phrases', '/joinphrases/', 'joinphrases');
+App.server.setMenuOption('joinphrases', 'Join-Phrases', '/joinphrases/', 'joinphrases', -2);
 
 /* Handlers */
 

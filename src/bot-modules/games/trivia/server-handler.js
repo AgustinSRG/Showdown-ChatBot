@@ -12,7 +12,7 @@ App.server.setPermission('trivia', 'Permission for managing the trivia database'
 
 /* Menu Options */
 
-App.server.setMenuOption('trivia', 'Trivia', '/trivia/', 'trivia');
+App.server.setMenuOption('trivia', 'Trivia', '/trivia/', 'trivia', -1);
 
 /* Handlers */
 

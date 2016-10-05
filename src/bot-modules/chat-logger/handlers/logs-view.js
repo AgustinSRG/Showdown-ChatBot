@@ -13,7 +13,7 @@ exports.setup = function (App) {
 	App.server.setPermission('logs', 'Permission for viewing chat logs');
 
 	/* Menu Options */
-	App.server.setMenuOption('logs', 'Logs', '/logs/', 'logs');
+	App.server.setMenuOption('logs', 'Logs', '/logs/', 'logs', 0);
 
 	/* Handlers */
 	App.server.setHandler('logs', (context, parts) => {

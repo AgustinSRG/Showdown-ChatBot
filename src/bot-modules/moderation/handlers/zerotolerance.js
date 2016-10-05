@@ -9,7 +9,7 @@ const check = Tools.get('check.js');
 
 /* Menu Options */
 
-App.server.setMenuOption('zerotol', 'Zero&nbsp;Tolerance', '/zerotol/', 'moderation');
+App.server.setMenuOption('zerotol', 'Zero&nbsp;Tolerance', '/zerotol/', 'moderation', 0);
 
 /* Handlers */
 

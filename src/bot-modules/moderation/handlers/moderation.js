@@ -9,7 +9,7 @@ const check = Tools.get('check.js');
 
 /* Menu Options */
 
-App.server.setMenuOption('moderation', 'Moderation', '/moderation/', 'moderation');
+App.server.setMenuOption('moderation', 'Moderation', '/moderation/', 'moderation', 0);
 
 /* Handlers */
 

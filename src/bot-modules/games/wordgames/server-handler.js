@@ -12,7 +12,7 @@ App.server.setPermission('wordgames', 'Permission for managing the words databas
 
 /* Menu Options */
 
-App.server.setMenuOption('wordgames', 'Word-Games', '/wordgames/', 'wordgames');
+App.server.setMenuOption('wordgames', 'Word-Games', '/wordgames/', 'wordgames', -1);
 
 /* Handlers */
 

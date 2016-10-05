@@ -180,7 +180,8 @@ class Server {
 	 * @param {Number} level - Option level (higher for important options, lower for modules)
 	 */
 	setMenuOption(id, name, url, permission, level) {
-		this.menu[id] = {name: name, url: url, permission: permission, level: (parseInt(level) || 0)};
+		if (level === undefined) level = -10;
+		this.menu[id] = {name: name, url: url, permission: permission, level: level};
 	}
 
 	/**
@@ -226,7 +227,7 @@ class Server {
 			menu[level] = menu[level].sort((a, b) => {
 				return a.name.localeCompare(b.name);
 			});
-			ret.push({level: level, menu: menu[level]});
+			ret.push({level: parseInt(level), menu: menu[level]});
 		}
 		ret = ret.sort((a, b) => {
 			if (a.level >= b.level) {

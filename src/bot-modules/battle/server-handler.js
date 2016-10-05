@@ -24,8 +24,8 @@ exports.setup = function (App) {
 	App.server.setPermission('teams', 'Permission for managing bot teams database');
 
 	/* Menu Options */
-	App.server.setMenuOption('battle', 'Battle&nbsp;Bot', '/battle/', 'battle');
-	App.server.setMenuOption('teams', 'Battle&nbsp;Bot&nbsp;Teams', '/teams/', 'teams');
+	App.server.setMenuOption('battle', 'Battle&nbsp;Bot', '/battle/', 'battle', -1);
+	App.server.setMenuOption('teams', 'Battle&nbsp;Teams', '/teams/', 'teams', -1);
 
 	/* Handlers */
 	App.server.setHandler('battle', (context, parts) => {

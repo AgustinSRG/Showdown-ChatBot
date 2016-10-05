@@ -16,7 +16,7 @@ exports.setup = function (App) {
 	App.server.setPermission('blacklist', 'Permission for managing the blacklist');
 
 	/* Menu Options */
-	App.server.setMenuOption('blacklist', 'Blacklist', '/blacklist/', 'blacklist');
+	App.server.setMenuOption('blacklist', 'Blacklist', '/blacklist/', 'blacklist', 0);
 
 	/* Handlers */
 	App.server.setHandler('blacklist', (context, parts) => {

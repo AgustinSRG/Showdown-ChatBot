@@ -15,7 +15,7 @@ exports.setup = function (App) {
 	App.server.setPermission('autoinvite', 'Permission for changing the auto-invite configuration');
 
 	/* Menu Options */
-	App.server.setMenuOption('autoinvite', 'Auto-Invite', '/autoinvite/', 'autoinvite');
+	App.server.setMenuOption('autoinvite', 'Auto-Invite', '/autoinvite/', 'autoinvite', -2);
 
 	/* Handlers */
 	App.server.setHandler('autoinvite', (context, parts) => {

@@ -17,7 +17,7 @@ App.server.setPermission('tourleaderboards', 'Permission for changing tour leade
 
 /* Menu Options */
 
-App.server.setMenuOption('tourleaderboards', 'Tour&nbsp;Leaderboards', '/tourleaderboards/', 'tourleaderboards');
+App.server.setMenuOption('tourleaderboards', 'Tour&nbsp;Leaderboards', '/tourleaderboards/', 'tourleaderboards', -1);
 
 /* Handlers */
 

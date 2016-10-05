@@ -15,7 +15,7 @@ exports.setup = function (App) {
 	App.server.setPermission('chatlogger', 'Permission for changing the chat-logger configuration');
 
 	/* Menu Options */
-	App.server.setMenuOption('chatlogger', 'Chat-Logger', '/chatlogger/', 'chatlogger');
+	App.server.setMenuOption('chatlogger', 'Chat-Logger', '/chatlogger/', 'chatlogger', 0);
 
 	/* Handlers */
 	App.server.setHandler('chatlogger', (context, parts) => {
