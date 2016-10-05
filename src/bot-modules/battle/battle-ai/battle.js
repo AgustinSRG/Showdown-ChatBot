@@ -172,8 +172,8 @@ exports.setup = function (App) {
 			let txt = '';
 			let server = App.config.server.url;
 			if (server && App.config.debug) {
-				let html = '<html><head><title>' + this.id + '</title></head><body><div align="center"><textarea cols="150" rows="100">' +
-				this.buffer.join('\n') + '</textarea></div></body></html>';
+				let html = '<html><head><title>' + this.id + '</title></head><body>' +
+				this.buffer.map(line => ('<p>' + Text.escapeHTML(line) + '</p>')).join('') + '</body></html>';
 				let key = App.data.temp.createTempFile(html);
 				App.log("Generated battle log: " + this.id + " - " + key);
 				if (server.charAt(server.length - 1) === '/') {
