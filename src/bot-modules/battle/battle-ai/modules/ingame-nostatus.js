@@ -119,7 +119,7 @@ exports.setup = function (Data) {
 					}
 				}
 				let dmg = Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, battle.conditions, battle.gen);
-			//debug("DMG [" + pokeA.species + ", " + pokeB.species + ", " + move.name + "] = " + dmg.getMax());
+				//debug("DMG [" + pokeA.species + ", " + pokeB.species + ", " + move.name + "] = " + dmg.getMax());
 				if (DoubleTurnMoves.indexOf(move.id) >= 0) final += dmg.getMax() * 0.5;
 				else final += dmg.getMax();
 			}
@@ -167,6 +167,17 @@ exports.setup = function (Data) {
 
 		for (let i = 0; i < targets.length; i++) {
 			if (!targets[i]) continue;
+			if (targets[i].fainted) continue;
+			if (move.flags && move.flags['charge'] && targets[i].moves) {
+				let hasDangerousMove = false;
+				for (let dangerousMove of targets[i].moves) {
+					if (dangerousMove.id in {'protect': 1, 'detect': 1, 'kingsshield': 1, 'spikyshield': 1, 'dig': 1, 'fly': 1}) {
+						hasDangerousMove = true;
+						break;
+					}
+				}
+				if (hasDangerousMove) continue;
+			}
 			let conditionsB = new Conditions({
 				side: battle.foe.side,
 				volatiles: targets[i].volatiles,
