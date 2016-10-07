@@ -216,8 +216,11 @@ class Server {
 	getMenu(context, selected) {
 		let menu = {};
 		for (let i in this.menu) {
-			if (!this.menu[i].permission || (context.user && context.user.can(this.menu[i].permission))) {
+			if (!context || !this.menu[i].permission || (context.user && context.user.can(this.menu[i].permission))) {
 				let level = this.menu[i].level || 0;
+				if (this.app.config.menuOrder[i] !== undefined) {
+					level = this.app.config.menuOrder[i];
+				}
 				if (!menu[level]) menu[level] = [];
 				menu[level].push({name: this.menu[i].name, url: this.menu[i].url, selected: (selected === i)});
 			}

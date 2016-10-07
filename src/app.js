@@ -100,6 +100,11 @@ class ChatBotApp {
 			this.config.loadmodules = {};
 		}
 
+		/* Menu configuration */
+		if (!this.config.menuOrder) {
+			this.config.menuOrder = {};
+		}
+
 		if (env.port !== undefined) {
 			this.config.server.port = global.ShellOptions.port;
 		} else if (process.env['PORT']) {
