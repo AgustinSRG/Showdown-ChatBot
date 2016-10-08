@@ -15,10 +15,10 @@ const Default_Server_Port = 8080;
 const Path = require('path');
 const FileSystem = require('fs');
 
-const CryptoDataBase = Tools.get('crypto-json.js');
-const Logger = Tools.get('logs.js');
-const BotMod = Tools.get('bot-mod.js');
-const Text = Tools.get('text.js');
+const CryptoDataBase = Tools('crypto-json');
+const Logger = Tools('logs');
+const BotMod = Tools('bot-mod');
+const Text = Tools('text');
 
 const Server = require(Path.resolve(__dirname, 'server/server.js')).Server;
 const DataManager = require(Path.resolve(__dirname, 'data.js'));

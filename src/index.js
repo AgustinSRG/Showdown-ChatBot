@@ -10,12 +10,15 @@
 
 const Path = require('path');
 
+/* Tools manager */
+
+const ToolsManager = require(Path.resolve(__dirname, 'tools.js'));
+ToolsManager.setPath(Path.resolve(__dirname, 'tools/'));
+ToolsManager.makeGlobal();
+
+/* Application setup */
+
 function setup(env) {
-	/* Tools manager */
-
-	const ToolsManager = require(Path.resolve(__dirname, 'tools.js'));
-	global.Tools = new ToolsManager(Path.resolve(__dirname, 'tools/'));
-
 	/* Check known cloud enviroments */
 
 	let logsDir = Path.resolve(__dirname, '../logs/');

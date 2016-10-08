@@ -12,25 +12,42 @@
 
 const Path = require('path');
 
-/**
- * Represents a manager for Showdown ChatBot tools
- */
-class ToolsManager {
-	/**
-	 * @param {Path} directory - An existing path where all tools are located
-	 */
-	constructor(directory) {
-		this.path = directory;
-	}
+exports.path = '';
 
-	/**
-	 * Requires a tool
-	 * @param {String} file - Javascript file corresponding to the tool you want
-	 * @returns {Module}
-	 */
-	get(file) {
-		return require(Path.resolve(this.path, file));
+/**
+ * Resolves a tool script file
+ * @param {String} filename
+ * @returns {Path}
+ */
+function resolveTool(filename) {
+	if ((/.*\.js$/).test(filename)) {
+		return Path.resolve(exports.path, filename);
+	} else {
+		return Path.resolve(exports.path, filename + '.js');
 	}
 }
 
-module.exports = ToolsManager;
+/**
+ * Requires a Tool script
+ * @param {String} filename
+ */
+function requireTool(filename) {
+	return require(resolveTool(filename));
+}
+
+/**
+ * Sets the tools path
+ * @param {Path} path
+ */
+exports.setPath = function (path) {
+	exports.path = path;
+};
+
+/**
+ * Creates the Tools global
+ */
+exports.makeGlobal = function () {
+	global.Tools = requireTool;
+	Tools.get = requireTool;
+	Tools.resolve = resolveTool;
+};
