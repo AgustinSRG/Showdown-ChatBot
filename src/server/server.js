@@ -86,10 +86,10 @@ class Server {
 			let sslkey = Path.resolve(path, 'ssl-key.pem');
 			let sslcert = Path.resolve(path, 'ssl-cert.pem');
 			if (app.env.sslkey !== undefined) {
-				sslkey = global.ShellOptions.sslkey;
+				sslkey = app.env.sslkey;
 			}
 			if (app.env.sslcert !== undefined) {
-				sslcert = global.ShellOptions.sslcert;
+				sslcert = app.env.sslcert;
 			}
 			this.httpsOptions = {
 				port: config.httpsPort,

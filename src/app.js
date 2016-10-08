@@ -106,7 +106,7 @@ class ChatBotApp {
 		}
 
 		if (env.port !== undefined) {
-			this.config.server.port = global.ShellOptions.port;
+			this.config.server.port = env.port;
 		} else if (process.env['PORT']) {
 			this.config.server.port = process.env['PORT'];
 		} else if (process.env['OPENSHIFT_NODEJS_PORT']) {
@@ -114,11 +114,16 @@ class ChatBotApp {
 		}
 
 		if (env.bindaddress !== undefined) {
-			this.config.server.bindaddress = global.ShellOptions.bindaddress;
+			this.config.server.bindaddress = env.bindaddress;
 		} else if (process.env['BIND_IP']) {
 			this.config.server.bindaddress = process.env['BIND_IP'];
 		} else if (process.env['OPENSHIFT_NODEJS_IP']) {
 			this.config.server.bindaddress = process.env['OPENSHIFT_NODEJS_IP'];
+		}
+
+		if (env.sslport !== undefined) {
+			this.config.server.httpsPort = env.sslport;
+			this.config.server.https = true;
 		}
 
 		/* Languages */

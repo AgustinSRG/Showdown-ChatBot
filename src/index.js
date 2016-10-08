@@ -26,9 +26,9 @@ function setup(env) {
 	let dataDir = Path.resolve(__dirname, '../data/');
 
 	if (env && env.dir !== undefined) {
-		logsDir = Path.resolve(global.ShellOptions.dir, 'logs/');
-		confDir = Path.resolve(global.ShellOptions.dir, 'config/');
-		dataDir = Path.resolve(global.ShellOptions.dir, 'data/');
+		logsDir = Path.resolve(env.dir, 'logs/');
+		confDir = Path.resolve(env.dir, 'config/');
+		dataDir = Path.resolve(env.dir, 'data/');
 	} else if (process.env['OPENSHIFT_DATA_DIR']) {
 		/* Openshift Node catridge */
 		logsDir = Path.resolve(process.env['OPENSHIFT_DATA_DIR'], 'logs/');
