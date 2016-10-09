@@ -5,11 +5,11 @@
 'use strict';
 
 const Path = require('path');
-const ServerGet = Tools.get('ps-cross-server.js');
-const Text = Tools.get('text.js');
-const getEvalResult = Tools.get('eval.js');
-const SubMenu = Tools.get('submenu.js');
-const Template = Tools.get('html-template.js');
+const ServerGet = Tools('ps-cross-server');
+const Text = Tools('text');
+const getEvalResult = Tools('eval');
+const SubMenu = Tools('submenu');
+const Template = Tools('html-template');
 
 const getServerTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-getserver.html'));
 const botSendTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-botsend.html'));

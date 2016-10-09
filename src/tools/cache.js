@@ -6,9 +6,9 @@
 
 const Path = require('path');
 const FileSystem = require('fs');
-const Text = Tools.get('text.js');
-const DataBase = Tools.get('json-db.js');
-const EventManager = Tools.get('events.js');
+const Text = Tools('text');
+const DataBase = Tools('json-db');
+const EventManager = Tools('events');
 
 /**
  * Represents a limited cache

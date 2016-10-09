@@ -18,13 +18,13 @@ const Command_Wait_Interval = 1500;
 const Util = require('util');
 const Path = require('path');
 
-const DataBase = Tools.get('json-db.js');
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
-const AbuseMonitor = Tools.get('abuse-monitor.js');
-const LineSplitter = Tools.get('line-splitter.js');
+const DataBase = Tools('json-db');
+const Text = Tools('text');
+const Chat = Tools('chat');
+const AbuseMonitor = Tools('abuse-monitor');
+const LineSplitter = Tools('line-splitter');
+const Translator = Tools('translate');
 
-const Translator = Tools.get('translate.js');
 const translator = new Translator(Path.resolve(__dirname, 'command-parser.translations'));
 const usageTranslator = new Translator(Path.resolve(__dirname, 'command-usage.translations'));
 

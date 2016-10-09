@@ -7,9 +7,9 @@
 'use strict';
 
 const Path = require('path');
-const Text = Tools.get('text');
-const check = Tools.get('check.js');
-const Template = Tools.get('html-template.js');
+const Text = Tools('text');
+const check = Tools('check');
+const Template = Tools('html-template');
 
 const mainTemplate = new Template(Path.resolve(__dirname, 'templates', 'users-main.html'));
 const editTemplate = new Template(Path.resolve(__dirname, 'templates', 'users-edit.html'));

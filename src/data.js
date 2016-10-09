@@ -18,17 +18,13 @@ const Http = require('http');
 const Url = require('url');
 const FileSystem = require('fs');
 
-const WebCache = Tools.get('cache.js').WebCache;
-const TempManager = Tools.get('temp.js');
-const uncacheTree = Tools.get('uncachetree.js');
-const checkDir = Tools.get('checkdir.js');
-const EventManager = Tools.get('events.js');
+const WebCache = Tools('cache').WebCache;
+const TempManager = Tools('temp');
+const uncacheTree = Tools('uncachetree');
+const checkDir = Tools('checkdir');
+const EventManager = Tools('events');
 
 const Showdown_Data = [
-	{
-		url: "https://raw.githubusercontent.com/Zarel/Pokemon-Showdown/master/config/formats.js",
-		file: "formats.js",
-	},
 	{
 		url: "https://raw.githubusercontent.com/Zarel/Pokemon-Showdown/master/data/formats-data.js",
 		file: "formats-data.js",

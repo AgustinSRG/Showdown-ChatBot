@@ -1,21 +1,32 @@
 /**
  * Commands File
  *
+ * joinroom: joins chat rooms
+ * leaveroom: leaves chat rooms
+ * custom: sends a custom text to the current room
+ * send: sends a custom text to an arbitrary room
+ * sendpm: sends a custom private message
+ * say: similar to custom, but no comands are allowed
+ * null: does nothing
+ * eval: runs arbitrary javascript
+ * hotpatch: realoads commands from bot modules
+ * version: gets the package version
+ * time: gets the bot time
+ * uptime: gets the process uptime
  */
 
 'use strict';
 
 const Path = require('path');
 
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
-const Translator = Tools.get('translate.js');
+const Text = Tools('text');
+const Chat = Tools('chat');
+const Translator = Tools('translate');
 
 const translator = new Translator(Path.resolve(__dirname, 'control.translations'));
 
 module.exports = {
 	/* Joining / Leaving Rooms */
-
 	join: 'joinroom',
 	joinrooms: 'joinroom',
 	joinroom: function () {
@@ -104,8 +115,10 @@ module.exports = {
 		if (!this.isExcepted()) return;
 		if (!this.arg) return this.errorReply(this.usage({desc: 'script'}));
 		try {
-			let res = eval(this.arg);
-			this.reply(Chat.code(JSON.stringify(res)));
+			let res = JSON.stringify(eval(this.arg));
+			if (res.length > 0) {
+				this.reply(Chat.code(res));
+			}
 		} catch (err) {
 			this.reply('Error: ' + err.code + ' - ' + err.message);
 		}

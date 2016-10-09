@@ -23,10 +23,10 @@ const FileSystem = require('fs');
 const QueryString = require('querystring');
 const Crypto = require('crypto');
 
-const Static = Tools.get('server-static.js');
-const DataBase = Tools.get('crypto-json.js');
-const AbuseMonitor = Tools.get('abuse-monitor.js');
-const Text = Tools.get('text.js');
+const Static = Tools('server-static');
+const DataBase = Tools('crypto-json');
+const AbuseMonitor = Tools('abuse-monitor');
+const Text = Tools('text');
 
 const PageMaker = require(Path.resolve(__dirname, 'html-maker.js'));
 

@@ -6,8 +6,8 @@
 'use strict';
 
 const Path = require('path');
-const check = Tools.get('check.js');
-const Template = Tools.get('html-template.js');
+const check = Tools('check');
+const Template = Tools('html-template');
 
 const mainTemplate = new Template(Path.resolve(__dirname, 'templates', 'chpass.html'));
 

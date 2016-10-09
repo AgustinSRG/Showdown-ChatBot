@@ -1,16 +1,32 @@
 /**
  * Commands File
  *
+ * setalias: sets commands aliases
+ * rmalias: removes commands aliases
+ * lang: sets the room language
+ * temp: sets the temporal variable for making commands
+ * setcmd: creates a text dynamic command
+ * setindexcmd: creates an index dynamic command
+ * setsubcmd: creates a sub-command for an index command
+ * rmcmd: removes a dynamic command
+ * rmsubcmd: removes a sub-command
+ * dyncmdlist: gets the dynamic commands list
+ * grant: configures permissions globally
+ * set: configures permissions for a room
+ * parserignore: locks an user from using comands
+ * parserunignore: unlocks an user from using commands
+ * setcontrolroom: sets a control room
+ * rmcontrolroom: removes a control room
  */
 
 'use strict';
 
 const Path = require('path');
 
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
-const Translator = Tools.get('translate.js');
-const LineSplitter = Tools.get('line-splitter.js');
+const Text = Tools('text');
+const Chat = Tools('chat');
+const Translator = Tools('translate');
+const LineSplitter = Tools('line-splitter');
 
 const translator = new Translator(Path.resolve(__dirname, 'cmd-admin.translations'));
 

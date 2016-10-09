@@ -6,8 +6,8 @@
 
 const Path = require('path');
 const FileSystem = require('fs');
-const Text = Tools.get('text.js');
-const EventManager = Tools.get('events.js');
+const Text = Tools('text');
+const EventManager = Tools('events');
 
 /**
  * Represents a temporal files manager

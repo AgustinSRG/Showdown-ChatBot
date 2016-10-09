@@ -5,7 +5,7 @@
 
 'use strict';
 
-const EventsManager = Tools.get('events.js');
+const EventsManager = Tools('events');
 
 /**
  * Represents an abuse monitor

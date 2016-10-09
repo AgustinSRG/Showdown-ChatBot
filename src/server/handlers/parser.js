@@ -5,9 +5,9 @@
 'use strict';
 
 const Path = require('path');
-const Text = Tools.get('text.js');
-const SubMenu = Tools.get('submenu.js');
-const Template = Tools.get('html-template.js');
+const Text = Tools('text');
+const SubMenu = Tools('submenu');
+const Template = Tools('html-template');
 
 const configTemplate = new Template(Path.resolve(__dirname, 'templates', 'parser-config.html'));
 const aliasesTemplate = new Template(Path.resolve(__dirname, 'templates', 'parser-aliases.html'));

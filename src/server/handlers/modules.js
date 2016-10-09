@@ -6,8 +6,8 @@
 'use strict';
 
 const Path = require('path');
-const SubMenu = Tools.get('submenu.js');
-const Template = Tools.get('html-template.js');
+const SubMenu = Tools('submenu');
+const Template = Tools('html-template');
 
 const mainTemplate = new Template(Path.resolve(__dirname, 'templates', 'modules.html'));
 const menuTemplate = new Template(Path.resolve(__dirname, 'templates', 'modules-menu.html'));

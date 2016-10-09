@@ -8,9 +8,9 @@
 
 const Path = require('path');
 const FileSystem = require('fs');
-const Text = Tools.get('text.js');
-const check = Tools.get('check.js');
-const Template = Tools.get('html-template.js');
+const Text = Tools('text');
+const check = Tools('check');
+const Template = Tools('html-template');
 
 const listTemplate = new Template(Path.resolve(__dirname, 'templates', 'addons-list.html'));
 const addonItemTemplate = new Template(Path.resolve(__dirname, 'templates', 'addons-item.html'));

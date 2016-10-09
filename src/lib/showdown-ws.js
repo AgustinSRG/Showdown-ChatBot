@@ -18,8 +18,8 @@
 
 'use strict';
 
-const Text = Tools.get('text.js');
-const Events = Tools.get('events.js');
+const Text = Tools('text');
+const Events = Tools('events');
 const Util = require('util');
 const Url = require('url');
 const WebSocketClient = require('websocket').client;

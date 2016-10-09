@@ -14,9 +14,9 @@ const Util = require('util');
  */
 function getEvalResult(script, App) {
 	try {
-		return JSON.stringify(eval(script));
+		return ('' + JSON.stringify(eval(script)));
 	} catch (err) {
-		return Util.inspect(err);
+		return ('' + Util.inspect(err));
 	}
 }
 
