@@ -39,7 +39,7 @@ function setup(env) {
 	/* Create Application */
 
 	const ShowdownBotApplication = require(Path.resolve(__dirname, 'app.js'));
-	const App = global.App = new ShowdownBotApplication(confDir, dataDir, env || {});
+	const App = new ShowdownBotApplication(confDir, dataDir, env || {});
 
 	App.createLogger(logsDir);
 
@@ -74,6 +74,8 @@ function setup(env) {
 			App.tryRunBot();
 		}
 	});
+
+	return App;
 }
 
 exports.setup = setup;
