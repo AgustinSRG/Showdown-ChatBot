@@ -5,7 +5,7 @@
 'use strict';
 
 const Path = require('path');
-const Text = Tools.get('text.js');
+const Text = Tools('text');
 const Calc = require(Path.resolve(__dirname, '..', 'calc.js'));
 const TypeChart = require(Path.resolve(__dirname, '..', 'typechart.js'));
 const Pokemon = Calc.Pokemon;

@@ -4,8 +4,8 @@
 
 'use strict';
 
-const Text = Tools.get('text.js');
-const BattleTypeChart = Tools.get('typechart.js');
+const Text = Tools('text');
+const BattleTypeChart = Tools('typechart');
 
 const BattleStatIDs = {
 	HP: 'hp',

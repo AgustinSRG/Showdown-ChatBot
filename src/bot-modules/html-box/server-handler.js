@@ -5,10 +5,10 @@
 'use strict';
 
 const Path = require('path');
-const Text = Tools.get('text.js');
-const check = Tools.get('check.js');
-const SubMenu = Tools.get('submenu.js');
-const Template = Tools.get('html-template.js');
+const Text = Tools('text');
+const check = Tools('check');
+const SubMenu = Tools('submenu');
+const Template = Tools('html-template');
 
 const cmdsTemplate = new Template(Path.resolve(__dirname, 'template-cmds.html'));
 const cmdTemplate = new Template(Path.resolve(__dirname, 'template-cmd.html'));

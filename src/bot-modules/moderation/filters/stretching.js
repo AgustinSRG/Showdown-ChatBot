@@ -7,7 +7,7 @@
 const Stretch_Default_Value = 1;
 
 const Path = require('path');
-const Translator = Tools.get('translate.js');
+const Translator = Tools('translate');
 
 const translator = new Translator(Path.resolve(__dirname, 'stretching.translations'));
 

@@ -4,7 +4,7 @@
 
 'use strict';
 
-const Text = Tools.get('text.js');
+const Text = Tools('text');
 
 exports.setup = function (App) {
 	const Config = App.config.modules.battle;

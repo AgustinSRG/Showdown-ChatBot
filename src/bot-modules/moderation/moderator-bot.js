@@ -9,8 +9,8 @@ const MAX_MODTIME_RELEVANCE = 60 * 60 * 1000;
 
 const Path = require('path');
 const FileSystem = require('fs');
-const Text = Tools.get('text.js');
-const Translator = Tools.get('translate.js');
+const Text = Tools('text');
+const Translator = Tools('translate');
 
 const translator = new Translator(Path.resolve(__dirname, 'mod.translations'));
 

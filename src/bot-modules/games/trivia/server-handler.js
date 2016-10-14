@@ -4,7 +4,12 @@
 
 'use strict';
 
-const check = Tools.get('check.js');
+const Path = require('path');
+const check = Tools('check');
+const Template = Tools('html-template');
+
+const mainTemplate = new Template(Path.resolve(__dirname, 'template.html'));
+const questionTemplate = new Template(Path.resolve(__dirname, 'template-question.html'));
 
 exports.setup = function (App) {
 	/* Permissions */
@@ -95,33 +100,20 @@ exports.setup = function (App) {
 			}
 		}
 
-		let html = '';
-		html += '<h2>Trivia Answers</h2>';
+		let htmlVars = {};
 
-		html += '<form method="post" action="./"><p><strong>Question</strong>:&nbsp;<input name="clue" type="text" size="80" /></p>' +
-		'<p><strong>Answers</strong>:&nbsp;<input name="answers" type="text" size="80" /></p>' +
-		'<p><input type="submit" name="add" value="Add" /></p></form>';
-
+		htmlVars.questions = '';
 		for (let id in mod.data) {
-			html += '<hr />';
-			html += '<a id="a" name="' + id + '"></a>';
-			html += '<form method="post" action="#' + id + '">';
-			html += '<input type="hidden" name="id" value="' + id + '" />';
-			html += '<p><strong>Question</strong>:&nbsp;<input name="clue" type="text" size="80" value="' +
-			mod.data[id].clue + '" /></p>';
-			html += '<p><strong>Answers</strong>:&nbsp;<input name="answers" type="text" size="80" value="' +
-			mod.data[id].answers.join(', ') + '" /></p>';
-			html += '<p><input type="submit" name="edit" value="Edit" />&nbsp;&nbsp;' +
-			'<input type="submit" name="del" value="Delete" /></p>';
-			html += '</form>';
+			htmlVars.questions += questionTemplate.make({
+				id: id,
+				clue: mod.data[id].clue,
+				answers: mod.data[id].answers.join(', '),
+			});
 		}
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(html, {title: "Trivia - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Trivia - Showdown ChatBot"});
 	});
 };

@@ -1,4 +1,4 @@
-/*
+/**
  * Bot Module: Tour Leaderboards
  */
 
@@ -8,10 +8,10 @@ const Top_Table_Length = 100;
 
 const Path = require('path');
 const FileSystem = require('fs');
-const Text = Tools.get('text.js');
-const DataBase = Tools.get('json-db.js');
-const parseTourTree = Tools.get('tour-tree.js');
-const checkDir = Tools.get('checkdir.js');
+const Text = Tools('text');
+const DataBase = Tools('json-db');
+const parseTourTree = Tools('tour-tree');
+const checkDir = Tools('checkdir');
 
 exports.setup = function (App) {
 	if (!App.config.modules.tourleaderboards) {

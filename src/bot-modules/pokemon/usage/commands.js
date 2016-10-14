@@ -1,15 +1,18 @@
 /**
  * Commands file
+ *
+ * usage: gets usage for a pokemon and a tier (via Smogon)
+ * usagedate: gets usage for moves, itema... (via Smogon)
  */
 
 'use strict';
 
 const Path = require('path');
 
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
-const Translator = Tools.get('translate.js');
-const LineSplitter = Tools.get('line-splitter.js');
+const Text = Tools('text');
+const Chat = Tools('chat');
+const Translator = Tools('translate');
+const LineSplitter = Tools('line-splitter');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 

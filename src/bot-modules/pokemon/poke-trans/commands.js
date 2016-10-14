@@ -1,14 +1,16 @@
 /**
  * Commands File
+ *
+ * translate: translates pokemon stuff
  */
 
 'use strict';
 
 const Path = require('path');
-const normalize = Tools.get('normalize.js');
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
-const Translator = Tools.get('translate.js');
+const normalize = Tools('normalize');
+const Text = Tools('text');
+const Chat = Tools('chat');
+const Translator = Tools('translate');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 const getTranslations = require(Path.resolve(__dirname, 'translate.js'));

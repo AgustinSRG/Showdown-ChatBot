@@ -5,8 +5,12 @@
 'use strict';
 
 const Path = require('path');
-const Text = Tools.get('text.js');
-const check = Tools.get('check.js');
+const Text = Tools('text');
+const check = Tools('check');
+const Template = Tools('html-template');
+
+const mainTemplate = new Template(Path.resolve(__dirname, 'template.html'));
+const roomTemplate = new Template(Path.resolve(__dirname, 'template-room.html'));
 
 exports.setup = function (App) {
 	const Config = App.config.modules.tourleaderboards;
@@ -135,58 +139,24 @@ exports.setup = function (App) {
 			}
 		}
 
-		let html = '';
+		let htmlVars = {};
 
-		html += '<script type="text/javascript">function removeRoom(room) {var elem = document.getElementById(\'confirm-del-\' + room);' +
-		'if (elem) {elem.innerHTML = \'<form style="display:inline;" id="confirm-delete-form" method="post" action="">' +
-		'<input type="hidden" name="room" value="\' + room + \'" />Are you sure?&nbsp;' +
-		'<input type="submit" name="delroom" value="Delete Configuration" /></form>\';}return false;}</script>';
-		html += '<script type="text/javascript">function clearRoom(room) {var elem = document.getElementById(\'confirm-clear-\' + room);' +
-		'if (elem) {elem.innerHTML = \'<form style="display:inline;" id="confirm-delete-form" method="post" action="">' +
-		'<input type="hidden" name="room" value="\' + room + \'" />Are you sure?&nbsp;' +
-		'<input type="submit" name="clearroom" value="Clear" /></form>\';}return false;}</script>';
-
-		html += '<h2>Leaderboards Configuration</h2>';
-
+		htmlVars.rooms = '';
 		for (let room in Config) {
-			html += '<h3>Room: ' + room + '</h3>';
-			html += '<p><a href="/tourtable/' + room + '/get" target="_blank">View Leaderboards Table</a></p>';
-			html += '<form method="post" action="">';
-			html += '<input type="hidden" name="room" value="' + room + '" />';
-			html += '<table border="0">';
-			html += '<tr><td>Points for winner: </td><td><input name="winner" type="text" size="10" value="' +
-			Config[room].winner + '" /></td></tr><tr>';
-			html += '<tr><td>Points for finalist: </td><td><input name="finalist" type="text" size="10" value="' +
-			Config[room].finalist + '" /></td></tr><tr>';
-			html += '<tr><td>Points for semi-finalist: </td><td><input name="semifinalist" type="text" size="10" value="' +
-			Config[room].semifinalist + '" /></td></tr><tr>';
-			html += '<tr><td>Points per battle: </td><td><input name="battle" type="text" size="10" value="' +
-			Config[room].battle + '" /></td></tr><tr>';
-			html += '<tr><td colspan="2"><input name="onlyofficial" type="checkbox" value="true"' +
-			(Config[room].onlyOfficial ? ' checked="checked"' : '') + ' />&nbsp;Count only official tournaments</td></tr>';
-			html += '</table>';
-			html += '<p><input type="submit" name="edit" value="Save Changes" /></p>';
-			html += '</form>';
-			html += '<form method="post" action="">';
-			html += '<input type="hidden" name="room" value="' + room + '" />';
-			html += '<p><input type="submit" name="gentable" value="Generate Table" /></p>';
-			html += '</form>';
-			html += '<p><button onclick="clearRoom(\'' + room +
-			'\');">Clear Leaderboards</button>&nbsp;<span id="confirm-clear-' + room + '">&nbsp;</span></p>';
-			html += '<p><button onclick="removeRoom(\'' + room +
-			'\');">Delete Configuration</button>&nbsp;<span id="confirm-del-' + room + '">&nbsp;</span></p>';
-			html += '<hr />';
+			htmlVars.rooms += roomTemplate.make({
+				room: room,
+				name: Text.escapeHTML(App.parser.getRoomTitle(room)),
+				winner: Config[room].winner,
+				finalist: Config[room].finalist,
+				semifinalist: Config[room].semifinalist,
+				battle: Config[room].battle,
+				onlyofficial: (Config[room].onlyOfficial ? ' checked="checked"' : ''),
+			});
 		}
 
-		html += '<form method="post" action=""><input name="room" type="text" size="30" />&nbsp;&nbsp;' +
-		'<input type="submit" name="add" value="Add Room" /></form>';
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
-
-		context.endWithWebPage(html, {title: "Tour Ledaerboards - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Tour Ledaerboards - Showdown ChatBot"});
 	});
 };

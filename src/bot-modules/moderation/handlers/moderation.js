@@ -4,9 +4,17 @@
 
 'use strict';
 
-const Text = Tools.get('text.js');
-const check = Tools.get('check.js');
-const SubMenu = Tools.get('submenu.js');
+const Path = require('path');
+const Text = Tools('text');
+const check = Tools('check');
+const SubMenu = Tools('submenu');
+const Template = Tools('html-template');
+
+const configTemplate = new Template(Path.resolve(__dirname, 'templates', 'config.html'));
+const settingsTemplate = new Template(Path.resolve(__dirname, 'templates', 'settings.html'));
+const exceptionTemplate = new Template(Path.resolve(__dirname, 'templates', 'exception.html'));
+const rulesTemplate = new Template(Path.resolve(__dirname, 'templates', 'rules.html'));
+const otherTemplate = new Template(Path.resolve(__dirname, 'templates', 'other.html'));
 
 exports.setup = function (App) {
 	/* Menu Options */
@@ -64,40 +72,27 @@ exports.setup = function (App) {
 			ok = "Moderation values saved";
 		}
 
-		html += '<form method="post" action=""><p><strong>Punishments</strong>:&nbsp;' +
-		'<input name="punishments" type="text" size="50" value="' + config.punishments.join(', ') +
-		'" /></p><p><input type="submit" name="savepuns" value="Save Changes" /></p></form>';
+		let htmlVars = {};
+		htmlVars.punishments = config.punishments.join(', ');
 
-		html += '<hr />';
-		html += '<form method="post" action="">';
-		html += '<table border="1">';
-		html += '<tr><td width="200"><div align="center"><strong>Moderation Type </strong></div></td>' +
-		'<td width="200"><div align="center"><strong>Default Punishment </strong></div></td></tr>';
+		htmlVars.rooms = '';
 		for (let k in App.modules.moderation.system.modBot.filters) {
 			let val = config.values[k] || 0;
-			html += '<tr>';
-			html += '<td>' + k + '</td>';
-			html += '<td>';
-			html += '<select name="' + k + '">';
+			htmlVars.rooms += '<tr><td>' + k + '</td>';
+			htmlVars.rooms += '<td><select name="' + k + '">';
 			let punishments = config.punishments;
 			for (let i = 0; i < punishments.length; i++) {
-				html += '<option value="' + punishments[i] + '"' + (val === (i + 1) ? ' selected="selected"' : '') +
+				htmlVars.rooms += '<option value="' + punishments[i] + '"' + (val === (i + 1) ? ' selected="selected"' : '') +
 				' >' + punishments[i] + '</option>';
 			}
-			html += '<option value=""' + (val === 0 ? ' selected="selected"' : '') + ' >Default</option>';
-			html += '</select>';
-			html += '</td>';
-			html += '</tr>';
+			htmlVars.rooms += '<option value=""' + (val === 0 ? ' selected="selected"' : '') + ' >Default</option>';
+			htmlVars.rooms += '</select></td></tr>';
 		}
-		html += '</table>';
-		html += '<p><input type="submit" name="editval" value="Save Changes" /></p>';
-		html += '</form>';
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
+
+		html += configTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Moderation Configuration - Showdown ChatBot"});
 	}
 
@@ -163,39 +158,26 @@ exports.setup = function (App) {
 			ok = "Moderation settings saved";
 		}
 
-		html += '<script type="text/javascript">function removeRoom(room) {var elem = document.getElementById(\'confirm-\' + room);' +
-		'if (elem) {elem.innerHTML = \'<form style="display:inline;" id="confirm-delete-form" method="post" action="">' +
-		'<input type="hidden" name="room" value="\' + room + \'" />Are you sure?&nbsp;' +
-		'<input type="submit" name="delroom" value="Delete Configuration" /></form>\';}return false;}</script>';
+		let htmlVars = {};
 
-		html += '<h3>Default Settings</h3>';
-		html += '<form method="post" action="">';
-		html += '<input type="hidden" name="room" value="" />';
-		html += getSettingsForm('');
-		html += '<p><input type="submit" name="edit" value="Save Changes" /></p>';
-		html += '</form>';
-		html += '<hr />';
-
+		htmlVars.global = getSettingsForm('');
+		htmlVars.rooms = '';
 		for (let room in config.roomSettings) {
-			html += '<h3>Room: ' + room + '</h3>';
-			html += '<form method="post" action="">';
-			html += '<input type="hidden" name="room" value="' + room + '" />';
-			html += getSettingsForm(room);
-			html += '<p><input type="submit" name="edit" value="Save Changes" /></p>';
-			html += '</form>';
-			html += '<p><button onclick="removeRoom(\'' + room +
+			htmlVars.rooms += '<h3>Room: ' + room + '</h3>';
+			htmlVars.rooms += '<form method="post" action="">';
+			htmlVars.rooms += '<input type="hidden" name="room" value="' + room + '" />';
+			htmlVars.rooms += getSettingsForm(room);
+			htmlVars.rooms += '<p><input type="submit" name="edit" value="Save Changes" /></p>';
+			htmlVars.rooms += '</form>';
+			htmlVars.rooms += '<p><button onclick="removeRoom(\'' + room +
 			'\');">Use Default Settings</button>&nbsp;<span id="confirm-' + room + '">&nbsp;</span></p>';
-			html += '<hr />';
+			htmlVars.rooms += '<hr />';
 		}
 
-		html += '<form method="post" action=""><input name="room" type="text" size="30" />&nbsp;&nbsp;' +
-		'<input type="submit" name="add" value="Add Room" /></form>';
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+		html += settingsTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Moderation Settings - Showdown ChatBot"});
 	}
 
@@ -263,51 +245,34 @@ exports.setup = function (App) {
 			}
 		}
 
-		html += '<form method="post" action="">';
-		html += '<strong>Default Moderation Exception</strong>:&nbsp;';
-		html += getRankSelect('rank', config.modexception.global);
-		html += '<p><input type="submit" name="editdefault" value="Save Changes" /></p>';
-		html += '</form>';
+		let htmlVars = {};
 
-		html += '<hr />';
-
-		html += '<table border="1">';
-		html += '<tr><td width="200"><div align="center"><strong>Room</strong></div></td>' +
-		'<td width="250"><div align="center"><strong>Moderation Exception </strong></div></td>' +
-		'<td width="150"><div align="center"><strong>Options</strong></div></td></tr>';
+		htmlVars.dme = getRankSelect('rank', config.modexception.global);
+		htmlVars.rooms = '';
 		for (let room in config.modexception.rooms) {
-			html += '<tr>';
-			html += '<td>' + room + '</td>';
+			htmlVars.rooms += '<tr><td>' + room + '</td>';
 			switch (config.modexception.rooms[room]) {
 			case 'user':
-				html += '<td>All Users</td>';
+				htmlVars.rooms += '<td>All Users</td>';
 				break;
 			case 'excepted':
-				html += '<td>Excepted Users</td>';
+				htmlVars.rooms += '<td>Excepted Users</td>';
 				break;
 			default:
-				html += '<td>Group ' + Text.escapeHTML(config.modexception.rooms[room]) + '</td>';
+				htmlVars.rooms += '<td>Group ' + Text.escapeHTML(config.modexception.rooms[room]) + '</td>';
 				break;
 			}
-			html += '<td><div align="center"><form style="display:inline;" method="post" action="">' +
+			htmlVars.rooms += '<td><div align="center"><form style="display:inline;" method="post" action="">' +
 			'<input type="hidden" name="room" value="' + room +
-			'" /><input type="submit" name="delroom" value="Delete" /></form></div></td>';
-			html += '</tr>';
+			'" /><input type="submit" name="delroom" value="Delete" /></form></div></td></tr>';
 		}
-		html += '</table>';
 
-		html += '<hr />';
+		htmlVars.ranks = getRankSelect('rank');
 
-		html += '<form  method="post" action=""><table border="0"><tr><td><strong>Room</strong>: </td>' +
-		'<td><input name="room" type="text" size="30" /></td></tr><tr><td><strong>Exception</strong>: </td>' +
-		'<td>' + getRankSelect('rank') + '</td></tr></table>' +
-		'<p><input type="submit" name="setroom" value="Set Moderation Exception" /></p></form>';
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+		html += exceptionTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Moderation Exception - Showdown ChatBot"});
 	}
 
@@ -342,35 +307,21 @@ exports.setup = function (App) {
 			}
 		}
 
-		html += '<table border="1">';
-		html += '<tr><td width="200"><div align="center"><strong>Room</strong></div></td>' +
-		'<td width="250"><div align="center"><strong>Rules Link</strong></div></td>' +
-		'<td width="150"><div align="center"><strong>Options</strong></div></td></tr>';
+		let htmlVars = {};
 
+		htmlVars.rooms = '';
 		for (let room in config.rulesLink) {
-			html += '<tr>';
-			html += '<td>' + room + '</td>';
-			html += '<td><a href="' + config.rulesLink[room] + '">' + Text.escapeHTML(config.rulesLink[room]) + '</a></td>';
-			html += '<td><div align="center"><form style="display:inline;" method="post" action="">' +
+			htmlVars.rooms += '<tr><td>' + room + '</td>';
+			htmlVars.rooms += '<td><a href="' + config.rulesLink[room] + '">' + Text.escapeHTML(config.rulesLink[room]) + '</a></td>';
+			htmlVars.rooms += '<td><div align="center"><form style="display:inline;" method="post" action="">' +
 			'<input type="hidden" name="room" value="' + room +
-			'" /><input type="submit" name="delroom" value="Delete" /></form></div></td>';
-			html += '</tr>';
+			'" /><input type="submit" name="delroom" value="Delete" /></form></div></td></tr>';
 		}
 
-		html += '</table>';
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		html += '<hr />';
-
-		html += '<form  method="post" action=""><table border="0"><tr><td><strong>Room</strong>: </td>' +
-		'<td><input name="room" type="text" size="30" /></td></tr><tr><td><strong>Rules Link</strong>: </td>' +
-		'<td><input name="link" type="text" size="40" /></td></tr></table>' +
-		'<p><input type="submit" name="setroom" value="Set Rules Link" /></p></form>';
-
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+		html += rulesTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Moderation Rules Links Configuration - Showdown ChatBot"});
 	}
 
@@ -393,17 +344,14 @@ exports.setup = function (App) {
 			ok = "Moderation configuration saved";
 		}
 
-		html += '<form method="post" action="">';
-		html += '<strong>Whitelisted Servers</strong>:&nbsp;';
-		html += '<input name="servers" type="text" size="50" value="' + config.serversWhitelist.join(', ') + '" />';
-		html += '<p><input type="submit" name="editservers" value="Save Changes" /></p>';
-		html += '</form>';
+		let htmlVars = {};
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+		htmlVars.wservers = config.serversWhitelist.join(', ');
+
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
+
+		html += otherTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Moderation - Showdown ChatBot"});
 	}
 };

@@ -1,12 +1,14 @@
 /**
  * Commands File
+ *
+ * tour: creates a tournament easier than using Showdown commands
  */
 
 'use strict';
 
 const Path = require('path');
-const Translator = Tools.get('translate.js');
-const Text = Tools.get('text.js');
+const Translator = Tools('translate');
+const Text = Tools('text');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 

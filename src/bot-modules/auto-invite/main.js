@@ -6,7 +6,7 @@
 
 const Roomauth_Check_Interval = 30 * 1000;
 
-const Text = Tools.get('text.js');
+const Text = Tools('text');
 
 exports.setup = function (App) {
 	if (!App.config.modules.autoinvite) {

@@ -4,8 +4,13 @@
 
 'use strict';
 
-const Text = Tools.get('text.js');
-const check = Tools.get('check.js');
+const Path = require('path');
+const Text = Tools('text');
+const check = Tools('check');
+const Template = Tools('html-template');
+
+const mainTemplate = new Template(Path.resolve(__dirname, 'templates', 'zerotolerance.html'));
+const roomTemplate = new Template(Path.resolve(__dirname, 'templates', 'zerotolerance-room.html'));
 
 exports.setup = function (App) {
 	/* Menu Options */
@@ -94,9 +99,9 @@ exports.setup = function (App) {
 			}
 		}
 
-		let html = '';
-		html += '<h2>Zero Tolerance</h2>';
+		let htmlVars = {};
 
+		htmlVars.rooms = '';
 		let data = App.modules.moderation.system.data.zeroTolerance;
 		for (let room in data) {
 			let minTol = [], lowTol = [], normalTol = [], highTol = [], maxTol = [];
@@ -119,31 +124,21 @@ exports.setup = function (App) {
 					break;
 				}
 			}
-			html += '<h3>Room: ' + room + '</h3>';
-			html += '<form method="post" action="">';
-			html += '<input type="hidden" name="room" value="' + room + '" />';
-			html += '<p><input type="checkbox" name="incpun" value="true"' +
-			(App.modules.moderation.system.data.enableZeroTol[room] ? ' checked="checked"' : '') +
-			' />&nbsp;Enable increase punishment mode</p>';
-			html += '<p>Zero Tolerance (MIN):</p><p><textarea name="min" cols="80" rows="2">' + minTol.join(', ') + '</textarea></p>';
-			html += '<p>Zero Tolerance (LOW):</p><p><textarea name="low" cols="80" rows="2">' + lowTol.join(', ') + '</textarea></p>';
-			html += '<p>Zero Tolerance (NORMAL):</p><p><textarea name="normal" cols="80" rows="2">' + normalTol.join(', ') + '</textarea></p>';
-			html += '<p>Zero Tolerance (HIGH):</p><p><textarea name="high" cols="80" rows="2">' + highTol.join(', ') + '</textarea></p>';
-			html += '<p>Zero Tolerance (MAX):</p><p><textarea name="max" cols="80" rows="2">' + maxTol.join(', ') + '</textarea></p>';
-			html += '<p><input type="submit" name="edit" value="Save Changes" /></p>';
-			html += '</form>';
-			html += '<hr />';
+			htmlVars.rooms += roomTemplate.make({
+				room: room,
+				name: Text.escapeHTML(App.parser.getRoomTitle(room)),
+				enabled: (App.modules.moderation.system.data.enableZeroTol[room] ? ' checked="checked"' : ''),
+				min: minTol.join(', '),
+				low: lowTol.join(', '),
+				normal: normalTol.join(', '),
+				high: highTol.join(', '),
+				max:  maxTol.join(', '),
+			});
 		}
 
-		html += '<form method="post" action=""><input name="room" type="text" size="30" />' +
-		'&nbsp;&nbsp;<input type="submit" name="add" value="Add Room" /></form>';
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
-
-		context.endWithWebPage(html, {title: "Zero Tolerance - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Zero Tolerance - Showdown ChatBot"});
 	});
 };

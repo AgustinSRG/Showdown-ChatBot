@@ -1,11 +1,11 @@
-/*
+/**
  * Bot Module: HtmlBox Commands
  */
 
 'use strict';
 
 const Path = require('path');
-const DataBase = Tools.get('json-db.js');
+const DataBase = Tools('json-db');
 
 exports.setup = function (App) {
 	class HtmlBoxModule {

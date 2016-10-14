@@ -1,0 +1,22 @@
+<form method="post" action="">
+	<p><strong>Default Moderation Exception</strong>:&nbsp;${DME}</p>
+	<p><input type="submit" name="editdefault" value="Save Changes" /></p>
+</form>
+<hr />
+<table border="1">
+	<tr>
+		<td width="200"><div align="center"><strong>Room</strong></div></td>
+		<td width="250"><div align="center"><strong>Moderation Exception </strong></div></td>
+		<td width="150"><div align="center"><strong>Options</strong></div></td>
+	</tr>
+	${ROOMS}
+</table>
+<hr />
+<form  method="post" action="">
+	<table border="0">
+		<tr><td><strong>Room</strong>: </td><td><input name="room" type="text" size="30" /></td></tr>
+		<tr><td><strong>Exception</strong>: </td><td>${RANKS}</td></tr>
+	</table>
+	<p><input type="submit" name="setroom" value="Set Moderation Exception" /></p>
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

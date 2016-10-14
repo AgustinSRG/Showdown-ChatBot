@@ -4,8 +4,12 @@
 
 'use strict';
 
-const Text = Tools.get('text.js');
-const check = Tools.get('check.js');
+const Path = require('path');
+const Text = Tools('text');
+const check = Tools('check');
+const Template = Tools('html-template');
+
+const mainTemplate = new Template(Path.resolve(__dirname, 'template.html'));
 
 exports.setup = function (App) {
 	const Config = App.config.modules.tourcmd;
@@ -70,43 +74,27 @@ exports.setup = function (App) {
 			}
 		}
 
-		let html = '';
-		html += '<h2>Tournament Command</h2>';
-		html += '<form method="post" action="">';
-		html += '<table border="0">';
-		html += '<tr><td><strong>Default Format</strong>: </td><td><input name="format" type="text" size="30" value="' +
-		Config.format + '" /></td></tr>';
-		html += '<tr><td><strong>Default Type</strong>: </td><td><select name="type">';
-		html += '<option value="elimination"' + (Config.type === 'elimination' ? ' selected="selected"' : '') + '>Elimination</option>';
-		html += '<option value="roundrobin"' + (Config.type === 'roundrobin' ? ' selected="selected"' : '') + '>Round Robin</option>';
-		html += '</select></td></tr>';
-		html += '<tr><td><strong>Users Limit (0 for no limit)</strong>: </td><td><input name="users" type="text" size="20" value="' +
-		Config.maxUsers + '" /></td></tr>';
-		html += '<tr><td><strong>Sign-ups Time (seconds)</strong>: </td><td><input name="time" type="text" size="20" value="' +
-		Math.floor(Config.time / 1000) + '" /></td></tr>';
-		html += '<tr><td><strong>Autodq (minutes)</strong>: </td><td><input name="autodq" type="text" size="20" value="' +
-		Config.autodq + '" /></td></tr>';
-		html += '<tr><td><strong>Scout</strong>: </td><td><select name="scout">';
-		html += '<option value="yes" ' + (!Config.scoutProtect ? 'selected="selected"' : '') + '>Allow</option>';
-		html += '<option value="no" ' + (Config.scoutProtect ? 'selected="selected"' : '') + '>Disallow</option>';
-		html += '</select></td></tr>';
-		html += '<tr><td><strong>Creation Message</strong>: </td><td><input name="creationmsg" type="text" size="60" maxlength="300" value="' +
-		Config.createMessage + '" /></td></tr>';
+		let htmlVars = {};
+
+		htmlVars.format = Config.format;
+		htmlVars.elimination = (Config.type === 'elimination' ? ' selected="selected"' : '');
+		htmlVars.roundrobin = (Config.type === 'roundrobin' ? ' selected="selected"' : '');
+		htmlVars.users = Config.maxUsers;
+		htmlVars.time = Math.floor(Config.time / 1000);
+		htmlVars.autodq = Config.autodq;
+		htmlVars.scout_yes = (!Config.scoutProtect ? 'selected="selected"' : '');
+		htmlVars.scout_no = (Config.scoutProtect ? 'selected="selected"' : '');
+		htmlVars.creationmsg = Config.createMessage;
+
 		let aliases = [];
 		for (let format in Config.aliases) {
 			aliases.push(format + ', ' + Config.aliases[format]);
 		}
-		html += '<tr><td colspan="2"><strong>Aliases </strong>(<em>alias, format</em>)' +
-		'<p><textarea name="aliases" cols="80" rows="4">' + aliases.join('\n') + '</textarea></p></td></tr>';
-		html += '</table>';
-		html += '<p><input type="submit" name="edit" value="Save Changes" /></p>';
-		html += '</form>';
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+		htmlVars.aliases = aliases.join('\n');
 
-		context.endWithWebPage(html, {title: "Tour Command - Showdown ChatBot"});
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
+
+		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Tour Command - Showdown ChatBot"});
 	});
 };

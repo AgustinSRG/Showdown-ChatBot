@@ -1,15 +1,21 @@
 /**
  * Commands File
+ *
+ * addzerotolerance: adds an user to the zero tolerance list
+ * rmzerotolerance: removes an user from the zero tolerance list
+ * viewzerotolerance: gets the zero tolerance list
+ * viewzerotolerancehastebin: gets the zero tolerance list (via Hastebin)
+ * checkzerotolerance: checks the zero tolerance status of an user
  */
 
 'use strict';
 
 const Path = require('path');
 
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
-const Translator = Tools.get('translate.js');
-const Hastebin = Tools.get('hastebin.js');
+const Text = Tools('text');
+const Chat = Tools('chat');
+const Translator = Tools('translate');
+const Hastebin = Tools('hastebin');
 
 const translator = new Translator(Path.resolve(__dirname, 'zerotolerance.translations'));
 

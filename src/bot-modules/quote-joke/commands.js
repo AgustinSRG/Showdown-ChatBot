@@ -1,12 +1,19 @@
 /**
  * Commands File
+ *
+ * quote: gets a random quote
+ * joke: gets a random joke
+ * addquote: adds a quote
+ * rmquote: removes a quote
+ * addjoke: adds a new joke
+ * rmjoke: removes a joke
  */
 
 'use strict';
 
 const Path = require('path');
-const Translator = Tools.get('translate.js');
-const Text = Tools.get('text.js');
+const Translator = Tools('translate');
+const Text = Tools('text');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 

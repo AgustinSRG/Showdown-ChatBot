@@ -1,11 +1,11 @@
-/*
+/**
  * Bot Module: Quotes & Jokes
  */
 
 'use strict';
 
 const Path = require('path');
-const DataBase = Tools.get('json-db.js');
+const DataBase = Tools('json-db');
 
 class QuoteMod {
 	constructor(App) {

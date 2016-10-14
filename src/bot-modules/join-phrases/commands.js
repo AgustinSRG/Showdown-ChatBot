@@ -1,14 +1,18 @@
 /**
  * Commands File
+ *
+ * joinphrase: configures joinphrases
+ * listjoinphrases: views joinphrases list
+ * listjoinphraseshastebin: views joinphrases list (via Hastebin)
  */
 
 'use strict';
 
 const Path = require('path');
-const Translator = Tools.get('translate.js');
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
-const Hastebin = Tools.get('hastebin.js');
+const Translator = Tools('translate');
+const Text = Tools('text');
+const Chat = Tools('chat');
+const Hastebin = Tools('hastebin');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 

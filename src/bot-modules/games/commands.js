@@ -1,11 +1,13 @@
 /**
- * Commands Reader
+ * Commands File
+ *
+ * terminategame: finalizes a game
  */
 
 'use strict';
 
 const Path = require('path');
-const Translator = Tools.get('translate.js');
+const Translator = Tools('translate');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 

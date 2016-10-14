@@ -7,7 +7,7 @@
 const modFiles = ['singles-eff.js', 'ingame-nostatus.js'];
 
 const Path = require('path');
-const Text = Tools.get('text.js');
+const Text = Tools('text');
 
 exports.setup = function (App, BattleData) {
 	const BattleModulesManager = {};

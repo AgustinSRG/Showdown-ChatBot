@@ -4,8 +4,13 @@
 
 'use strict';
 
-const Text = Tools.get('text.js');
-const check = Tools.get('check.js');
+const Path = require('path');
+const Text = Tools('text');
+const check = Tools('check');
+const Template = Tools('html-template');
+
+const mainTemplate = new Template(Path.resolve(__dirname, 'templates', 'bannedwords.html'));
+const roomTemplate = new Template(Path.resolve(__dirname, 'templates', 'bannedwords-room.html'));
 
 exports.setup = function (App) {
 	/* Menu Options */
@@ -18,12 +23,10 @@ exports.setup = function (App) {
 			return;
 		}
 
-		let html = '';
-
 		if (parts[0] === 'room') {
 			let room = Text.toRoomid(parts[1]);
 			if (room) {
-				return roomHandler(context, room, html);
+				return roomHandler(context, room);
 			} else {
 				context.endWith404();
 				return;
@@ -48,32 +51,21 @@ exports.setup = function (App) {
 			}
 		}
 
-
-		html = '';
-		html += '<div align="center"><h2>Banned Words</h2>';
+		let htmlVars = {};
 
 		let opts = [];
 		for (let room in App.modules.moderation.system.data.bannedWords) {
 			opts.push('<a class="submenu-option" href="/banwords/room/' + room + '/">' + room + '</a>');
 		}
-		html += opts.join(' | ');
-		html += '</div>';
+		htmlVars.submenu = opts.join(' | ');
 
-		html += '<hr />';
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		html += '<form method="post" action=""><input name="room" type="text" size="30" />' +
-		'&nbsp;&nbsp;<input type="submit" name="add" value="Add Room" /></form>';
-
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
-
-		context.endWithWebPage(html, {title: "Banned Words - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Banned Words - Showdown ChatBot"});
 	});
 
-	function roomHandler(context, room, html) {
+	function roomHandler(context, room) {
 		let config = App.modules.moderation.system.data;
 		let ok = null, error = null;
 
@@ -132,85 +124,60 @@ exports.setup = function (App) {
 			}
 		}
 
-		html += '<div align="center"><h2>Banned Words</h2>';
+		let htmlVars = {};
+		htmlVars.room = room;
+		htmlVars.name = Text.escapeHTML(App.parser.getRoomTitle(room));
 
 		let opts = [];
 		for (let k in App.modules.moderation.system.data.bannedWords) {
 			opts.push('<a class="submenu-option' + (room === k ? '-selected' : '') + '" href="/banwords/room/' + k + '/">' + k + '</a>');
 		}
-		html += opts.join(' | ');
-		html += '</div>';
+		htmlVars.submenu = opts.join(' | ');
 
-		html += '<hr />';
-
-		html += '<h3>Banned Words of ' + room + '</h3>';
-
-		html += '<table border="1">';
-		html += '<tr><td width="200"><div align="center"><strong>Word</strong></div></td>' +
-		'<td width="150"><div align="center"><strong>Punishment</strong></div></td>' +
-		'<td width="150"><div align="center"><strong>Type</strong></div></td>' +
-		'<td width="150"><div align="center"><strong>Strict Word</strong></div></td>' +
-		'<td width="150"><div align="center"><strong>Ignore Nicks</strong></div></td>' +
-		'<td width="100"><div align="center"><strong>Options</strong></div></td></tr>';
+		htmlVars.words = '';
 		let wordsData = App.modules.moderation.system.data.bannedWords[room] || {};
 		for (let word in wordsData) {
-			html += '<tr>';
-			html += '<td>' + Text.escapeHTML(word) + '</td>';
-			html += '<td>' + App.modules.moderation.system.modBot.getPunishment(wordsData[word].val) + '</td>';
+			htmlVars.words += '<tr>';
+			htmlVars.words += '<td>' + Text.escapeHTML(word) + '</td>';
+			htmlVars.words += '<td>' + App.modules.moderation.system.modBot.getPunishment(wordsData[word].val) + '</td>';
 			switch (wordsData[word].type) {
 			case 'i':
-				html += '<td>Inappropriate</td>';
+				htmlVars.words += '<td>Inappropriate</td>';
 				break;
 			case 'o':
-				html += '<td>Insult</td>';
+				htmlVars.words += '<td>Insult</td>';
 				break;
 			default:
-				html += '<td>Banned Word</td>';
+				htmlVars.words += '<td>Banned Word</td>';
 				break;
 			}
 			if (wordsData[word].strict) {
-				html += '<td>Yes</td>';
+				htmlVars.words += '<td>Yes</td>';
 			} else {
-				html += '<td>No</td>';
+				htmlVars.words += '<td>No</td>';
 			}
 			if (wordsData[word].nonicks) {
-				html += '<td>Yes</td>';
+				htmlVars.words += '<td>Yes</td>';
 			} else {
-				html += '<td>No</td>';
+				htmlVars.words += '<td>No</td>';
 			}
-			html += '<td><div align="center"><form style="display:inline;" method="post" action="">' +
+			htmlVars.words += '<td><div align="center"><form style="display:inline;" method="post" action="">' +
 			'<input type="hidden" name="word" value=' + JSON.stringify(word) +
 			' /><input type="submit" name="remove" value="Delete" /></form></div></td>';
-			html += '</tr>';
+			htmlVars.words += '</tr>';
 		}
-		html += '</table>';
 
-		html += '<br /><hr /><br />';
-
-		html += '<form method="post" action="">';
-		html += '<table>';
-		html += '<tr><td>Word: </td><td><input name="word" type="text" size="40" /></td></tr>';
-		html += '<tr><td>Punishment: </td><td><select name="punishment">';
+		htmlVars.punishments = '<select name="punishment">';
 		let punishments = App.modules.moderation.system.data.punishments;
 		for (let i = 0; i < punishments.length; i++) {
-			html += ' <option value="' + punishments[i] + '"' + (punishments[i] === 'mute' ? ' selected="selected"' : '') +
+			htmlVars.punishments += ' <option value="' + punishments[i] + '"' + (punishments[i] === 'mute' ? ' selected="selected"' : '') +
 			' >' + punishments[i] + '</option>';
 		}
-		html += '</select></td></tr>';
-		html += '<tr><td>Type: </td><td><select name="type"><option value="banned">Banned Word</option>' +
-		'<option value="inap">Inappropriate</option><option value="insult">Insult</option></select></td></tr>';
-		html += '<tr><td colspan="2"><input type="checkbox" name="strict" value="true" />&nbsp;Ban strict word</td></tr>';
-		html += '<tr><td colspan="2"><input type="checkbox" name="nonicks" value="checkbox" />&nbsp;Ignore Nicknames</td></tr>';
-		html += '</table>';
-		html += '<p><input type="submit" name="add" value="Add Banned Word" /></p>';
-		html += '</form>';
+		htmlVars.punishments += '</select>';
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(html, {title: "Banned Words - Showdown ChatBot"});
+		context.endWithWebPage(roomTemplate.make(htmlVars), {title: "Banned Words - Showdown ChatBot"});
 	}
 };

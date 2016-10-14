@@ -4,7 +4,9 @@
   "version": "1.0",
   "main": "main.js",
   "commands": [
-     "commands.js"
+     "commands/banwords.js",
+	 "commands/settings.js",
+	 "commands/zerotolerance.js"
   ],
   "permissions": {
 	"moderation": {"group": "owner"},

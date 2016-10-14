@@ -1,15 +1,20 @@
 /**
  * Commands File
+ *
+ * banword: adds a banned word
+ * unbanword: removes a banned word
+ * viewbannedwords: gets a list with the banned words
+ * viewbannedwordshastebin: gets a list with the banned words (via Hastebin)
  */
 
 'use strict';
 
 const Path = require('path');
 
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
-const Translator = Tools.get('translate.js');
-const Hastebin = Tools.get('hastebin.js');
+const Text = Tools('text');
+const Chat = Tools('chat');
+const Translator = Tools('translate');
+const Hastebin = Tools('hastebin');
 
 const translator = new Translator(Path.resolve(__dirname, 'banwords.translations'));
 

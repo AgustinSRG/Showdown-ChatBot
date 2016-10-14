@@ -7,8 +7,8 @@
 const Servers_Default_Value = 2;
 
 const Path = require('path');
-const Text = Tools.get('text.js');
-const Translator = Tools.get('translate.js');
+const Text = Tools('text');
+const Translator = Tools('translate');
 
 const translator = new Translator(Path.resolve(__dirname, 'servers.translations'));
 

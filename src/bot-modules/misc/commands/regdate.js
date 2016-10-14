@@ -1,5 +1,9 @@
 /**
  * Commands File
+ *
+ * regdate: gets the register date of a Pokemon Showdown account
+ * regtime: gets the old of a Pokemon Showdown account
+ * autoconfirmedhelp: privides help about the autoconfirmed status
  */
 
 'use strict';
@@ -8,10 +12,10 @@ const AutoConfirmed_RegTime = 7 * 24 * 60 * 60;
 
 const Path = require('path');
 
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
-const Cache = Tools.get('cache.js').BufferCache;
-const Translator = Tools.get('translate.js');
+const Text = Tools('text');
+const Chat = Tools('chat');
+const Cache = Tools('cache').BufferCache;
+const Translator = Tools('translate');
 
 const translator = new Translator(Path.resolve(__dirname, 'regdate.translations'));
 const regdateCache = new Cache(10);

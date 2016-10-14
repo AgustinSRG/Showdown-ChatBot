@@ -5,9 +5,9 @@
 'use strict';
 
 const Path = require('path');
-const Text = Tools.get('text.js');
-const DataBase = Tools.get('json-db.js');
-const Translator = Tools.get('translate.js');
+const Text = Tools('text');
+const DataBase = Tools('json-db');
+const Translator = Tools('translate');
 
 const translator = new Translator(Path.resolve(__dirname, 'blacklist.translations'));
 

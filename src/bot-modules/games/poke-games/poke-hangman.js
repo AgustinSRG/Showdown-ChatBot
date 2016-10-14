@@ -6,9 +6,9 @@
 
 const Path = require('path');
 
-const Translator = Tools.get('translate.js');
-const normalize = Tools.get('normalize.js');
-const Chat = Tools.get('chat.js');
+const Translator = Tools('translate');
+const normalize = Tools('normalize');
+const Chat = Tools('chat');
 
 const translator = new Translator(Path.resolve(__dirname, 'poke-hangman.translations'));
 

@@ -5,7 +5,7 @@
 'use strict';
 
 const Path = require('path');
-const DataBase = Tools.get('json-db.js');
+const DataBase = Tools('json-db');
 const ModeratorBot = require(Path.resolve(__dirname, 'moderator-bot.js')).ModeratorBot;
 
 exports.setup = function (App) {

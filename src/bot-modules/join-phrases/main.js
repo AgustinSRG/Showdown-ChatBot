@@ -1,25 +1,21 @@
-/*
+/**
  * Bot Module: Join-Phrases
  */
 
 'use strict';
 
 const Path = require('path');
-const Text = Tools.get('text.js');
-const DataBase = Tools.get('json-db.js');
+const Text = Tools('text');
+const DataBase = Tools('json-db');
 
 exports.setup = function (App) {
-	class JoinPhrasesModule {
-		constructor() {
-			this.db = new DataBase(Path.resolve(App.confDir, 'join-phrases.json'));
-			this.config = this.db.data;
-			if (!this.config.rooms) {
-				this.config.rooms = {};
-			}
-		}
+	const JoinPhrasesMod = {};
+	JoinPhrasesMod.db = new DataBase(Path.resolve(App.confDir, 'join-phrases.json'));
+	JoinPhrasesMod.config = JoinPhrasesMod.db.data;
+	if (!JoinPhrasesMod.config.rooms) {
+		JoinPhrasesMod.config.rooms = {};
 	}
 
-	const JoinPhrasesMod = new JoinPhrasesModule();
 	const config = JoinPhrasesMod.config;
 
 	App.bot.on('userjoin', (room, user) => {

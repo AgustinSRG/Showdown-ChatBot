@@ -4,8 +4,13 @@
 
 'use strict';
 
-const Text = Tools.get('text.js');
-const check = Tools.get('check.js');
+const Path = require('path');
+const Text = Tools('text');
+const check = Tools('check');
+const Template = Tools('html-template');
+
+const mainTemplate = new Template(Path.resolve(__dirname, 'template-main.html'));
+const roomTemplate = new Template(Path.resolve(__dirname, 'template-room.html'));
 
 exports.setup = function (App) {
 	/* Permissions */
@@ -21,12 +26,10 @@ exports.setup = function (App) {
 			return;
 		}
 
-		let html = '';
-
 		if (parts[0] === 'room') {
 			let room = Text.toRoomid(parts[1]);
 			if (room) {
-				return roomHandler(context, room, html);
+				return roomHandler(context, room);
 			} else {
 				context.endWith404();
 				return;
@@ -34,7 +37,6 @@ exports.setup = function (App) {
 		}
 
 		let ok = null, error = null;
-
 		if (context.post.add) {
 			let data = App.modules.joinphrases.system.config.rooms;
 			let room = Text.toRoomid(context.post.room);
@@ -52,30 +54,21 @@ exports.setup = function (App) {
 			}
 		}
 
-		html += '<div align="center"><h2>Join-Phrases</h2>';
+		let htmlVars = {};
 
 		let opts = [];
 		for (let room in App.modules.joinphrases.system.config.rooms) {
 			opts.push('<a class="submenu-option" href="/joinphrases/room/' + room + '/">' + room + '</a>');
 		}
-		html += opts.join(' | ');
-		html += '</div>';
+		htmlVars.submenu = opts.join(' | ');
 
-		html += '<hr />';
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		html += '<form method="post" action=""><input name="room" type="text" size="30" />' +
-		'&nbsp;&nbsp;<input type="submit" name="add" value="Add Room" /></form>';
-
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
-
-		context.endWithWebPage(html, {title: "Join-Phrases - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Join-Phrases - Showdown ChatBot"});
 	});
 
-	function roomHandler(context, room, html) {
+	function roomHandler(context, room) {
 		let config = App.modules.joinphrases.system.config;
 		let ok = null, error = null;
 
@@ -117,49 +110,33 @@ exports.setup = function (App) {
 			}
 		}
 
-		html += '<div align="center"><h2>Join-Phrases</h2>';
+		let htmlVars = {};
+
+		htmlVars.room = room;
+		htmlVars.name = Text.escapeHTML(App.parser.getRoomTitle(room));
 
 		let opts = [];
 		for (let k in config.rooms) {
 			opts.push('<a class="submenu-option' + (room === k ? '-selected' : '') + '" href="/joinphrases/room/' + k + '/">' + k + '</a>');
 		}
-		html += opts.join(' | ');
-		html += '</div>';
+		htmlVars.submenu = opts.join(' | ');
 
-		html += '<hr />';
-
-		html += '<h3>Join-phrases of ' + room + '</h3>';
-
-		html += '<table border="1">';
-		html += '<tr><td width="150"><div align="center"><strong>User</strong></div></td>' +
-		'<td width="400"><div align="center"><strong>Phrase</strong></div></td>' +
-		'<td width="100"><div align="center"><strong>Options</strong></div></td></tr>';
+		htmlVars.phrases = '';
 		if (config.rooms[room]) {
 			for (let user in config.rooms[room]) {
-				html += '<tr>';
-				html += '<td>' + user + '</td>';
-				html += '<td>' + Text.escapeHTML(config.rooms[room][user]) + '</td>';
-				html += '<td><div align="center"><form style="display:inline;" method="post" action="">' +
-			'<input type="hidden" name="user" value="' + user +
-			'" /><input type="submit" name="remove" value="Delete" /></form></div></td>';
-				html += '</tr>';
+				htmlVars.phrases += '<tr>';
+				htmlVars.phrases += '<td>' + user + '</td>';
+				htmlVars.phrases += '<td>' + Text.escapeHTML(config.rooms[room][user]) + '</td>';
+				htmlVars.phrases += '<td><div align="center"><form style="display:inline;" method="post" action="">' +
+					'<input type="hidden" name="user" value="' + user +
+					'" /><input type="submit" name="remove" value="Delete" /></form></div></td>';
+				htmlVars.phrases += '</tr>';
 			}
 		}
-		html += '</table>';
 
-		html += '<br /><hr /><br />';
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		html += '<form method="post" action="">';
-		html += '<p><strong>User</strong>: <input name="user" type="text" size="30" maxlength="19" /></p>';
-		html += '<p><strong>Phrase</strong>: <input name="phrase" type="text" size="80" maxlength="300" /></p>';
-		html += '<p><input type="submit" name="add" value="Add Join-Phrase" /></p>';
-		html += '</form>';
-
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
-		context.endWithWebPage(html, {title: "Join-Phrases - Showdown ChatBot"});
+		context.endWithWebPage(roomTemplate.make(htmlVars), {title: "Join-Phrases - Showdown ChatBot"});
 	}
 };

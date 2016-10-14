@@ -6,9 +6,9 @@
 
 const Path = require('path');
 
-const DataBase = Tools.get('json-db.js');
-const Text = Tools.get('text.js');
-const randomize = Tools.get('randomize.js');
+const DataBase = Tools('json-db');
+const Text = Tools('text');
+const randomize = Tools('randomize');
 
 exports.setup = function (App) {
 	const Teams = require(Path.resolve(__dirname, 'teams.js')).setup(App);

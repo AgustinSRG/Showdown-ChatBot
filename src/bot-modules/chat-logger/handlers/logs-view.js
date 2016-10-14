@@ -5,7 +5,7 @@
 'use strict';
 
 const Path = require('path');
-const Text = Tools.get('text.js');
+const Text = Tools('text');
 const FileSystem = require('fs');
 
 exports.setup = function (App) {

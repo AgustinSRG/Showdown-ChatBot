@@ -1,5 +1,9 @@
 /**
  * Commands File
+ *
+ * pick: randomly chooses between two or more options
+ * poke: gets a random pokemon
+ * hashpoke: gets a pseudo-random pokemon using an input string
  */
 
 'use strict';
@@ -7,9 +11,9 @@
 const Path = require('path');
 const Crypto = require('crypto');
 
-const Translator = Tools.get('translate.js');
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
+const Translator = Tools('translate');
+const Text = Tools('text');
+const Chat = Tools('chat');
 
 const translator = new Translator(Path.resolve(__dirname, 'fun.translations'));
 

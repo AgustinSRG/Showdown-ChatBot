@@ -1,13 +1,19 @@
 /**
  * Commands File
+ *
+ * toursrank: gets the tournament ranking
+ * top: gets the TOP5 for a room
+ * tourleaderboards: gets the TOP100 table for a room
+ * official: makes a tournament official
+ * unofficial: makes a tournament unofficial
  */
 
 'use strict';
 
 const Path = require('path');
-const Translator = Tools.get('translate.js');
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
+const Translator = Tools('translate');
+const Text = Tools('text');
+const Chat = Tools('chat');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 

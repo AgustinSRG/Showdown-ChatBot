@@ -1,14 +1,19 @@
 /**
  * Commands File
+ *
+ * blacklist: adds users to the blackist
+ * unblacklist: removes users from the blacklist
+ * viewblacklist: views the backlist
+ * viewblacklisthastebin: views the backlist(via Hastebin)
  */
 
 'use strict';
 
 const Path = require('path');
-const Translator = Tools.get('translate.js');
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
-const Hastebin = Tools.get('hastebin.js');
+const Translator = Tools('translate');
+const Text = Tools('text');
+const Chat = Tools('chat');
+const Hastebin = Tools('hastebin');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 

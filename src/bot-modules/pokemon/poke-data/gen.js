@@ -4,7 +4,7 @@
 
 'use strict';
 
-const Text = Tools.get('text.js');
+const Text = Tools('text');
 
 function getGeneration(name, App) {
 	let id = Text.toId(name);

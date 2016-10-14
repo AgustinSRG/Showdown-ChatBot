@@ -4,9 +4,14 @@
 
 'use strict';
 
-const Text = Tools.get('text.js');
-const check = Tools.get('check.js');
-const SubMenu = Tools.get('submenu.js');
+const Path = require('path');
+const Text = Tools('text');
+const check = Tools('check');
+const SubMenu = Tools('submenu');
+const Template = Tools('html-template');
+
+const quotesTemplate = new Template(Path.resolve(__dirname, 'template-quotes.html'));
+const jokesTemplate = new Template(Path.resolve(__dirname, 'template-jokes.html'));
 
 exports.setup = function (App) {
 	/* Permissions */
@@ -62,30 +67,20 @@ exports.setup = function (App) {
 			}
 		}
 
-		html += '<table border="1">';
-		html += '<tr><td width="600"><div align="center"><strong>Quote</strong></div></td>' +
-		'<td width="150"><div align="center"><strong>Options</strong></div></td></tr>';
+		let htmlVars = {};
 
+		htmlVars.quotes = '';
 		let quotes = App.modules.quote.system.quotes;
 		for (let id in quotes) {
-			html += '<tr>';
-			html += '<td style="word-wrap: break-word;">' + Text.escapeHTML(quotes[id]) + '</td>';
-			html += ' <td><div align="center"><form style="display:inline;" method="post" action="">' +
-			'<input type="hidden" name="id" value="' + id + '" /><input type="submit" name="remove" value="Remove" /></form></div></td>';
-			html += '</tr>';
+			htmlVars.quotes += '<tr><td style="word-wrap: break-word;">' + Text.escapeHTML(quotes[id]) + '</td>';
+			htmlVars.quotes += ' <td><div align="center"><form style="display:inline;" method="post" action="">' +
+			'<input type="hidden" name="id" value="' + id + '" /><input type="submit" name="remove" value="Remove" /></form></div></td></tr>';
 		}
 
-		html += '</table>';
-		html += '<hr />';
-		html += '<form method="post" action=""><input name="content" type="text" size="120" maxlength="300" />' +
-		'<p><input type="submit" name="add" value="Add New Quote" /></p></form>';
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
-
+		html += quotesTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Quotes - Showdown ChatBot"});
 	}
 
@@ -121,30 +116,20 @@ exports.setup = function (App) {
 			}
 		}
 
-		html += '<table border="1">';
-		html += '<tr><td width="600"><div align="center"><strong>Joke</strong></div></td>' +
-		'<td width="150"><div align="center"><strong>Options</strong></div></td></tr>';
+		let htmlVars = {};
 
+		htmlVars.jokes = '';
 		let jokes = App.modules.quote.system.jokes;
 		for (let id in jokes) {
-			html += '<tr>';
-			html += '<td style="word-wrap: break-word;">' + Text.escapeHTML(jokes[id]) + '</td>';
-			html += ' <td><div align="center"><form style="display:inline;" method="post" action="">' +
-			'<input type="hidden" name="id" value="' + id + '" /><input type="submit" name="remove" value="Remove" /></form></div></td>';
-			html += '</tr>';
+			htmlVars.jokes += '<tr><td style="word-wrap: break-word;">' + Text.escapeHTML(jokes[id]) + '</td>';
+			htmlVars.jokes += ' <td><div align="center"><form style="display:inline;" method="post" action="">' +
+			'<input type="hidden" name="id" value="' + id + '" /><input type="submit" name="remove" value="Remove" /></form></div></td></tr>';
 		}
 
-		html += '</table>';
-		html += '<hr />';
-		html += '<form method="post" action=""><input name="content" type="text" size="120" maxlength="300" />' +
-		'<p><input type="submit" name="add" value="Add New Joke" /></p></form>';
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		if (error) {
-			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-		} else if (ok) {
-			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-		}
-
+		html += jokesTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Jokes - Showdown ChatBot"});
 	}
 };

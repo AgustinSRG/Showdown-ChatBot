@@ -9,11 +9,11 @@ const Default_Answer_Time = 30 * 1000;
 
 const Path = require('path');
 
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
-const Translator = Tools.get('translate.js');
-const normalize = Tools.get('normalize.js');
-const randomize = Tools.get('randomize.js');
+const Text = Tools('text');
+const Chat = Tools('chat');
+const Translator = Tools('translate');
+const normalize = Tools('normalize');
+const randomize = Tools('randomize');
 
 const translator = new Translator(Path.resolve(__dirname, 'kunc.translations'));
 

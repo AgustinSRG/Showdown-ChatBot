@@ -6,9 +6,9 @@
 
 const Path = require('path');
 
-const Text = Tools.get('text.js');
-const Logger = Tools.get('logs.js');
-const checkdir = Tools.get('checkdir.js');
+const Text = Tools('text');
+const Logger = Tools('logs');
+const checkdir = Tools('checkdir');
 
 exports.setup = function (App) {
 	if (!App.config.modules.chatlogger) {

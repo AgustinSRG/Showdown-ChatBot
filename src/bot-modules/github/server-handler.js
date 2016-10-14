@@ -5,8 +5,8 @@
 'use strict';
 
 const Path = require('path');
-const Text = Tools.get('text.js');
-const Template = Tools.get('html-template.js');
+const Text = Tools('text');
+const Template = Tools('html-template');
 
 const mainTemplate = new Template(Path.resolve(__dirname, 'template.html'));
 

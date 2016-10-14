@@ -6,7 +6,7 @@
 
 const ACTION_INTERVAL = 1500;
 
-const Text = Tools.get('text.js');
+const Text = Tools('text');
 
 exports.setup = function (App) {
 	const TornamentsManager = {};

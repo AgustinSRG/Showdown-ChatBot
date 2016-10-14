@@ -1,5 +1,12 @@
 /**
  * Commands File
+ *
+ * gen: gets generation of pokemon, moves, items...
+ * randommoves: gets moves used in Random Battle format
+ * priority: gets priority moves a pokemon can learn
+ * boosting: gets boosting moves a pokemon can learn
+ * recovery: gets recovery moves a pokemon can learn
+ * hazards: gets hazards moves a pokemon can learn
  */
 
 'use strict';
@@ -9,9 +16,9 @@ const Path = require('path');
 const getGeneration = require(Path.resolve(__dirname, 'gen.js'));
 const Moves = require(Path.resolve(__dirname, 'moves.js'));
 
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
-const Translator = Tools.get('translate.js');
+const Text = Tools('text');
+const Chat = Tools('chat');
+const Translator = Tools('translate');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 

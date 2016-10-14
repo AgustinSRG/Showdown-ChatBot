@@ -1,5 +1,8 @@
 /**
  * Commands File
+ *
+ * starttimer: starts a new timeout
+ * stoptimer: stops the current timeout
  */
 
 'use strict';
@@ -8,7 +11,7 @@ const Min_Timer = 5000;
 const Max_Timer = 2 * 60 * 60 * 1000;
 
 const Path = require('path');
-const Translator = Tools.get('translate.js');
+const Translator = Tools('translate');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 

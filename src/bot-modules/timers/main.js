@@ -5,8 +5,8 @@
 'use strict';
 
 const Path = require('path');
-const Chat = Tools.get('chat.js');
-const Translator = Tools.get('translate.js');
+const Chat = Tools('chat');
+const Translator = Tools('translate');
 
 const translator = new Translator(Path.resolve(__dirname, 'timers.translations'));
 

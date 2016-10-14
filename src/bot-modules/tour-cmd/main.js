@@ -1,11 +1,11 @@
-/*
+/**
  * Bot Module: Tour Command
  */
 
 'use strict';
 
 const Path = require('path');
-const Translator = Tools.get('translate.js');
+const Translator = Tools('translate');
 const Tournament = require(Path.resolve(__dirname, 'tournament.js'));
 
 const translator = new Translator(Path.resolve(__dirname, 'errors.translations'));
@@ -35,7 +35,7 @@ exports.setup = function (App) {
 				if (this.tournaments[room].startTimer) clearTimeout(this.tournaments[room].startTimer);
 				delete this.tournaments[room];
 			}
-			this.tournaments[room] = new Tournament(room, details);
+			this.tournaments[room] = new Tournament(App, room, details);
 			this.tournaments[room].create();
 		}
 	}

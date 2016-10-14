@@ -10,7 +10,7 @@ const MIN_TIME_LOCK = 3 * 1000; // 3 secods to avoid send spam
 
 const Path = require('path');
 const Util = require('util');
-const Text = Tools.get('text.js');
+const Text = Tools('text');
 
 exports.setup = function (App) {
 	const BattleData = require(Path.resolve(__dirname, "battle-data.js")).setup(App);

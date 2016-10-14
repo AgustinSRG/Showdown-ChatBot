@@ -7,9 +7,9 @@
 const Wait_Interval = 2000;
 
 const Path = require('path');
-const Chat = Tools.get('chat.js');
-const Translator = Tools.get('translate.js');
-const randomize = Tools.get('randomize.js');
+const Chat = Tools('chat');
+const Translator = Tools('translate');
+const randomize = Tools('randomize');
 
 const translator = new Translator(Path.resolve(__dirname, 'blackjack.translations'));
 

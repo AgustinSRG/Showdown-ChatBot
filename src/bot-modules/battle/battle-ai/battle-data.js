@@ -5,7 +5,7 @@
 'use strict';
 
 const Path = require('path');
-const Text = Tools.get('text.js');
+const Text = Tools('text');
 
 const BAT_DATA_DIR = Path.resolve(__dirname, '..', 'data');
 

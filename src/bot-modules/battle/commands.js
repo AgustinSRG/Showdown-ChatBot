@@ -1,14 +1,19 @@
 /**
  * Commands File
+ *
+ * chall: bot sends a challenge to an arbitrary user
+ * cancelchallenge: cancels an active challenge
+ * searchbattle: searchs a ladder battle and returns the link
+ * evalbattle: runs arbitrary javascript in a battle context
  */
 
 'use strict';
 
 const Path = require('path');
 const Util = require('util');
-const Translator = Tools.get('translate.js');
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
+const Translator = Tools('translate');
+const Text = Tools('text');
+const Chat = Tools('chat');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
