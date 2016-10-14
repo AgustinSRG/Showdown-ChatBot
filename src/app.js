@@ -24,8 +24,8 @@ const Server = require(Path.resolve(__dirname, 'server/server.js')).Server;
 const DataManager = require(Path.resolve(__dirname, 'data.js'));
 const CommandParser = require(Path.resolve(__dirname, 'command-parser.js')).CommandParser;
 
-const uncacheTree = Tools.get('uncachetree.js');
-const checkDir = Tools.get('checkdir.js');
+const uncacheTree = Tools('uncachetree');
+const checkDir = Tools('checkdir');
 
 class ChatBotApp {
 	/**

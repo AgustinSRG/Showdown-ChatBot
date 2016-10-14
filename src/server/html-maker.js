@@ -64,7 +64,7 @@ exports.generate = function (body, loginData, menu, options) {
 		}
 		buf += '<div style=" margin-bottom:8px;"><a href="/chpass/"><i>Change Password</i></a></div>';
 		buf += '<div style=" margin-bottom:8px;">' +
-			'<form class="logoutform" method="POST" action="">' +
+			'<form class="logoutform" method="POST" action="/">' +
 			'<input type="submit" name="logout" value="Logout" /></form></div>';
 	} else {
 		/* Login form */
@@ -109,17 +109,14 @@ exports.generate = function (body, loginData, menu, options) {
 	buf += body;
 	buf += '</div></div>';
 
-	buf += '<div align="center" class="maindiv">';
-	buf += '<div align="center" class="copyright">';
-	buf += '<i>This is a Pokemon Showdown Bot for Node JS - ';
 	if (options.package) {
+		buf += '<div align="center" class="maindiv">';
+		buf += '<div align="center" class="copyright">';
+		buf += '<i>This is a Pokemon Showdown Bot for Node JS - ';
 		buf += '<a href="' + options.package.homepage + '" target="_blank">Showdown-ChatBot' + '</a> v' + options.package.version;
-	} else {
-		buf += 'Showdown-ChatBot v' + options.package.version;
+		buf += '</i></div></div>';
 	}
-	buf += '</i>';
-	buf += '</div>';
-	buf += '</div></div></body>';
+	buf += '</div></body>';
 	buf += '</html>';
 	return buf;
 };

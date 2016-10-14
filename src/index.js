@@ -43,7 +43,7 @@ function setup(env) {
 
 	App.createLogger(logsDir);
 
-	const SourceLoader = Tools.get('loader.js');
+	const SourceLoader = Tools('loader');
 	const loader = new SourceLoader(Path.resolve(__dirname, 'server/handlers/'), App);
 	loader.loadAll(/.*\.js$/);
 
@@ -53,7 +53,7 @@ function setup(env) {
 
 	/* Set Crash-Guard */
 
-	const CrashGuardTemplate = Tools.get('crashguard.js');
+	const CrashGuardTemplate = Tools('crashguard');
 
 	global.CrashGuard = new CrashGuardTemplate(err => {
 		App.reportCrash(err);
