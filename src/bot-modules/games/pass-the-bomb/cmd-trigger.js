@@ -4,7 +4,7 @@
 
 'use strict';
 
-const Text = Tools.get('text.js');
+const Text = Tools('text');
 
 module.exports = {
 	"in": "join",

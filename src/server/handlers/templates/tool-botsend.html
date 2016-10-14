@@ -1,0 +1,26 @@
+<script type="text/javascript">
+	function escapeHtml(text) {
+		return text.replace(/[\"&<>]/g, function (a) {return {'"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;'}[a];});
+	}
+	var req = null;
+	function sendMessage () {
+		var room = document.getElementById("room").value;
+		var msg = document.getElementById("message").value;
+		if (!msg) {return;}
+		if (req) {try {req.abort()} catch (err) {} req = null;}
+		document.getElementById("result").innerHTML = '<p><i>Sending Message...</i></p>';
+		document.getElementById("message").value = "";
+		req = $.post('/tools/botsend/', {room: room, msg: msg, snd: "true"}, function (data) {
+			document.getElementById("result").innerHTML = data;
+		}).fail(function () {
+			document.getElementById("result").innerHTML = '<p><span class="error-msg">Request error. Try again later or refresh the page.</span></p>';
+		});
+	}
+</script>
+<h2>Bot-Send Tool</h2>
+<p><strong>Room</strong>:&nbsp;<input id="room" type="text" name="room" /></p>
+<p><strong>Message</strong>:</p>
+<p><textarea id="message" name="msg" cols="100" rows="4"></textarea></p>
+<p><label><button onclick="sendMessage();">Send Message</button></p>
+<div id="result">&nbsp;</div>
+		

@@ -1,0 +1,10 @@
+<h3>GitHub Hook</h3>
+<form  method="post" action="">
+	<p><strong>Dev Room</strong>:&nbsp;<input name="room" type="text" size="40" value="${ROOM}" /></p>
+	<p><strong>Web-Hook Port</strong>:&nbsp;<input name="port" type="text" size="20" value="${PORT}" /></p>
+	<p><strong>Secret</strong>:&nbsp;<input name="secret" type="text" size="40" autocomplete="off" value="${SECRET}" /></p>
+	<p><strong>Pull Request Blacklist</strong>:&nbsp;<input name="blacklist" type="text" size="70" autocomplete="off" value="${BL}" /> (Separated by commas)</p>
+	<p><input type="checkbox" name="enabled" value="true"${ENABLED} />&nbsp;Enable GitHub hook</p>
+	<p><input type="submit" name="edit" value="Save Changes" /></p>
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

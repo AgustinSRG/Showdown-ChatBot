@@ -1,15 +1,14 @@
-/*
+/**
  * Bot Module: Quotes & Jokes
  */
 
 'use strict';
 
 const Path = require('path');
-
-const DataBase = Tools.get('json-db.js');
+const DataBase = Tools('json-db');
 
 class QuoteMod {
-	constructor() {
+	constructor(App) {
 		this.db = new DataBase(Path.resolve(App.confDir, 'quote-joke.json'));
 		this.data = this.db.data;
 		if (!this.data.jokes) {
@@ -85,6 +84,6 @@ class QuoteMod {
 	}
 }
 
-module.exports = new QuoteMod();
-
-require(Path.resolve(__dirname, 'server-handler.js'));
+exports.setup = function (App) {
+	return new QuoteMod(App);
+};

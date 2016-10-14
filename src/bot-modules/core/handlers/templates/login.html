@@ -1,0 +1,16 @@
+<h3>Bot Login Credentials</h3>
+<table border="0">
+	<tr><td><strong>Nick</strong>:</td><td>${NICK}</td></tr>
+	<tr><td><strong>Password</strong>: </td><td>${PASS}</td></tr>
+</table>
+<br />
+<form method="post" action="">
+	<table border="0">
+		<tr><td>Bot Nickname: </td><td><input name="nick" type="text" size="30" maxlength="20" value="${NICK_FAIL}" /></td></tr>
+		<tr><td>Password:</td><td><input name="pass" type="password" size="30" /></td></tr>
+		<tr><td>Password (confirm):</td><td><input name="passconfirm" type="password" size="30" /></td></tr>
+	</table>
+	<p><input type="submit" name="setlogin" value="Set Credentials" /></p>
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
+		

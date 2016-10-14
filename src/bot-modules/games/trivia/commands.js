@@ -1,19 +1,21 @@
 /**
  * Commands File
+ *
+ * trivia: creates a game of Trivia
  */
 
 'use strict';
 
 const Path = require('path');
-const Translator = Tools.get('translate.js');
-const Text = Tools.get('text.js');
+const Translator = Tools('translate');
+const Text = Tools('text');
 
-const Trivia = require(Path.resolve(__dirname, 'trivia.js'));
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 const trigger = require(Path.resolve(__dirname, 'cmd-trigger.js'));
 
 module.exports = {
-	trivia: function () {
+	trivia: function (App) {
+		const Trivia = App.modules.games.system.templates.trivia.trivia;
 		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		if (!this.arg) {
 			return this.errorReply(this.usage({desc: translator.get('games', this.lang)},

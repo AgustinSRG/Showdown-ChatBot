@@ -5,59 +5,103 @@
 
 'use strict';
 
-/* Menu Options */
+const Path = require('path');
+const SubMenu = Tools('submenu');
+const Template = Tools('html-template');
 
-App.server.setMenuOption('modules', 'Modules', '/modules/', 'root', 2);
+const mainTemplate = new Template(Path.resolve(__dirname, 'templates', 'modules.html'));
+const menuTemplate = new Template(Path.resolve(__dirname, 'templates', 'modules-menu.html'));
 
-/* Handlers */
+exports.setup = function (App) {
+	/* Menu Options */
+	App.server.setMenuOption('modules', 'Modules', '/modules/', 'root', 2);
 
-App.server.setHandler('modules', (context, parts) => {
-	/* Permission check */
-	if (!context.user || !context.user.can('root')) {
-		context.endWith403();
-		return;
-	}
-
-	/* Actions */
-	let error = null, ok = null;
-	if (context.post.savechanges) {
-		for (let id in App.modules) {
-			if (context.post[id] === 'd') {
-				App.config.loadmodules[id] = false;
-			} else {
-				App.config.loadmodules[id] = true;
-			}
+	/* Handlers */
+	App.server.setHandler('modules', (context, parts) => {
+		if (!context.user || !context.user.can('root')) {
+			context.endWith403();
+			return;
 		}
-		App.saveConfig();
-		ok = "Modules configuration saved sucessfully.";
-		App.logServerAction(context.user.id, 'Modules configuration was editted');
+
+		let submenu = new SubMenu("Modules", parts, context, [
+			{id: 'config', title: 'Configuration', url: '/modules/', handler: configurationHandler},
+			{id: 'menu', title: 'Menu&nbsp;Ordering', url: '/modules/menu/', handler: menuHandler},
+		], 'config');
+
+		return submenu.run();
+	});
+
+	function configurationHandler(context, html) {
+		let error = null, ok = null;
+		if (context.post.savechanges) {
+			for (let id in App.modules) {
+				if (context.post[id] === 'd') {
+					App.config.loadmodules[id] = false;
+				} else {
+					App.config.loadmodules[id] = true;
+				}
+			}
+			App.saveConfig();
+			ok = "Modules configuration saved sucessfully.";
+			App.logServerAction(context.user.id, 'Modules configuration was editted');
+		}
+
+		let htmlVars = {};
+
+		htmlVars.modules = '<table border="0">';
+		for (let id in App.modules) {
+			htmlVars.modules += '<tr>';
+			htmlVars.modules += '<td><strong>' + App.modules[id].name + '</strong>&nbsp;</td>';
+			htmlVars.modules += '<td><select name="' + id + '">';
+			htmlVars.modules += '<option value="e"' + (App.config.loadmodules[id] !== false ? ' selected="selected"' : '') + '>Enabled</option>';
+			htmlVars.modules += '<option value="d"' + (App.config.loadmodules[id] === false ? ' selected="selected"' : '') + '>Disabled</option>';
+			htmlVars.modules += '</select></td>';
+			htmlVars.modules += '</tr>';
+		}
+		htmlVars.modules += '</table>';
+
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
+
+		html += mainTemplate.make(htmlVars);
+		context.endWithWebPage(html, {title: "Modules - Showdown ChatBot"});
 	}
 
-	/* Generate HTML */
-	let html = '';
+	function menuHandler(context, html) {
+		let error = null, ok = null;
+		if (context.post.savechanges) {
+			let menuOrder = {};
+			for (let opt in App.server.menu) {
+				let level = parseInt(context.post[opt]);
+				if (isNaN(level)) continue;
+				menuOrder[opt] = level;
+			}
+			App.config.menuOrder = menuOrder;
+			App.saveConfig();
+			ok = "Control panel menu configuration saved sucessfully.";
+			App.logServerAction(context.user.id, 'Control panel menu configuration was editted');
+		}
+		let htmlVars = {};
 
-	html += '<h2>Bot Modules</h2>';
-	html += '<p>Note: Changes here require an application restart to be effective.</p>';
-	html += '<form method="post" action="">';
-	html += '<table border="0">';
-	for (let id in App.modules) {
-		html += '<tr>';
-		html += '<td><strong>' + App.modules[id].name + '</strong>&nbsp;</td>';
-		html += '<td><select name="' + id + '">';
-		html += '<option value="e"' + (App.config.loadmodules[id] !== false ? ' selected="selected"' : '') + '>Enabled</option>';
-		html += '<option value="d"' + (App.config.loadmodules[id] === false ? ' selected="selected"' : '') + '>Disabled</option>';
-		html += '</select></td>';
-		html += '</tr>';
+		htmlVars.opts = '<table border="0">';
+		for (let opt in App.server.menu) {
+			let level = App.server.menu[opt].level || 0;
+			if (App.config.menuOrder[opt] !== undefined) {
+				level = App.config.menuOrder[opt];
+			}
+			htmlVars.opts += '<tr>';
+			htmlVars.opts += '<td><strong>' + App.server.menu[opt].name + '</strong></td>';
+			htmlVars.opts += '<td><input name="' + opt + '" type="text" value="' +
+			level + '" size="15" placeholder="default" autocomplete="off" /></td>';
+			htmlVars.opts += '<tr>';
+			htmlVars.opts += '</tr>';
+		}
+		htmlVars.opts += '</table>';
+
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
+
+		html += menuTemplate.make(htmlVars);
+		context.endWithWebPage(html, {title: "Menu Ordering - Showdown ChatBot"});
 	}
-	html += '</table>';
-	html += '<p><input type="submit" name="savechanges" value="Save Changes" /></p>';
-	html += '</form>';
-
-	if (error) {
-		html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-	} else if (ok) {
-		html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-	}
-
-	context.endWithWebPage(html, {title: "Modules - Showdown ChatBot"});
-});
+};

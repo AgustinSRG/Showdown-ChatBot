@@ -13,58 +13,67 @@ const Path = require('path');
 /* Tools manager */
 
 const ToolsManager = require(Path.resolve(__dirname, 'tools.js'));
-global.Tools = new ToolsManager(Path.resolve(__dirname, 'tools/'));
+ToolsManager.setPath(Path.resolve(__dirname, 'tools/'));
+ToolsManager.makeGlobal();
 
-/* Check known cloud enviroments */
+/* Application setup */
 
-let logsDir = Path.resolve(__dirname, '../logs/');
-let confDir = Path.resolve(__dirname, '../config/');
-let dataDir = Path.resolve(__dirname, '../data/');
+function setup(env) {
+	/* Check known cloud enviroments */
 
-if (global.ShellOptions && global.ShellOptions.dir !== undefined) {
-	logsDir = Path.resolve(global.ShellOptions.dir, 'logs/');
-	confDir = Path.resolve(global.ShellOptions.dir, 'config/');
-	dataDir = Path.resolve(global.ShellOptions.dir, 'data/');
-} else if (process.env['OPENSHIFT_DATA_DIR']) {
-	/* Openshift Node catridge */
-	logsDir = Path.resolve(process.env['OPENSHIFT_DATA_DIR'], 'logs/');
-	confDir = Path.resolve(process.env['OPENSHIFT_DATA_DIR'], 'config/');
-	dataDir = Path.resolve(process.env['OPENSHIFT_DATA_DIR'], 'data/');
+	let logsDir = Path.resolve(__dirname, '../logs/');
+	let confDir = Path.resolve(__dirname, '../config/');
+	let dataDir = Path.resolve(__dirname, '../data/');
+
+	if (env && env.dir !== undefined) {
+		logsDir = Path.resolve(env.dir, 'logs/');
+		confDir = Path.resolve(env.dir, 'config/');
+		dataDir = Path.resolve(env.dir, 'data/');
+	} else if (process.env['OPENSHIFT_DATA_DIR']) {
+		/* Openshift Node catridge */
+		logsDir = Path.resolve(process.env['OPENSHIFT_DATA_DIR'], 'logs/');
+		confDir = Path.resolve(process.env['OPENSHIFT_DATA_DIR'], 'config/');
+		dataDir = Path.resolve(process.env['OPENSHIFT_DATA_DIR'], 'data/');
+	}
+
+	/* Create Application */
+
+	const ShowdownBotApplication = require(Path.resolve(__dirname, 'app.js'));
+	const App = global.App = new ShowdownBotApplication(confDir, dataDir, env || {});
+
+	App.createLogger(logsDir);
+
+	const SourceLoader = Tools('loader');
+	const loader = new SourceLoader(Path.resolve(__dirname, 'server/handlers/'), App);
+	loader.loadAll(/.*\.js$/);
+
+	App.loadModules(Path.resolve(__dirname, 'bot-modules/'));
+
+	App.loadAddons();
+
+	/* Set Crash-Guard */
+
+	const CrashGuardTemplate = Tools('crashguard');
+
+	global.CrashGuard = new CrashGuardTemplate(err => {
+		App.reportCrash(err);
+	});
+
+	/* Start Application */
+
+	console.log('Starting server...');
+
+	App.start(err => {
+		if (err) {
+			console.log("FATAL: Cannot start the server. Error code: " + err.code);
+			if (err.code === "EADDRINUSE") {
+				console.log("PORT is in use. You can choose another port with the following syntax: node showdown chatbot -p PORT");
+			}
+			process.exit(1);
+		} else {
+			App.tryRunBot();
+		}
+	});
 }
 
-/* Create Application */
-
-const ShowdownBotApplication = require(Path.resolve(__dirname, 'app.js'));
-global.App = new ShowdownBotApplication(confDir, dataDir);
-
-App.createLogger(logsDir);
-
-require(Path.resolve(__dirname, 'server/basic-handlers.js'));
-
-App.loadModules(Path.resolve(__dirname, 'bot-modules/'));
-
-App.loadAddons();
-
-/* Set Crash-Guard */
-
-const CrashGuardTemplate = Tools.get('crashguard.js');
-
-global.CrashGuard = new CrashGuardTemplate(err => {
-	App.reportCrash(err);
-});
-
-/* Start Application */
-
-console.log('Starting server...');
-
-App.start(err => {
-	if (err) {
-		console.log("FATAL: Cannot start the server. Error code: " + err.code);
-		if (err.code === "EADDRINUSE") {
-			console.log("PORT is in use. You can choose another port with the following syntax: node showdown chatbot -p PORT");
-		}
-		process.exit(1);
-	} else {
-		App.tryRunBot();
-	}
-});
+exports.setup = setup;

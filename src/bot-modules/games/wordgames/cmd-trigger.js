@@ -4,7 +4,7 @@
 
 'use strict';
 
-const Chat = Tools.get('chat.js');
+const Chat = Tools('chat');
 
 exports.anagrams = {
 	g: "guess",

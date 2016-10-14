@@ -1,0 +1,10 @@
+<h2>Auto-Invite Configuration</h2>
+<form method="post" action="">
+	<table border="0">
+		<tr><td><strong>Private Room</strong>:&nbsp;</td><td><input name="room" type="text" size="40" value="${ROOM}" /></td></tr>
+		<tr><td><strong>Public Room</strong>:&nbsp;</td><td><input name="public" type="text" size="40" value="${PUBLICROOM}" /></td></tr>
+		<tr><td><strong>Rank</strong>:&nbsp;</td><td>${RANK}</td></tr>
+	</table>
+	<p><input type="submit" name="edit" value="Save Changes" /></p>
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

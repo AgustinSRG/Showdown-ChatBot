@@ -1,0 +1,21 @@
+<script type="text/javascript">
+	function removeRoom(room) {
+		var elem = document.getElementById('confirm-' + room);
+		if (elem) {
+			elem.innerHTML = '<form style="display:inline;" id="confirm-delete-form" method="post" action=""><input type="hidden" name="room" value="' + room + '" />Are you sure?&nbsp;<input type="submit" name="delroom" value="Delete Configuration" /></form>';
+		}
+		return false;
+	}
+</script>
+<h3>Default Settings</h3>
+<form method="post" action="">
+	<input type="hidden" name="room" value="" />
+	${GLOBAL}
+	<p><input type="submit" name="edit" value="Save Changes" /></p>
+</form>
+<hr />
+${ROOMS}
+<form method="post" action="">
+	<input name="room" type="text" size="30" />&nbsp;&nbsp;<input type="submit" name="add" value="Add Room" />
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

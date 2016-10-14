@@ -1,11 +1,12 @@
 /**
- *  Bot Game
+ * Bot Game
  */
 
 'use strict';
 
 class Game {
-	constructor(room, system) {
+	constructor(manager, room, system) {
+		this.manager = manager;
 		this.room = room;
 		this.system = system;
 		this.commands = {};
@@ -28,7 +29,7 @@ class Game {
 	}
 
 	terminate() {
-		App.modules.games.system.terminateGame(this.room);
+		this.manager.terminateGame(this.room);
 	}
 }
 

@@ -1,19 +1,22 @@
 /**
  * Commands File
+ *
+ * chall: bot sends a challenge to an arbitrary user
+ * cancelchallenge: cancels an active challenge
+ * searchbattle: searchs a ladder battle and returns the link
+ * evalbattle: runs arbitrary javascript in a battle context
  */
 
 'use strict';
 
 const Path = require('path');
-const Translator = Tools.get('translate.js');
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
+const Translator = Tools('translate');
+const Text = Tools('text');
+const Chat = Tools('chat');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
-App.parser.addPermission('searchbattle', {group: 'admin'});
-
-function parseAliases(format) {
+function parseAliases(format, App) {
 	if (!format) return '';
 	format = Text.toId(format);
 	if (App.bot.formats[format]) return format;
@@ -25,11 +28,11 @@ function parseAliases(format) {
 }
 
 module.exports = {
-	chall: function () {
+	chall: function (App) {
 		if (!this.can('chall', this.room)) return this.replyAccessDenied('chall');
 		let mod = App.modules.battle.system;
 		let user = Text.toId(this.args[0]) || this.byIdent.id;
-		let format = parseAliases(this.args[1]);
+		let format = parseAliases(this.args[1], App);
 		let teamId = Text.toId(this.args[2]);
 		if (!user || !format) {
 			return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: translator.get('format', this.lang)},
@@ -64,7 +67,7 @@ module.exports = {
 		App.logCommandAction(this);
 	},
 
-	cancelchallenge: function () {
+	cancelchallenge: function (App) {
 		if (!this.can('chall', this.room)) return this.replyAccessDenied('chall');
 		let mod = App.modules.battle.system;
 		if (mod.ChallManager.challenges && mod.ChallManager.challenges.challengeTo) {
@@ -75,10 +78,10 @@ module.exports = {
 		}
 	},
 
-	searchbattle: function () {
+	searchbattle: function (App) {
 		if (!this.can('searchbattle', this.room)) return this.replyAccessDenied('searchbattle');
 		let mod = App.modules.battle.system;
-		let format = parseAliases(this.arg);
+		let format = parseAliases(this.arg, App);
 		if (!format) return this.errorReply(this.usage({desc: 'format'}));
 		if (!App.bot.formats[format] || !App.bot.formats[format].ladder) {
 			return this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(format) + ' ' + translator.get(5, this.lang));
@@ -101,9 +104,9 @@ module.exports = {
 		App.logCommandAction(this);
 	},
 
-	evalbattle: function () {
+	evalbattle: function (App) {
 		if (!App.config.debug) return;
-		if (global.ShellOptions && global.ShellOptions.staticmode) return;
+		if (App.env.staticmode) return;
 		if (!this.isExcepted()) return;
 		if (!this.arg) return this.errorReply(this.usage({desc: 'script'}));
 		if (App.modules.battle.system.BattleBot.battles[this.room]) {

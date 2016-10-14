@@ -1,0 +1,26 @@
+<script type="text/javascript">
+	function removeRoom(room) {
+		var elem = document.getElementById('confirm-' + room);
+		if (elem) {
+			elem.innerHTML = '<form style="display:inline;" id="confirm-delete-form" method="post" action=""><input type="hidden" name="room" value="' + room + '" />Are you sure?&nbsp;<input type="submit" name="delroom" value="Delete Configuration" /></form>';
+		}
+		return false;
+	}
+</script>
+<h3>Exceptions</h3>
+<form method="post" action="">
+	<p><strong>Excepted Users</strong>:&nbsp;<input name="expusers" type="text" size="50" value="${EXPUSERS}" autocomplete="off" />&nbsp;(Separated by commas)</p>
+	<p><strong>Command Exceptions</strong></p>
+	<textarea name="canexp" cols="80" rows="3">${CANEXP}</textarea>
+	<p>(Format: <em>permission, user, room</em>)</p>
+	<p><input type="submit" name="editexp" value="Save Changes" /></p>
+</form>
+<hr />
+${GLOBAL_CHART}
+${ROOMS_CHARTS}
+<hr />
+<form method="post" action="">
+	<input name="room" type="text" size="30" />&nbsp;&nbsp;<input type="submit" name="addroom" value="Add Room" />
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
+		

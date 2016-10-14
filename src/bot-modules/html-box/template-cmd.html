@@ -1,0 +1,8 @@
+<form method="post" action="">
+	<input type="hidden" name="cmd" value="${CMD}" />
+	<p><strong>Command</strong>:&nbsp;${CMD}</p>
+	<p><textarea name="content" cols="150" rows="4">${CONTENT}</textarea></p>
+	<p><input type="submit" name="edit" value="Edit Html Command" /></p>
+</form>
+<p><button onclick="removeCmd('${CMD}');">Delete</button>&nbsp;<span id="confirm-${CMD}">&nbsp;</span></p>
+<hr />

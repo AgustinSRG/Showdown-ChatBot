@@ -5,9 +5,8 @@
 'use strict';
 
 const Path = require('path');
-
-const normalize = Tools.get('normalize.js');
-const Text = Tools.get('text.js');
+const normalize = Tools('normalize');
+const Text = Tools('text');
 
 const Eng_Trans = require(Path.resolve(__dirname, 'english-pokemon-trans.js')).translations;
 const Esp_Trans = require(Path.resolve(__dirname, 'spanish-pokemon-trans.js')).translations;

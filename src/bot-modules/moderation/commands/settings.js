@@ -1,21 +1,22 @@
 /**
  * Commands File
+ *
+ * setmoderation: configures moderation filters
+ * modexception: configures moderation exception
  */
 
 'use strict';
 
 const Path = require('path');
 
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
-const Translator = Tools.get('translate.js');
+const Text = Tools('text');
+const Chat = Tools('chat');
+const Translator = Tools('translate');
 
 const translator = new Translator(Path.resolve(__dirname, 'settings.translations'));
 
-App.parser.addPermission('moderation', {group: 'owner'});
-
 module.exports = {
-	setmoderation: function () {
+	setmoderation: function (App) {
 		if (!this.can('moderation', this.room)) return this.replyAccessDenied('moderation');
 		if (this.args.length !== 2) return this.errorReply(this.usage({desc: 'mod-type'}, {desc: 'on/off'}));
 		let room = this.targetRoom;
@@ -40,7 +41,7 @@ module.exports = {
 		}
 	},
 
-	modexception: function () {
+	modexception: function (App) {
 		if (!this.can('moderation', this.room)) return this.replyAccessDenied('moderation');
 		let room = this.targetRoom;
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));

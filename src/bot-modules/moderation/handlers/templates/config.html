@@ -1,0 +1,16 @@
+<form method="post" action="">
+	<p><strong>Punishments</strong>:&nbsp;<input name="punishments" type="text" size="50" value="${PUNISHMENTS}" /></p>
+	<p><input type="submit" name="savepuns" value="Save Changes" /></p>
+</form>
+<hr />
+<form method="post" action="">
+	<table border="1">
+		<tr>
+			<td width="200"><div align="center"><strong>Moderation Type </strong></div></td>
+			<td width="200"><div align="center"><strong>Default Punishment </strong></div></td>
+		</tr>
+		${ROOMS}
+	</table>
+	<p><input type="submit" name="editval" value="Save Changes" /></p>
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

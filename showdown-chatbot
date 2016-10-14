@@ -10,6 +10,7 @@
  *  -p [port] to change the http port
  *  -b [address] to change the bind address
  *  -d [path] to change the data / configuration path
+ *  -sp [port] to change the https port
  *  -k [ssl-key] to set the ssl key file
  *  -c [ssl-cert] to set the ssl certificate file
  *  --static to set static mode
@@ -20,7 +21,7 @@
 const Util = require("util");
 const Path = require("path");
 
-global.Package = require(Path.resolve(__dirname, 'package.json'));
+const Package = require(Path.resolve(__dirname, 'package.json'));
 
 console.log(Util.format('Showdown-ChatBot %s', Package.version));
 
@@ -42,14 +43,14 @@ for (let i = 0; i < process.argv.length; i++) {
 	}
 }
 
-global.ShellOptions = {};
+let env = {};
 for (let key in shellOpts) {
 	switch (key) {
 	case '-port':
 	case '-p':
 		if (shellOpts[key] !== true && !isNaN(parseInt(shellOpts[key]))) {
-			global.ShellOptions.port = parseInt(shellOpts[key]);
-			console.log("Shell Options: PORT set to " + global.ShellOptions.port);
+			env.port = parseInt(shellOpts[key]);
+			console.log("Shell Options: PORT set to " + env.port);
 		} else {
 			console.log("Invalid PORT set. Usage: node showdown-chatbot [-p] [PORT]");
 			process.exit(1);
@@ -58,8 +59,8 @@ for (let key in shellOpts) {
 	case '-bindaddress':
 	case '-b':
 		if (shellOpts[key] !== true) {
-			global.ShellOptions.bindaddress = shellOpts[key].trim();
-			console.log("Shell Options: BINADDRESS set to " + global.ShellOptions.bindaddress);
+			env.bindaddress = shellOpts[key].trim();
+			console.log("Shell Options: BINADDRESS set to " + env.bindaddress);
 		} else {
 			console.log("Invalid BINADDRESS set. Usage: node showdown-chatbot [-b] [BINADDRESS]");
 			process.exit(1);
@@ -68,18 +69,28 @@ for (let key in shellOpts) {
 	case '-dir':
 	case '-d':
 		if (shellOpts[key] !== true) {
-			global.ShellOptions.dir = Path.resolve(__dirname, shellOpts[key]);
-			console.log("Shell Options: DATA-DIRECTORY set to " + global.ShellOptions.dir);
+			env.dir = Path.resolve(__dirname, shellOpts[key]);
+			console.log("Shell Options: DATA-DIRECTORY set to " + env.dir);
 		} else {
 			console.log("Invalid DATA-DIRECTORY set. Usage: node showdown-chatbot [-d] [DATA-DIRECTORY]");
+			process.exit(1);
+		}
+		break;
+	case '-sslport':
+	case '-sp':
+		if (shellOpts[key] !== true && !isNaN(parseInt(shellOpts[key]))) {
+			env.sslport = parseInt(shellOpts[key]);
+			console.log("Shell Options: SSL PORT set to " + env.sslport);
+		} else {
+			console.log("Invalid PORT set. Usage: node showdown-chatbot [-sp] [PORT]");
 			process.exit(1);
 		}
 		break;
 	case '-key':
 	case '-k':
 		if (shellOpts[key] !== true) {
-			global.ShellOptions.sslkey = Path.resolve(__dirname, shellOpts[key]);
-			console.log("Shell Options: SSL-KEY set to " + global.ShellOptions.sslkey);
+			env.sslkey = Path.resolve(__dirname, shellOpts[key]);
+			console.log("Shell Options: SSL-KEY set to " + env.sslkey);
 		} else {
 			console.log("Invalid SSL-KEY set. Usage: node showdown-chatbot [-k] [SSL-KEY]");
 			process.exit(1);
@@ -88,8 +99,8 @@ for (let key in shellOpts) {
 	case '-cert':
 	case '-c':
 		if (shellOpts[key] !== true) {
-			global.ShellOptions.sslcert = Path.resolve(__dirname, shellOpts[key]);
-			console.log("Shell Options: SSL-CERT set to " + global.ShellOptions.sslcert);
+			env.sslcert = Path.resolve(__dirname, shellOpts[key]);
+			console.log("Shell Options: SSL-CERT set to " + env.sslcert);
 		} else {
 			console.log("Invalid SSL-CERT set. Usage: node showdown-chatbot [-c] [SSL-CERT]");
 			process.exit(1);
@@ -97,11 +108,13 @@ for (let key in shellOpts) {
 		break;
 	case '--static':
 		console.log("MODE: Static Mode");
-		global.ShellOptions.staticmode = true;
+		env.staticmode = true;
 		break;
 	}
 }
 
+env.package = Package;
+
 /* Require Main File */
 
-require(Path.resolve(__dirname, 'src/index.js'));
+require(Path.resolve(__dirname, 'src/index.js')).setup(env);

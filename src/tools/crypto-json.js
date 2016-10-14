@@ -6,7 +6,7 @@
 
 const Crypto = require('crypto');
 const FileSystem = require('fs');
-const EventsManager = require('./events.js');
+const EventsManager = Tools('events');
 
 /**
  * Encrypts a text

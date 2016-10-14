@@ -1,0 +1,12 @@
+<table border="1">
+	<tr><td width="300"><strong>Command</strong></td><td width="300">${CMDID}</td></tr>
+	<tr><td colspan="2">
+	<form method="post" action="#Cmd-${CMDID}">
+		<input type="hidden" name="cmd" value="${CMDID}" />
+		<p><textarea name="content" cols="80" rows="2">${TEXT}</textarea></p>
+		<p><input type="submit" name="editcmd" value="Edit Command" /></p>
+	</form>
+	<p><button onclick="deleteCommand('${CMDID}')">Delete Command</button>&nbsp;<span id="confirm-delcmd-${CMDID}">&nbsp;</span></p>
+	</td></tr>
+</table>
+

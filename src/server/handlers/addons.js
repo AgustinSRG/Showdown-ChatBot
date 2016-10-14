@@ -8,178 +8,145 @@
 
 const Path = require('path');
 const FileSystem = require('fs');
-const Text = Tools.get('text.js');
-const check = Tools.get('check.js');
+const Text = Tools('text');
+const check = Tools('check');
+const Template = Tools('html-template');
 
-/* Menu Options */
+const listTemplate = new Template(Path.resolve(__dirname, 'templates', 'addons-list.html'));
+const addonItemTemplate = new Template(Path.resolve(__dirname, 'templates', 'addons-item.html'));
+const addingTemplate = new Template(Path.resolve(__dirname, 'templates', 'addons-new.html'));
+const editTemplate = new Template(Path.resolve(__dirname, 'templates', 'addons-edit.html'));
 
-App.server.setMenuOption('addons', 'Add-ons', '/addons/', 'root', 2);
+exports.setup = function (App) {
+	if (App.env.staticmode) return;
 
-/* Handlers */
+	/* Menu Options */
+	App.server.setMenuOption('addons', 'Add-ons', '/addons/', 'root', 2);
 
-App.server.setHandler('addons', (context, parts) => {
-	/* Permission check */
-	if (!context.user || !context.user.can('root')) {
-		context.endWith403();
-		return;
-	}
+	/* Handlers */
+	App.server.setHandler('addons', (context, parts) => {
+		if (!context.user || !context.user.can('root')) {
+			context.endWith403();
+			return;
+		}
 
-	if (parts[0] === 'new') {
-		newAddonHandler(context, parts);
-		return;
-	} else if (parts[0] === 'edit') {
-		editAddonHandler(context, parts);
-		return;
-	}
+		if (parts[0] === 'new') {
+			newAddonHandler(context, parts);
+			return;
+		} else if (parts[0] === 'edit') {
+			editAddonHandler(context, parts);
+			return;
+		}
 
-	let ok = null, error = null;
+		let ok = null, error = null;
+		if (context.post.remove) {
+			let addon = context.post.addon;
+			if (addon && App.addons[addon]) {
+				App.removeAddon(addon);
+				try {
+					FileSystem.unlinkSync(Path.resolve(App.addonsDir, addon));
+				} catch (err) {
+					App.reportCrash(err);
+				}
+				App.logServerAction(context.user.id, 'Add-on uninstalled: ' + addon + '.js');
+				ok = "Addon " + addon + " deleted sucessfully";
+			} else {
+				error = "Invalid add-on";
+			}
+		}
 
-	if (context.post.remove) {
-		let addon = context.post.addon;
-		if (addon && App.addons[addon]) {
-			App.removeAddon(addon);
+		let htmlVars = {};
+		htmlVars.addons_list = '';
+
+		for (let file in App.addons) {
+			htmlVars.addons_list += addonItemTemplate.make({
+				file: file,
+				desc: (App.addons[file].desc ? ('<p>' + Text.escapeHtml(App.addons[file].desc) + '</p>') : ""),
+			});
+		}
+
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
+
+		context.endWithWebPage(listTemplate.make(htmlVars), {title: "Add-ons - Showdown ChatBot"});
+	});
+
+	function newAddonHandler(context, parts) {
+		let ok = null, error = null;
+
+		if (context.post.add) {
+			let addon = Text.toId(context.post.addon);
+			let content = (context.post.content || "").trim();
 			try {
-				FileSystem.unlinkSync(Path.resolve(App.addonsDir, addon));
+				check(addon, "You must specify an addon filename");
+				check(content, "Addon content cannot be blank");
+				check(!App.addons[addon + '.js'], "Addon " + addon + ".js already exists");
 			} catch (err) {
-				App.reportCrash(err);
+				error = err.message;
 			}
-			App.logServerAction(context.user.id, 'Add-on uninstalled: ' + addon + '.js');
-			ok = "Addon " + addon + " deleted sucessfully";
-		} else {
-			error = "Invalid add-on";
-		}
-	}
-
-	let html = '';
-
-	html += '<h2>Add-ons</h2>';
-	html += '<script type="text/javascript">function removeAddon(addon) {var elem = document.getElementById(\'confirm-\' + addon);' +
-		'if (elem) {elem.innerHTML = \'<form style="display:inline;" id="confirm-delete-form" method="post" action="">' +
-		'<input type="hidden" name="addon" value="\' + addon + \'" />Are you sure?&nbsp;' +
-		'<input type="submit" name="remove" value="Delete" /></form>\';}return false;}</script>';
-
-	for (let file in App.addons) {
-		html += '<p><strong>Add-on | File: ' + file + '</strong></p>';
-		if (typeof App.addons[file].desc === 'string') {
-			html += '<p>' + Text.escapeHtml(App.addons[file].desc) + '</p>';
-		}
-		html += '<p><a href="/addons/edit/' + file + '/set/"><button>Edit Add-on</button></a></p>';
-		html += '<p><button onclick="removeAddon(\'' + file +
-			'\');">Delete Add-on</button>&nbsp;<span id="confirm-' + file + '">&nbsp;</span></p>';
-		html += '<hr />';
-	}
-
-	html += '<p><strong>Note:</strong> Addons can cause several damage to your bot. Only install them if you know they are safe.</p>';
-	html += '<a href="/addons/new/"><button>Install New Add-on</button></a>';
-
-	if (error) {
-		html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-	} else if (ok) {
-		html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-	}
-
-	context.endWithWebPage(html, {title: "Add-ons - Showdown ChatBot"});
-});
-
-function newAddonHandler(context, parts) {
-	let ok = null, error = null;
-
-	if (context.post.add) {
-		let addon = Text.toId(context.post.addon);
-		let content = (context.post.content || "").trim();
-		try {
-			check(addon, "You must specify an addon filename");
-			check(content, "Addon content cannot be blank");
-			check(!App.addons[addon + '.js'], "Addon " + addon + ".js already exists");
-		} catch (err) {
-			error = err.message;
-		}
-		if (!error) {
-			FileSystem.writeFileSync(Path.resolve(App.addonsDir, addon + '.js'), content);
-			if (!App.installAddon(addon + '.js')) {
-				error = "Failed to install the add-on";
-			} else {
-				App.logServerAction(context.user.id, 'Add-on installed: ' + addon + '.js');
-				context.response.writeHead(302, {'Location': '/addons/'});
-				context.response.end();
-				return;
+			if (!error) {
+				FileSystem.writeFileSync(Path.resolve(App.addonsDir, addon + '.js'), content);
+				if (!App.installAddon(addon + '.js')) {
+					error = "Failed to install the add-on";
+				} else {
+					App.logServerAction(context.user.id, 'Add-on installed: ' + addon + '.js');
+					context.response.writeHead(302, {'Location': '/addons/'});
+					context.response.end();
+					return;
+				}
 			}
 		}
+
+		let htmlVars = {};
+		htmlVars.content = (context.post.content || '');
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
+
+		context.endWithWebPage(addingTemplate.make(htmlVars), {title: "New Add-on - Showdown ChatBot"});
 	}
 
-	let html = '';
-	html += '<p><a href="/addons/">Back to Add-ons list</a></p>';
-	html += '<form method="post" action="">';
-	html += '<p><strong>File (without ext):</strong>&nbsp;<input name="addon" type="text" size="30" /></p>';
-	html += '<p>Copy in the following textarea the full script file.</p>';
-	html += '<p><textarea name="content" cols="140" rows="20">' + (context.post.content || '') + '</textarea></p>';
-	html += '<p><input type="submit" name="add" value="Install Add-on" /></p>';
-	html += '</form>';
-
-	if (error) {
-		html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-	} else if (ok) {
-		html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-	}
-
-	context.endWithWebPage(html, {title: "New Add-on - Showdown ChatBot"});
-}
-
-function editAddonHandler(context, parts) {
-	let html = '';
-	let file = parts[1];
-	if (!file) {
-		return context.endWith404();
-	}
-	let path = Path.resolve(App.addonsDir, file);
-	if (!FileSystem.existsSync(path) || !FileSystem.statSync(path).isFile()) {
-		return context.endWith404();
-	}
-
-	let ok = null, error = null;
-
-	if (context.post.edit) {
-		let addon = file;
-		let content = (context.post.content || "").trim();
-		try {
-			check(addon, "You must specify an addon filename");
-			check(content, "Addon content cannot be blank");
-			check(App.addons[addon], "Addon " + addon + " not found");
-		} catch (err) {
-			error = err.message;
+	function editAddonHandler(context, parts) {
+		let file = parts[1];
+		if (!file) {
+			return context.endWith404();
 		}
-		if (!error) {
-			App.removeAddon(addon);
-			FileSystem.writeFileSync(Path.resolve(App.addonsDir, addon), content);
-			if (!App.installAddon(addon)) {
-				error = "Failed to re-install the add-on";
-			} else {
-				App.logServerAction(context.user.id, 'Add-on re-installed: ' + addon);
-				ok = "Add-on re-installed sucessfully";
+		let path = Path.resolve(App.addonsDir, file);
+		if (!FileSystem.existsSync(path) || !FileSystem.statSync(path).isFile()) {
+			return context.endWith404();
+		}
+
+		let ok = null, error = null;
+
+		if (context.post.edit) {
+			let addon = file;
+			let content = (context.post.content || "").trim();
+			try {
+				check(addon, "You must specify an addon filename");
+				check(content, "Addon content cannot be blank");
+				check(App.addons[addon], "Addon " + addon + " not found");
+			} catch (err) {
+				error = err.message;
+			}
+			if (!error) {
+				App.removeAddon(addon);
+				FileSystem.writeFileSync(Path.resolve(App.addonsDir, addon), content);
+				if (!App.installAddon(addon)) {
+					error = "Failed to re-install the add-on";
+				} else {
+					App.logServerAction(context.user.id, 'Add-on re-installed: ' + addon);
+					ok = "Add-on re-installed sucessfully";
+				}
 			}
 		}
+
+		let content = FileSystem.readFileSync(path).toString();
+
+		let htmlVars = {};
+		htmlVars.content = content;
+		htmlVars.file = file;
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
+
+		context.endWithWebPage(editTemplate.make(htmlVars), {title: "Add-ons - Showdown ChatBot"});
 	}
-
-	let content = FileSystem.readFileSync(path).toString();
-
-	html += '<p><a href="/addons/">Back to Add-ons list</a></p>';
-	html += '<form method="post" action="">';
-	html += '<input type="hidden" name="addon" value="' + file + '" />';
-	html += '<p><strong>File: ' + file + '</strong></p>';
-	html += '<p><textarea name="content" cols="140" rows="20">' + content + '</textarea></p>';
-	html += '<p><input type="submit" name="edit" value="Save Changes" /></p>';
-	html += '</form>';
-
-	if (error) {
-		html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
-	} else if (ok) {
-		html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
-	}
-
-	context.endWithWebPage(html, {title: "Add-ons - Showdown ChatBot"});
-}
-
-if (global.ShellOptions && global.ShellOptions.staticmode) {
-	App.server.removeMenuOption('addons');
-	App.server.removeHandler('addons');
-}
+};

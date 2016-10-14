@@ -5,5 +5,10 @@
   "commands": [
     "misc.js"
   ],
+  "permissions": {
+	"randomanswer": {"group": "voice"},
+	"random": {"group": "voice"},
+	"randpoke": {"group": "voice"}
+  },
   "description": "Misc Commands Plugins"
 }

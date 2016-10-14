@@ -4,9 +4,9 @@
 
 'use strict';
 
-const Text = Tools.get('text.js');
+const Text = Tools('text');
 
-function getGeneration(name) {
+function getGeneration(name, App) {
 	let id = Text.toId(name);
 	let pokedex = App.data.getPokedex();
 	let movedex = App.data.getMoves();

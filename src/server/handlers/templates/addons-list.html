@@ -1,0 +1,16 @@
+<script type="text/javascript">
+	function removeAddon(addon) {
+		var elem = document.getElementById('confirm-' + addon);
+		if (elem) {
+			elem.innerHTML = '<form style="display:inline;" id="confirm-delete-form" method="post" action="">' +
+			'<input type="hidden" name="addon" value="' + addon +
+			'" />Are you sure?&nbsp;<input type="submit" name="remove" value="Delete" /></form>';
+		}
+		return false;
+	}
+</script>
+<h2>Add-ons</h2>
+${ADDONS_LIST}
+<p><strong>Note:</strong> Addons can cause several damage to your bot. Only install them if you know they are safe.</p>
+<a href="/addons/new/"><button>Install New Add-on</button></a>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

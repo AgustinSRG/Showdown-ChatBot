@@ -1,22 +1,23 @@
 /**
  * Commands File
+ *
+ * pokeanagrams: creates a game of Poke-Anagrams
+ * pokehangman: creates a game of Poke-Hangman
  */
 
 'use strict';
 
 const Path = require('path');
-const Translator = Tools.get('translate.js');
-const Text = Tools.get('text.js');
+const Translator = Tools('translate');
+const Text = Tools('text');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 const trigger = require(Path.resolve(__dirname, 'cmd-trigger.js'));
-const PokeRand = require(Path.resolve(__dirname, 'pokerand.js'));
-
-const PokeAnagrams = require(Path.resolve(__dirname, 'poke-anagrams.js'));
-const PokeHangman = require(Path.resolve(__dirname, 'poke-hangman.js'));
 
 module.exports = {
-	pokeanagrams: function () {
+	pokeanagrams: function (App) {
+		const PokeAnagrams = App.modules.games.system.templates['poke-games'].anagrams;
+		const PokeRand = App.modules.games.system.templates['poke-games'].pokerand;
 		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		if (!this.arg) {
 			return this.errorReply(this.usage({desc: translator.get('games', this.lang)},
@@ -52,7 +53,9 @@ module.exports = {
 		}
 	},
 
-	pokehangman: function () {
+	pokehangman: function (App) {
+		const PokeHangman = App.modules.games.system.templates['poke-games'].hangman;
+		const PokeRand = App.modules.games.system.templates['poke-games'].pokerand;
 		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		if (this.getRoomType(this.room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
 		let maxFails = parseInt(this.arg || '0');

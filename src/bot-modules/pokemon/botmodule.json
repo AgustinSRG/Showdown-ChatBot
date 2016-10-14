@@ -7,5 +7,11 @@
 	"poke-data/commands.js",
 	"usage/commands.js"
   ],
+  "permissions": {
+	"pokemon": {"group": "voice"},
+	"translate": {"group": "driver"},
+	"usage": {"group": "voice"},
+	"usagedata": {"group": "driver"}
+  },
   "description": "Pokemon help commands"
 }

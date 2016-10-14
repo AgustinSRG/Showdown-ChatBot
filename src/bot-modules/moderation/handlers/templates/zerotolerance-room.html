@@ -1,0 +1,12 @@
+<h3>Room: ${NAME}</h3>
+<form method="post" action="">
+	<input type="hidden" name="room" value="${ROOM}" />
+	<p><input type="checkbox" name="incpun" value="true"${ENABLED} />&nbsp;Enable increase punishment mode</p>
+	<p>Zero Tolerance (MIN):</p><p><textarea name="min" cols="80" rows="2">${MIN}</textarea></p>
+	<p>Zero Tolerance (LOW):</p><p><textarea name="low" cols="80" rows="2">${LOW}</textarea></p>
+	<p>Zero Tolerance (NORMAL):</p><p><textarea name="normal" cols="80" rows="2">${NORMAL}</textarea></p>
+	<p>Zero Tolerance (HIGH):</p><p><textarea name="high" cols="80" rows="2">${HIGH}</textarea></p>
+	<p>Zero Tolerance (MAX):</p><p><textarea name="max" cols="80" rows="2">${MAX}</textarea></p>
+	<p><input type="submit" name="edit" value="Save Changes" /></p>
+</form>
+<hr />

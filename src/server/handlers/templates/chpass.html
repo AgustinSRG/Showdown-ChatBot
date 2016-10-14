@@ -1,0 +1,14 @@
+<h2>Change password for your account</h2>
+<form id="chpass-form" name="chpass-form" method="post" action="">
+	<table border="0">
+		<tr><td style="padding:5px;">Current password: </td>
+		<td><input type="password" name="password" /></td></tr>
+		<tr><td style="padding:5px;">New password: </td>
+		<td><input type="password" name="newpassword" /></td></tr>
+		<tr><td style="padding:5px;">Confirm new password: </td>
+		<td><input type="password" name="newpasswordconfirm" /></td></tr>
+	</table>
+	<br />
+	<p><input type="submit" name="chpass" value="Change Password" /></p>
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

@@ -15,26 +15,28 @@ const Default_Server_Port = 8080;
 const Path = require('path');
 const FileSystem = require('fs');
 
-const CryptoDataBase = Tools.get('crypto-json.js');
-const Logger = Tools.get('logs.js');
-const BotMod = Tools.get('bot-mod.js');
-const Text = Tools.get('text.js');
+const CryptoDataBase = Tools('crypto-json');
+const Logger = Tools('logs');
+const BotMod = Tools('bot-mod');
+const Text = Tools('text');
 
 const Server = require(Path.resolve(__dirname, 'server/server.js')).Server;
 const DataManager = require(Path.resolve(__dirname, 'data.js'));
 const CommandParser = require(Path.resolve(__dirname, 'command-parser.js')).CommandParser;
 
-const uncacheTree = Tools.get('uncachetree.js');
-const checkDir = Tools.get('checkdir.js');
+const uncacheTree = Tools('uncachetree');
+const checkDir = Tools('checkdir');
 
 class ChatBotApp {
 	/**
 	 * @param {Path} confDir - A path to store the bot configuration
 	 * @param {Path} dataDir - A path to store the bot data (dowloaded or temporal data)
+	 * @param {Object} env
 	 */
-	constructor(confDir, dataDir) {
+	constructor(confDir, dataDir, env) {
 		/* Initial Status */
 		this.status = 'stopped';
+		this.env = env;
 
 		/* Check paths */
 		this.confDir = confDir;
@@ -43,7 +45,10 @@ class ChatBotApp {
 		checkDir(dataDir);
 
 		/* Data */
-		this.data = new DataManager(dataDir);
+		this.data = new DataManager(dataDir, this);
+		this.data.events.on('msg', function (str) {
+			this.log(str);
+		}.bind(this));
 
 		/* Configuration DataBase */
 		if (!FileSystem.existsSync(Path.resolve(confDir, 'config.key'))) {
@@ -95,20 +100,30 @@ class ChatBotApp {
 			this.config.loadmodules = {};
 		}
 
-		if (global.ShellOptions && global.ShellOptions.port !== undefined) {
-			this.config.server.port = global.ShellOptions.port;
+		/* Menu configuration */
+		if (!this.config.menuOrder) {
+			this.config.menuOrder = {};
+		}
+
+		if (env.port !== undefined) {
+			this.config.server.port = env.port;
 		} else if (process.env['PORT']) {
 			this.config.server.port = process.env['PORT'];
 		} else if (process.env['OPENSHIFT_NODEJS_PORT']) {
 			this.config.server.port = process.env['OPENSHIFT_NODEJS_PORT'];
 		}
 
-		if (global.ShellOptions && global.ShellOptions.bindaddress !== undefined) {
-			this.config.server.bindaddress = global.ShellOptions.bindaddress;
+		if (env.bindaddress !== undefined) {
+			this.config.server.bindaddress = env.bindaddress;
 		} else if (process.env['BIND_IP']) {
 			this.config.server.bindaddress = process.env['BIND_IP'];
 		} else if (process.env['OPENSHIFT_NODEJS_IP']) {
 			this.config.server.bindaddress = process.env['OPENSHIFT_NODEJS_IP'];
+		}
+
+		if (env.sslport !== undefined) {
+			this.config.server.httpsPort = env.sslport;
+			this.config.server.https = true;
 		}
 
 		/* Languages */
@@ -164,10 +179,10 @@ class ChatBotApp {
 			this.config.bot.loginserv, this.config.bot.maxlines, true, this.config.bot.retrydelay);
 
 		/* Create the server */
-		this.server = new Server(this.confDir, this.config.server);
+		this.server = new Server(this.confDir, this);
 
 		/* Create the command parser */
-		this.parser = new CommandParser(this.confDir, this.bot);
+		this.parser = new CommandParser(this.confDir, this);
 
 		/* Command parser bot events */
 		this.bot.on('userchat', function (room, time, by, msg) {
@@ -205,6 +220,7 @@ class ChatBotApp {
 		}.bind(this));
 
 		/* Other initial values */
+		this.console = null;
 		this.logger = null;
 		this.logsDir = null;
 		this.modules = {};
@@ -247,7 +263,7 @@ class ChatBotApp {
 					try {
 						let conf = require(absFile);
 						if (conf.id && this.config.loadmodules[conf.id] !== false) {
-							let mod = new BotMod(Path.resolve(path, file), conf);
+							let mod = new BotMod(Path.resolve(path, file), conf, this);
 							this.modules[mod.id] = mod;
 							this.parser.addCommands(mod.commands);
 							console.log('NEW MODULE: ' + mod.name + ' (v' + mod.version + ')');
@@ -263,7 +279,7 @@ class ChatBotApp {
 							};
 						}
 					} catch (err) {
-						console.log('Error: Cannot load module "' + file + '" - ' + err.message);
+						console.log('Error: Cannot load module "' + file + '" - ' + err.message + '\n' + err.stack);
 					}
 				}
 			}.bind(this));
@@ -326,6 +342,9 @@ class ChatBotApp {
 		let path = Path.resolve(this.addonsDir, file);
 		try {
 			this.addons[file] = require(path);
+			if (typeof this.addons[file].setup === "function") {
+				this.addons[file].setup(this);
+			}
 			return true;
 		} catch (err) {
 			this.reportCrash(err);
@@ -340,7 +359,7 @@ class ChatBotApp {
 	removeAddon(file) {
 		if (typeof this.addons[file] === 'object' && typeof this.addons[file].destroy === 'function') {
 			try {
-				this.addons[file].destroy();
+				this.addons[file].destroy(this);
 			} catch (err) {
 				this.reportCrash(err);
 			}
@@ -375,6 +394,29 @@ class ChatBotApp {
 	log(text) {
 		if (this.logger) {
 			this.logger.log(text);
+		} else {
+			this.logToConsole(text);
+		}
+	}
+
+	/**
+	 * Sets the application console
+	 * @param {Object} con - The new console
+	 */
+	setConsole(con) {
+		if (typeof con !== "object" || typeof con.log !== "function") {
+			throw new Error("Invalid Console.");
+		}
+		this.console = con;
+	}
+
+	/**
+	 * Writes a message to the console
+	 * @param {String} text - The message to be written
+	 */
+	logToConsole(text) {
+		if (this.console) {
+			this.console.log(text);
 		} else {
 			console.log(text);
 		}

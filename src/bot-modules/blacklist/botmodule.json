@@ -6,5 +6,11 @@
   "commands": [
     "commands.js"
   ],
+  "permissions": {
+	"blacklist": {"group": "owner"}
+  },
+  "handlers": [
+    "server-handler.js"
+  ],
   "description": "An user blacklist for chat rooms"
 }

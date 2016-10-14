@@ -1,0 +1,25 @@
+<script type="text/javascript">
+	function deleteUser(user) {
+		var elem = document.getElementById('confirm-del-' + user);
+		if (elem) {
+			elem.innerHTML = '<form style="display:inline;" id="confirm-delete-form" method="post" action="/users/"><input type="hidden" name="user" value="' + user + '" />Are you sure?&nbsp;<input type="submit" name="deluser" value="Confirm Delete" /></form>';
+		}
+		return false;
+	}
+</script>
+<form id="user-form" name="user-form" method="post" action="">
+	<input type="hidden" name="user" value="${ID}" />
+	<table class="user-table">
+		<tr><td><strong>ID</strong><td><td>${ID}</td></tr>
+		<tr><td><strong>Name</strong><td><td><input name="username" value="${NAME}" type="text" size="50" /></td></tr>
+		<tr><td><strong>Group</strong><td><td><input name="usergroup" value="${GROUP}" type="text" size="50" /></td></tr>
+		<tr><td colspan="2"><strong>Permissions</strong></td></tr>
+	</table>
+	<div style="padding:10px;">
+		${PERMISSIONS}
+	</div>
+	<p><input type="submit" name="edituser" value="Save Changes" /></p>
+</form>
+<p><button onclick="deleteUser('${ID}');">Delete User</button>&nbsp;<span id="confirm-del-${ID}"></span></p>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
+				

@@ -1,19 +1,19 @@
 /**
  * Commands File
+ *
+ * gitban: adds a GitHub user to the PR blacklist
+ * gitunban: removes a GitHub user from the blacklist
  */
 
 'use strict';
 
 const Path = require('path');
-const Translator = Tools.get('translate.js');
+const Translator = Tools('translate');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
-App.parser.addPermission('gitban', {group: 'admin'});
-
-
 module.exports = {
-	gitban: function () {
+	gitban: function (App) {
 		if (!this.can('gitban', this.room)) return this.replyAccessDenied('gitban');
 		const bl = App.config.modules.github.blacklist;
 		let target = this.arg.toLowerCase().trim();
@@ -30,7 +30,7 @@ module.exports = {
 		}
 	},
 
-	gitunban: function () {
+	gitunban: function (App) {
 		if (!this.can('gitban', this.room)) return this.replyAccessDenied('gitban');
 		const bl = App.config.modules.github.blacklist;
 		let target = this.arg.toLowerCase().trim();

@@ -8,8 +8,7 @@ const Spam_Message_Time = 15 * 1000;
 const Spam_Default_Value = 3;
 
 const Path = require('path');
-
-const Translator = Tools.get('translate.js');
+const Translator = Tools('translate');
 
 const translator = new Translator(Path.resolve(__dirname, 'spam.translations'));
 

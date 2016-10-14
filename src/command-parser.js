@@ -18,13 +18,13 @@ const Command_Wait_Interval = 1500;
 const Util = require('util');
 const Path = require('path');
 
-const DataBase = Tools.get('json-db.js');
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
-const AbuseMonitor = Tools.get('abuse-monitor.js');
-const LineSplitter = Tools.get('line-splitter.js');
+const DataBase = Tools('json-db');
+const Text = Tools('text');
+const Chat = Tools('chat');
+const AbuseMonitor = Tools('abuse-monitor');
+const LineSplitter = Tools('line-splitter');
+const Translator = Tools('translate');
 
-const Translator = Tools.get('translate.js');
 const translator = new Translator(Path.resolve(__dirname, 'command-parser.translations'));
 const usageTranslator = new Translator(Path.resolve(__dirname, 'command-usage.translations'));
 
@@ -34,11 +34,12 @@ const usageTranslator = new Translator(Path.resolve(__dirname, 'command-usage.tr
 class CommandParser {
 	/**
 	 * @param {Path} path - Existing directory to store the parser configuration
-	 * @param {ShowdownBot} bot
+	 * @param {ChatBotApp} app - Application to assign the parser
 	 */
-	constructor(path, bot) {
+	constructor(path, app) {
 		/* Initial values */
-		this.bot = bot;
+		this.app = app;
+		this.bot = app.bot;
 		this.commands = {};
 		this.triggers = {
 			before: {},
@@ -75,12 +76,12 @@ class CommandParser {
 
 		/* Abuse Monitor */
 		this.monitor = new AbuseMonitor(Max_Cmd_Flood, Flood_Interval);
-		this.monitor.on('lock', (user, msg) => {
-			App.log("[PARSER - ABUSE] [LOCK: " + user + "]" + (msg ? (' ' + msg) : ''));
-		});
-		this.monitor.on('unlock', user => {
-			App.log("[PARSER - ABUSE] [UNLOCK: " + user + "]");
-		});
+		this.monitor.on('lock', function (user, msg) {
+			this.app.log("[PARSER - ABUSE] [LOCK: " + user + "]" + (msg ? (' ' + msg) : ''));
+		}.bind(this));
+		this.monitor.on('unlock', function (user) {
+			this.app.log("[PARSER - ABUSE] [UNLOCK: " + user + "]");
+		}.bind(this));
 	}
 
 	/**
@@ -253,7 +254,7 @@ class CommandParser {
 		this.lastHelpCommand[userid] = Date.now();
 		let helpmsg = this.data.helpmsg;
 		helpmsg = helpmsg.replace(/\$USER/, by);
-		helpmsg = helpmsg.replace(/\$BOT/, App.bot.getBotNick());
+		helpmsg = helpmsg.replace(/\$BOT/, this.bot.getBotNick());
 		this.bot.pm(userid, Text.stripCommands(helpmsg));
 	}
 
@@ -333,7 +334,7 @@ class CommandParser {
 	 */
 	parse(msg, room, by) {
 		if (!room && msg.substr(0, 8) === '/invite ') {
-			return this.parse((App.config.parser.tokens[0] || '') + 'joinroom ' + msg.substr(8), room, by);
+			return this.parse((this.app.config.parser.tokens[0] || '') + 'joinroom ' + msg.substr(8), room, by);
 		}
 		if (msg.substr(0, 6) === '/html ') {
 			return this.parse(msg.substr(6), room, by);
@@ -356,7 +357,7 @@ class CommandParser {
 		}
 
 		/* Command Token */
-		let tokens = App.config.parser.tokens;
+		let tokens = this.app.config.parser.tokens;
 		let token = null;
 		for (let i = 0; i < tokens.length; i++) {
 			if (msg.indexOf(tokens[i]) === 0) {
@@ -406,7 +407,7 @@ class CommandParser {
 				if (!this.data.exceptions[userid]) this.markPrivateCommand(userid, room);
 			}
 		} catch (err) {
-			App.log("[COMMAND CRASH] " + err.code + ":" + err.message + " | " + context.toString() + "\n" + err.stack);
+			this.app.log("[COMMAND CRASH] " + err.code + ":" + err.message + " | " + context.toString() + "\n" + err.stack);
 			context.errorReply("The command crashed: " + err.code + " (" + err.message + ")");
 		}
 	}
@@ -419,11 +420,11 @@ class CommandParser {
 	 * @returns {Boolean}
 	 */
 	equalOrHigherGroup(ident, group) {
-		let groups = App.config.parser.groups;
+		let groups = this.app.config.parser.groups;
 		if (group.length > 1) {
 			if (group === 'excepted') return false;
 			if (group === 'user') return true;
-			group = App.config.parser[group];
+			group = this.app.config.parser[group];
 		}
 		let i, j;
 		i = groups.indexOf(group);
@@ -496,6 +497,19 @@ class CommandParser {
 		commands = commands.concat(Object.keys(this.data.dyncmds));
 		return commands;
 	}
+
+	/**
+	 * Returns a room title
+	 * @param {String} room
+	 * @returns {String}
+	 */
+	getRoomTitle(room) {
+		if (this.app.bot.rooms[room]) {
+			return (this.app.bot.rooms[room].title || room);
+		} else {
+			return Text.escapeHTML(room);
+		}
+	}
 }
 
 /**
@@ -504,7 +518,7 @@ class CommandParser {
 class Command {
 	/**
 	 * @param {String} id - Command ID
-	 * @param {function(String, CommandContext)} func
+	 * @param {function} func
 	 */
 	constructor(id, func) {
 		this.id = id;
@@ -517,7 +531,7 @@ class Command {
 	 */
 	exec(context) {
 		context.handler = this.id;
-		this.func.call(context, this.id, context);
+		this.func.call(context, context.parser.app, context);
 	}
 }
 
@@ -556,7 +570,7 @@ class DynamicCommand {
 				if (conf[arg]) {
 					this.execNext(conf[arg], context);
 				} else if (Object.keys(conf).length) {
-					let spl = new LineSplitter(App.config.bot.maxMessageLength);
+					let spl = new LineSplitter(context.parser.app.config.bot.maxMessageLength);
 					spl.add((arg ? (translator.get(4, context.lang) + ". ") : "") +
 						translator.get(5, context.lang) + " " + Chat.bold(cmd) + ":");
 					let subCmds = Object.keys(conf);
@@ -745,9 +759,9 @@ class CommandContext {
 	 */
 	getLanguage() {
 		if (!this.room) {
-			return App.config.language['default'];
+			return this.parser.app.config.language['default'];
 		} else {
-			return App.config.language.rooms[this.room] || App.config.language['default'];
+			return this.parser.app.config.language.rooms[this.room] || this.parser.app.config.language['default'];
 		}
 	}
 
@@ -810,6 +824,13 @@ class CommandContext {
 			parsedArgs[id] = val || true;
 		}
 		return parsedArgs;
+	}
+
+	/**
+	 * Logs command action
+	 */
+	addToSecurityLog() {
+		this.parser.app.logCommandAction(this);
 	}
 
 	/**

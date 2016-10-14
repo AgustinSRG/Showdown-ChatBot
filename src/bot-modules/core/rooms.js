@@ -7,7 +7,7 @@
 const Path = require('path');
 const FileSystem = require('fs');
 
-const checkDir = Tools.get('checkdir.js');
+const checkDir = Tools('checkdir');
 
 class RoomManager {
 	constructor(path) {

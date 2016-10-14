@@ -4,7 +4,20 @@
   "version": "1.0",
   "main": "main.js",
   "commands": [
-     "commands.js"
+     "commands/banwords.js",
+	 "commands/settings.js",
+	 "commands/zerotolerance.js"
+  ],
+  "permissions": {
+	"moderation": {"group": "owner"},
+	"banword": {"group": "owner"},
+	"zerotolerance": {"group": "owner"},
+	"checkzerotol": {"group": "driver"}
+  },
+  "handlers": [
+    "handlers/moderation.js",
+	"handlers/bannedwords.js",
+	"handlers/zerotolerance.js"
   ],
   "description": "Automated moderation for chat rooms"
 }

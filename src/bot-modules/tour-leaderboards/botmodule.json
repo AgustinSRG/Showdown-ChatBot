@@ -6,5 +6,12 @@
   "commands": [
     "commands.js"
   ],
+  "handlers": [
+    "server-handler.js"
+  ],
+  "permissions": {
+	"tourofficial": {"group": "mod"},
+	"toursrank": {"group": "driver"}
+  },
   "description": "Tournament leaderboards for chat rooms"
 }

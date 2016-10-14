@@ -4,7 +4,7 @@
 
 'use strict';
 
-const Text = Tools.get('text.js');
+const Text = Tools('text');
 
 function normalize_init() {
 	let str1 = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑÇç";

@@ -4,5 +4,11 @@
   "version": "1.0",
   "main": "main.js",
   "commands": ["commands.js"],
+  "handlers": [
+    "server-handler.js"
+  ],
+  "permissions": {
+    "gitban": {"group": "admin"}
+  },
   "description": "Provides notifications of repositories updates"
 }

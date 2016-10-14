@@ -1,0 +1,8 @@
+<hr />
+<form method="post" action="">
+	<p>Group <strong>${GROUP}</strong> (words separated by commas)</p>
+	<input type="hidden" name="wordgroup" value=${JSONGROUP} />
+	<p><textarea name="words" cols="100" rows="3">${WORDS}</textarea></p>
+	<p><input type="submit" name="edit" value="Edit Group" /></p>
+</form>
+<p><button onclick="removeGroup('${GROUP}');">Delete</button>&nbsp;<span id="confirm-${GROUP}">&nbsp;</span></p>

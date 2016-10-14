@@ -5,8 +5,7 @@
 'use strict';
 
 const Path = require('path');
-
-const Translator = Tools.get('translate.js');
+const Translator = Tools('translate');
 
 const translator = new Translator(Path.resolve(__dirname, 'bannedwords.translations'));
 
@@ -15,7 +14,7 @@ exports.id = 'bannedwords';
 exports.parse = function (context) {
 	let msgLow = context.msgLow;
 	let msgAltLow = context.noNicksMsgLow;
-	let banwords = App.modules.moderation.system.data.bannedWords[context.room];
+	let banwords = context.app.modules.moderation.system.data.bannedWords[context.room];
 	if (!banwords) return;
 	let val = 0, wordType = '';
 	for (let word in banwords) {

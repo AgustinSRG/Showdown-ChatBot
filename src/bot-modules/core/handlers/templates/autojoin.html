@@ -1,0 +1,11 @@
+<h2>Bot Auto-Join Configuration</h2>
+<form method="post" action="">
+	<table border="0">
+		<tr><td><strong>Public Rooms</strong>:&nbsp;</td><td><input name="rooms" type="text" size="70" value="${ROOMS}" autocomplete="off" />&nbsp;(Separated by commas)</td></tr>
+		<tr><td><strong>Private Rooms</strong>:&nbsp;</td><td><input name="privaterooms" type="text" size="70" value="${PRIVATEROOMS}" autocomplete="off" />&nbsp;(Separated by commas)</td></tr>
+		<tr><td><strong>Avatar</strong>:&nbsp;</td><td><input name="avatar" type="text" size="20" value="${AVATAR}" /></td></tr>
+	</table>
+	<p><input type="submit" name="edit" value="Save Changes" /></p>
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
+		

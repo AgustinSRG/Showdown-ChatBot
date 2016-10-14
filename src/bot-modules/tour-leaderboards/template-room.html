@@ -1,0 +1,20 @@
+<h3>Room: ${NAME}</h3>
+<p><a href="/tourtable/${ROOM}/get" target="_blank">View Leaderboards Table</a></p>
+<form method="post" action="">
+	<input type="hidden" name="room" value="${ROOM}" />
+	<table border="0">
+		<tr><td>Points for winner: </td><td><input name="winner" type="text" size="10" value="${WINNER}" /></td></tr><tr>
+		<tr><td>Points for finalist: </td><td><input name="finalist" type="text" size="10" value="${FINALIST}" /></td></tr><tr>
+		<tr><td>Points for semi-finalist: </td><td><input name="semifinalist" type="text" size="10" value="${SEMIFINALIST}" /></td></tr><tr>
+		<tr><td>Points per battle: </td><td><input name="battle" type="text" size="10" value="${BATTLE}" /></td></tr><tr>
+		<tr><td colspan="2"><input name="onlyofficial" type="checkbox" value="true"${ONLYOFFICIAL} />&nbsp;Count only official tournaments</td></tr>
+	</table>
+	<p><input type="submit" name="edit" value="Save Changes" /></p>
+</form>
+<form method="post" action="">
+	<input type="hidden" name="room" value="${ROOM}" />
+	<p><input type="submit" name="gentable" value="Generate Table" /></p>
+</form>
+<p><button onclick="clearRoom('${ROOM}');">Clear Leaderboards</button>&nbsp;<span id="confirm-clear-${ROOM}">&nbsp;</span></p>
+<p><button onclick="removeRoom('${ROOM}');">Delete Configuration</button>&nbsp;<span id="confirm-del-${ROOM}">&nbsp;</span></p>
+<hr />

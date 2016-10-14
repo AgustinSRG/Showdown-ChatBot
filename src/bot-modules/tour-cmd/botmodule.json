@@ -6,5 +6,11 @@
   "commands": [
     "commands.js"
   ],
+  "handlers": [
+    "server-handler.js"
+  ],
+  "permissions": {
+	"tour": {"group": "mod"}
+  },
   "description": "A single command to make a tour, start it and set the autodq"
 }

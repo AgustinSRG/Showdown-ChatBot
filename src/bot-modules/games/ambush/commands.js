@@ -1,19 +1,21 @@
 /**
  * Commands File
+ *
+ * ambush: creates a game of Ambush
  */
 
 'use strict';
 
 const Path = require('path');
-const Translator = Tools.get('translate.js');
-const Text = Tools.get('text.js');
+const Translator = Tools('translate');
+const Text = Tools('text');
 
-const Ambush = require(Path.resolve(__dirname, 'ambush.js'));
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 const trigger = require(Path.resolve(__dirname, 'cmd-trigger.js'));
 
 module.exports = {
-	ambush: function () {
+	ambush: function (App) {
+		const Ambush = App.modules.games.system.templates.ambush;
 		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		if (this.getRoomType(this.room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
 		let maxPlayers = parseInt(this.arg);

@@ -1,18 +1,18 @@
 /**
  * Commands File
+ *
+ * tour: creates a tournament easier than using Showdown commands
  */
 
 'use strict';
 
 const Path = require('path');
-const Translator = Tools.get('translate.js');
-const Text = Tools.get('text.js');
+const Translator = Tools('translate');
+const Text = Tools('text');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
-App.parser.addPermission('tour', {group: 'mod'});
-
-function parseAliases(format) {
+function parseAliases(format, App) {
 	const Config = App.config.modules.tourcmd;
 	format = Text.toId(format);
 	if (App.bot.formats[format]) return format;
@@ -30,7 +30,7 @@ function parseAliases(format) {
 
 module.exports = {
 	newtour: 'tour',
-	tour: function () {
+	tour: function (App) {
 		if (!this.can('tour', this.room)) return this.replyAccessDenied('tour');
 		const Mod = App.modules.tourcmd.system;
 		const Config = App.config.modules.tourcmd;
@@ -122,7 +122,7 @@ module.exports = {
 				}
 			}
 			if (params.format) {
-				let format = parseAliases(params.format);
+				let format = parseAliases(params.format, App);
 				if (!App.bot.formats[format] || !App.bot.formats[format].chall || App.bot.formats[format].disableTournaments) {
 					return this.reply(translator.get('e31', this.lang) + ' ' + format + ' ' + translator.get('e32', this.lang));
 				}

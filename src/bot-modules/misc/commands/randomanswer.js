@@ -1,16 +1,15 @@
 /**
  * Commands File
+ *
+ * randomanswer: gets a random answer (command from BoTTT)
  */
 
 'use strict';
 
 const Path = require('path');
-
-const Translator = Tools.get('translate.js');
+const Translator = Tools('translate');
 
 const translator = new Translator(Path.resolve(__dirname, 'randomanswer.translations'));
-
-App.parser.addPermission('randomanswer', {group: 'voice'});
 
 module.exports = {
 	"8ball": "randomanswer",

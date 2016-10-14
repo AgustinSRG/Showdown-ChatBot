@@ -1,19 +1,21 @@
 /**
  * Commands File
+ *
+ * passbomb: creates a game of Pass-The-Bomb
  */
 
 'use strict';
 
 const Path = require('path');
-const Translator = Tools.get('translate.js');
-const Text = Tools.get('text.js');
+const Translator = Tools('translate');
+const Text = Tools('text');
 
-const PassBomb = require(Path.resolve(__dirname, 'passbomb.js'));
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 const trigger = require(Path.resolve(__dirname, 'cmd-trigger.js'));
 
 module.exports = {
-	passbomb: function () {
+	passbomb: function (App) {
+		const PassBomb = App.modules.games.system.templates['pass-the-bomb'];
 		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		if (this.getRoomType(this.room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
 		let maxPlayers = parseInt(this.arg);

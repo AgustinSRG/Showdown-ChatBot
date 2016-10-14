@@ -1,0 +1,16 @@
+<script type="text/javascript">
+	function removeGroup(group) {
+		var elem = document.getElementById('confirm-' + group);
+		if (elem) {
+			elem.innerHTML = '<form style="display:inline;" method="post" action=""><input type="hidden" name="wordgroup" value="' + group + '" />Are you sure?&nbsp;<input type="submit" name="delgroup" value="Confirm Delete" /></form>';
+		}
+		return false;
+	}
+</script>
+<h2>Words for Games</h2>
+<form method="post" action="">
+	<p><strong>Group Name</strong>:&nbsp;<input name="wordgroup" type="text" size="30" /></p><p><textarea name="words" cols="100" rows="3">${WORDS}</textarea></p>
+	<p><input type="submit" name="add" value="Add Group" />  (words separated by commas)</p>
+</form>
+${GROUPS}
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

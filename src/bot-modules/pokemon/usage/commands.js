@@ -1,21 +1,20 @@
 /**
  * Commands file
+ *
+ * usage: gets usage for a pokemon and a tier (via Smogon)
+ * usagedate: gets usage for moves, itema... (via Smogon)
  */
 
 'use strict';
 
 const Path = require('path');
 
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
-const Translator = Tools.get('translate.js');
-const LineSplitter = Tools.get('line-splitter.js');
+const Text = Tools('text');
+const Chat = Tools('chat');
+const Translator = Tools('translate');
+const LineSplitter = Tools('line-splitter');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
-
-if (!App.config.modules.pokemon) {
-	App.config.modules.pokemon = {};
-}
 
 /* Usage utils */
 
@@ -41,7 +40,7 @@ function generateUsageLink(monthmod) {
 	return "http://www.smogon.com/stats/" + addLeftZero(year, 4) + "-" + addLeftZero(month + 1, 2) + "/";
 }
 
-function getUsageLink(callback) {
+function getUsageLink(App, callback) {
 	let realLink = generateUsageLink(-1);
 	let currLink = App.config.modules.pokemon.usagelink;
 	if (currLink !== realLink) {
@@ -73,13 +72,13 @@ function markDownload(link, b) {
 	}
 }
 
-function tierName(tier) {
+function tierName(tier, App) {
 	if (!tier) return "";
 	if (App.bot.formats[tier]) return App.bot.formats[tier].name;
 	return tier.toUpperCase();
 }
 
-function parseAliases(format) {
+function parseAliases(format, App) {
 	if (!format) return '';
 	format = Text.toId(format);
 	if (App.bot.formats[format]) return format;
@@ -94,14 +93,11 @@ const Default_Rank = 1630;
 const Rank_Exceptions = {'randombattle': 1695, 'ou': 1695, 'oususpecttest': 1695, 'doublesou': 1695};
 const Tier_Error_Expires = 2 * 60 * 60 * 1000;
 
-App.parser.addPermission('usage', {group: 'voice'});
-App.parser.addPermission('usagedata', {group: 'driver'});
-
 /* Commands */
 
 module.exports = {
-	usage: function () {
-		getUsageLink(function (link) {
+	usage: function (App) {
+		getUsageLink(App, function (link) {
 			if (!link) {
 				return this.errorReply(translator.get('error', this.lang));
 			}
@@ -122,7 +118,7 @@ module.exports = {
 			}
 			if (!isNaN(parseInt(poke))) searchIndex = parseInt(poke);
 			if (args[1]) {
-				tier = parseAliases(args[1]);
+				tier = parseAliases(args[1], App);
 				if (!App.bot.formats[tier] && !App.bot.formats[tier + "suspecttest"]) {
 					return this.errorReply(translator.get('tiererr1', this.lang) + ' "' + tier + '" ' + translator.get('tiererr2', this.lang));
 				}
@@ -147,7 +143,7 @@ module.exports = {
 						App.data.cache.cache(url, data, Tier_Error_Expires, {'smogon-usage': 1});
 					}
 					return this.errorReply(translator.get('tiererr1', this.lang) + " \"" +
-						tierName(tier) + "\" " + translator.get('tiererr3', this.lang) + '. ' + translator.get('pokeerr3', this.lang));
+						tierName(tier, App) + "\" " + translator.get('tiererr3', this.lang) + '. ' + translator.get('pokeerr3', this.lang));
 				} else {
 					if (!App.data.cache.has(url)) {
 						App.data.cache.cache(url, data, 0, {'smogon-usage': 1});
@@ -197,24 +193,24 @@ module.exports = {
 				if (!dataRes.pos || dataRes.pos < 1) {
 					if (!dataResAux.pos || dataResAux.pos < 1) {
 						return this.errorReply(translator.get('pokeerr1', this.lang) + " \"" + poke + "\" " +
-							translator.get('pokeerr2', this.lang) + " " + tierName(tier) + " " + translator.get('pokeerr3', this.lang));
+							translator.get('pokeerr2', this.lang) + " " + tierName(tier, App) + " " + translator.get('pokeerr3', this.lang));
 					} else {
 						return this.restrictReply(translator.get('pokeerr1', this.lang) + " \"" + poke + "\" " +
-							translator.get('pokeerr2', this.lang) + " " + tierName(tier) + " " + translator.get('pokeerr3', this.lang) +
+							translator.get('pokeerr2', this.lang) + " " + tierName(tier, App) + " " + translator.get('pokeerr3', this.lang) +
 							' | ' + Chat.bold(dataResAux.name) + ", #" + dataResAux.pos + " " + translator.get('in', this.lang) +
-							" " + Chat.bold(tierName(tier)) + ". " + translator.get('pokeusage', this.lang) + ": " + dataResAux.usage + ", " +
+							" " + Chat.bold(tierName(tier, App)) + ". " + translator.get('pokeusage', this.lang) + ": " + dataResAux.usage + ", " +
 							translator.get('pokeraw', this.lang) + ": " + dataResAux.raw, 'usage');
 					}
 				}
 				this.restrictReply(Chat.bold(dataRes.name) + ", #" + dataRes.pos + " " + translator.get('in', this.lang) +
-					" " + Chat.bold(tierName(tier)) + ". " + translator.get('pokeusage', this.lang) + ": " + dataRes.usage + ", " +
+					" " + Chat.bold(tierName(tier, App)) + ". " + translator.get('pokeusage', this.lang) + ": " + dataRes.usage + ", " +
 					translator.get('pokeraw', this.lang) + ": " + dataRes.raw, 'usage');
 			}.bind(this));
 		}.bind(this));
 	},
 
-	usagedata: function () {
-		getUsageLink(function (link) {
+	usagedata: function (App) {
+		getUsageLink(App, function (link) {
 			if (!link) {
 				return this.errorReply(translator.get('error', this.lang));
 			}
@@ -240,7 +236,7 @@ module.exports = {
 				App.log("Could not fetch aliases. Cmd: " + this.cmd + " " + this.arg + " | Room: " + this.room + " | By: " + this.by);
 			}
 			if (args[2]) {
-				tier = parseAliases(args[2]);
+				tier = parseAliases(args[2], App);
 				if (!App.bot.formats[tier] && !App.bot.formats[tier + "suspecttest"]) {
 					return this.errorReply(translator.get('tiererr1', this.lang) + ' "' + tier + '" ' + translator.get('tiererr2', this.lang));
 				}
@@ -263,7 +259,7 @@ module.exports = {
 						App.data.cache.cache(url, data, Tier_Error_Expires, {'smogon-usage': 1});
 					}
 					return this.errorReply(translator.get('tiererr1', this.lang) + " \"" +
-						tierName(tier) + "\" " + translator.get('tiererr3', this.lang) + '. ' + translator.get('pokeerr4', this.lang));
+						tierName(tier, App) + "\" " + translator.get('tiererr3', this.lang) + '. ' + translator.get('pokeerr4', this.lang));
 				} else {
 					if (!App.data.cache.has(url)) {
 						App.data.cache.cache(url, data, 0, {'smogon-usage': 1});
@@ -279,7 +275,7 @@ module.exports = {
 				}
 				if (!chosen) {
 					return this.errorReply(translator.get('pokeerr1', this.lang) + " \"" + poke + "\" " +
-						translator.get('pokeerr2', this.lang) + " " + tierName(tier) + " " + translator.get('pokeerr4', this.lang));
+						translator.get('pokeerr2', this.lang) + " " + tierName(tier, App) + " " + translator.get('pokeerr4', this.lang));
 				}
 				let result = [];
 				let resultName = "";
@@ -326,12 +322,12 @@ module.exports = {
 					return this.errorReply(translator.get('notfound', this.lang) + " " +
 						translator.get('usagedata1', this.lang).replace("#NAME", resultName) + pokeName +
 						translator.get('usagedata2', this.lang).replace("#NAME", resultName) + " " +
-						translator.get('in', this.lang) + " " + tierName(tier));
+						translator.get('in', this.lang) + " " + tierName(tier, App));
 				}
 				let spl = new LineSplitter(App.config.bot.maxMessageLength);
 				spl.add(Chat.bold((translator.get('usagedata1', this.lang).replace("#NAME", resultName) + ' ' + pokeName +
 					translator.get('usagedata2', this.lang).replace("#NAME", resultName) + " " +
-					translator.get('in', this.lang) + " " + tierName(tier)).trim()) + ":");
+					translator.get('in', this.lang) + " " + tierName(tier, App)).trim()) + ":");
 				for (let i = 0; i < result.length; i++) {
 					spl.add(" " + result[i] + (i < (result.length - 1) ? ',' : ''));
 				}

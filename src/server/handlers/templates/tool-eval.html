@@ -1,0 +1,27 @@
+<script type="text/javascript">
+	function escapeHtml(text) {
+		return text.replace(/[\"&<>]/g, function (a) {return {'"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;'}[a];});
+	}
+	var req = null;
+	function updateEvalResult () {
+		var scriptdata = document.getElementById("scriptdata").value;
+		if (!scriptdata) {return;}
+		if (req) {try {req.abort()} catch (err) {} req = null;}
+		document.getElementById("evalresult").innerHTML = '<p><i>Getting eval result...</i></p>';
+		req = $.post('/tools/eval/', {scriptdata: scriptdata}, function (data) {
+			document.getElementById("evalresult").innerHTML = '<p>' + escapeHtml(data) + '</p>';
+		}).fail(function () {
+			document.getElementById("evalresult").innerHTML = '<p><span class="error-msg">Request error. Try again later or refresh the page.</span></p>';
+		});
+	}
+</script>
+<h2>Eval Tool</h2>
+<p><strong>Warning: </strong>This tool is extremely dangerous and can cause several damage to your bot if used wrong. Use it only if you know what are you doing.</p>
+<p><input id="scriptdata" name="scriptdata" type="text" size="70" />&nbsp;&nbsp;
+<button onclick="updateEvalResult();">Eval</button></p>
+<div id="evalresult">&nbsp;</div>
+<script type="text/javascript">
+	var obj = document.getElementById("scriptdata");
+	obj.addEventListener("keydown", function (e) {if (e.keyCode == 13) {updateEvalResult();}});
+</script>
+			

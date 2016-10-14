@@ -9,5 +9,17 @@
 	"commands/control.js",
 	"commands/cmd-admin.js"
   ],
+  "permissions": {
+    "commands": {"excepted": true},
+	"grant": {"excepted": true},
+	"set": {"group": "owner"},
+	"joinroom": {"group": "admin"},
+	"send": {"group": "admin"},
+	"say": {"group": "mod"}
+  },
+  "handlers": [
+    "handlers/autojoin.js",
+	"handlers/login.js"
+  ],
   "description": "Essential Module"
 }

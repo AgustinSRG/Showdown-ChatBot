@@ -5,7 +5,7 @@
 'use strict';
 
 const FileSystem = require('fs');
-const EventsManager = require('./events.js');
+const EventsManager = Tools('events');
 
 /**
  * Represents a JSON database

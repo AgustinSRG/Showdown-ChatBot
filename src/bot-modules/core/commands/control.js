@@ -1,25 +1,32 @@
 /**
  * Commands File
  *
+ * joinroom: joins chat rooms
+ * leaveroom: leaves chat rooms
+ * custom: sends a custom text to the current room
+ * send: sends a custom text to an arbitrary room
+ * sendpm: sends a custom private message
+ * say: similar to custom, but no comands are allowed
+ * null: does nothing
+ * eval: runs arbitrary javascript
+ * hotpatch: realoads commands from bot modules
+ * version: gets the package version
+ * time: gets the bot time
+ * uptime: gets the process uptime
  */
 
 'use strict';
 
 const Path = require('path');
 
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
-const Translator = Tools.get('translate.js');
+const Text = Tools('text');
+const Chat = Tools('chat');
+const Translator = Tools('translate');
 
 const translator = new Translator(Path.resolve(__dirname, 'control.translations'));
 
-App.parser.addPermission('joinroom', {group: 'admin'});
-App.parser.addPermission('send', {group: 'admin'});
-App.parser.addPermission('say', {group: 'mod'});
-
 module.exports = {
 	/* Joining / Leaving Rooms */
-
 	join: 'joinroom',
 	joinrooms: 'joinroom',
 	joinroom: function () {
@@ -33,8 +40,8 @@ module.exports = {
 			rooms.push(roomid);
 		}
 		if (rooms.length > 0) {
-			App.bot.joinRooms(rooms);
-			App.logCommandAction(this);
+			this.parser.bot.joinRooms(rooms);
+			this.parser.app.logCommandAction(this);
 		}
 	},
 
@@ -51,8 +58,8 @@ module.exports = {
 			rooms.push(roomid);
 		}
 		if (rooms.length > 0) {
-			App.bot.leaveRooms(rooms);
-			App.logCommandAction(this);
+			this.parser.bot.leaveRooms(rooms);
+			this.parser.app.logCommandAction(this);
 		}
 	},
 
@@ -62,7 +69,7 @@ module.exports = {
 		if (!this.can('send', this.room)) return this.replyAccessDenied('send');
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('message')}));
 		this.send(this.arg, this.targetRoom);
-		App.logCommandAction(this);
+		this.addToSecurityLog();
 	},
 
 	send: function () {
@@ -76,7 +83,7 @@ module.exports = {
 			return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: this.usageTrans('message')}));
 		}
 		this.send(msg, room);
-		App.logCommandAction(this);
+		this.addToSecurityLog();
 	},
 
 	pm: 'sendpm',
@@ -87,7 +94,7 @@ module.exports = {
 		let msg = this.args[1].trim();
 		if (!user || !msg) return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: this.usageTrans('message')}));
 		this.sendPM(user, msg);
-		App.logCommandAction(this);
+		this.addToSecurityLog();
 	},
 
 	say: function () {
@@ -102,29 +109,31 @@ module.exports = {
 		return;
 	},
 
-	"eval": function () {
-		if (!App.config.debug) return;
-		if (global.ShellOptions && global.ShellOptions.staticmode) return;
+	"eval": function (App) {
+		if (!this.parser.app.config.debug) return;
+		if (this.parser.app.env.staticmode) return;
 		if (!this.isExcepted()) return;
 		if (!this.arg) return this.errorReply(this.usage({desc: 'script'}));
 		try {
-			let res = eval(this.arg);
-			this.reply(Chat.code(JSON.stringify(res)));
+			let res = JSON.stringify(eval(this.arg));
+			if (res.length > 0) {
+				this.reply(Chat.code(res));
+			}
 		} catch (err) {
 			this.reply('Error: ' + err.code + ' - ' + err.message);
 		}
-		App.logCommandAction(this);
+		this.addToSecurityLog();
 	},
 
 	hotpatch: function () {
 		if (!this.isExcepted()) return;
-		App.hotpatchCommands(Path.resolve(__dirname, '../../'));
+		this.parser.app.hotpatchCommands(Path.resolve(__dirname, '../../'));
 		this.reply(translator.get(0, this.lang));
-		App.logCommandAction(this);
+		this.addToSecurityLog();
 	},
 
-	version: function () {
-		let reply = Chat.bold('Showdown ChatBot v' + Package.version) + ' (' + Package.homepage + ')';
+	version: function (App) {
+		let reply = Chat.bold('Showdown ChatBot v' + App.env.package.version) + ' (' + App.env.package.homepage + ')';
 		this.restrictReply(reply, 'info');
 	},
 

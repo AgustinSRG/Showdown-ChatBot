@@ -1,21 +1,22 @@
 /**
  * Commands File
+ *
+ * anagrams: creates a game of Anagrams
+ * hangman: creates a game of hangman
  */
 
 'use strict';
 
 const Path = require('path');
-const Translator = Tools.get('translate.js');
-const Text = Tools.get('text.js');
+const Translator = Tools('translate');
+const Text = Tools('text');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 const trigger = require(Path.resolve(__dirname, 'cmd-trigger.js'));
 
-const Anagrams = require(Path.resolve(__dirname, 'anagrams.js'));
-const Hangman = require(Path.resolve(__dirname, 'hangman.js'));
-
 module.exports = {
-	anagrams: function () {
+	anagrams: function (App) {
+		const Anagrams = App.modules.games.system.templates.wordgames.anagrams;
 		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		if (!this.arg) {
 			return this.errorReply(this.usage({desc: translator.get('games', this.lang)},
@@ -48,7 +49,8 @@ module.exports = {
 		}
 	},
 
-	hangman: function () {
+	hangman: function (App) {
+		const Hangman = App.modules.games.system.templates.wordgames.hangman;
 		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		if (this.getRoomType(this.room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
 		let maxFails = parseInt(this.arg || '0');

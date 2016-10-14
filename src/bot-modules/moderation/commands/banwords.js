@@ -1,30 +1,25 @@
 /**
  * Commands File
+ *
+ * banword: adds a banned word
+ * unbanword: removes a banned word
+ * viewbannedwords: gets a list with the banned words
+ * viewbannedwordshastebin: gets a list with the banned words (via Hastebin)
  */
 
 'use strict';
 
 const Path = require('path');
 
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
-const Translator = Tools.get('translate.js');
-const Hastebin = Tools.get('hastebin.js');
+const Text = Tools('text');
+const Chat = Tools('chat');
+const Translator = Tools('translate');
+const Hastebin = Tools('hastebin');
 
 const translator = new Translator(Path.resolve(__dirname, 'banwords.translations'));
 
-App.parser.addPermission('banword', {group: 'owner'});
-
-function tryGetRoomTitle(room) {
-	if (App.bot.rooms[room]) {
-		return Text.escapeHTML(App.bot.rooms[room].title || room);
-	} else {
-		return Text.escapeHTML(room);
-	}
-}
-
 module.exports = {
-	banword: function () {
+	banword: function (App) {
 		if (!this.can('banword', this.room)) return this.replyAccessDenied('banword');
 		let room = this.targetRoom;
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
@@ -67,7 +62,7 @@ module.exports = {
 		this.reply(translator.get(1, this.lang) + " \"" + word + "\" " + translator.get(3, this.lang) + " " + Chat.italics(room));
 	},
 
-	unbanword: function () {
+	unbanword: function (App) {
 		if (!this.can('banword', this.room)) return this.replyAccessDenied('banword');
 		let room = this.targetRoom;
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
@@ -86,7 +81,7 @@ module.exports = {
 		this.reply(translator.get(1, this.lang) + " \"" + word + "\" " + translator.get(5, this.lang) + " " + Chat.italics(room));
 	},
 
-	viewbannedwords: function () {
+	viewbannedwords: function (App) {
 		if (!this.can('banword', this.room)) return this.replyAccessDenied('banword');
 		let server = App.config.server.url;
 		if (!server) {
@@ -100,9 +95,9 @@ module.exports = {
 		if (!words) return this.pmReply(translator.get(6, this.lang) + " " + Chat.italics(room));
 		let html = '';
 		html += '<html>';
-		html += '<head><title>Banned Words of ' + tryGetRoomTitle(room) + '</title></head>';
+		html += '<head><title>Banned Words of ' + Text.escapeHTML(App.parser.getRoomTitle(room)) + '</title></head>';
 		html += '<body>';
-		html += '<h3>Banned Words in ' + tryGetRoomTitle(room) + '</h3>';
+		html += '<h3>Banned Words in ' + Text.escapeHTML(App.parser.getRoomTitle(room)) + '</h3>';
 		html += '<ul>';
 		words = Object.keys(words).sort();
 		for (let i = 0; i < words.length; i++) {
@@ -144,7 +139,7 @@ module.exports = {
 		}
 	},
 
-	viewbannedwordshastebin: function () {
+	viewbannedwordshastebin: function (App) {
 		if (!this.can('banword', this.room)) return this.replyAccessDenied('banword');
 		let room = this.targetRoom;
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));

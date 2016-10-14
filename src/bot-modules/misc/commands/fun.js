@@ -1,5 +1,9 @@
 /**
  * Commands File
+ *
+ * pick: randomly chooses between two or more options
+ * poke: gets a random pokemon
+ * hashpoke: gets a pseudo-random pokemon using an input string
  */
 
 'use strict';
@@ -7,14 +11,11 @@
 const Path = require('path');
 const Crypto = require('crypto');
 
-const Translator = Tools.get('translate.js');
-const Text = Tools.get('text.js');
-const Chat = Tools.get('chat.js');
+const Translator = Tools('translate');
+const Text = Tools('text');
+const Chat = Tools('chat');
 
 const translator = new Translator(Path.resolve(__dirname, 'fun.translations'));
-
-App.parser.addPermission('random', {group: 'voice'});
-App.parser.addPermission('randpoke', {group: 'voice'});
 
 module.exports = {
 	choose: "pick",
@@ -31,7 +32,7 @@ module.exports = {
 	},
 
 	rpoke: 'poke',
-	poke: function () {
+	poke: function (App) {
 		let pokedex;
 		try {
 			pokedex = App.data.getPokedex();
@@ -51,7 +52,7 @@ module.exports = {
 	},
 
 	hpoke: "hashpoke",
-	hashpoke: function () {
+	hashpoke: function (App) {
 		let pokedex;
 		try {
 			pokedex = App.data.getPokedex();

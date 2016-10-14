@@ -4,7 +4,7 @@
 
 'use strict';
 
-const Text = Tools.get('text.js');
+const Text = Tools('text');
 const FileSystem = require('fs');
 
 /**
@@ -53,17 +53,12 @@ class Translator {
 		if (lang && this.data[lang] && typeof this.data[lang][key] === 'string') {
 			return this.data[lang][key];
 		} else {
-			let defLang = App.config.language['default'];
-			if (defLang && this.data[defLang] && typeof this.data[defLang][key] === 'string') {
-				return this.data[defLang][key];
-			} else {
-				for (let l in this.data) {
-					if (typeof this.data[l][key] === 'string') {
-						return this.data[l][key];
-					}
+			for (let l in this.data) {
+				if (typeof this.data[l][key] === 'string') {
+					return this.data[l][key];
 				}
-				return 'undefined';
 			}
+			return 'undefined';
 		}
 	}
 }

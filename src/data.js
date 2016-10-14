@@ -18,16 +18,13 @@ const Http = require('http');
 const Url = require('url');
 const FileSystem = require('fs');
 
-const WebCache = Tools.get('cache.js').WebCache;
-const TempManager = Tools.get('temp.js');
-const uncacheTree = Tools.get('uncachetree.js');
-const checkDir = Tools.get('checkdir.js');
+const WebCache = Tools('cache').WebCache;
+const TempManager = Tools('temp');
+const uncacheTree = Tools('uncachetree');
+const checkDir = Tools('checkdir');
+const EventManager = Tools('events');
 
 const Showdown_Data = [
-	{
-		url: "https://raw.githubusercontent.com/Zarel/Pokemon-Showdown/master/config/formats.js",
-		file: "formats.js",
-	},
 	{
 		url: "https://raw.githubusercontent.com/Zarel/Pokemon-Showdown/master/data/formats-data.js",
 		file: "formats-data.js",
@@ -102,6 +99,14 @@ class DataManager {
 
 		checkDir(Path.resolve(path, 'temp/'));
 		this.temp = new TempManager(Path.resolve(path, 'temp/'), Temp_Size);
+
+		this.events = new EventManager();
+		this.cache.events.on('error', function (err, url) {
+			this.events.emit('msg', "Error (" + err.code + ") " + err.message + " | Cache " + url);
+		}.bind(this));
+		this.temp.events.on('error', function (err) {
+			this.events.emit('msg', "Error (" + err.code + ") " + err.message);
+		}.bind(this));
 	}
 
 	/**
@@ -235,19 +240,20 @@ class DataManager {
 		this.cur++;
 		if (this.cur < 0 || this.cur >= Showdown_Data.length) {
 			this.downloading = false;
+			this.events.emit('update');
 			return;
 		}
 		wget(Showdown_Data[this.cur].url, function (data, err) {
 			if (err) {
-				App.log("Error: Failed to download " + Showdown_Data[this.cur].url + " | (" + err.code + ") " + err.messaage);
+				this.events.emit('msg', "Error: Failed to download " + Showdown_Data[this.cur].url + " | (" + err.code + ") " + err.messaage);
 				return;
 			}
 			FileSystem.writeFile(Path.resolve(this.path, Showdown_Data[this.cur].file), data, function (err2) {
 				if (err2) {
-					App.log("Error (" + err2.code + ") " + err2.messaage);
+					this.events.emit('msg', "Error (" + err2.code + ") " + err2.messaage);
 				} else {
 					try {uncacheTree(Path.resolve(this.path, Showdown_Data[this.cur].file));} catch (e) {}
-					App.log("Updated data file " + Showdown_Data[this.cur].file + " from " + Showdown_Data[this.cur].url);
+					this.events.emit('msg', "Updated data file " + Showdown_Data[this.cur].file + " from " + Showdown_Data[this.cur].url);
 				}
 				this.nextDownload();
 			}.bind(this));

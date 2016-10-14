@@ -1,0 +1,13 @@
+<table border="1">
+	<tr>
+		<td width="600"><div align="center"><strong>Joke</strong></div></td>
+		<td width="150"><div align="center"><strong>Options</strong></div></td>
+	</tr>
+	${JOKES}
+</table>
+<hr />
+<form method="post" action="">
+	<p><input name="content" type="text" size="120" maxlength="300" /></p>
+	<p><input type="submit" name="add" value="Add New Joke" /></p>
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
