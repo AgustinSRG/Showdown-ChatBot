@@ -28,6 +28,7 @@ if (!Object.values) {
 }
 
 Object.createFromKeys = function (keys, value) {
+	if (value === undefined) value = true;
 	let object = {};
 	for (let key of keys) object[key] = value;
 	return object;
