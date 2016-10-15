@@ -32,7 +32,7 @@ exports.setup = function (App) {
 				let aux = (context.post.rooms || "").split(',');
 				for (let i = 0; i < aux.length; i++) {
 					let room = Text.toRoomid(aux[i]);
-					if (!room) return;
+					if (!room) continue;
 					rooms[room] = true;
 				}
 				App.config.modules.chatlogger.rooms = rooms;
