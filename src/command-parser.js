@@ -14,6 +14,7 @@ const Max_Cmd_Flood = 30;
 const Flood_Interval = 45 * 1000;
 const Help_Msg_Interval = 2 * 60 * 1000;
 const Command_Wait_Interval = 1500;
+const Command_Reply_Wait_Interval = 10 * 1000;
 
 const Util = require('util');
 const Path = require('path');
@@ -47,6 +48,7 @@ class CommandParser {
 		};
 		this.lastHelpCommand = {};
 		this.lastPrivateCommand = {};
+		this.lastReplyCommand = {};
 
 		/* Configuration DataBase */
 		this.db = new DataBase(Path.resolve(path, 'cmd-parser.json'));
@@ -61,6 +63,7 @@ class CommandParser {
 		if (!this.data.roomctrl) this.data.roomctrl = {}; /* Control rooms */
 		if (!this.data.helpmsg) this.data.helpmsg = ""; /* Help Message */
 		if (!this.data.antispam) this.data.antispam = false; /* Anti-Spam System */
+		if (!this.data.antirepeat) this.data.antispam = false; /* Anti-Repeat System */
 
 		/* Dynamic Commands */
 		if (!this.data.dyncmds) this.data.dyncmds = {};
@@ -510,6 +513,25 @@ class CommandParser {
 			return Text.escapeHTML(room);
 		}
 	}
+
+	/**
+	 * Avoids repeating messages
+	 * @param {String} room
+	 * @param {String} txt
+	 * @returns {Boolean}
+	 */
+	checkReplyCommand(room, txt) {
+		if (!this.data.antirepeat) return true;
+		if (this.lastReplyCommand[room] && (Date.now() - this.lastReplyCommand[room].time) < Command_Reply_Wait_Interval && txt === this.lastReplyCommand[room].txt) {
+			return false;
+		} else {
+			this.lastReplyCommand[room] = {
+				time: Date.now(),
+				txt: txt,
+			};
+			return true;
+		}
+	}
 }
 
 /**
@@ -709,7 +731,7 @@ class CommandContext {
 	 * @returns {SendManager}
 	 */
 	restrictReply(msg, perm) {
-		if (this.can(perm, this.room)) {
+		if (this.can(perm, this.room) && this.parser.checkReplyCommand(this.room, msg)) {
 			return this.reply(msg);
 		} else {
 			return this.pmReply(msg);

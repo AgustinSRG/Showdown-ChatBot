@@ -63,6 +63,7 @@ exports.setup = function (App) {
 				}
 				App.parser.data.helpmsg = context.post.helpmsg;
 				App.parser.data.antispam = !!context.post.antispam;
+				App.parser.data.antirepeat = !!context.post.antirepeat;
 				App.parser.data.sleep = Object.createFromKeys((context.post.sleep || "").split(',').map(Text.toRoomid).filter(room => room));
 				App.parser.data.lockedUsers = Object.createFromKeys((context.post.locklist || "").split(',').map(Text.toId).filter(u => u));
 				App.saveConfig();
@@ -86,6 +87,7 @@ exports.setup = function (App) {
 		htmlVars.sleep = Object.keys(App.parser.data.sleep).join(', ');
 		htmlVars.locklist = Object.keys(App.parser.data.lockedUsers).join(', ');
 		htmlVars.antispam = (App.parser.data.antispam ? ' checked="checked"' : '');
+		htmlVars.antirepeat = (App.parser.data.antirepeat ? ' checked="checked"' : '');
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
