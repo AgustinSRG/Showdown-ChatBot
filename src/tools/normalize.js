@@ -21,15 +21,20 @@ const normalObj = normalize_init();
 /**
  * Normalizes a string
  * @param {String} str
+ * @param {Boolean} noId
  * @returns {String} Normalized string
  */
-function normalize(str) {
+function normalize(str, noId) {
 	if (!str) return '';
 	let res = '';
 	for (let i = 0; i < str.length; i++) {
 		res += normalObj[str.charAt(i)] ? normalObj[str.charAt(i)] : str.charAt(i);
 	}
-	return Text.toId(res);
+	if (noId) {
+		return res;
+	} else {
+		return Text.toId(res);
+	}
 }
 
 module.exports = normalize;

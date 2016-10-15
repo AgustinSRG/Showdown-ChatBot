@@ -49,7 +49,7 @@ $12 = adivinó la palabra. La palabra era
 $13 = Puntos
 
 $lose = Sin embargo nadie ha conseguido ningún punto, por lo que no hay ganadores
-$end =¡ El juego de Anagrams ha terminado!
+$end = ¡El juego de Anagrams ha terminado!
 $grats1 = Felicidades a
 $grats2 = por ganar el juego con
 $points = puntos

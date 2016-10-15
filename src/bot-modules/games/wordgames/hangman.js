@@ -18,7 +18,7 @@ function isNotAlphanumeric(str) {
 
 function toWordId(str) {
 	if (!str) return '';
-	str = normalize(str);
+	str = normalize(str, true);
 	return str.toLowerCase().replace(/[^a-z0-9\u00f1]/g, '');
 }
 
@@ -42,7 +42,7 @@ exports.setup = function (App) {
 			this.ended = false;
 			this.said = [];
 			this.status = [];
-			let w = normalize(this.word).trim().toLowerCase();
+			let w = normalize(this.word, true).trim().toLowerCase();
 			for (let i = 0; i < w.length; i++) {
 				if (isNotAlphanumeric(w.charAt(i))) {
 					this.status.push({type: 'sep', key: w.charAt(i)});
