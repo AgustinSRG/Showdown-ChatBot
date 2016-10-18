@@ -13,6 +13,7 @@ const configTemplate = new Template(Path.resolve(__dirname, 'templates', 'parser
 const aliasesTemplate = new Template(Path.resolve(__dirname, 'templates', 'parser-aliases.html'));
 const permissionsTemplate = new Template(Path.resolve(__dirname, 'templates', 'parser-perm.html'));
 const roomControlTemplate = new Template(Path.resolve(__dirname, 'templates', 'parser-controlrooms.html'));
+const roomAliasesTemplate = new Template(Path.resolve(__dirname, 'templates', 'parser-roomalias.html'));
 const abuseMonitorTemplate = new Template(Path.resolve(__dirname, 'templates', 'parser-monitor.html'));
 
 exports.setup = function (App) {
@@ -34,6 +35,7 @@ exports.setup = function (App) {
 			{id: 'aliases', title: 'Aliases', url: '/parser/aliases/', handler: parserAliasesHandler},
 			{id: 'permissions', title: 'Permissions', url: '/parser/permissions/', handler: parserPermissionsHandler},
 			{id: 'roomctrl', title: 'Control&nbsp;Rooms', url: '/parser/roomctrl/', handler: parserRoomControlHandler},
+			{id: 'roomalias', title: 'Rooms&nbsp;Aliases', url: '/parser/roomalias/', handler: parserRoomAliasHandler},
 			{id: 'monitor', title: 'Abuse&nbsp;Monitor', url: '/parser/monitor/', handler: parserAbuseMonitorHandler},
 		], 'config');
 
@@ -306,6 +308,55 @@ exports.setup = function (App) {
 
 		html += roomControlTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Control Rooms - Showdown ChatBot"});
+	}
+
+	function parserRoomAliasHandler(context, html) {
+		let ok = null, error = null;
+		if (context.post.set) {
+			let room = Text.toRoomid(context.post.room);
+			let alias = Text.toRoomid(context.post.alias);
+			if (room) {
+				if (alias) {
+					App.parser.data.roomaliases[alias] = room;
+					App.parser.saveData();
+					App.logServerAction(context.user.id, "Set room alias: " + alias + " for: " + room);
+					ok = 'Alias "' + alias + '" was set for the room "' + room + '.';
+				} else {
+					error = "You must specify an alias";
+				}
+			} else {
+				error = "You must specify a target room.";
+			}
+		} else if (context.post.remove) {
+			let alias = Text.toRoomid(context.post.alias);
+			if (alias) {
+				if (App.parser.data.roomaliases[alias]) {
+					delete App.parser.data.roomaliases[alias];
+					App.parser.saveData();
+					App.logServerAction(context.user.id, "Delete room alias: " + alias);
+					ok = 'Room alias <strong>' + alias + '</strong> was deleted sucessfully.';
+				} else {
+					error = 'Room alias <strong>' + alias + '</strong> was not found.';
+				}
+			} else {
+				error = "You must specify an alias";
+			}
+		}
+
+		let htmlVars = {};
+
+		htmlVars.rooms = '';
+		for (let alias in App.parser.data.roomaliases) {
+			htmlVars.rooms += '<tr><td>' + alias + '</td><td>' + App.parser.data.roomaliases[alias] +
+			'</td><td><div align="center"><form style="display:inline;" method="post" action=""><input type="hidden" name="alias" value="' +
+			alias + '" /><input type="submit" name="remove" value="Remove Control Room" /></form></div></td></tr>';
+		}
+
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
+
+		html += roomAliasesTemplate.make(htmlVars);
+		context.endWithWebPage(html, {title: "Rooms Aliases - Showdown ChatBot"});
 	}
 
 	function parserAbuseMonitorHandler(context, html) {

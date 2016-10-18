@@ -61,6 +61,7 @@ class CommandParser {
 		if (!this.data.sleep) this.data.sleep = {}; /* Sleeping rooms */
 		if (!this.data.lockedUsers) this.data.lockedUsers = {}; /* Locked users */
 		if (!this.data.roomctrl) this.data.roomctrl = {}; /* Control rooms */
+		if (!this.data.roomaliases) this.data.roomaliases = {}; /* Rooms aliases */
 		if (!this.data.helpmsg) this.data.helpmsg = ""; /* Help Message */
 		if (!this.data.antispam) this.data.antispam = false; /* Anti-Spam System */
 		if (!this.data.antirepeat) this.data.antispam = false; /* Anti-Repeat System */
@@ -833,6 +834,14 @@ class CommandContext {
 			}
 		}
 	}
+
+	/**
+	 * @param {String} room
+	 * @returns {String} Original Room
+	 */
+	 parseRoomAliases(room) {
+		 return (this.parser.data.roomaliases[room] || room);
+	 }
 
 	/**
 	 * @returns {Object} Parsed Arguments

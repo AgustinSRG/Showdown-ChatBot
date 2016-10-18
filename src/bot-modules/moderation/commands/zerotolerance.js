@@ -131,7 +131,7 @@ module.exports = {
 	},
 
 	checkzerotolerance: function (App) {
-		let room = Text.toRoomid(this.args[0]);
+		let room = this.parseRoomAliases(Text.toRoomid(this.args[0]));
 		let user = Text.toId(this.args[1]) || this.byIdent.id;
 		if (!user || !room) return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: this.usageTrans('user'), optional: true}));
 		if (!App.bot.rooms[room] || this.getRoomType(room) !== 'chat') {

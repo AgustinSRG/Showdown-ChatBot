@@ -77,7 +77,7 @@ module.exports = {
 		if (this.args.length !== 2) {
 			return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: this.usageTrans('message')}));
 		}
-		let room = Text.toRoomid(this.args[0]);
+		let room = this.parseRoomAliases(Text.toRoomid(this.args[0]));
 		let msg = this.args[1].trim();
 		if (!msg) {
 			return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: this.usageTrans('message')}));

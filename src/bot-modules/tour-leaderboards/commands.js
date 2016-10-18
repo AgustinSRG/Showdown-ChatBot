@@ -23,7 +23,7 @@ module.exports = {
 		const Config = App.config.modules.tourleaderboards;
 		let mod = App.modules.tourleaderboards.system;
 		let user = Text.toId(this.args[0]) || this.byIdent.id;
-		let room = Text.toRoomid(this.args[1]) || this.room;
+		let room = this.parseRoomAliases(Text.toRoomid(this.args[1])) || this.room;
 		if (!user || !room) {
 			return this.errorReply(this.usage({desc: this.usageTrans('user'), optional: true}, {desc: this.usageTrans('room'), optional: true}));
 		}
@@ -47,7 +47,7 @@ module.exports = {
 	top: function (App) {
 		const Config = App.config.modules.tourleaderboards;
 		let mod = App.modules.tourleaderboards.system;
-		let room = Text.toRoomid(this.arg) || this.room;
+		let room = this.parseRoomAliases(Text.toRoomid(this.arg)) || this.room;
 		if (!room) {
 			return this.errorReply(this.usage({desc: this.usageTrans('room')}));
 		}
@@ -71,7 +71,7 @@ module.exports = {
 		if (!server) {
 			return this.pmReply(translator.get(13, this.lang));
 		}
-		let room = Text.toRoomid(this.arg) || this.room;
+		let room = this.parseRoomAliases(Text.toRoomid(this.arg)) || this.room;
 		if (!room) {
 			return this.errorReply(this.usage({desc: this.usageTrans('room')}));
 		}
