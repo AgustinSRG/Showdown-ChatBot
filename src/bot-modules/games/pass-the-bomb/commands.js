@@ -23,7 +23,7 @@ module.exports = {
 			maxPlayers = 0;
 		}
 		if (isNaN(maxPlayers) || (maxPlayers < 2 && maxPlayers !== 0)) {
-			return this.errorReply(this.usage({desc: translator.get('maxplayers', this.lang), optional: true}));
+			return this.errorReply(this.usage({desc: translator.get('maxplayers', this.lang)}));
 		}
 		let passbomb = new PassBomb(this.room, maxPlayers);
 		if (!App.modules.games.system.createGame(this.room, passbomb, trigger)) {

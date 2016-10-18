@@ -36,7 +36,7 @@ module.exports = {
 		if (isNaN(ansTime) || ansTime < 10 || ansTime > 300) {
 			return this.errorReply(translator.get(0, this.lang));
 		}
-		if (games < 0 || points < 0) {
+		if (games < 0 || points < 0 || isNaN(games) || isNaN(points)) {
 			return this.errorReply(this.usage({desc: translator.get('games', this.lang)},
 				{desc: translator.get('maxpoints', this.lang), optional: true}, {desc: translator.get('anstime', this.lang), optional: true}));
 		}
