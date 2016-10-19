@@ -262,7 +262,7 @@ exports.setup = function (App) {
 			this.timer = null;
 			let cmds = [];
 			cmds.push(Chat.bold("Blackjack:") + " " + translator.get("timeout1", this.lang) + " " +
-			this.currPlayer.name + "" + translator.get("timeout2", this.lang));
+			this.currPlayer.name + " " + translator.get("timeout2", this.lang));
 			let handval = this.getHandValue(this.currPlayer.hand);
 			if (handval === 21) {
 				cmds.push(Chat.bold("Blackjack:") + " " + this.currPlayer.name + " " + translator.get("bj", this.lang) + "!");
