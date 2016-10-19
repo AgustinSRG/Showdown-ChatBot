@@ -111,7 +111,7 @@ exports.setup = function (App) {
 		case 'updateEnd':
 			if (!tournaments[room]) break;
 			if (tournaments[room].started && !tourData[room].isStarted) {
-				tournaments[room].startTour();
+				tournaments[room].start();
 			}
 			break;
 		case 'end':
