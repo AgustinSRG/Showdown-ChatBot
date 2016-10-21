@@ -23,6 +23,7 @@ const Text = Tools('text');
 const Server = require(Path.resolve(__dirname, 'server/server.js')).Server;
 const DataManager = require(Path.resolve(__dirname, 'data.js'));
 const CommandParser = require(Path.resolve(__dirname, 'command-parser.js')).CommandParser;
+const ConnectionMonitor = require(Path.resolve(__dirname, 'connection-monitor.js'));
 
 const uncacheTree = Tools('uncachetree');
 const checkDir = Tools('checkdir');
@@ -218,6 +219,9 @@ class ChatBotApp {
 			this.log('Bot Disconnected' + (err ? (" | " + err.code + ": " + err.message) : ''));
 			console.log('Bot Disconnected' + (err ? (" | " + err.code + ": " + err.message) : ''));
 		}.bind(this));
+
+		/* Monitor */
+		this.connMonitor = new ConnectionMonitor(this);
 
 		/* Other initial values */
 		this.console = null;
