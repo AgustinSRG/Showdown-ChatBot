@@ -74,11 +74,11 @@ module.exports = {
 
 	send: function () {
 		if (!this.can('send', this.room)) return this.replyAccessDenied('send');
-		if (this.args.length !== 2) {
+		if (this.args.length < 2) {
 			return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: this.usageTrans('message')}));
 		}
 		let room = this.parseRoomAliases(Text.toRoomid(this.args[0]));
-		let msg = this.args[1].trim();
+		let msg = this.args.slice(1).join(',');
 		if (!msg) {
 			return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: this.usageTrans('message')}));
 		}
