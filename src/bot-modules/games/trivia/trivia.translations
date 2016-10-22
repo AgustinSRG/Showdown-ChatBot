@@ -43,7 +43,7 @@ $7 = Usa
 $8 = ta <respuesta>
 $9 = para jugar
 
-$10 = El tiempo ha terminado!
+$10 = ¡El tiempo ha terminado!
 $10b = Respuestas
 
 $11 = ¡Correcto!
@@ -51,7 +51,7 @@ $12 = respondió a la pregunta correctamente. Respuesta
 $13 = Puntos
 
 $lose = Sin embargo nadie ha conseguido ningún punto, por lo que no hay ganadores
-$end = El juego de Trivia ha terminado!
+$end = ¡El juego de Trivia ha terminado!
 $grats1 = Felicidades a
 $grats2 = por ganar el juego con
 $points = puntos

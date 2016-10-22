@@ -140,7 +140,7 @@ exports.setup = function (App) {
 				this.points[ident.id]++;
 				this.names[ident.id] = ident.name;
 				let ind = this.validAnswersIds.indexOf(word);
-				this.send(Chat.bold(translator.get(11, this.lang)) + "! " + Chat.bold(ident.name) + " " + translator.get(12, this.lang) + ": " +
+				this.send(Chat.bold(translator.get(11, this.lang)) + " " + Chat.bold(ident.name) + " " + translator.get(12, this.lang) + ": " +
 				Chat.italics(this.validAnswers[ind]) + ". " + translator.get(13, this.lang) + ": " + this.points[ident.id]);
 				this.wait();
 			}
