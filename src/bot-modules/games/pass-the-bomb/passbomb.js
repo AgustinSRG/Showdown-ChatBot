@@ -110,6 +110,7 @@ exports.setup = function (App) {
 
 		pass(ident, to) {
 			if (this.status !== 'round') return;
+			if (!this.players[ident.id]) return;
 			to = Text.toId(to);
 			if (ident.id !== this.playerWithBomb) {
 				if (this.players[to]) {
