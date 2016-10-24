@@ -47,8 +47,9 @@ exports.setup = function (App) {
 				this.timer2 = setTimeout(this.midAnnounce.bind(this), halfTime);
 			}
 			this.timer1 = setTimeout(this.end.bind(this), time);
-			App.bot.sendTo(this.room, Chat.bold("Timer:") + " " + translator.get(0, this.lang) + ' ' +
-			this.getDiff() + ' ' + translator.get(1, this.lang));
+			let diff = this.getDiff();
+			App.bot.sendTo(this.room, Chat.bold("Timer:") + " " + translator.get((diff.substr(0, 2) === '1 ' ? 3 : 0), this.lang) + ' ' +
+			diff + ' ' + translator.get(1, this.lang));
 		}
 
 		getDiff() {
@@ -72,8 +73,9 @@ exports.setup = function (App) {
 
 		midAnnounce() {
 			this.timer2 = null;
-			App.bot.sendTo(this.room, Chat.bold("Timer:") + " " + translator.get(0, this.lang) + ' ' +
-			this.getDiff() + ' ' + translator.get(1, this.lang));
+			let diff = this.getDiff();
+			App.bot.sendTo(this.room, Chat.bold("Timer:") + " " + translator.get((diff.substr(0, 2) === '1 ' ? 3 : 0), this.lang) + ' ' +
+			diff + ' ' + translator.get(1, this.lang));
 		}
 
 		end() {
