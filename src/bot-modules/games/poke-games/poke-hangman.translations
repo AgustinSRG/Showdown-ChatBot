@@ -19,7 +19,7 @@ $1 = g <letra/palabra>
 $2 = para jugar
 
 $3 = ¡El juego de Poke-Hangman ha terminado!
-$4 = fue ahoracado por no acertar la palabra
+$4 = fue ahorcado por no acertar la palabra
 $5 = ¡Felicidades a
 $6 = por ganar el juego!
 $7 = La palabra era

@@ -22,7 +22,7 @@ $natures = Nature
 
 %spanish
 
-$0 = Pokemon, habilidad, objeto, movimineto o naturaleza llamado
+$0 = Pokemon, habilidad, objeto, movimiento o naturaleza llamado
 $1 = no está disponible en las traducciones
 $3 = Traducciones de
 $4 = Idioma no disponible
