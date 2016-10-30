@@ -89,9 +89,9 @@ module.exports = {
 	pm: 'sendpm',
 	sendpm: function () {
 		if (!this.can('send', this.room)) return this.replyAccessDenied('send');
-		if (this.args.length !== 2) return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: this.usageTrans('message')}));
+		if (this.args.length < 2) return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: this.usageTrans('message')}));
 		let user = Text.toId(this.args[0]);
-		let msg = this.args[1].trim();
+		let msg = this.args.slice(1).join(',');
 		if (!user || !msg) return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: this.usageTrans('message')}));
 		this.sendPM(user, msg);
 		this.addToSecurityLog();
