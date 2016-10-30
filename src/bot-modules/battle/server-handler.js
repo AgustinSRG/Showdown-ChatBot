@@ -272,19 +272,35 @@ exports.setup = function (App) {
 		let htmlVars = {};
 
 		htmlVars.exportable = (context.post.exportable || "");
-		htmlVars.formats = getFormatsMenu(Text.toId(context.post.format));
-		htmlVars.teams = '';
+		htmlVars.formats = getFormatsMenu(Text.toId(context.get.format));
 
+		let submenu = [];
+		let formats = {};
+		let selectedFormat = Text.toId(context.get.format);
+		submenu.push('<a class="submenu-option' + (!selectedFormat ? '-selected' : '') + '" href="./">All&nbsp;Teams</a>');
+		htmlVars.teams = '';
 		let teams = mod.TeamBuilder.dynTeams;
 		for (let id in teams) {
 			let formatName = teams[id].format;
 			if (App.bot.formats[formatName]) formatName = App.bot.formats[formatName].name;
+			if (!formats[teams[id].format]) {
+				formats[teams[id].format] = true;
+				submenu.push('<a class="submenu-option' + (selectedFormat === teams[id].format ? '-selected' : '') +
+				'" href="./?format=' + teams[id].format + '">' + formatName + '</a>');
+			}
+			if (selectedFormat && selectedFormat !== teams[id].format) continue;
 			htmlVars.teams += teamsItemTemplate.make({
 				id: id,
 				format: Text.escapeHTML(formatName),
 				pokemon: Teams.teamOverview(teams[id].packed),
 			});
 		}
+
+		if (!htmlVars.teams) {
+			htmlVars.teams = "<p><i>(No battle teams)</i></p>";
+		}
+
+		htmlVars.menu = submenu.join('&nbsp;| ');
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
