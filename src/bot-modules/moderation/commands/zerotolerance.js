@@ -41,7 +41,8 @@ module.exports = {
 		App.modules.moderation.system.db.write();
 		App.logCommandAction(this);
 		this.reply(translator.get(1, this.lang) + " " + Chat.italics(user) + " " + translator.get(2, this.lang) +
-			" (" + translator.get(3, this.lang) + ": " + level + ") " + translator.get(4, this.lang) + " " + Chat.italics(room));
+			" (" + translator.get(3, this.lang) + ": " + level + ") " + translator.get(4, this.lang) +
+			" " + Chat.italics(this.parser.getRoomTitle(room)));
 	},
 
 	rmzerotolerance: function (App) {
@@ -53,7 +54,7 @@ module.exports = {
 		if (!user) return this.errorReply(this.usage({desc: this.usageTrans('user')}));
 		if (!config.zeroTolerance[room] || !config.zeroTolerance[room][user]) {
 			return this.errorReply(translator.get(1, this.lang) + " " + Chat.italics(user) + " " +
-				translator.get(5, this.lang) + " " + Chat.italics(room));
+				translator.get(5, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)));
 		}
 		delete config.zeroTolerance[room][user];
 		if (Object.keys(config.zeroTolerance[room]).length === 0) {
@@ -61,7 +62,8 @@ module.exports = {
 		}
 		App.modules.moderation.system.db.write();
 		App.logCommandAction(this);
-		this.reply(translator.get(1, this.lang) + " " + Chat.italics(user) + " " + translator.get(6, this.lang) + " " + Chat.italics(room));
+		this.reply(translator.get(1, this.lang) + " " + Chat.italics(user) + " " + translator.get(6, this.lang) +
+			" " + Chat.italics(this.parser.getRoomTitle(room)));
 	},
 
 	viewzerotolerance: function (App) {
@@ -76,7 +78,8 @@ module.exports = {
 		const config = App.modules.moderation.system.data;
 		let zt = config.zeroTolerance[room];
 		if (!zt) {
-			return this.pmReply(translator.get(8, this.lang) + " " + Chat.italics(room) + " " + translator.get(9, this.lang));
+			return this.pmReply(translator.get(8, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)) +
+				" " + translator.get(9, this.lang));
 		}
 		let html = '';
 		html += '<html>';
@@ -110,10 +113,11 @@ module.exports = {
 		const config = App.modules.moderation.system.data;
 		let zt = config.zeroTolerance[room];
 		if (!zt) {
-			return this.pmReply(translator.get(8, this.lang) + " " + Chat.italics(room) + " " + translator.get(9, this.lang));
+			return this.pmReply(translator.get(8, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)) +
+				" " + translator.get(9, this.lang));
 		}
 		let text = '';
-		text += 'Zero tolerance configuration of ' + room + ':\n\n';
+		text += 'Zero tolerance configuration of ' + this.parser.getRoomTitle(room) + ':\n\n';
 		let users = Object.keys(zt).sort();
 		for (let i = 0; i < users.length; i++) {
 			let user = users[i];
@@ -135,7 +139,8 @@ module.exports = {
 		let user = Text.toId(this.args[1]) || this.byIdent.id;
 		if (!user || !room) return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: this.usageTrans('user'), optional: true}));
 		if (!App.bot.rooms[room] || this.getRoomType(room) !== 'chat') {
-			return this.errorReply(translator.get(10, this.lang) + " " + Chat.italics(room) + " " + translator.get(11, this.lang));
+			return this.errorReply(translator.get(10, this.lang) + " " + Chat.italics(room) +
+				" " + translator.get(11, this.lang));
 		}
 		if (user.length > 19) {
 			return this.errorReply(translator.get(0, this.lang));
@@ -150,11 +155,12 @@ module.exports = {
 		let config = App.modules.moderation.system.data;
 		if (!config.zeroTolerance[room] || !config.zeroTolerance[room][user]) {
 			this.pmReply(translator.get(1, this.lang) + " " + Chat.italics(user) + " " + translator.get(12, this.lang) +
-				" " + translator.get(4, this.lang) + " " + Chat.italics(room));
+				" " + translator.get(4, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)));
 		} else {
 			let level = config.zeroTolerance[room][user];
 			this.pmReply(translator.get(1, this.lang) + " " + Chat.italics(user) + " " + translator.get(13, this.lang) +
-				" (" + translator.get(3, this.lang) + ": " + level + ") " + translator.get(4, this.lang) + " " + Chat.italics(room));
+				" (" + translator.get(3, this.lang) + ": " + level + ") " + translator.get(4, this.lang) +
+				" " + Chat.italics(this.parser.getRoomTitle(room)));
 		}
 	},
 };

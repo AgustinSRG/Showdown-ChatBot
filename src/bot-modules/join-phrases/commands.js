@@ -37,7 +37,8 @@ module.exports = {
 			config.rooms[room][user] = phrase;
 			App.modules.joinphrases.system.db.write();
 			App.logCommandAction(this);
-			this.reply(translator.get(0, this.lang) + ' ' + Chat.italics(user) + ' ' + translator.get(1, this.lang) + ' ' + Chat.italics(room));
+			this.reply(translator.get(0, this.lang) + ' ' + Chat.italics(user) + ' ' + translator.get(1, this.lang) +
+				' ' + Chat.italics(this.parser.getRoomTitle(room)));
 			break;
 		case 'remove':
 		case 'delete':
@@ -50,10 +51,11 @@ module.exports = {
 				}
 				App.modules.joinphrases.system.db.write();
 				App.logCommandAction(this);
-				this.reply(translator.get(2, this.lang) + '' + Chat.italics(user) + ' ' + translator.get(1, this.lang) + ' ' + Chat.italics(room));
+				this.reply(translator.get(2, this.lang) + '' + Chat.italics(user) + ' ' + translator.get(1, this.lang) +
+					' ' + Chat.italics(this.parser.getRoomTitle(room)));
 			} else {
 				this.errorReply(translator.get(3, this.lang) + ' ' + Chat.italics(user) + ' ' +
-					translator.get(1, this.lang) + ' ' + Chat.italics(room));
+					translator.get(1, this.lang) + ' ' + Chat.italics(this.parser.getRoomTitle(room)));
 			}
 			break;
 		case 'get':
@@ -63,7 +65,7 @@ module.exports = {
 				this.reply(Text.stripCommands(config.rooms[room][user]));
 			} else {
 				this.errorReply(translator.get(3, this.lang) + ' ' + Chat.italics(user) + ' ' +
-					translator.get(1, this.lang) + ' ' + Chat.italics(room));
+					translator.get(1, this.lang) + ' ' + Chat.italics(this.parser.getRoomTitle(room)));
 			}
 			break;
 		default:
@@ -82,7 +84,7 @@ module.exports = {
 		let room = this.targetRoom;
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
 		if (!config.rooms[room]) {
-			return this.errorReply(translator.get(4, this.lang) + " " + Chat.italics(room));
+			return this.errorReply(translator.get(4, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)));
 		}
 		let html = '';
 		html += '<html>';
@@ -113,10 +115,10 @@ module.exports = {
 		let room = this.targetRoom;
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
 		if (!config.rooms[room]) {
-			return this.errorReply(translator.get(4, this.lang) + " " + Chat.italics(room));
+			return this.errorReply(translator.get(4, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)));
 		}
 		let text = '';
-		text += 'Join-Phrases in ' + room + ':\n\n';
+		text += 'Join-Phrases in ' + this.parser.getRoomTitle(room) + ':\n\n';
 		for (let user in config.rooms[room]) {
 			text += user + ' - ';
 			text += config.rooms[room][user];

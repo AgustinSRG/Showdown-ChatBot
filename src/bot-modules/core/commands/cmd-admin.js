@@ -81,7 +81,8 @@ module.exports = {
 			App.saveConfig();
 			this.addToSecurityLog();
 			this.lang = lang;
-			this.reply(translator.get(7, this.lang) + ' ' + Chat.italics(room) + ' ' + translator.get(8, this.lang) + ' ' + Chat.italics(lang));
+			this.reply(translator.get(7, this.lang) + ' ' + Chat.italics(this.parser.getRoomTitle(room)) +
+				' ' + translator.get(8, this.lang) + ' ' + Chat.italics(lang));
 		} else {
 			this.errorReply(translator.get(9, this.lang) + ' ' + Chat.italics(lang) + ' ' +
 				translator.get(10, this.lang) + ': ' + Object.values(App.languages).join(', '));
@@ -252,15 +253,16 @@ module.exports = {
 			switch (rank) {
 			case 'user':
 				this.reply(translator.get(18, this.lang) + ' ' + Chat.italics(perm) + ' ' + translator.get(19, this.lang) + ' ' +
-						translator.get(26, this.lang) + ' ' + Chat.italics(room));
+						translator.get(26, this.lang) + ' ' + Chat.italics(this.parser.getRoomTitle(room)));
 				break;
 			case 'excepted':
 				this.reply(translator.get(18, this.lang) + ' ' + Chat.italics(perm) + ' ' + translator.get(20, this.lang) + ' ' +
-						translator.get(26, this.lang) + ' ' + Chat.italics(room));
+						translator.get(26, this.lang) + ' ' + Chat.italics(this.parser.getRoomTitle(room)));
 				break;
 			default:
 				this.reply(translator.get(18, this.lang) + ' ' + Chat.italics(perm) + ' ' + translator.get(21, this.lang) + ' ' +
-						Chat.bold(rank) + ' ' + translator.get(22, this.lang) + ' ' + translator.get(26, this.lang) + ' ' + Chat.italics(room));
+						Chat.bold(rank) + ' ' + translator.get(22, this.lang) + ' ' + translator.get(26, this.lang) + ' ' +
+						Chat.italics(this.parser.getRoomTitle(room)));
 			}
 		} else {
 			return this.errorReply(translator.get(23, this.lang) + ": " + groups.join(', '));

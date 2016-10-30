@@ -35,7 +35,7 @@ module.exports = {
 			}
 		}
 		if (added.length > 0) {
-			this.reply(translator.get(0, this.lang) + " " + Chat.italics(room) + ": " + added.join(', '));
+			this.reply(translator.get(0, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)) + ": " + added.join(', '));
 			App.modules.blacklist.system.db.write();
 			App.logCommandAction(this);
 			let cmds = App.modules.blacklist.system.getInitCmds();
@@ -63,7 +63,7 @@ module.exports = {
 			}
 		}
 		if (removed.length > 0) {
-			this.reply(translator.get(2, this.lang) + " " + Chat.italics(room) + ": " + removed.join(', '));
+			this.reply(translator.get(2, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)) + ": " + removed.join(', '));
 			App.modules.blacklist.system.db.write();
 			App.logCommandAction(this);
 		} else {
@@ -85,7 +85,7 @@ module.exports = {
 		}
 		let bl = App.modules.blacklist.system.data[room];
 		if (!bl || Object.keys(bl).length === 0) {
-			return this.pmReply(translator.get(5, this.lang) + " " + Chat.italics(room));
+			return this.pmReply(translator.get(5, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)));
 		}
 		let html = '';
 		html += '<html>';
@@ -116,10 +116,10 @@ module.exports = {
 		}
 		let bl = App.modules.blacklist.system.data[room];
 		if (!bl || Object.keys(bl).length === 0) {
-			return this.pmReply(translator.get(5, this.lang) + " " + Chat.italics(room));
+			return this.pmReply(translator.get(5, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)));
 		}
 		let text = '';
-		text += 'Users blacklisted in ' + room + ':\n\n';
+		text += 'Users blacklisted in ' + this.parser.getRoomTitle(room) + ':\n\n';
 		let blUsers = Object.keys(bl).sort();
 		for (let i = 0; i < blUsers.length; i++) {
 			text += blUsers[i] + '\n';
