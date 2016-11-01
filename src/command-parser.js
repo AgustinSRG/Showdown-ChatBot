@@ -392,7 +392,7 @@ class CommandParser {
 		cmd = Text.toCmdid(cmd);
 
 		/* Create Command Context */
-		let context = new CommandContext(this, room, by, token, cmd, arg, tarRoom, false);
+		let context = new CommandContext(this, room, by, token, cmd, arg, tarRoom, false, msg);
 
 		/* Exec Command */
 
@@ -621,8 +621,9 @@ class CommandContext {
 	 * @param {String} arg - Command argument
 	 * @param {String} targetRoom - Target room (control rooms for example)
 	 * @param {Boolean} replyWithWall - true to reply with /announce
+	 * @param {String} originalMessage - Original message before parsing
 	 */
-	constructor(parser, room, by, token, cmd, arg, targetRoom, replyWithWall) {
+	constructor(parser, room, by, token, cmd, arg, targetRoom, replyWithWall, originalMessage) {
 		/* Initial values */
 		this.parser = parser;
 		this.by = by;
@@ -633,6 +634,7 @@ class CommandContext {
 		this.arg = arg.trim();
 		this.args = this.arg.split(',');
 		this.wall = !!replyWithWall;
+		this.originalMessage = originalMessage;
 
 		/* Room type */
 		if (room === null) {
