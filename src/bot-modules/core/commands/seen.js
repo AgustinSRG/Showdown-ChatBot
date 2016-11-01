@@ -12,6 +12,7 @@ const Path = require('path');
 const Text = Tools('text');
 const Chat = Tools('chat');
 const Translator = Tools('translate');
+const LineSplitter = Tools('line-splitter');
 
 const translator = new Translator(Path.resolve(__dirname, 'seen.translations'));
 
@@ -85,8 +86,18 @@ module.exports = {
 		} else if (App.bot.users[targetUser]) {
 			let alts = App.bot.users[targetUser].alts;
 			if (alts.length > 10) {
-				this.pmReply(translator.get(17, this.lang) + ' ' +
-					Chat.bold(App.bot.users[targetUser].name) + ': ' + alts.splice(0, 10).join(', ').trim() + '');
+				if (!this.isExcepted()) {
+					this.pmReply(translator.get(17, this.lang) + ' ' +
+						Chat.bold(App.bot.users[targetUser].name) + ': ' + alts.slice(0, 10).join(', ').trim() +
+						", (" + (alts.length - 10) + ' ' + translator.get('more', this.lang) + ')');
+				} else {
+					let spl = new LineSplitter(App.config.bot.maxMessageLength);
+					spl.add(translator.get(17, this.lang) + ' ' + Chat.bold(App.bot.users[targetUser].name) + ':');
+					for (let i = 0; i < alts.length; i++) {
+						spl.add(" " + alts[i] + ((i < alts.length - 1) ? "," : ""));
+					}
+					this.pmReply(spl.getLines());
+				}
 			} else if (alts.length > 0) {
 				this.pmReply(translator.get(17, this.lang) + ' ' +
 					Chat.bold(App.bot.users[targetUser].name) + ': ' + alts.join(', ').trim() + '');

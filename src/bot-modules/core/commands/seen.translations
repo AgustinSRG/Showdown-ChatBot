@@ -16,6 +16,7 @@ $9 = days
 
 $seen = was last seen
 $ago = ago
+$more = more
 
 $10 = joining
 $11 = leaving
@@ -48,6 +49,7 @@ $9 = días
 
 $seen = fue visto por última vez hace
 $ago = 
+$more = más
 
 $10 = entrando en
 $11 = saliendo de
