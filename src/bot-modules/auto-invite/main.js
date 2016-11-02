@@ -51,6 +51,7 @@ exports.setup = function (App) {
 					}
 				}
 				this.roomAuth = auth;
+				App.log("[AUTO-INVITE] Roomauth realoaded from room: " + App.config.modules.autoinvite.room);
 				App.bot.removeListener('popup', this.popupHandler);
 			}
 		}
@@ -125,7 +126,7 @@ exports.setup = function (App) {
 			clearInterval(mod.timer);
 			mod.timer = null;
 		}
-		mod.timer = setInterval(mod.checkRoomAuth, Roomauth_Check_Interval);
+		mod.timer = setInterval(mod.checkRoomAuth.bind(mod), Roomauth_Check_Interval);
 	});
 
 	App.bot.on('disconnect', () => {
