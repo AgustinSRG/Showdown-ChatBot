@@ -33,6 +33,6 @@
   "private": true,
   "license": "MIT",
   "devDependencies": {
-    "eslint": "3.4.0"
+    "eslint": "3.9.1"
   }
 }
