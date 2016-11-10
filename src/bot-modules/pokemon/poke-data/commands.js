@@ -73,7 +73,7 @@ module.exports = {
 			return this.errorReply(translator.get('error', this.lang));
 		}
 		if (moves === null) {
-			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + '__ ' + translator.get(2, this.lang));
+			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang));
 		} else if (!moves.length) {
 			return this.errorReply(translator.get(6, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id, App)));
 		} else if (doubles) {
