@@ -206,6 +206,14 @@ class CommandParser {
 	}
 
 	/**
+	 * Removes a command permission
+	 * @param {String} id - Permission ID
+	 */
+	removePermission(id) {
+		delete this.modPermissions[id];
+	}
+
+	/**
 	 * Adds a Command parser trigger
 	 * @param {String} id - Trigger ID
 	 * @param {String} mode - It can be "before" (it can interupt the command) or "after"

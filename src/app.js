@@ -63,7 +63,7 @@ class ChatBotApp {
 				let oldConfig = JSON.parse(FileSystem.readFileSync(Path.resolve(confDir, 'config.json')).toString());
 				this.db.set(oldConfig);
 				this.db.write();
-				console.log("Configuration was encryped");
+				console.log("Configuration was encrypted");
 			} catch (err) {
 				this.reportCrash(err);
 			}
@@ -347,7 +347,10 @@ class ChatBotApp {
 		try {
 			this.addons[file] = require(path);
 			if (typeof this.addons[file].setup === "function") {
-				this.addons[file].setup(this);
+				let addon = this.addons[file].setup(this);
+				if (addon) {
+					this.addons[file] = addon;
+				}
 			}
 			return true;
 		} catch (err) {
