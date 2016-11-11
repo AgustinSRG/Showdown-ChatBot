@@ -9,6 +9,8 @@
 const Path = require('path');
 const Translator = Tools('translate');
 const Text = Tools('text');
+const Chat = Tools('chat');
+const Inexact = Tools('inexact-pokemon');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
@@ -123,8 +125,14 @@ module.exports = {
 			}
 			if (params.format) {
 				let format = parseAliases(params.format, App);
-				if (!App.bot.formats[format] || !App.bot.formats[format].chall || App.bot.formats[format].disableTournaments) {
-					return this.reply(translator.get('e31', this.lang) + ' ' + format + ' ' + translator.get('e32', this.lang));
+				if (!App.bot.formats[format]) {
+					let inexact = Inexact.safeResolve(App, format, {formats: 1, others: 0});
+					return this.reply(translator.get('e31', this.lang) + ' "' + format + '" ' + translator.get('e33', this.lang) +
+						(inexact ? (". " + translator.get('inexact', this.lang) + " " + Chat.italics(inexact) + "?") : ""));
+				}
+				if (!App.bot.formats[format].chall || App.bot.formats[format].disableTournaments) {
+					return this.reply(translator.get('e31', this.lang) + ' ' + Chat.italics(App.bot.formats[format]) +
+						' ' + translator.get('e32', this.lang));
 				}
 				details.format = format;
 			}

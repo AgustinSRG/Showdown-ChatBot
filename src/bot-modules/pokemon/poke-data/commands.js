@@ -19,6 +19,7 @@ const Moves = require(Path.resolve(__dirname, 'moves.js'));
 const Text = Tools('text');
 const Chat = Tools('chat');
 const Translator = Tools('translate');
+const Inexact = Tools('inexact-pokemon');
 
 const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
 
@@ -35,13 +36,15 @@ module.exports = {
 			App.reportCrash(err);
 			return this.errorReply(translator.get('error', this.lang));
 		}
-		let text = '';
+		let inexact, text = '';
 		switch (gen.gen) {
 		case 'metronome':
 			text = translator.get(0, this.lang);
 			break;
 		case 0:
-			text = translator.get(1, this.lang) + " " + Chat.italics(id) + " " + translator.get(2, this.lang);
+			inexact = Inexact.safeResolve(App, id, {natures: 0, formats: 0, others: 1});
+			text = translator.get(1, this.lang) + " " + Chat.italics(id) + " " + translator.get(2, this.lang) +
+				(inexact ? (". " + translator.get('inexact', this.lang) + " " + Chat.italics(inexact) + "?") : "");
 			break;
 		default:
 			text = translator.get(3, this.lang) + " " + Chat.italics(gen.name) + ": " + translator.get(4, this.lang) + " " + Chat.italics(gen.gen);
@@ -73,7 +76,9 @@ module.exports = {
 			return this.errorReply(translator.get('error', this.lang));
 		}
 		if (moves === null) {
-			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang));
+			let inexact = Inexact.safeResolve(App, id, {pokemon: 1, others: 0});
+			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang) +
+				(inexact ? (". " + translator.get('inexact', this.lang) + " " + Chat.italics(inexact) + "?") : ""));
 		} else if (!moves.length) {
 			return this.errorReply(translator.get(6, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id, App)));
 		} else if (doubles) {
@@ -97,7 +102,9 @@ module.exports = {
 			return this.errorReply(translator.get('error', this.lang));
 		}
 		if (moves === null) {
-			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang));
+			let inexact = Inexact.safeResolve(App, id, {pokemon: 1, others: 0});
+			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang) +
+				(inexact ? (". " + translator.get('inexact', this.lang) + " " + Chat.italics(inexact) + "?") : ""));
 		} else if (!moves.length) {
 			return this.errorReply(translator.get(9, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id, App)));
 		} else {
@@ -119,7 +126,9 @@ module.exports = {
 			return this.errorReply(translator.get('error', this.lang));
 		}
 		if (moves === null) {
-			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang));
+			let inexact = Inexact.safeResolve(App, id, {pokemon: 1, others: 0});
+			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang) +
+				(inexact ? (". " + translator.get('inexact', this.lang) + " " + Chat.italics(inexact) + "?") : ""));
 		} else if (!moves.length) {
 			return this.errorReply(translator.get(11, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id, App)));
 		} else {
@@ -141,7 +150,9 @@ module.exports = {
 			return this.errorReply(translator.get('error', this.lang));
 		}
 		if (moves === null) {
-			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang));
+			let inexact = Inexact.safeResolve(App, id, {pokemon: 1, others: 0});
+			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang) +
+				(inexact ? (". " + translator.get('inexact', this.lang) + " " + Chat.italics(inexact) + "?") : ""));
 		} else if (!moves.length) {
 			return this.errorReply(translator.get(13, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id, App)));
 		} else {
@@ -163,7 +174,9 @@ module.exports = {
 			return this.errorReply(translator.get('error', this.lang));
 		}
 		if (moves === null) {
-			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang));
+			let inexact = Inexact.safeResolve(App, id, {pokemon: 1, others: 0});
+			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang) +
+				(inexact ? (". " + translator.get('inexact', this.lang) + " " + Chat.italics(inexact) + "?") : ""));
 		} else if (!moves.length) {
 			return this.errorReply(translator.get(15, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + '');
 		} else {

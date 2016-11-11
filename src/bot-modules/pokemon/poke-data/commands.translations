@@ -3,6 +3,7 @@
 %english
 
 $error = An error ocurred, try again later
+$inexact = Maybe you mean
 
 $0 = Generation of __Metronome__: Move: Generation 1; Item: Generation 4
 $1 = Pokemon, item, ability or move called
@@ -32,6 +33,7 @@ $17 = pokemon / item / ability / move
 %spanish
 
 $error = Se ha producido un error, inténtalo de nuevo más tarde
+$inexact = ¿Quizás quisiste decir
 
 $0 = Generación de __Metronome__: Movimiento: Generación 1; Objeto: Generación 4
 $1 = Pokemon, objeto, habilidad o movimiento llamado
