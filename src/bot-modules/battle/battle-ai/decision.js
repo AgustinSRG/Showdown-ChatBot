@@ -201,15 +201,22 @@ exports.getDecisions = function (battle) {
 					for (let tar = 0; tar < battle.self.active.length; tar++) {
 						if (tar === i) continue; // Not self target allowed
 						if (!battle.self.active[tar] || battle.self.active[tar].fainted) continue; // Target not found
-						if (active.moves[j].target === 'normal' && isTooFar(battle, tar, i)) continue; // Target too far
+						if (active.moves[j].target === 'normal' && Math.abs(tar - i) > 1) continue; // Target too far
 						if (mega) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, active.moves[j].move));
 						tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move));
 					}
 				} else if (active.moves[j].target in {'adjacentAlly': 1}) {
+					let auxHasAllies = false;
 					for (let tar = 0; tar < battle.self.active.length; tar++) {
 						if (tar === i) continue; // Not self target allowed
 						if (!battle.self.active[tar] || battle.self.active[tar].fainted) continue; // Target not found
-						if (active.moves[j].target === 'normal' && isTooFar(battle, tar, i)) continue; // Target too far
+						if (Math.abs(tar - i) > 1) continue; // Target too far
+						auxHasAllies = true;
+					}
+					for (let tar = 0; tar < battle.self.active.length; tar++) {
+						if (tar === i) continue; // Not self target allowed
+						if (auxHasAllies && (!battle.self.active[tar] || battle.self.active[tar].fainted)) continue; // Target not found
+						if (Math.abs(tar - i) > 1) continue; // Target too far
 						if (mega) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, active.moves[j].move));
 						tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move));
 					}
