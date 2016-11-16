@@ -28,6 +28,13 @@ $15 = The tournament was already official
 $16 = The tournament is no longer official
 $17 = The tournament is not official
 
+$18 = Tours points system for
+$19 = points for winner
+$20 = for finalist
+$21 = for semi-finalist
+$22 = per won battle
+$23 = Only official tours are rated
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
@@ -55,3 +62,10 @@ $15 = El torneo ya era oficial
 
 $16 = El torneo ha dejado de ser oficial
 $17 = El torneo no es oficial
+
+$18 = Sistema de puntos en torneos en
+$19 = puntos para el ganador
+$20 = para el finalista
+$21 = para los semi-finalistas
+$22 = por batalla ganada
+$23 = Solo cuentan los torneos oficiales

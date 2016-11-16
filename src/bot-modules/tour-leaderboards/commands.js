@@ -3,6 +3,7 @@
  *
  * toursrank: gets the tournament ranking
  * top: gets the TOP5 for a room
+ * toursrankconfig: gets the points system configuration for a room
  * tourleaderboards: gets the TOP100 table for a room
  * official: makes a tournament official
  * unofficial: makes a tournament unofficial
@@ -63,6 +64,22 @@ module.exports = {
 			topResults.push(Chat.italics("#" + (i + 1)) + " " + Chat.bold(top[i][0]) + " (" + top[i][6] + ")");
 		}
 		this.restrictReply(Chat.bold(this.parser.getRoomTitle(room)) + " | " + topResults.join(", "), "toursrank");
+	},
+
+	toursrankconfig: function (App) {
+		const Config = App.config.modules.tourleaderboards;
+		let room = this.parseRoomAliases(Text.toRoomid(this.arg)) || this.room;
+		if (!room) {
+			return this.errorReply(this.usage({desc: this.usageTrans('room')}));
+		}
+		if (!Config[room]) {
+			return this.errorReply(translator.get(0, this.lang) + " " + Chat.italics(room));
+		}
+		this.restrictReply(translator.get(18, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)) + ": " +
+			Chat.bold(Config[room].winner) + " " + translator.get(19, this.lang) + ", " + Chat.bold(Config[room].finalist) +
+			" " + translator.get(20, this.lang) + ", " + Chat.bold(Config[room].semifinalist) + " " + translator.get(21, this.lang) +
+			", " + Chat.bold(Config[room].battle) + " " + translator.get(22, this.lang) + "." +
+			(Config[room].onlyOfficial ? (" " + translator.get(23, this.lang) + ".") : ""), "toursrank");
 	},
 
 	tourleaderboards: function (App) {
