@@ -3,7 +3,7 @@
 	<tr><td colspan="2">
 		<form method="post" action="#Cmd-${CMDID}">
 			<input type="hidden" name="cmd" value="${CMDID}" />
-			<input type="hidden" name="subcmd" value="' + k + '" />
+			<input type="hidden" name="subcmd" value="${SUBCMD}" />
 			<p><label><textarea name="content" cols="80" rows="2">${TEXT}</textarea></label></p>
 			<p><label><input type="submit" name="editsubcmd" value="Edit SubCommand" /></label></p>
 		</form>
