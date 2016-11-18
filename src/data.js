@@ -46,8 +46,8 @@ const Showdown_Data = [
 		file: "items.js",
 	},
 	{
-		url: "https://play.pokemonshowdown.com/data/learnsets-g6.js",
-		file: "learnsets-g6.js",
+		url: "https://raw.githubusercontent.com/Zarel/Pokemon-Showdown/master/data/learnsets.js",
+		file: "learnsets.js",
 	},
 	{
 		url: "https://play.pokemonshowdown.com/data/aliases.js",
@@ -181,7 +181,7 @@ class DataManager {
 	 * @returns {Object}
 	 */
 	getLearnsets() {
-		return this.get('learnsets-g6.js').BattleLearnsets;
+		return this.get('learnsets.js').BattleLearnsets;
 	}
 
 	/**

@@ -38,7 +38,7 @@ exports.setup = function (App) {
 			this.foe = null;
 
 			this.gametype = "singles";
-			this.gen = 6;
+			this.gen = 7;
 			this.tier = "ou";
 			this.rules = [];
 			this.variations = [];

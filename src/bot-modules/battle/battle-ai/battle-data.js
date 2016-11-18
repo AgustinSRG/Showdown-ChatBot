@@ -63,7 +63,7 @@ exports.setup = function (App) {
 	};
 
 	BattleDataManager.getPokemon = BattleDataManager.getTemplate = function (poke, gen) {
-		if (!gen || gen > 6 || gen < 1) gen = 6;
+		if (!gen || gen > 7 || gen < 1) gen = 7;
 		poke = Text.toId(poke || "");
 		let pokemon = {};
 		let temp;
@@ -71,7 +71,7 @@ exports.setup = function (App) {
 			temp = App.data.getPokedex()[poke];
 			for (let i in temp) pokemon[i] = temp[i];
 		} catch (e) {}
-		for (let i = 5; i >= gen; i--) {
+		for (let i = 6; i >= gen; i--) {
 			try {
 				temp = require(Path.resolve(BAT_DATA_DIR, "gen" + i, "pokedex.js")).BattlePokedex[poke];
 				if (!temp) continue;
@@ -100,7 +100,7 @@ exports.setup = function (App) {
 	};
 
 	BattleDataManager.getMove = function (move, gen) {
-		if (!gen || gen > 6 || gen < 1) gen = 6;
+		if (!gen || gen > 7 || gen < 1) gen = 7;
 		move = Text.toId(move || "");
 		if (move.indexOf("hiddenpower") === 0) {
 			move = move.replace(/[0-9]/g, "");
@@ -111,7 +111,7 @@ exports.setup = function (App) {
 			temp = App.data.getMoves()[move];
 			for (let i in temp) moveData[i] = temp[i];
 		} catch (e) {}
-		for (let i = 5; i >= gen; i--) {
+		for (let i = 6; i >= gen; i--) {
 			try {
 				temp = require(Path.resolve(BAT_DATA_DIR, "gen" + i, "moves.js")).BattleMovedex[move];
 				if (!temp) continue;
@@ -146,7 +146,7 @@ exports.setup = function (App) {
 	};
 
 	BattleDataManager.getItem = function (item, gen) {
-		if (!gen || gen > 6 || gen < 1) gen = 6;
+		if (!gen || gen > 7 || gen < 1) gen = 7;
 		item = Text.toId(item || "");
 		let itemData = {};
 		let temp;
@@ -154,7 +154,7 @@ exports.setup = function (App) {
 			temp = App.data.getItems()[item];
 			for (let i in temp) itemData[i] = temp[i];
 		} catch (e) {}
-		for (let i = 5; i >= gen; i--) {
+		for (let i = 6; i >= gen; i--) {
 			try {
 				temp = require(Path.resolve(BAT_DATA_DIR, "gen" + i, "items.js")).BattleItems[item];
 				if (!temp) continue;
@@ -184,7 +184,7 @@ exports.setup = function (App) {
 	};
 
 	BattleDataManager.getAbility = function (ab, gen) {
-		if (!gen || gen > 6 || gen < 1) gen = 6;
+		if (!gen || gen > 7 || gen < 1) gen = 7;
 		ab = Text.toId(ab || "");
 		let ability = {};
 		let temp;
@@ -192,7 +192,7 @@ exports.setup = function (App) {
 			temp = App.data.getAbilities()[ab];
 			for (let i in temp) ability[i] = temp[i];
 		} catch (e) {}
-		for (let i = 5; i >= gen; i--) {
+		for (let i = 6; i >= gen; i--) {
 			try {
 				temp = require(Path.resolve(BAT_DATA_DIR, "gen" + i, "abilities.js")).BattleAbilities[ab];
 				if (!temp) continue;
@@ -444,7 +444,7 @@ exports.setup = function (App) {
 	BattleDataManager.Player = Player;
 
 	BattleDataManager.getFormatsData = function (gen) {
-		if (!gen || gen > 6 || gen < 1) gen = 6;
+		if (!gen || gen > 7 || gen < 1) gen = 7;
 		try {
 			return require(Path.resolve(BAT_DATA_DIR, "gen" + gen, "formats-data.js")).BattleFormatsData;
 		} catch (e) {

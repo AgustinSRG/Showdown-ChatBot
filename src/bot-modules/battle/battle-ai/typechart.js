@@ -32,7 +32,7 @@ exports.getEffectiveness = function (typeA, typeB, gen) {
 	}
 };
 
-exports.gen6 = {
+exports.gen7 = exports.gen6 = {
 	"Bug": {
 		"Bug": 0,
 		"Dark": 0,
