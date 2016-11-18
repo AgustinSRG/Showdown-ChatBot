@@ -19,7 +19,8 @@ function getRandomBattleMoves(pokemon, whichRandom, App) {
 	let pokedex = App.data.getPokedex();
 	let formats = App.data.getFormatsData();
 	let movedex = App.data.getMoves();
-	if (!pokedex[pokemon] || !formats[pokemon] || !formats[pokemon][whichRandom]) return null;
+	if (!pokedex[pokemon]) return null;
+	if (!formats[pokemon] || !formats[pokemon][whichRandom]) return [];
 	let moves = formats[pokemon][whichRandom];
 	let ret = [];
 	for (let i = 0; i < moves.length; i++) {
