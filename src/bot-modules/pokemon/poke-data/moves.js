@@ -41,8 +41,12 @@ function filterMoves(pokemon, func, App) {
 		let pokemonToCheck = [pokemon];
 		let i = true;
 		while (i) {
-			if (pokedex[pokemonToCheck[pokemonToCheck.length - 1]].prevo) {
-				pokemonToCheck.push(pokedex[pokemonToCheck[pokemonToCheck.length - 1]].prevo.toLowerCase());
+			let poke = pokedex[pokemonToCheck[pokemonToCheck.length - 1]];
+			if (poke.baseSpecies) {
+				pokemonToCheck.push(poke.baseSpecies.toLowerCase());
+			}
+			if (poke.prevo) {
+				pokemonToCheck.push(poke.prevo.toLowerCase());
 			} else {
 				i = false;
 			}
