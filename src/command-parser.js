@@ -379,7 +379,7 @@ class CommandParser {
 		}
 
 		if (!token) {
-			if (!room && this.data.helpmsg) {
+			if (!room && this.data.helpmsg && !(msg.charAt(0) in {"/": 1, "!": 1})) {
 				this.sendHelpMsg(Text.toId(by), by); /* Help Message */
 			}
 			return;
