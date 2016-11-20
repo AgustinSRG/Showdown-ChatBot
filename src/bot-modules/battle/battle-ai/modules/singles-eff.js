@@ -196,6 +196,10 @@ exports.setup = function (Data) {
 					continue;
 				}
 			}
+			if (move.id === "rest" && battle.gen > 6 && pokeB.isGrounded() && battle.conditions['electricterrain']) {
+				res.unviable.push(decisions[i]);
+				continue;
+			}
 			switch (move.id) {
 			case "spikes":
 				if (foeCanSwitch(battle) && conditionsB.side["spikes"] !== 3) res.viable.push(decisions[i]);
@@ -391,7 +395,7 @@ exports.setup = function (Data) {
 				continue;
 			}
 			if (move.status) {
-				if (pokeB.status) {
+				if (pokeB.status || (pokeB.isGrounded() && battle.conditions['mistyterrain'])) {
 					res.unviable.push(decisions[i]);
 					continue;
 				}
@@ -416,6 +420,9 @@ exports.setup = function (Data) {
 					}
 				} else if (move.status === "slp") {
 					if (battle.rules.indexOf("Sleep Clause Mod") >= 0 && alreadyOppSleeping(battle)) {
+						res.unviable.push(decisions[i]);
+						continue;
+					} else if (pokeB.isGrounded() && battle.conditions['electricterrain']) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
@@ -452,6 +459,12 @@ exports.setup = function (Data) {
 				continue;
 			}
 			if (move.id in {"supersonic": 1, "swagger": 1, "sweetkiss": 1, "confuseray": 1, "teeterdance": 1, "flatter": 1, "embargo": 1, "taunt": 1, "telekinesis": 1, "torment": 1, "healblock": 1}) {
+				if (move.volatileStatus === "confusion") {
+					if (pokeB.isGrounded() && battle.conditions['mistyterrain']) {
+						res.unviable.push(decisions[i]);
+						continue;
+					}
+				}
 				if (conditionsB.volatiles[move.volatileStatus]) {
 					res.unviable.push(decisions[i]);
 				} else {

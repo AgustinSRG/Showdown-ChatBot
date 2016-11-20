@@ -34,6 +34,13 @@ class Pokemon {
 		}
 	}
 
+	isGrounded() {
+		if (this.template.types.indexOf("Flying") >= 0) return false;
+		if (this.ability && this.ability.id === "levitate") return false;
+		if (this.item && this.item.id === "airballoon") return false;
+		return true;
+	}
+
 	getEV(ev) {
 		return this.evs[ev] || 0;
 	}
@@ -590,8 +597,17 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 
 	/* Field */
 
-	if (gconditions["electricterrain"] && moveType === "Electric") bp = Math.floor(bp * 1.5);
-	if (gconditions["grassyterrain"] && moveType === "Grass") bp = Math.floor(bp * 1.5);
+	if (pokeA.isGrounded()) {
+		if (gconditions["electricterrain"] && moveType === "Electric") bp = Math.floor(bp * 1.5);
+		if (gconditions["grassyterrain"] && moveType === "Grass") bp = Math.floor(bp * 1.5);
+		if (gconditions["psychicterrain"] && moveType === "Psychic") bp = Math.floor(bp * 1.5);
+	}
+
+	if (pokeB.isGrounded()) {
+		if (gconditions["psychicterrain"] && move.priority > 0) bp = 0;
+		if (gconditions["grassyterrain"] && (move.id in {"bulldoze": 1, "earthquake": 1, "magnitude": 1})) bp = Math.floor(bp * 1.5);
+		if (gconditions["mistyterrain"] && moveType === "Dragon") bp = Math.floor(bp * 0.5);
+	}
 
 	if (gconditions["gametype"] === "doubles" || gconditions["gametype"] === "triples") {
 		if (move.target === "allAdjacentFoes") modifier *= 0.75;
