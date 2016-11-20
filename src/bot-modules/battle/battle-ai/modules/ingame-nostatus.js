@@ -142,6 +142,11 @@ exports.setup = function (Data) {
 		let p = battle.request.side.pokemon[act];
 		let a = battle.request.active[act];
 		let move = Data.getMove(p.moves[des.moveId]);
+		if (des.zmove) {
+			let zmove = Data.getMove(des.move);
+			zmove.basePower = move.zMovePower || 0;
+			move = zmove;
+		}
 
 		if (move.category === "Status") return 0;
 		if (BadMoves.indexOf(move.id) >= 0) return 0;

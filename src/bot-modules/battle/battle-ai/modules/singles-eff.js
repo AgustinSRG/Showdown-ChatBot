@@ -169,6 +169,9 @@ exports.setup = function (Data) {
 				if (!des.mega) continue; // Mega evolve by default
 			}
 			let move = Data.getMove(battle.request.side.pokemon[0].moves[des.moveId]);
+			if (des.zmove) {
+				move = Data.getMove(des.move);
+			}
 			if (move.category === "Status") res.total++;
 			if (move.flags && move.flags['reflectable'] && pokeB.ability && pokeB.ability.id === "magicbounce") {
 				res.unviable.push(decisions[i]);
@@ -535,6 +538,11 @@ exports.setup = function (Data) {
 				if (!des.mega) continue; // Mega evolve by default
 			}
 			let move = Data.getMove(battle.request.side.pokemon[0].moves[des.moveId]);
+			if (des.zmove) {
+				let zmove = Data.getMove(des.move);
+				zmove.basePower = move.zMovePower || 0;
+				move = zmove;
+			}
 			if (move.category !== "Physical" && move.category !== "Special") continue; // Status move
 			let dmg = Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, battle.conditions, battle.gen).getMax();
 			let hp = pokeB.hp;
