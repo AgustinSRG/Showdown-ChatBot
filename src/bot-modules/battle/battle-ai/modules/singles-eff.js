@@ -540,7 +540,8 @@ exports.setup = function (Data) {
 			let move = Data.getMove(battle.request.side.pokemon[0].moves[des.moveId]);
 			if (des.zmove) {
 				let zmove = Data.getMove(des.move);
-				zmove.basePower = move.zMovePower || 0;
+				if (zmove.basePower === 1) zmove.basePower = move.zMovePower || 0;
+				zmove.category = move.category;
 				move = zmove;
 			}
 			if (move.category !== "Physical" && move.category !== "Special") continue; // Status move

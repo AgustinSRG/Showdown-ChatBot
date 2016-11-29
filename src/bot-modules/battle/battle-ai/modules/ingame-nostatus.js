@@ -144,7 +144,8 @@ exports.setup = function (Data) {
 		let move = Data.getMove(p.moves[des.moveId]);
 		if (des.zmove) {
 			let zmove = Data.getMove(des.move);
-			zmove.basePower = move.zMovePower || 0;
+			if (zmove.basePower === 1) zmove.basePower = move.zMovePower || 0;
+			zmove.category = move.category;
 			move = zmove;
 		}
 
