@@ -26,7 +26,7 @@ const EventManager = Tools('events');
 
 const Showdown_Data = [
 	{
-		url: "https://raw.githubusercontent.com/Zarel/Pokemon-Showdown/master/data/formats-data.js",
+		url: "https://play.pokemonshowdown.com/data/formats-data.js",
 		file: "formats-data.js",
 	},
 	{
@@ -46,7 +46,7 @@ const Showdown_Data = [
 		file: "items.js",
 	},
 	{
-		url: "https://raw.githubusercontent.com/Zarel/Pokemon-Showdown/master/data/learnsets.js",
+		url: "https://play.pokemonshowdown.com/data/learnsets.js",
 		file: "learnsets.js",
 	},
 	{
