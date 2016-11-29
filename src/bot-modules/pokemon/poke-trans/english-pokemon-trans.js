@@ -2347,5 +2347,9 @@ exports.translations.pokemon = {
 	"necrozma": "Necrozma",
 	"magearna": "Magearna",
 	"marshadow": "Marshadow",
+	"greninjaash": "Greninja-Ash",
+	"zygarde10": "Zygarde-10%",
+	"zygardecomplete": "Zygarde-Complete",
+	"miniormeteor": "Minior-Meteor",
 };
 
