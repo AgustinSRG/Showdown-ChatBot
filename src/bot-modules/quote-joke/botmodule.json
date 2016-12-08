@@ -1,7 +1,7 @@
 {
   "id": "quote",
   "name": "Quotes & Jokes",
-  "version": "1.0",
+  "version": "2.0",
   "main": "main.js",
   "commands": [
     "commands.js"
@@ -13,5 +13,5 @@
 	"quote": {"group": "driver"},
 	"editquote": {"group": "admin"}
   },
-  "description": "A database of quotes an jokes"
+  "description": "A database of quotes and jokes"
 }

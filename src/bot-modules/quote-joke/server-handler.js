@@ -12,6 +12,7 @@ const Template = Tools('html-template');
 
 const quotesTemplate = new Template(Path.resolve(__dirname, 'template-quotes.html'));
 const jokesTemplate = new Template(Path.resolve(__dirname, 'template-jokes.html'));
+const listTemplate = new Template(Path.resolve(__dirname, 'template-list.html'));
 
 exports.setup = function (App) {
 	/* Permissions */
@@ -22,6 +23,12 @@ exports.setup = function (App) {
 
 	/* Handlers */
 	App.server.setHandler('quotejoke', (context, parts) => {
+		if (parts[0].split('?')[0] === 'listquotes') {
+			return serveQuotesList(context);
+		} else if (parts[0].split('?')[0] === 'listjokes') {
+			return serveJokesList(context);
+		}
+
 		if (!context.user || !context.user.can('quotejoke')) {
 			context.endWith403();
 			return;
@@ -131,5 +138,39 @@ exports.setup = function (App) {
 
 		html += jokesTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Jokes - Showdown ChatBot"});
+	}
+
+	function serveQuotesList(context) {
+		let html = '';
+		let quotes = App.modules.quote.system.quotes;
+		for (let id in quotes) {
+			html += '<li style="word-wrap: break-word; padding: 5px;">' + Text.escapeHTML(quotes[id]) + '</li>';
+		}
+		if (!html) {
+			html = "<i>(empty)</i>";
+		}
+		context.endWithHtml(
+			listTemplate.make({
+				title: "List of Quotes",
+				list: html,
+			})
+		);
+	}
+
+	function serveJokesList(context) {
+		let html = '';
+		let jokes = App.modules.quote.system.jokes;
+		for (let id in jokes) {
+			html += '<li style="word-wrap: break-word; padding: 5px;">' + Text.escapeHTML(jokes[id]) + '</li>';
+		}
+		if (!html) {
+			html = "<i>(empty)</i>";
+		}
+		context.endWithHtml(
+			listTemplate.make({
+				title: "List of Jokes",
+				list: html,
+			})
+		);
 	}
 };

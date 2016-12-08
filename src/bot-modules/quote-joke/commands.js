@@ -2,7 +2,9 @@
  * Commands File
  *
  * quote: gets a random quote
+ * listquotes: gets a link to the list of quotes
  * joke: gets a random joke
+ * listjokes: gets a link to the list of jokes
  * addquote: adds a quote
  * rmquote: removes a quote
  * addjoke: adds a new joke
@@ -28,6 +30,18 @@ module.exports = {
 		}
 	},
 
+	listquotes: function (App) {
+		let server = App.config.server.url;
+		if (!server) {
+			return this.pmReply(translator.get(12, this.lang));
+		}
+		if (server.charAt(server.length - 1) === '/') {
+			return this.restrictReply(App.config.server.url + 'quotejoke/listquotes/', 'quote');
+		} else {
+			return this.restrictReply(App.config.server.url + '/quotejoke/listquotes/', 'quote');
+		}
+	},
+
 	randomjoke: "joke",
 	joke: function (App) {
 		let text = App.modules.quote.system.getRandomJoke();
@@ -35,6 +49,18 @@ module.exports = {
 			return this.restrictReply(Text.stripCommands(text), 'quote');
 		} else {
 			return this.errorReply(translator.get(1, this.lang));
+		}
+	},
+
+	listjokes: function (App) {
+		let server = App.config.server.url;
+		if (!server) {
+			return this.pmReply(translator.get(12, this.lang));
+		}
+		if (server.charAt(server.length - 1) === '/') {
+			return this.restrictReply(App.config.server.url + 'quotejoke/listjokes/', 'quote');
+		} else {
+			return this.restrictReply(App.config.server.url + '/quotejoke/listjokes/', 'quote');
 		}
 	},
 

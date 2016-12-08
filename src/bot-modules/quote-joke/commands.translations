@@ -14,6 +14,7 @@ $8 = Joke removed from the database
 $9 = Joke not found
 $10 = quote
 $11 = joke
+$12 = Feature not availbale
 
 %spanish
 
@@ -29,3 +30,4 @@ $8 = Chiste eliminado de la base de datos
 $9 = Chiste no encontrado
 $10 = cita
 $11 = chiste
+$12 = Funcionalidad no disponible
