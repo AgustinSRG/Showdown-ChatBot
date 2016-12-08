@@ -199,13 +199,13 @@ exports.setup = function (App) {
 		for (let cmd in cmds) {
 			switch (typeof cmds[cmd]) {
 			case 'string':
-				html += '<p><strong>' + cmd + '</strong>&nbsp;&#8212;&nbsp;' + cmds[cmd] + '</p>';
+				html += '<p><strong>' + cmd + '</strong>&nbsp;&#8212;&nbsp;' + Text.escapeHTML(cmds[cmd]) + '</p>';
 				break;
 			case 'object':
 				html += '<p><strong>' + cmd + '</strong>&nbsp;&#8212;&nbsp;<u>Index Command</u></p>';
 				html += '<ul>';
 				for (let subcmd in cmds[cmd]) {
-					html += '<li><strong>' + subcmd + '</strong>&nbsp;&#8212;&nbsp;' + cmds[cmd][subcmd] + '</li>';
+					html += '<li><strong>' + subcmd + '</strong>&nbsp;&#8212;&nbsp;' + Text.escapeHTML(cmds[cmd][subcmd]) + '</li>';
 				}
 				html += '</ul>';
 				break;

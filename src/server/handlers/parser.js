@@ -349,7 +349,7 @@ exports.setup = function (App) {
 		for (let alias in App.parser.data.roomaliases) {
 			htmlVars.rooms += '<tr><td>' + alias + '</td><td>' + App.parser.data.roomaliases[alias] +
 			'</td><td><div align="center"><form style="display:inline;" method="post" action=""><input type="hidden" name="alias" value="' +
-			alias + '" /><input type="submit" name="remove" value="Remove Control Room" /></form></div></td></tr>';
+			alias + '" /><input type="submit" name="remove" value="Remove Room Alias" /></form></div></td></tr>';
 		}
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
