@@ -236,36 +236,37 @@ exports.getDecisions = function (battle) {
 			let zMove = active.canZMove || (req.side.pokemon[i] ? req.side.pokemon[i].canZMove : false);
 			if (zMove && zMove.length) {
 				for (let j = 0; j < zMove.length; j++) {
-					let z = zMove[j];
+					let z = zMove[j] ? zMove[j].move : "";
 					if (!z) continue;
+					let zData = zMove[j];
 					if (active.moves[j].pp === 0) continue; // No more moves
 					let mega = false;
 					if (active.canMegaEvo || (req.side.pokemon[i] && req.side.pokemon[i].canMegaEvo)) mega = true;
-					if (!active.moves[j].target) {
+					if (!zData.target) {
 						// No need to set the target
 						if (mega) tables[i].push(new MoveDecision(j, null, true, z, true));
 						tables[i].push(new MoveDecision(j, null, false, z, true));
-					} else if (active.moves[j].target in {'any': 1, 'normal': 1}) {
+					} else if (zData.target in {'any': 1, 'normal': 1}) {
 						auxHasTarget = false;
 						for (let tar = 0; tar < battle.foe.active.length; tar++) {
 							if (!battle.foe.active[tar] || battle.foe.active[tar].fainted) continue; // Target not found
-							if (active.moves[j].target === 'normal' && isTooFar(battle, tar, i)) continue; // Target too far
+							if (zData.target === 'normal' && isTooFar(battle, tar, i)) continue; // Target too far
 							auxHasTarget = true;
 						}
 						for (let tar = 0; tar < battle.foe.active.length; tar++) {
 							if (auxHasTarget && (!battle.foe.active[tar] || battle.foe.active[tar].fainted)) continue; // Target not found
-							if (active.moves[j].target === 'normal' && isTooFar(battle, tar, i)) continue; // Target too far
+							if (zData.target === 'normal' && isTooFar(battle, tar, i)) continue; // Target too far
 							if (mega) tables[i].push(new MoveDecision(j, tar, true, z, true));
 							tables[i].push(new MoveDecision(j, tar, false, z, true));
 						}
 						for (let tar = 0; tar < battle.self.active.length; tar++) {
 							if (tar === i) continue; // Not self target allowed
 							if (!battle.self.active[tar] || battle.self.active[tar].fainted) continue; // Target not found
-							if (active.moves[j].target === 'normal' && Math.abs(tar - i) > 1) continue; // Target too far
+							if (zData.target === 'normal' && Math.abs(tar - i) > 1) continue; // Target too far
 							if (mega) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, z, true));
 							tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, z, true));
 						}
-					} else if (active.moves[j].target in {'adjacentAlly': 1}) {
+					} else if (zData.target in {'adjacentAlly': 1}) {
 						let auxHasAllies = false;
 						for (let tar = 0; tar < battle.self.active.length; tar++) {
 							if (tar === i) continue; // Not self target allowed

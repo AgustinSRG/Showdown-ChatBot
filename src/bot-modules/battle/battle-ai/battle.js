@@ -234,7 +234,7 @@ exports.setup = function (App) {
 			this.debug("Making decisions - " + this.id);
 			let decisions, mod;
 			try {
-				decisions = DecisionMaker.getDecisions(this);
+				decisions = DecisionMaker.getDecisions(this, BattleData);
 			} catch (e) {
 				this.debug(e.stack);
 				this.debug("Decision maker crashed: " + e.message);

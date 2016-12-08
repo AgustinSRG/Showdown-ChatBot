@@ -123,7 +123,9 @@ exports.setup = function (App) {
 			}
 			for (let i in temp) moveData[i] = temp[i];
 		}
-		if (!moveData.id) {
+		if (!moveData.id && move.length > 0 && move.charAt(move.length - 1) === 'z') {
+			return BattleDataManager.getMove(move.substr(0, move.length - 1), gen);
+		} else if (!moveData.id) {
 			return {
 				num: 165,
 				accuracy: true,
