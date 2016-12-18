@@ -90,7 +90,8 @@ function parseAliases(format, App) {
 }
 
 const Default_Rank = 1630;
-const Rank_Exceptions = {'randombattle': 1695, 'ou': 1695, 'oususpecttest': 1695, 'doublesou': 1695};
+const Rank_Exception = 1695;
+const Rank_Exceptions = {};
 const Tier_Error_Expires = 2 * 60 * 60 * 1000;
 
 /* Commands */
@@ -124,7 +125,12 @@ module.exports = {
 				}
 			}
 			if (!poke || !tier) return this.errorReply(this.usage({desc: 'pokemon'}, {desc: 'tier', optional: true}));
-			if (Rank_Exceptions[tier]) ladderType = Rank_Exceptions[tier];
+			if (this.usageRankExceptionFlag) {
+				ladderType = Rank_Exception;
+				Rank_Exceptions[tier] = true;
+			} else if (Rank_Exceptions[tier]) {
+				ladderType = Rank_Exception;
+			}
 			let url = link + tier + "-" + ladderType + ".txt";
 			if (markDownload(url)) {
 				return this.errorReply(translator.get('busy', this.lang));
@@ -142,8 +148,13 @@ module.exports = {
 					if (!App.data.cache.has(url)) {
 						App.data.cache.cache(url, data, Tier_Error_Expires, {'smogon-usage': 1});
 					}
-					return this.errorReply(translator.get('tiererr1', this.lang) + " \"" +
-						tierName(tier, App) + "\" " + translator.get('tiererr3', this.lang) + '. ' + translator.get('pokeerr3', this.lang));
+					if (!this.usageRankExceptionFlag) {
+						this.usageRankExceptionFlag = true;
+						return App.parser.exec(this);
+					} else {
+						return this.errorReply(translator.get('tiererr1', this.lang) + " \"" +
+							tierName(tier, App) + "\" " + translator.get('tiererr3', this.lang) + '. ' + translator.get('pokeerr3', this.lang));
+					}
 				} else {
 					if (!App.data.cache.has(url)) {
 						App.data.cache.cache(url, data, 0, {'smogon-usage': 1});
@@ -241,7 +252,12 @@ module.exports = {
 					return this.errorReply(translator.get('tiererr1', this.lang) + ' "' + tier + '" ' + translator.get('tiererr2', this.lang));
 				}
 			}
-			if (Rank_Exceptions[tier]) ladderType = Rank_Exceptions[tier];
+			if (this.usageRankExceptionFlag) {
+				ladderType = Rank_Exception;
+				Rank_Exceptions[tier] = true;
+			} else if (Rank_Exceptions[tier]) {
+				ladderType = Rank_Exception;
+			}
 			let url = link + "moveset/" + tier + "-" + ladderType + ".txt";
 			if (markDownload(url)) {
 				return this.errorReply(translator.get('busy', this.lang));
@@ -258,8 +274,13 @@ module.exports = {
 					if (!App.data.cache.has(url)) {
 						App.data.cache.cache(url, data, Tier_Error_Expires, {'smogon-usage': 1});
 					}
-					return this.errorReply(translator.get('tiererr1', this.lang) + " \"" +
-						tierName(tier, App) + "\" " + translator.get('tiererr3', this.lang) + '. ' + translator.get('pokeerr4', this.lang));
+					if (!this.usageRankExceptionFlag) {
+						this.usageRankExceptionFlag = true;
+						return App.parser.exec(this);
+					} else {
+						return this.errorReply(translator.get('tiererr1', this.lang) + " \"" +
+							tierName(tier, App) + "\" " + translator.get('tiererr3', this.lang) + '. ' + translator.get('pokeerr4', this.lang));
+					}
 				} else {
 					if (!App.data.cache.has(url)) {
 						App.data.cache.cache(url, data, 0, {'smogon-usage': 1});
