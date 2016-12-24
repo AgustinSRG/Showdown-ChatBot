@@ -43,7 +43,7 @@ function getServersAds(text) {
 		spamindex = aux.indexOf(".psim.us");
 		actualAd = '';
 		for (let i = spamindex - 1; i >= 0; i--) {
-			if (aux.charAt(i).replace(/[^a-z0-9]/g, '') === '') break;
+			if (aux.charAt(i).replace(/[^a-z0-9-]/g, '') === '') break;
 			actualAd = aux.charAt(i) + actualAd;
 		}
 		if (actualAd.length) serversAds.push(Text.toId(actualAd));
