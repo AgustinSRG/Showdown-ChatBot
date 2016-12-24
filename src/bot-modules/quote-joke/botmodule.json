@@ -11,7 +11,9 @@
   ],
   "permissions": {
 	"quote": {"group": "driver"},
-	"editquote": {"group": "admin"}
+	"joke": {"group": "driver"},
+	"editquote": {"group": "admin"},
+	"editjoke": {"group": "admin"}
   },
   "description": "A database of quotes and jokes"
 }

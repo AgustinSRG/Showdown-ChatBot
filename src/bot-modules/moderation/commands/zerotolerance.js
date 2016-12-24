@@ -67,7 +67,7 @@ module.exports = {
 	},
 
 	viewzerotolerance: function (App) {
-		if (!this.can('zerotolerance', this.room)) return this.replyAccessDenied('zerotolerance');
+		if (!this.can('viewzerotol', this.room)) return this.replyAccessDenied('viewzerotol');
 		let server = App.config.server.url;
 		if (!server) {
 			this.cmd = 'viewzerotolerancehastebin';
@@ -107,7 +107,7 @@ module.exports = {
 	},
 
 	viewzerotolerancehastebin: function (App) {
-		if (!this.can('zerotolerance', this.room)) return this.replyAccessDenied('zerotolerance');
+		if (!this.can('viewzerotol', this.room)) return this.replyAccessDenied('viewzerotol');
 		let room = this.targetRoom;
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
 		const config = App.modules.moderation.system.data;

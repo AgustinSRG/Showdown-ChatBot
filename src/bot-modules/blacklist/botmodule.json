@@ -7,7 +7,8 @@
     "commands.js"
   ],
   "permissions": {
-	"blacklist": {"group": "owner"}
+	"blacklist": {"group": "owner"},
+	"viewblacklist": {"group": "owner"}
   },
   "handlers": [
     "server-handler.js"

@@ -11,8 +11,10 @@
   "permissions": {
 	"moderation": {"group": "owner"},
 	"banword": {"group": "owner"},
+	"viewbanwords": {"group": "owner"},
 	"zerotolerance": {"group": "owner"},
-	"checkzerotol": {"group": "driver"}
+	"checkzerotol": {"group": "driver"},
+	"viewzerotol": {"group": "owner"}
   },
   "handlers": [
     "handlers/moderation.js",

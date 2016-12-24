@@ -73,7 +73,7 @@ module.exports = {
 
 	vab: "viewblacklist",
 	viewblacklist: function (App) {
-		if (!this.can('blacklist', this.room)) return this.replyAccessDenied('blacklist');
+		if (!this.can('viewblacklist', this.room)) return this.replyAccessDenied('viewblacklist');
 		let room = this.targetRoom;
 		if (!room || this.getRoomType(room) !== 'chat') {
 			return this.errorReply(translator.get('nochat', this.lang));
@@ -109,7 +109,7 @@ module.exports = {
 	},
 
 	viewblacklisthastebin: function (App) {
-		if (!this.can('blacklist', this.room)) return this.replyAccessDenied('blacklist');
+		if (!this.can('viewblacklist', this.room)) return this.replyAccessDenied('viewblacklist');
 		let room = this.targetRoom;
 		if (!room || this.getRoomType(room) !== 'chat') {
 			return this.errorReply(translator.get('nochat', this.lang));

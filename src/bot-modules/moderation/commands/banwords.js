@@ -86,7 +86,7 @@ module.exports = {
 	},
 
 	viewbannedwords: function (App) {
-		if (!this.can('banword', this.room)) return this.replyAccessDenied('banword');
+		if (!this.can('viewbanwords', this.room)) return this.replyAccessDenied('viewbanwords');
 		let server = App.config.server.url;
 		if (!server) {
 			this.cmd = 'viewbannedwordshastebin';
@@ -144,7 +144,7 @@ module.exports = {
 	},
 
 	viewbannedwordshastebin: function (App) {
-		if (!this.can('banword', this.room)) return this.replyAccessDenied('banword');
+		if (!this.can('viewbanwords', this.room)) return this.replyAccessDenied('viewbanwords');
 		let room = this.targetRoom;
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
 		const config = App.modules.moderation.system.data;

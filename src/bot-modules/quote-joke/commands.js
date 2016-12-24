@@ -46,7 +46,7 @@ module.exports = {
 	joke: function (App) {
 		let text = App.modules.quote.system.getRandomJoke();
 		if (text) {
-			return this.restrictReply(Text.stripCommands(text), 'quote');
+			return this.restrictReply(Text.stripCommands(text), 'joke');
 		} else {
 			return this.errorReply(translator.get(1, this.lang));
 		}
@@ -58,9 +58,9 @@ module.exports = {
 			return this.pmReply(translator.get(12, this.lang));
 		}
 		if (server.charAt(server.length - 1) === '/') {
-			return this.restrictReply(App.config.server.url + 'quotejoke/listjokes/', 'quote');
+			return this.restrictReply(App.config.server.url + 'quotejoke/listjokes/', 'joke');
 		} else {
-			return this.restrictReply(App.config.server.url + '/quotejoke/listjokes/', 'quote');
+			return this.restrictReply(App.config.server.url + '/quotejoke/listjokes/', 'joke');
 		}
 	},
 
@@ -94,7 +94,7 @@ module.exports = {
 	},
 
 	addjoke: function (App) {
-		if (!this.can('editquote', this.room)) return this.replyAccessDenied('editquote');
+		if (!this.can('editjoke', this.room)) return this.replyAccessDenied('editjoke');
 		let joke = this.arg.trim();
 		if (!joke) return this.errorReply(this.usage({desc: translator.get(11, this.lang)}));
 		if (App.modules.quote.system.getJokeId(joke) === -1) {
@@ -108,7 +108,7 @@ module.exports = {
 	},
 
 	rmjoke: function (App) {
-		if (!this.can('editquote', this.room)) return this.replyAccessDenied('editquote');
+		if (!this.can('editjoke', this.room)) return this.replyAccessDenied('editjoke');
 		let joke = this.arg.trim();
 		if (!joke) return this.errorReply(this.usage({desc: translator.get(11, this.lang)}));
 		let id = App.modules.quote.system.getQuoteId(joke);
