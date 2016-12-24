@@ -14,7 +14,8 @@ class Translator {
 	/**
 	 * @param {Path} file - Translations file
 	 */
-	constructor(file) {
+	constructor(file, loadFilter) {
+		if (!loadFilter) loadFilter = {};
 		this.data = {};
 		let str = FileSystem.readFileSync(file).toString();
 		let lines = str.split('\n');
@@ -25,7 +26,7 @@ class Translator {
 			switch (lines[i].charAt(0)) {
 			case '%':
 				currentLang = Text.toId(lines[i].substr(1));
-				if (!currentLang) {
+				if (!currentLang || loadFilter[currentLang] === false) {
 					currentLang = null;
 					continue;
 				}

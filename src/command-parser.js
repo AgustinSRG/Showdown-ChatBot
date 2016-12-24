@@ -24,10 +24,9 @@ const Text = Tools('text');
 const Chat = Tools('chat');
 const AbuseMonitor = Tools('abuse-monitor');
 const LineSplitter = Tools('line-splitter');
-const Translator = Tools('translate');
 
-const translator = new Translator(Path.resolve(__dirname, 'command-parser.translations'));
-const usageTranslator = new Translator(Path.resolve(__dirname, 'command-usage.translations'));
+const Lang_File = Path.resolve(__dirname, 'command-parser.translations');
+const Lang_File_Usage = Path.resolve(__dirname, 'command-usage.translations');
 
 /**
  * Represents a Showdown-ChatBot command parser
@@ -602,8 +601,8 @@ class DynamicCommand {
 					this.execNext(conf[arg], context);
 				} else if (Object.keys(conf).length) {
 					let spl = new LineSplitter(context.parser.app.config.bot.maxMessageLength);
-					spl.add((arg ? (translator.get(4, context.lang) + ". ") : "") +
-						translator.get(5, context.lang) + " " + Chat.bold(cmd) + ":");
+					spl.add((arg ? (context.parser.app.multilang.mlt(Lang_File, context.lang, 4) + ". ") : "") +
+						context.parser.app.multilang.mlt(Lang_File, context.lang, 5) + " " + Chat.bold(cmd) + ":");
 					let subCmds = Object.keys(conf);
 					for (let i = 0; i < subCmds.length; i++) {
 						spl.add(" " + subCmds[i] + (i < (subCmds.length - 1) ? ',' : ''));
@@ -774,8 +773,7 @@ class CommandContext {
 	 * @returns {SendManager}
 	 */
 	replyAccessDenied(perm) {
-		return this.pmReply(translator.get(0, this.lang) + '. ' +
-			translator.get(1, this.lang) + ' ' + Chat.italics(perm) + ' ' + translator.get(2, this.lang) + '.');
+		return this.pmReply(this.parser.app.multilang.mlt(Lang_File, this.lang, 0, {perm: Chat.italics(perm)}));
 	}
 
 	/**
@@ -804,7 +802,7 @@ class CommandContext {
 	 */
 	usage() {
 		let txt = "";
-		txt += "" + translator.get(3, this.lang) + ": ";
+		txt += "" + this.parser.app.multilang.mlt(Lang_File, this.lang, 3) + ": ";
 		txt += this.token + this.cmd;
 		txt += " ";
 		let args = "";
@@ -825,7 +823,7 @@ class CommandContext {
 	 * @returns {String} Translated Key
 	 */
 	usageTrans(key) {
-		return usageTranslator.get(key, this.lang);
+		return this.parser.app.multilang.mlt(Lang_File_Usage, this.lang, key);
 	}
 
 	/**
@@ -849,9 +847,9 @@ class CommandContext {
 	 * @param {String} room
 	 * @returns {String} Original Room
 	 */
-	 parseRoomAliases(room) {
+	parseRoomAliases(room) {
 		 return (this.parser.data.roomaliases[room] || room);
-	 }
+	}
 
 	/**
 	 * @returns {Object} Parsed Arguments
@@ -872,6 +870,25 @@ class CommandContext {
 	 */
 	addToSecurityLog() {
 		this.parser.app.logCommandAction(this);
+	}
+
+	/**
+	 * Sets Multi-Language file
+	 * @param {String} file
+	 */
+	setLangFile(file) {
+		this.langFile = file;
+	}
+
+	/**
+	 * Gets a message from the language file
+	 * @param {String} key
+	 * @param {Object} vars
+	 * @returns {String}
+	 */
+	mlt(key, vars) {
+		if (!this.langFile) return "(no langfile)";
+		return this.parser.app.multilang.mlt(this.langFile, this.lang, key, vars);
 	}
 
 	/**

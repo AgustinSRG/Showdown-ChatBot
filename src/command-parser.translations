@@ -5,9 +5,7 @@
 %english
 
 # Access Denied
-$0 = Access denied
-$1 = You need the permission
-$2 = to use this command
+$0 = Access denied. You need the permission ${PERM} to use this command.
 
 # Usage
 $3 = Usage
@@ -19,9 +17,7 @@ $5 = Options for command
 %spanish
 
 # Access Denied
-$0 = Acceso Denegado
-$1 = Necesitas el permiso
-$2 = para usar este comando
+$0 = Acceso Denegado. Necesitas el permiso ${PERM} para usar este comando.
 
 # Usage
 $3 = Uso del Comando
