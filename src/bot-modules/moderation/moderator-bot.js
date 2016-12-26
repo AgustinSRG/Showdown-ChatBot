@@ -277,8 +277,8 @@ class ModerationContext {
 			let usernum = 0;
 			for (let userid in this.app.bot.rooms[room].users) {
 				usernum++;
-				if (!this.app.bot.users[userid]) continue;
-				let name = this.app.bot.users[userid].name.replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&");
+				if (!this.app.userdata.users[userid]) continue;
+				let name = this.app.userdata.users[userid].name.replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&");
 				let regex = new RegExp("[^a-z0-9A-Z]" + name + "[^a-z0-9A-Z]", 'g');
 				this.noNicksMsg = this.noNicksMsg.replace(regex, " %" + usernum + "% ");
 			}

@@ -12,7 +12,6 @@ const Path = require('path');
 const Text = Tools('text');
 const Chat = Tools('chat');
 const Translator = Tools('translate');
-const LineSplitter = Tools('line-splitter');
 
 const translator = new Translator(Path.resolve(__dirname, 'seen.translations'));
 
@@ -27,9 +26,9 @@ module.exports = {
 			this.pmReply(translator.get(0, this.lang));
 		} else if (targetUser === Text.toId(App.bot.getBotNick())) {
 			this.pmReply(translator.get(1, this.lang));
-		} else if (App.bot.users[targetUser]) {
-			let name = App.bot.users[targetUser].name;
-			let seen = App.bot.users[targetUser].lastSeen;
+		} else if (App.userdata.users[targetUser] && App.userdata.users[targetUser].lastSeen) {
+			let name = App.userdata.users[targetUser].name;
+			let seen = App.userdata.users[targetUser].lastSeen;
 			let time = Math.round((Date.now() - seen.time) / 1000);
 			let times = [];
 			let aux;
@@ -83,29 +82,18 @@ module.exports = {
 			this.pmReply(this.usage({desc: this.usageTrans('user')}));
 		} else if (targetUser.length > 19) {
 			this.pmReply(translator.get('inv', this.lang));
-		} else if (App.bot.users[targetUser]) {
-			let alts = App.bot.users[targetUser].alts;
+		} else if (App.userdata.users[targetUser]) {
+			let alts = App.userdata.getAlts(targetUser);
 			if (alts.length > 10) {
-				if (!this.isExcepted()) {
-					this.pmReply(translator.get(17, this.lang) + ' ' +
-						Chat.bold(App.bot.users[targetUser].name) + ': ' + alts.slice(0, 10).join(', ').trim() +
-						", (" + (alts.length - 10) + ' ' + translator.get('more', this.lang) + ')');
-				} else {
-					let spl = new LineSplitter(App.config.bot.maxMessageLength);
-					spl.add(translator.get(17, this.lang) + ' ' + Chat.bold(App.bot.users[targetUser].name) + ':');
-					for (let i = 0; i < alts.length; i++) {
-						spl.add(" " + alts[i] + ((i < alts.length - 1) ? "," : ""));
-					}
-					this.pmReply(spl.getLines());
-				}
+				this.pmReply(translator.get(17, this.lang) + ' ' +
+					Chat.bold(App.userdata.users[targetUser].name) + ': ' + alts.slice(0, 10).join(', ').trim() +
+					", (" + (alts.length - 10) + ' ' + translator.get('more', this.lang) + ')');
 			} else if (alts.length > 0) {
 				this.pmReply(translator.get(17, this.lang) + ' ' +
-					Chat.bold(App.bot.users[targetUser].name) + ': ' + alts.join(', ').trim() + '');
+					Chat.bold(App.userdata.users[targetUser].name) + ': ' + alts.join(', ').trim() + '');
 			} else {
 				this.pmReply(translator.get(18, this.lang) + ' ' + Chat.italics(targetUser) + '');
 			}
-		} else {
-			this.pmReply(translator.get(18, this.lang) + ' ' + Chat.italics(targetUser) + '');
 		}
 	},
 };

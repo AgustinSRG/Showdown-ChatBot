@@ -116,12 +116,12 @@ exports.setup = function (App) {
 		let user = Text.toId(context.get.user);
 		if (user) {
 			if (user.length > 19) {
-				context.endWithText("Error: Invalid Username");
+				context.endWithText(Text.escapeHTML("Error: Invalid Username"));
 			} else if (user === Text.toId(App.bot.getBotNick())) {
-				context.endWithText("Bot nickname: " + App.bot.getBotNick() + " | No seen information");
-			} else if (App.bot.users[user]) {
-				let name = App.bot.users[user].name;
-				let seen = App.bot.users[user].lastSeen;
+				context.endWithText(Text.escapeHTML("Bot nickname: " + App.bot.getBotNick() + " | No seen information"));
+			} else if (App.userdata.users[user] && App.userdata.users[user].lastSeen) {
+				let name = App.userdata.users[user].name;
+				let seen = App.userdata.users[user].lastSeen;
 				let time = Math.round((Date.now() - seen.time) / 1000);
 				let times = [];
 				let aux;
@@ -156,13 +156,15 @@ exports.setup = function (App) {
 				if (seen.type in {'J': 1, 'L': 1, 'C': 1}) {
 					reply += tryGetRoomTitle(seen.room);
 				}
-				if (App.bot.users[user].alts.length > 0) {
-					reply += '\n';
-					reply += 'Alts: ' + App.bot.users[user].alts.join(', ');
+				reply = Text.escapeHTML(reply);
+				let alts = App.userdata.getAlts(user);
+				if (alts.length > 0) {
+					reply += '<br /><br />';
+					reply += 'Alts: ' + Text.escapeHTML(alts.join(', '));
 				}
 				context.endWithText(reply);
 			} else {
-				context.endWithText("User \"" + user + "\" has never been seen, at least since the last restart");
+				context.endWithText(Text.escapeHTML("User \"" + user + "\" has never been seen, at least since the last restart"));
 			}
 		} else {
 			html += seenTemplate.get();
@@ -252,9 +254,13 @@ exports.setup = function (App) {
 	function toolClearUsers(context, html, parts) {
 		let ok = null, error = null;
 		if (context.post.clearusers) {
-			App.bot.clearUserData();
+			App.userdata.clean();
 			App.logServerAction(context.user.id, 'Clear User-Data');
 			ok = "User-Data cleared sucessfully.";
+		} else if (context.post.clearalts) {
+			App.userdata.cleanAlts();
+			App.logServerAction(context.user.id, 'Clear Alts Tree');
+			ok = "Alts tree cleared sucessfully.";
 		}
 
 		let htmlVars = {};

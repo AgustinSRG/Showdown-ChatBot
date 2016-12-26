@@ -25,6 +25,7 @@ const DataManager = require(Path.resolve(__dirname, 'data.js'));
 const CommandParser = require(Path.resolve(__dirname, 'command-parser.js')).CommandParser;
 const ConnectionMonitor = require(Path.resolve(__dirname, 'connection-monitor.js'));
 const LanguageManager = require(Path.resolve(__dirname, 'multi-lang.js'));
+const UserDataManager = require(Path.resolve(__dirname, 'user-data.js'));
 
 const uncacheTree = Tools('uncachetree');
 const checkDir = Tools('checkdir');
@@ -214,9 +215,6 @@ class ChatBotApp {
 			console.log('Could not connect to the server' + (err ? (" | " + err.code + ": " + err.message) : ''));
 		}.bind(this));
 		this.bot.on('disconnect', function (err) {
-			if (this.config.autoremoveuserdata) {
-				this.bot.clearUserData();
-			}
 			this.log('Bot Disconnected' + (err ? (" | " + err.code + ": " + err.message) : ''));
 			console.log('Bot Disconnected' + (err ? (" | " + err.code + ": " + err.message) : ''));
 		}.bind(this));
@@ -229,6 +227,9 @@ class ChatBotApp {
 			this.config.langfilter = {};
 		}
 		this.multilang = new LanguageManager(this.config.langfilter);
+
+		/* User data manager */
+		this.userdata = new UserDataManager(this);
 
 		/* Other initial values */
 		this.console = null;

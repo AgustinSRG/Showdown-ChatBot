@@ -67,7 +67,6 @@ class Bot {
 		this.events = new Events();
 
 		this.rooms = {};
-		this.users = {};
 		this.formats = {};
 
 		this.sending = {};
@@ -220,12 +219,6 @@ class Bot {
 		this.nextSend = 0;
 		this.rooms = {};
 		this.status.onDisconnect();
-	}
-
-	clearUserData() {
-		for (let user in this.users) {
-			delete this.users[user];
-		}
 	}
 
 	/* Events */
@@ -641,10 +634,6 @@ class Bot {
 			if (initialMsg) break;
 			userid = Text.toId(splittedLine[1]);
 			time = Date.now();
-			if (!this.users[userid]) {
-				this.users[userid] = new BotUser(splittedLine[1]);
-			}
-			this.users[userid].onChat(room, splittedLine[1]);
 			if (userid === this.status.userid) {
 				this.events.emit('chat', room, time, splittedLine.slice(2).join('|'));
 			} else {
@@ -655,10 +644,6 @@ class Bot {
 			if (initialMsg) break;
 			userid = Text.toId(splittedLine[2]);
 			time = parseInt(splittedLine[1]) * 1000;
-			if (!this.users[userid]) {
-				this.users[userid] = new BotUser(splittedLine[2]);
-			}
-			this.users[userid].onChat(room, splittedLine[2]);
 			if (userid === this.status.userid) {
 				this.events.emit('chat', room, time, splittedLine.slice(3).join('|'));
 			} else {
@@ -676,11 +661,6 @@ class Bot {
 		case 'n':
 		case 'N':
 			if (initialMsg) break;
-			userid = Text.toId(splittedLine[2]);
-			if (!this.users[userid]) {
-				this.users[userid] = new BotUser(splittedLine[2]);
-			}
-			this.users[userid].onRename(room, splittedLine[1], this.users);
 			if (this.rooms[room]) {
 				this.rooms[room].userRename(splittedLine[2], splittedLine[1]);
 			}
@@ -689,11 +669,6 @@ class Bot {
 		case 'J':
 		case 'j':
 			if (initialMsg) break;
-			userid = Text.toId(splittedLine[1]);
-			if (!this.users[userid]) {
-				this.users[userid] = new BotUser(splittedLine[1]);
-			}
-			this.users[userid].onJoin(room, splittedLine[1]);
 			if (this.rooms[room]) {
 				this.rooms[room].userJoin(splittedLine[1]);
 			}
@@ -702,11 +677,6 @@ class Bot {
 		case 'l':
 		case 'L':
 			if (initialMsg) break;
-			userid = Text.toId(splittedLine[1]);
-			if (!this.users[userid]) {
-				this.users[userid] = new BotUser(splittedLine[1]);
-			}
-			this.users[userid].onLeave(room, splittedLine[1]);
 			if (this.rooms[room]) {
 				this.rooms[room].userLeave(splittedLine[1]);
 			}
@@ -860,106 +830,6 @@ class BotRoom {
 }
 
 /**
- * Represents a Pokemon Showdown User
- */
-class BotUser {
-	/**
-	 * @param {String} name
-	 */
-	constructor(name) {
-		this.id = Text.toId(name);
-		this.name = name;
-		this.lastSeen = null;
-		this.alts = [];
-	}
-
-	/**
-	 * @param {String} alt
-	 * @param {Map<BotUser>} users
-	 */
-	markAlt(alt, users) {
-		if (alt === this.id) return;
-		if (this.alts.indexOf(alt) < 0) {
-			this.alts.push(alt);
-			for (let i = 0; i < this.alts.length; i++) {
-				if (users[this.alts[i]]) {
-					users[this.alts[i]].markAlt(alt, users);
-				}
-			}
-		}
-	}
-
-	/**
-	 * @param {String} room
-	 * @param {String} ident - User Ident
-	 */
-	onJoin(room, ident) {
-		ident = Text.parseUserIdent(ident);
-		this.name = ident.name;
-		this.lastSeen = {
-			type: "J",
-			room: room,
-			time: Date.now(),
-		};
-	}
-
-	/**
-	 * @param {String} room
-	 * @param {String} ident - User Ident
-	 */
-	onChat(room, ident) {
-		ident = Text.parseUserIdent(ident);
-		this.name = ident.name;
-		this.lastSeen = {
-			type: "C",
-			room: room,
-			time: Date.now(),
-		};
-	}
-
-	/**
-	 * @param {String} room
-	 * @param {String} ident - User Ident
-	 */
-	onLeave(room, ident) {
-		if ((/[^a-zA-Z0-1]/).test(ident.charAt(0))) {
-			ident = Text.parseUserIdent(ident);
-			this.name = ident.name;
-		}
-		this.lastSeen = {
-			type: "L",
-			room: room,
-			time: Date.now(),
-		};
-	}
-
-	/**
-	 * @param {String} room
-	 * @param {String} newIdent
-	 * @param {Map<BotUser>} users
-	 */
-	onRename(room, newIdent, users) {
-		newIdent = Text.parseUserIdent(newIdent);
-		if (newIdent.id === this.id) {
-			this.name = newIdent.name;
-		} else {
-			this.lastSeen = {
-				type: "R",
-				room: null,
-				time: Date.now(),
-				detail: newIdent.name,
-			};
-			this.markAlt(newIdent.id, users);
-			if (!users[newIdent.id]) {
-				users[newIdent.id] = new BotUser(newIdent.name);
-			}
-			users[newIdent.id].onJoin(room, newIdent.ident);
-			users[newIdent.id].markAlt(this.id, users);
-		}
-	}
-}
-
-/**
  * Represents a queue manager that sends messages
  * to a Pokemon Showdown Server
  */
@@ -1029,5 +899,4 @@ class SendManager {
 exports.Bot = Bot;
 exports.BotStatus = BotStatus;
 exports.BotRoom = BotRoom;
-exports.BotUser = BotUser;
 exports.SendManager = SendManager;

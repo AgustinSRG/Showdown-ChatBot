@@ -10,7 +10,7 @@
 		document.getElementById("seenresult").innerHTML = "<p><i>Getting seen data for " + escapeHtml(user) + "...</i></p>";
 		req = $.get('/tools/seen/?user=' + encodeURI(user) + '&time=' + Date.now(), function (data) {
 			var res = document.getElementById("seenresult");
-			res.innerHTML = '<p><strong>' + escapeHtml(data).replace(/\\n/g, "<br />") + '</strong></p>';
+			res.innerHTML = '<p><strong>' + data + '</strong></p>';
 		}).fail(function () {
 			document.getElementById("seenresult").innerHTML = '<p><span class="error-msg">Error: Could not get seen data</span></p>';
 		});
