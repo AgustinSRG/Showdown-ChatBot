@@ -10,9 +10,8 @@ const Flood_Per_Msg_Min = 500;
 const Flood_Default_Value = 2;
 
 const Path = require('path');
-const Translator = Tools('translate');
 
-const translator = new Translator(Path.resolve(__dirname, 'flood.translations'));
+const Lang_File = Path.resolve(__dirname, 'flood.translations');
 
 exports.id = 'flood';
 
@@ -35,7 +34,7 @@ exports.parse = function (context) {
 			context.totalPointVal += val;
 			if (context.pointVal < val) {
 				context.pointVal = val;
-				context.muteMessage = translator.get('flood', this.getLanguage(context.room));
+				context.muteMessage = context.mlt(Lang_File, 'flood');
 			}
 			return;
 		}
@@ -48,7 +47,7 @@ exports.parse = function (context) {
 		context.totalPointVal += val;
 		if (context.pointVal < val) {
 			context.pointVal = val;
-			context.muteMessage = translator.get('flood', this.getLanguage(context.room));
+			context.muteMessage = context.mlt(Lang_File, 'flood');
 		}
 	}
 };

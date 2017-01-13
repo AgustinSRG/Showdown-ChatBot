@@ -7,12 +7,11 @@
 'use strict';
 
 const Path = require('path');
-const Translator = Tools('translate');
 const Text = Tools('text');
 const Chat = Tools('chat');
 const Inexact = Tools('inexact-pokemon');
 
-const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
+const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
 function parseAliases(format, App) {
 	const Config = App.config.modules.tourcmd;
@@ -33,17 +32,18 @@ function parseAliases(format, App) {
 module.exports = {
 	newtour: 'tour',
 	tour: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('tour', this.room)) return this.replyAccessDenied('tour');
 		const Mod = App.modules.tourcmd.system;
 		const Config = App.config.modules.tourcmd;
 		if (this.getRoomType(this.room) !== 'chat') {
-			return this.errorReply(translator.get('nochat', this.lang));
+			return this.errorReply(this.mlt('nochat'));
 		}
 		if (Mod.tourData[this.room]) {
 			if (Text.toId(this.arg) === 'start' && !Mod.tourData[this.room].isStarted) {
 				return this.send('/tournament start', this.room);
 			}
-			return this.errorReply(translator.get('e2', this.lang));
+			return this.errorReply(this.mlt('e2'));
 		}
 		let details = {
 			format: Config.format,
@@ -118,8 +118,8 @@ module.exports = {
 						params.scout = valueArg;
 						break;
 					default:
-						return this.reply(translator.get('param', this.lang) + ' ' + idArg + ' ' +
-								translator.get('paramhelp', this.lang) + ": tier, timer, dq, users, type, scout");
+						return this.reply(this.mlt('param') + ' ' + idArg + ' ' +
+								this.mlt('paramhelp') + ": tier, timer, dq, users, type, scout");
 					}
 				}
 			}
@@ -127,12 +127,12 @@ module.exports = {
 				let format = parseAliases(params.format, App);
 				if (!App.bot.formats[format]) {
 					let inexact = Inexact.safeResolve(App, format, {formats: 1, others: 0});
-					return this.reply(translator.get('e31', this.lang) + ' "' + format + '" ' + translator.get('e33', this.lang) +
-						(inexact ? (". " + translator.get('inexact', this.lang) + " " + Chat.italics(inexact) + "?") : ""));
+					return this.reply(this.mlt('e31') + ' "' + format + '" ' + this.mlt('e33') +
+						(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
 				}
 				if (!App.bot.formats[format].chall || App.bot.formats[format].disableTournaments) {
-					return this.reply(translator.get('e31', this.lang) + ' ' + Chat.italics(App.bot.formats[format]) +
-						' ' + translator.get('e32', this.lang));
+					return this.reply(this.mlt('e31') + ' ' + Chat.italics(App.bot.formats[format]) +
+						' ' + this.mlt('e32'));
 				}
 				details.format = format;
 			}
@@ -141,7 +141,7 @@ module.exports = {
 					details.timeToStart = null;
 				} else {
 					let time = parseInt(params.timeToStart);
-					if (!time || time < 10) return this.reply(translator.get('e4', this.lang));
+					if (!time || time < 10) return this.reply(this.mlt('e4'));
 					details.timeToStart = time * 1000;
 				}
 			}
@@ -150,7 +150,7 @@ module.exports = {
 					details.autodq = false;
 				} else {
 					let dq = parseFloat(params.autodq);
-					if (!dq || dq < 0) return this.reply(translator.get('e5', this.lang));
+					if (!dq || dq < 0) return this.reply(this.mlt('e5'));
 					details.autodq = dq;
 				}
 			}
@@ -159,14 +159,14 @@ module.exports = {
 					details.maxUsers = null;
 				} else {
 					let musers = parseInt(params.maxUsers);
-					if (!musers || musers < 4) return this.reply(translator.get('e6', this.lang));
+					if (!musers || musers < 4) return this.reply(this.mlt('e6'));
 					details.maxUsers = musers;
 				}
 			}
 			if (params.type) {
 				let type = Text.toId(params.type);
 				if (type !== 'elimination' && type !== 'roundrobin') {
-					return this.reply(translator.get('e7', this.lang));
+					return this.reply(this.mlt('e7'));
 				}
 				details.type = type;
 			}

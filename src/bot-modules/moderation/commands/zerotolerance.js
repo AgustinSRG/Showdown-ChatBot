@@ -14,16 +14,16 @@ const Path = require('path');
 
 const Text = Tools('text');
 const Chat = Tools('chat');
-const Translator = Tools('translate');
 const Hastebin = Tools('hastebin');
 
-const translator = new Translator(Path.resolve(__dirname, 'zerotolerance.translations'));
+const Lang_File = Path.resolve(__dirname, 'zerotolerance.translations');
 
 module.exports = {
 	addzerotolerance: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('zerotolerance', this.room)) return this.replyAccessDenied('zerotolerance');
 		let room = this.targetRoom;
-		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
+		if (this.getRoomType(room) !== 'chat') return this.errorReply(this.mlt('nochat'));
 		const config = App.modules.moderation.system.data;
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: 'min/low/normal/high/max', optional: true}));
 		let user = Text.toId(this.args[0]);
@@ -32,7 +32,7 @@ module.exports = {
 			return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: 'min/low/normal/high/max', optional: true}));
 		}
 		if (user.length > 19) {
-			return this.errorReply(translator.get(0, this.lang));
+			return this.errorReply(this.mlt(0));
 		}
 		if (!config.zeroTolerance[room]) {
 			config.zeroTolerance[room] = {};
@@ -40,21 +40,22 @@ module.exports = {
 		config.zeroTolerance[room][user] = level;
 		App.modules.moderation.system.db.write();
 		App.logCommandAction(this);
-		this.reply(translator.get(1, this.lang) + " " + Chat.italics(user) + " " + translator.get(2, this.lang) +
-			" (" + translator.get(3, this.lang) + ": " + level + ") " + translator.get(4, this.lang) +
+		this.reply(this.mlt(1) + " " + Chat.italics(user) + " " + this.mlt(2) +
+			" (" + this.mlt(3) + ": " + level + ") " + this.mlt(4) +
 			" " + Chat.italics(this.parser.getRoomTitle(room)));
 	},
 
 	rmzerotolerance: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('zerotolerance', this.room)) return this.replyAccessDenied('zerotolerance');
 		let room = this.targetRoom;
-		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
+		if (this.getRoomType(room) !== 'chat') return this.errorReply(this.mlt('nochat'));
 		const config = App.modules.moderation.system.data;
 		let user = Text.toId(this.args[0]);
 		if (!user) return this.errorReply(this.usage({desc: this.usageTrans('user')}));
 		if (!config.zeroTolerance[room] || !config.zeroTolerance[room][user]) {
-			return this.errorReply(translator.get(1, this.lang) + " " + Chat.italics(user) + " " +
-				translator.get(5, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)));
+			return this.errorReply(this.mlt(1) + " " + Chat.italics(user) + " " +
+				this.mlt(5) + " " + Chat.italics(this.parser.getRoomTitle(room)));
 		}
 		delete config.zeroTolerance[room][user];
 		if (Object.keys(config.zeroTolerance[room]).length === 0) {
@@ -62,11 +63,12 @@ module.exports = {
 		}
 		App.modules.moderation.system.db.write();
 		App.logCommandAction(this);
-		this.reply(translator.get(1, this.lang) + " " + Chat.italics(user) + " " + translator.get(6, this.lang) +
+		this.reply(this.mlt(1) + " " + Chat.italics(user) + " " + this.mlt(6) +
 			" " + Chat.italics(this.parser.getRoomTitle(room)));
 	},
 
 	viewzerotolerance: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('viewzerotol', this.room)) return this.replyAccessDenied('viewzerotol');
 		let server = App.config.server.url;
 		if (!server) {
@@ -74,12 +76,12 @@ module.exports = {
 			return App.parser.exec(this);
 		}
 		let room = this.targetRoom;
-		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
+		if (this.getRoomType(room) !== 'chat') return this.errorReply(this.mlt('nochat'));
 		const config = App.modules.moderation.system.data;
 		let zt = config.zeroTolerance[room];
 		if (!zt) {
-			return this.pmReply(translator.get(8, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)) +
-				" " + translator.get(9, this.lang));
+			return this.pmReply(this.mlt(8) + " " + Chat.italics(this.parser.getRoomTitle(room)) +
+				" " + this.mlt(9));
 		}
 		let html = '';
 		html += '<html>';
@@ -107,14 +109,15 @@ module.exports = {
 	},
 
 	viewzerotolerancehastebin: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('viewzerotol', this.room)) return this.replyAccessDenied('viewzerotol');
 		let room = this.targetRoom;
-		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
+		if (this.getRoomType(room) !== 'chat') return this.errorReply(this.mlt('nochat'));
 		const config = App.modules.moderation.system.data;
 		let zt = config.zeroTolerance[room];
 		if (!zt) {
-			return this.pmReply(translator.get(8, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)) +
-				" " + translator.get(9, this.lang));
+			return this.pmReply(this.mlt(8) + " " + Chat.italics(this.parser.getRoomTitle(room)) +
+				" " + this.mlt(9));
 		}
 		let text = '';
 		text += 'Zero tolerance configuration of ' + this.parser.getRoomTitle(room) + ':\n\n';
@@ -127,7 +130,7 @@ module.exports = {
 		}
 		Hastebin.upload(text, function (link, err) {
 			if (err) {
-				this.pmReply(translator.get(7, this.lang));
+				this.pmReply(this.mlt(7));
 			} else {
 				this.pmReply(link);
 			}
@@ -135,15 +138,16 @@ module.exports = {
 	},
 
 	checkzerotolerance: function (App) {
+		this.setLangFile(Lang_File);
 		let room = this.parseRoomAliases(Text.toRoomid(this.args[0]));
 		let user = Text.toId(this.args[1]) || this.byIdent.id;
 		if (!user || !room) return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: this.usageTrans('user'), optional: true}));
 		if (!App.bot.rooms[room] || this.getRoomType(room) !== 'chat') {
-			return this.errorReply(translator.get(10, this.lang) + " " + Chat.italics(room) +
-				" " + translator.get(11, this.lang));
+			return this.errorReply(this.mlt(10) + " " + Chat.italics(room) +
+				" " + this.mlt(11));
 		}
 		if (user.length > 19) {
-			return this.errorReply(translator.get(0, this.lang));
+			return this.errorReply(this.mlt(0));
 		}
 		if (user !== this.byIdent.id) {
 			let group = App.bot.rooms[room].users[this.byIdent.id] || " ";
@@ -154,12 +158,12 @@ module.exports = {
 		}
 		let config = App.modules.moderation.system.data;
 		if (!config.zeroTolerance[room] || !config.zeroTolerance[room][user]) {
-			this.pmReply(translator.get(1, this.lang) + " " + Chat.italics(user) + " " + translator.get(12, this.lang) +
-				" " + translator.get(4, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)));
+			this.pmReply(this.mlt(1) + " " + Chat.italics(user) + " " + this.mlt(12) +
+				" " + this.mlt(4) + " " + Chat.italics(this.parser.getRoomTitle(room)));
 		} else {
 			let level = config.zeroTolerance[room][user];
-			this.pmReply(translator.get(1, this.lang) + " " + Chat.italics(user) + " " + translator.get(13, this.lang) +
-				" (" + translator.get(3, this.lang) + ": " + level + ") " + translator.get(4, this.lang) +
+			this.pmReply(this.mlt(1) + " " + Chat.italics(user) + " " + this.mlt(13) +
+				" (" + this.mlt(3) + ": " + level + ") " + this.mlt(4) +
 				" " + Chat.italics(this.parser.getRoomTitle(room)));
 		}
 	},

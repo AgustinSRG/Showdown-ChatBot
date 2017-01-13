@@ -7,9 +7,8 @@
 const Stretch_Default_Value = 1;
 
 const Path = require('path');
-const Translator = Tools('translate');
 
-const translator = new Translator(Path.resolve(__dirname, 'stretching.translations'));
+const Lang_File = Path.resolve(__dirname, 'stretching.translations');
 
 exports.id = 'stretching';
 
@@ -24,14 +23,14 @@ exports.parse = function (context) {
 		context.totalPointVal += (val + 1);
 		if (context.pointVal < (val + 1)) {
 			context.pointVal = (val + 1);
-			context.muteMessage = translator.get('stretch', this.getLanguage(context.room));
+			context.muteMessage = context.mlt(Lang_File, 'stretch');
 		}
 	} else if (StrechRegExp.test(msg)) {
 		context.infractions.push(exports.id);
 		context.totalPointVal += val;
 		if (context.pointVal < val) {
 			context.pointVal = val;
-			context.muteMessage = translator.get('stretch', this.getLanguage(context.room));
+			context.muteMessage = context.mlt(Lang_File, 'stretch');
 		}
 	} else if (RepeatRegExp.test(msg)) {
 		context.infractions.push(exports.id);

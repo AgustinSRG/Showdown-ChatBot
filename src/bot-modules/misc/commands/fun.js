@@ -11,15 +11,15 @@
 const Path = require('path');
 const Crypto = require('crypto');
 
-const Translator = Tools('translate');
 const Text = Tools('text');
 const Chat = Tools('chat');
 
-const translator = new Translator(Path.resolve(__dirname, 'fun.translations'));
+const Lang_File = Path.resolve(__dirname, 'fun.translations');
 
 module.exports = {
 	choose: "pick",
 	pick: function () {
+		this.setLangFile(Lang_File);
 		let opts = [];
 		for (let i = 0; i < this.args.length; i++) {
 			let opt = this.args[i].trim();
@@ -28,17 +28,18 @@ module.exports = {
 			}
 		}
 		if (opts.length < 2) return this.errorReply(this.usage({desc: 'opt1'}, {desc: 'opt2'}, {desc: '...', optional: true}));
-		this.restrictReply(Chat.bold(translator.get('pick', this.lang) + ':') + ' ' + opts[Math.floor(Math.random() * opts.length)], 'random');
+		this.restrictReply(Chat.bold(this.mlt('pick') + ':') + ' ' + opts[Math.floor(Math.random() * opts.length)], 'random');
 	},
 
 	rpoke: 'poke',
 	poke: function (App) {
+		this.setLangFile(Lang_File);
 		let pokedex;
 		try {
 			pokedex = App.data.getPokedex();
 		} catch (err) {
 			App.reportCrash(err);
-			return this.errorReply(translator.get('error', this.lang));
+			return this.errorReply(this.mlt('error'));
 		}
 		let pokes = Object.keys(pokedex);
 		let chosen = pokedex[pokes[Math.floor(Math.random() * pokes.length)]].species;
@@ -53,12 +54,13 @@ module.exports = {
 
 	hpoke: "hashpoke",
 	hashpoke: function (App) {
+		this.setLangFile(Lang_File);
 		let pokedex;
 		try {
 			pokedex = App.data.getPokedex();
 		} catch (err) {
 			App.reportCrash(err);
-			return this.errorReply(translator.get('error', this.lang));
+			return this.errorReply(this.mlt('error'));
 		}
 		let pokes = Object.keys(pokedex);
 		let h = Text.toId(this.arg) || this.byIdent.id;

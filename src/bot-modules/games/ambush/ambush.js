@@ -8,9 +8,8 @@ const Path = require('path');
 
 const Text = Tools('text');
 const Chat = Tools('chat');
-const Translator = Tools('translate');
 
-const translator = new Translator(Path.resolve(__dirname, 'ambush.translations'));
+const Lang_File = Path.resolve(__dirname, 'ambush.translations');
 
 exports.setup = function (App) {
 	function getLanguage(room) {
@@ -26,6 +25,10 @@ exports.setup = function (App) {
 			this.lang = getLanguage(this.room);
 		}
 
+		mlt(key, vars) {
+			return App.multilang.mlt(Lang_File, this.lang, key, vars);
+		}
+
 		send(txt) {
 			App.bot.sendTo(this.room, txt);
 		}
@@ -34,11 +37,11 @@ exports.setup = function (App) {
 			this.hand = this.chatHandler.bind(this);
 			App.bot.on('userchat', this.hand);
 			let txt = '';
-			txt += Chat.bold(translator.get(0, this.lang)) + ' ' + translator.get(1, this.lang) + ' ' + Chat.code('/me in') + ' ' +
-			translator.get(2, this.lang) + '! ';
-			txt += translator.get(3, this.lang) + ' ' + Chat.code(translator.get(4, this.lang)) + ', ' + translator.get(5, this.lang) + '. ';
-			txt += translator.get(1, this.lang) + ' ' + Chat.code((App.config.parser.tokens[0] || "") + 'start') +
-			' ' + translator.get(6, this.lang) + '.';
+			txt += Chat.bold(this.mlt(0)) + ' ' + this.mlt(1) + ' ' + Chat.code('/me in') + ' ' +
+			this.mlt(2) + '! ';
+			txt += this.mlt(3) + ' ' + Chat.code(this.mlt(4)) + ', ' + this.mlt(5) + '. ';
+			txt += this.mlt(1) + ' ' + Chat.code((App.config.parser.tokens[0] || "") + 'start') +
+			' ' + this.mlt(6) + '.';
 			this.status = 'signups';
 			this.send(txt);
 		}
@@ -83,13 +86,13 @@ exports.setup = function (App) {
 		startFight() {
 			if (this.status !== 'signups') return;
 			if (Object.keys(this.players).length < 2) {
-				this.send(translator.get('starterr', this.lang));
+				this.send(this.mlt('starterr'));
 				return;
 			}
 			this.status = 'fight';
 			let txt = '';
-			txt += '' + Chat.bold(translator.get(7, this.lang)) + ' ' + translator.get(1, this.lang) +
-			' ' + Chat.code(translator.get(4, this.lang)) + ' ' + translator.get(8, this.lang);
+			txt += '' + Chat.bold(this.mlt(7)) + ' ' + this.mlt(1) +
+			' ' + Chat.code(this.mlt(4)) + ' ' + this.mlt(8);
 			this.send(txt);
 		}
 
@@ -98,8 +101,8 @@ exports.setup = function (App) {
 			if (!this.players[ident1.id] || !this.players[victim]) return;
 			let name = this.players[victim];
 			delete this.players[victim];
-			this.send(Chat.bold('Ambush:') + ' ' + Chat.italics(name) + ' ' + translator.get(9, this.lang) + ' ' +
-			Chat.italics(ident1.name) + ' ' + translator.get(10, this.lang) + '!');
+			this.send(Chat.bold('Ambush:') + ' ' + Chat.italics(name) + ' ' + this.mlt(9) + ' ' +
+			Chat.italics(ident1.name) + ' ' + this.mlt(10) + '!');
 			let players = Object.keys(this.players);
 			if (players.length <= 1) {
 				this.end(this.players[players[0]]);
@@ -109,9 +112,9 @@ exports.setup = function (App) {
 		end(winner) {
 			this.status = 'end';
 			let txt = '';
-			txt += translator.get(11, this.lang) + ' ';
+			txt += this.mlt(11) + ' ';
 			if (winner) {
-				txt += translator.get(12, this.lang) + ' ' + Chat.bold(winner) + ' ' + translator.get(13, this.lang) + '!';
+				txt += this.mlt(12) + ' ' + Chat.bold(winner) + ' ' + this.mlt(13) + '!';
 			}
 			this.send(txt);
 			App.modules.games.system.terminateGame(this.room);

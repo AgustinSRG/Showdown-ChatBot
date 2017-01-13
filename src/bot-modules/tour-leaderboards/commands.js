@@ -12,15 +12,15 @@
 'use strict';
 
 const Path = require('path');
-const Translator = Tools('translate');
 const Text = Tools('text');
 const Chat = Tools('chat');
 
-const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
+const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
 module.exports = {
 	rank: "toursrank",
 	toursrank: function (App) {
+		this.setLangFile(Lang_File);
 		const Config = App.config.modules.tourleaderboards;
 		let mod = App.modules.tourleaderboards.system;
 		let user = Text.toId(this.args[0]) || this.byIdent.id;
@@ -29,23 +29,24 @@ module.exports = {
 			return this.errorReply(this.usage({desc: this.usageTrans('user'), optional: true}, {desc: this.usageTrans('room'), optional: true}));
 		}
 		if (!Config[room]) {
-			return this.errorReply(translator.get(0, this.lang) + " " + Chat.italics(room));
+			return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
 		}
 		if (user.length > 19) {
-			return this.errorReply(translator.get(1, this.lang));
+			return this.errorReply(this.mlt(1));
 		}
 		let rank = mod.getUserPoints(room, user);
-		let txt = translator.get(2, this.lang) + " " + Chat.bold(rank.name) + " " +
-			translator.get('in', this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)) + " | ";
-		txt += translator.get(3, this.lang) + ": " + rank.points + " | ";
-		txt += translator.get(4, this.lang) + ": " + rank.wins + ", " + translator.get(5, this.lang) +
-			": " + rank.finals + ", " + translator.get(6, this.lang) + ": " + rank.semis + ". ";
-		txt += translator.get(7, this.lang) + ": " + rank.tours + " " + translator.get(8, this.lang) +
-			", " + rank.battles + " " + translator.get(9, this.lang) + ".";
+		let txt = this.mlt(2) + " " + Chat.bold(rank.name) + " " +
+			this.mlt('in') + " " + Chat.italics(this.parser.getRoomTitle(room)) + " | ";
+		txt += this.mlt(3) + ": " + rank.points + " | ";
+		txt += this.mlt(4) + ": " + rank.wins + ", " + this.mlt(5) +
+			": " + rank.finals + ", " + this.mlt(6) + ": " + rank.semis + ". ";
+		txt += this.mlt(7) + ": " + rank.tours + " " + this.mlt(8) +
+			", " + rank.battles + " " + this.mlt(9) + ".";
 		this.restrictReply(txt, 'toursrank');
 	},
 
 	top: function (App) {
+		this.setLangFile(Lang_File);
 		const Config = App.config.modules.tourleaderboards;
 		let mod = App.modules.tourleaderboards.system;
 		let room = this.parseRoomAliases(Text.toRoomid(this.arg)) || this.room;
@@ -53,11 +54,11 @@ module.exports = {
 			return this.errorReply(this.usage({desc: this.usageTrans('room')}));
 		}
 		if (!Config[room]) {
-			return this.errorReply(translator.get(0, this.lang) + " " + Chat.italics(room));
+			return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
 		}
 		let top = mod.getTop(room);
 		if (!top || !top.length) {
-			return this.restrictReply(translator.get(10, this.lang) + " " + Chat.italics(room) + " " + translator.get(11, this.lang), "rank");
+			return this.restrictReply(this.mlt(10) + " " + Chat.italics(room) + " " + this.mlt(11), "rank");
 		}
 		let topResults = [];
 		for (let i = 0; i < 5 && i < top.length; i++) {
@@ -67,33 +68,35 @@ module.exports = {
 	},
 
 	toursrankconfig: function (App) {
+		this.setLangFile(Lang_File);
 		const Config = App.config.modules.tourleaderboards;
 		let room = this.parseRoomAliases(Text.toRoomid(this.arg)) || this.room;
 		if (!room) {
 			return this.errorReply(this.usage({desc: this.usageTrans('room')}));
 		}
 		if (!Config[room]) {
-			return this.errorReply(translator.get(0, this.lang) + " " + Chat.italics(room));
+			return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
 		}
-		this.restrictReply(translator.get(18, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)) + ": " +
-			Chat.bold(Config[room].winner) + " " + translator.get(19, this.lang) + ", " + Chat.bold(Config[room].finalist) +
-			" " + translator.get(20, this.lang) + ", " + Chat.bold(Config[room].semifinalist) + " " + translator.get(21, this.lang) +
-			", " + Chat.bold(Config[room].battle) + " " + translator.get(22, this.lang) + "." +
-			(Config[room].onlyOfficial ? (" " + translator.get(23, this.lang) + ".") : ""), "toursrank");
+		this.restrictReply(this.mlt(18) + " " + Chat.italics(this.parser.getRoomTitle(room)) + ": " +
+			Chat.bold(Config[room].winner) + " " + this.mlt(19) + ", " + Chat.bold(Config[room].finalist) +
+			" " + this.mlt(20) + ", " + Chat.bold(Config[room].semifinalist) + " " + this.mlt(21) +
+			", " + Chat.bold(Config[room].battle) + " " + this.mlt(22) + "." +
+			(Config[room].onlyOfficial ? (" " + this.mlt(23) + ".") : ""), "toursrank");
 	},
 
 	tourleaderboards: function (App) {
+		this.setLangFile(Lang_File);
 		const Config = App.config.modules.tourleaderboards;
 		let server = App.config.server.url;
 		if (!server) {
-			return this.pmReply(translator.get(13, this.lang));
+			return this.pmReply(this.mlt(13));
 		}
 		let room = this.parseRoomAliases(Text.toRoomid(this.arg)) || this.room;
 		if (!room) {
 			return this.errorReply(this.usage({desc: this.usageTrans('room')}));
 		}
 		if (!Config[room]) {
-			return this.errorReply(translator.get(0, this.lang) + " " + Chat.italics(room));
+			return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
 		}
 		if (server.charAt(server.length - 1) === '/') {
 			return this.restrictReply(App.config.server.url + 'tourtable/' + room + '/get', 'toursrank');
@@ -103,46 +106,48 @@ module.exports = {
 	},
 
 	official: function (App) {
+		this.setLangFile(Lang_File);
 		const Config = App.config.modules.tourleaderboards;
 		if (!this.can('tourofficial', this.room)) return this.replyAccessDenied('tourofficial');
 		let mod = App.modules.tourleaderboards.system;
 		let room = this.room;
 		if (!room || this.getRoomType(room) !== 'chat') {
-			return this.errorReply(translator.get('nochat', this.lang));
+			return this.errorReply(this.mlt('nochat'));
 		}
 		if (!Config[room]) {
-			return this.errorReply(translator.get(0, this.lang) + " " + Chat.italics(room));
+			return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
 		}
 		if (!mod.tourData[room]) {
-			return this.errorReply(translator.get(12, this.lang));
+			return this.errorReply(this.mlt(12));
 		}
 		if (!mod.isOfficial[room]) {
 			mod.isOfficial[room] = true;
-			this.reply(translator.get(14, this.lang));
+			this.reply(this.mlt(14));
 		} else {
-			this.errorReply(translator.get(15, this.lang));
+			this.errorReply(this.mlt(15));
 		}
 	},
 
 	unofficial: function (App) {
+		this.setLangFile(Lang_File);
 		const Config = App.config.modules.tourleaderboards;
 		if (!this.can('tourofficial', this.room)) return this.replyAccessDenied('tourofficial');
 		let mod = App.modules.tourleaderboards.system;
 		let room = this.room;
 		if (!room || this.getRoomType(room) !== 'chat') {
-			return this.errorReply(translator.get('nochat', this.lang));
+			return this.errorReply(this.mlt('nochat'));
 		}
 		if (!Config[room]) {
-			return this.errorReply(translator.get(0, this.lang) + " " + Chat.italics(room));
+			return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
 		}
 		if (!mod.tourData[room]) {
-			return this.errorReply(translator.get(12, this.lang));
+			return this.errorReply(this.mlt(12));
 		}
 		if (mod.isOfficial[room]) {
 			mod.isOfficial[room] = false;
-			this.reply(translator.get(16, this.lang));
+			this.reply(this.mlt(16));
 		} else {
-			this.errorReply(translator.get(17, this.lang));
+			this.errorReply(this.mlt(17));
 		}
 	},
 };

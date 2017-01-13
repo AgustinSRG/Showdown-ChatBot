@@ -7,20 +7,20 @@
 'use strict';
 
 const Path = require('path');
-const Translator = Tools('translate');
 
-const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
+const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
 module.exports = {
 	endgame: "terminategame",
 	terminategame: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		let room = this.targetRoom;
-		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
+		if (this.getRoomType(room) !== 'chat') return this.errorReply(this.mlt('nochat'));
 		if (App.modules.games.system.terminateGame(room)) {
-			this.reply(translator.get('end', this.lang));
+			this.reply(this.mlt('end'));
 		} else {
-			return this.errorReply(translator.get('nogame', this.lang));
+			return this.errorReply(this.mlt('nogame'));
 		}
 	},
 };

@@ -41,6 +41,7 @@ class UserDataManager {
 				return;
 			}
 			this.addUser(user, false);
+			this.addUser(newName, true);
 			this.updateLastSeen(user, "R", null, newName);
 			this.parseNameChange(user, newName);
 		}.bind(this));

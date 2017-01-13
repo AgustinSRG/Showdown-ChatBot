@@ -13,16 +13,16 @@ const Path = require('path');
 
 const Text = Tools('text');
 const Chat = Tools('chat');
-const Translator = Tools('translate');
 const Hastebin = Tools('hastebin');
 
-const translator = new Translator(Path.resolve(__dirname, 'banwords.translations'));
+const Lang_File = Path.resolve(__dirname, 'banwords.translations');
 
 module.exports = {
 	banword: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('banword', this.room)) return this.replyAccessDenied('banword');
 		let room = this.targetRoom;
-		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
+		if (this.getRoomType(room) !== 'chat') return this.errorReply(this.mlt('nochat'));
 		const config = App.modules.moderation.system.data;
 		let word = this.args[0].toLowerCase().trim();
 		let type = Text.toId(this.args[1]) || 'banned';
@@ -31,15 +31,15 @@ module.exports = {
 		let nicks = Text.toId(this.args[4]) || 'std';
 		console.log(word + ' | ' + type + ' | ' + punishment + ' | ' + strictMode + ' | ' + nicks);
 		if (!word || !(type in {'banned': 1, 'inap': 1, 'insult': 1}) || !(strictMode in {'std': 1, 'strict': 1}) || !(nicks in {'std': 1, 'ignorenicks': 1})) {
-			return this.errorReply(this.usage({desc: translator.get('word', this.lang)}, {desc: 'banned/inap/insult', optional: true},
-				{desc: translator.get('punishment', this.lang), optional: true}, {desc: 'std/strict', optional: true},
+			return this.errorReply(this.usage({desc: this.mlt('word')}, {desc: 'banned/inap/insult', optional: true},
+				{desc: this.mlt('punishment'), optional: true}, {desc: 'std/strict', optional: true},
 				{desc: 'std/ignorenicks', optional: true}));
 		}
 		if (config.punishments.indexOf(punishment) === -1) {
-			return this.errorReply(translator.get(0, this.lang) + ": " + config.punishments.join(', '));
+			return this.errorReply(this.mlt(0) + ": " + config.punishments.join(', '));
 		}
 		if (config.bannedWords[room] && config.bannedWords[room][word]) {
-			return this.errorReply(translator.get(1, this.lang) + " \"" + word + "\" " + translator.get(2, this.lang) +
+			return this.errorReply(this.mlt(1) + " \"" + word + "\" " + this.mlt(2) +
 				" " + Chat.italics(this.parser.getRoomTitle(room)));
 		}
 		if (!config.bannedWords[room]) config.bannedWords[room] = {};
@@ -60,19 +60,20 @@ module.exports = {
 		config.bannedWords[room][word].val = config.punishments.indexOf(punishment) + 1;
 		App.modules.moderation.system.db.write();
 		App.logCommandAction(this);
-		this.reply(translator.get(1, this.lang) + " \"" + word + "\" " + translator.get(3, this.lang) +
+		this.reply(this.mlt(1) + " \"" + word + "\" " + this.mlt(3) +
 			" " + Chat.italics(this.parser.getRoomTitle(room)));
 	},
 
 	unbanword: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('banword', this.room)) return this.replyAccessDenied('banword');
 		let room = this.targetRoom;
-		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
+		if (this.getRoomType(room) !== 'chat') return this.errorReply(this.mlt('nochat'));
 		const config = App.modules.moderation.system.data;
 		let word = this.args[0].toLowerCase().trim();
-		if (!word) return this.errorReply(this.usage({desc: translator.get('word', this.lang)}));
+		if (!word) return this.errorReply(this.usage({desc: this.mlt('word')}));
 		if (!config.bannedWords[room] || !config.bannedWords[room][word]) {
-			return this.errorReply(translator.get(1, this.lang) + " \"" + word + "\" " + translator.get(4, this.lang) +
+			return this.errorReply(this.mlt(1) + " \"" + word + "\" " + this.mlt(4) +
 				" " + Chat.italics(this.parser.getRoomTitle(room)));
 		}
 		delete config.bannedWords[room][word];
@@ -81,11 +82,12 @@ module.exports = {
 		}
 		App.modules.moderation.system.db.write();
 		App.logCommandAction(this);
-		this.reply(translator.get(1, this.lang) + " \"" + word + "\" " + translator.get(5, this.lang) +
+		this.reply(this.mlt(1) + " \"" + word + "\" " + this.mlt(5) +
 			" " + Chat.italics(this.parser.getRoomTitle(room)));
 	},
 
 	viewbannedwords: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('viewbanwords', this.room)) return this.replyAccessDenied('viewbanwords');
 		let server = App.config.server.url;
 		if (!server) {
@@ -93,10 +95,10 @@ module.exports = {
 			return App.parser.exec(this);
 		}
 		let room = this.targetRoom;
-		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
+		if (this.getRoomType(room) !== 'chat') return this.errorReply(this.mlt('nochat'));
 		const config = App.modules.moderation.system.data;
 		let words = config.bannedWords[room];
-		if (!words) return this.pmReply(translator.get(6, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)));
+		if (!words) return this.pmReply(this.mlt(6) + " " + Chat.italics(this.parser.getRoomTitle(room)));
 		let html = '';
 		html += '<html>';
 		html += '<head><title>Banned Words of ' + Text.escapeHTML(App.parser.getRoomTitle(room)) + '</title></head>';
@@ -144,12 +146,13 @@ module.exports = {
 	},
 
 	viewbannedwordshastebin: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('viewbanwords', this.room)) return this.replyAccessDenied('viewbanwords');
 		let room = this.targetRoom;
-		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
+		if (this.getRoomType(room) !== 'chat') return this.errorReply(this.mlt('nochat'));
 		const config = App.modules.moderation.system.data;
 		let words = config.bannedWords[room];
-		if (!words) return this.pmReply(translator.get(6, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)));
+		if (!words) return this.pmReply(this.mlt(6) + " " + Chat.italics(this.parser.getRoomTitle(room)));
 		let text = '';
 		text += 'Banned Words in ' + this.parser.getRoomTitle(room) + ':\n\n';
 		words = Object.keys(words).sort();
@@ -181,7 +184,7 @@ module.exports = {
 		}
 		Hastebin.upload(text, function (link, err) {
 			if (err) {
-				this.pmReply(translator.get(7, this.lang));
+				this.pmReply(this.mlt(7));
 			} else {
 				this.pmReply(link);
 			}

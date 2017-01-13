@@ -8,9 +8,8 @@ const Ladder_Check_Interval = 10 * 1000;
 
 const Path = require('path');
 const Text = Tools('text');
-const Translator = Tools('translate');
 
-const translator = new Translator(Path.resolve(__dirname, 'ladder.translations'));
+const Lang_File = Path.resolve(__dirname, 'ladder.translations');
 
 exports.setup = function (App) {
 	const Config = App.config.modules.battle;
@@ -26,9 +25,9 @@ exports.setup = function (App) {
 	LadderManager.reportBattle = function (room) {
 		if (!LadderManager.reportsRoom) return;
 		if (LadderManager.reportsRoom.charAt(0) === ',') {
-			App.bot.pm(LadderManager.reportsRoom, translator.get(0, getLanguage(room)) + ": <<" + room + ">>");
+			App.bot.pm(LadderManager.reportsRoom, App.multilang.mlt(Lang_File, getLanguage(room), 0) + ": <<" + room + ">>");
 		} else {
-			App.bot.sendTo(LadderManager.reportsRoom, translator.get(0, getLanguage(room)) + ": <<" + room + ">>");
+			App.bot.sendTo(LadderManager.reportsRoom, App.multilang.mlt(Lang_File, getLanguage(room), 0) + ": <<" + room + ">>");
 		}
 		LadderManager.reportsRoom = false;
 	};

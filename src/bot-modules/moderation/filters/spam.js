@@ -8,9 +8,8 @@ const Spam_Message_Time = 15 * 1000;
 const Spam_Default_Value = 3;
 
 const Path = require('path');
-const Translator = Tools('translate');
 
-const translator = new Translator(Path.resolve(__dirname, 'spam.translations'));
+const Lang_File = Path.resolve(__dirname, 'spam.translations');
 
 exports.id = 'spam';
 
@@ -24,7 +23,7 @@ exports.parse = function (context) {
 	if (context.infractions.indexOf("flood-spam") >= 0) {
 		if (msg.indexOf("http://") > -1 || msg.indexOf("https://") > -1 || msg.indexOf("www.") > -1 || msg.length > 70 || (/\*\*.+\*\*/).test(msg)) {
 			context.pointVal = 5;
-			context.muteMessage = translator.get('spam', this.getLanguage(context.room));
+			context.muteMessage = context.mlt(Lang_File, 'spam');
 			return;
 		}
 	}
@@ -37,14 +36,14 @@ exports.parse = function (context) {
 	if (isSpamming) {
 		if (msg.indexOf("http://") > -1 || msg.indexOf("https://") > -1 || msg.indexOf("www.") > -1 || msg.length > 70 || (/\*\*.+\*\*/).test(msg)) {
 			context.pointVal = 5;
-			context.muteMessage = translator.get('spam', this.getLanguage(context.room));
+			context.muteMessage = context.mlt(Lang_File, 'spam');
 			return;
 		} else {
 			context.infractions.push('spam');
 			context.totalPointVal += val;
 			if (context.pointVal < val) {
 				context.pointVal = val;
-				context.muteMessage = translator.get('spam', this.getLanguage(context.room));
+				context.muteMessage = context.mlt(Lang_File, 'spam');
 			}
 		}
 	}
@@ -52,6 +51,6 @@ exports.parse = function (context) {
 	/* Multiple infraction */
 	if (context.infractions.length >= 2) {
 		context.pointVal = context.totalPointVal;
-		context.muteMessage = translator.get('spam', this.getLanguage(context.room));
+		context.muteMessage = context.mlt(Lang_File, 'spam');
 	}
 };

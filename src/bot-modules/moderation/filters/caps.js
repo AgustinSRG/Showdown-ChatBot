@@ -10,9 +10,8 @@ const Caps_Default_Value = 1;
 
 const Path = require('path');
 const Text = Tools('text');
-const Translator = Tools('translate');
 
-const translator = new Translator(Path.resolve(__dirname, 'caps.translations'));
+const Lang_File = Path.resolve(__dirname, 'caps.translations');
 
 exports.id = 'caps';
 
@@ -27,7 +26,7 @@ exports.parse = function (context) {
 		context.totalPointVal += val;
 		if (context.pointVal < val) {
 			context.pointVal = val;
-			context.muteMessage = translator.get('caps', this.getLanguage(context.room));
+			context.muteMessage = context.mlt(Lang_File, 'caps');
 		}
 	}
 };

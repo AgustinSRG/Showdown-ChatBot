@@ -8,9 +8,8 @@ const Servers_Default_Value = 2;
 
 const Path = require('path');
 const Text = Tools('text');
-const Translator = Tools('translate');
 
-const translator = new Translator(Path.resolve(__dirname, 'servers.translations'));
+const Lang_File = Path.resolve(__dirname, 'servers.translations');
 
 exports.id = 'servers';
 
@@ -27,7 +26,7 @@ exports.parse = function (context) {
 			context.totalPointVal += val;
 			if (context.pointVal < val) {
 				context.pointVal = val;
-				context.muteMessage = translator.get('servers', this.getLanguage(context.room));
+				context.muteMessage = context.mlt(Lang_File, 'servers');
 			}
 			break;
 		}

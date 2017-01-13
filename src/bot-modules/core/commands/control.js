@@ -21,15 +21,15 @@ const Path = require('path');
 
 const Text = Tools('text');
 const Chat = Tools('chat');
-const Translator = Tools('translate');
 
-const translator = new Translator(Path.resolve(__dirname, 'control.translations'));
+const Lang_File = Path.resolve(__dirname, 'control.translations');
 
 module.exports = {
 	/* Joining / Leaving Rooms */
 	join: 'joinroom',
 	joinrooms: 'joinroom',
 	joinroom: function () {
+		this.setLangFile(Lang_File);
 		if (!this.can('joinroom', this.room)) return this.replyAccessDenied('joinroom');
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: '...', optional: true}));
 		let rooms = [];
@@ -48,6 +48,7 @@ module.exports = {
 	leave: 'leaveroom',
 	leaverooms: 'leaveroom',
 	leaveroom: function () {
+		this.setLangFile(Lang_File);
 		if (!this.can('joinroom', this.room)) return this.replyAccessDenied('joinroom');
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: '...', optional: true}));
 		let rooms = [];
@@ -66,6 +67,7 @@ module.exports = {
 	/* Custom send */
 
 	custom: function () {
+		this.setLangFile(Lang_File);
 		if (!this.can('send', this.room)) return this.replyAccessDenied('send');
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('message')}));
 		this.send(this.arg, this.targetRoom);
@@ -73,6 +75,7 @@ module.exports = {
 	},
 
 	send: function () {
+		this.setLangFile(Lang_File);
 		if (!this.can('send', this.room)) return this.replyAccessDenied('send');
 		if (this.args.length < 2) {
 			return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: this.usageTrans('message')}));
@@ -88,6 +91,7 @@ module.exports = {
 
 	pm: 'sendpm',
 	sendpm: function () {
+		this.setLangFile(Lang_File);
 		if (!this.can('send', this.room)) return this.replyAccessDenied('send');
 		if (this.args.length < 2) return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: this.usageTrans('message')}));
 		let user = Text.toId(this.args[0]);
@@ -98,6 +102,7 @@ module.exports = {
 	},
 
 	say: function () {
+		this.setLangFile(Lang_File);
 		if (!this.can('say', this.room)) return this.replyAccessDenied('say');
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('message')}));
 		this.reply(Text.stripCommands(this.arg));
@@ -126,36 +131,40 @@ module.exports = {
 	},
 
 	hotpatch: function () {
+		this.setLangFile(Lang_File);
 		if (!this.isExcepted()) return;
 		this.parser.app.hotpatchCommands(Path.resolve(__dirname, '../../'));
-		this.reply(translator.get(0, this.lang));
+		this.reply(this.mlt(0));
 		this.addToSecurityLog();
 	},
 
 	version: function (App) {
+		this.setLangFile(Lang_File);
 		let reply = Chat.bold('Showdown ChatBot v' + App.env.package.version) + ' (' + App.env.package.homepage + ')';
 		this.restrictReply(reply, 'info');
 	},
 
 	time: function () {
+		this.setLangFile(Lang_File);
 		let date = new Date();
-		this.restrictReply(translator.get(1, this.lang) + ': ' + Chat.italics(date.toString()), 'info');
+		this.restrictReply(this.mlt(1) + ': ' + Chat.italics(date.toString()), 'info');
 	},
 
 	uptime: function () {
+		this.setLangFile(Lang_File);
 		let times = [];
 		let time = Math.round(process.uptime());
 		let aux;
 		aux = time % 60; // Seconds
-		if (aux > 0 || time === 0) times.unshift(aux + ' ' + (aux === 1 ? translator.get(2, this.lang) : translator.get(3, this.lang)));
+		if (aux > 0 || time === 0) times.unshift(aux + ' ' + (aux === 1 ? this.mlt(2) : this.mlt(3)));
 		time = Math.floor(time / 60);
 		aux = time % 60; // Minutes
-		if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? translator.get(4, this.lang) : translator.get(5, this.lang)));
+		if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? this.mlt(4) : this.mlt(5)));
 		time = Math.floor(time / 60);
 		aux = time % 24; // Hours
-		if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? translator.get(6, this.lang) : translator.get(7, this.lang)));
+		if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? this.mlt(6) : this.mlt(7)));
 		time = Math.floor(time / 24); // Days
-		if (time > 0) times.unshift(time + ' ' + (time === 1 ? translator.get(8, this.lang) : translator.get(9, this.lang)));
-		this.restrictReply(Chat.bold(translator.get(10, this.lang) + ':') + ' ' + Chat.italics(times.join(', ')), 'info');
+		if (time > 0) times.unshift(time + ' ' + (time === 1 ? this.mlt(8) : this.mlt(9)));
+		this.restrictReply(Chat.bold(this.mlt(10) + ':') + ' ' + Chat.italics(times.join(', ')), 'info');
 	},
 };

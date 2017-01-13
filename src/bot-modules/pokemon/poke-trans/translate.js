@@ -86,4 +86,6 @@ function getTranslations(from, to, word) {
 	return results;
 }
 
+getTranslations.supportedLanguages = Translations;
+
 module.exports = getTranslations;

@@ -11,16 +11,16 @@ const Path = require('path');
 
 const Text = Tools('text');
 const Chat = Tools('chat');
-const Translator = Tools('translate');
 
-const translator = new Translator(Path.resolve(__dirname, 'settings.translations'));
+const Lang_File = Path.resolve(__dirname, 'settings.translations');
 
 module.exports = {
 	setmoderation: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('moderation', this.room)) return this.replyAccessDenied('moderation');
 		if (this.args.length !== 2) return this.errorReply(this.usage({desc: 'mod-type'}, {desc: 'on/off'}));
 		let room = this.targetRoom;
-		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
+		if (this.getRoomType(room) !== 'chat') return this.errorReply(this.mlt('nochat'));
 		let mod = Text.toId(this.args[0]);
 		let set = Text.toId(this.args[1]);
 		if (set !== 'on' && set !== 'off') return this.errorReply(this.usage({desc: 'mod-type'}, {desc: 'on/off'}));
@@ -33,18 +33,19 @@ module.exports = {
 			config.roomSettings[room][mod] = !!(set === 'on');
 			App.modules.moderation.system.db.write();
 			App.logCommandAction(this);
-			this.reply(translator.get(0, this.lang) + " " + Chat.italics(mod) + " " + translator.get(1, this.lang) +
-				" " + (set === 'on' ? translator.get(2, this.lang) : translator.get(3, this.lang)) + " " +
-				translator.get(4, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)) + "");
+			this.reply(this.mlt(0) + " " + Chat.italics(mod) + " " + this.mlt(1) +
+				" " + (set === 'on' ? this.mlt(2) : this.mlt(3)) + " " +
+				this.mlt(4) + " " + Chat.italics(this.parser.getRoomTitle(room)) + "");
 		} else {
-			return this.errorReply(translator.get(5, this.lang) + ": " + Object.keys(modtypes).join(', '));
+			return this.errorReply(this.mlt(5) + ": " + Object.keys(modtypes).join(', '));
 		}
 	},
 
 	modexception: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('moderation', this.room)) return this.replyAccessDenied('moderation');
 		let room = this.targetRoom;
-		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
+		if (this.getRoomType(room) !== 'chat') return this.errorReply(this.mlt('nochat'));
 		let rank = this.arg.toLowerCase().trim();
 		if (!rank) return this.errorReply(this.usage({desc: this.usageTrans('rank')}));
 		let groups = ['user', 'excepted'].concat(App.config.parser.groups);
@@ -55,17 +56,17 @@ module.exports = {
 			App.logCommandAction(this);
 			switch (rank) {
 			case 'user':
-				this.reply(translator.get(6, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)));
+				this.reply(this.mlt(6) + " " + Chat.italics(this.parser.getRoomTitle(room)));
 				break;
 			case 'excepted':
-				this.reply(translator.get(7, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)));
+				this.reply(this.mlt(7) + " " + Chat.italics(this.parser.getRoomTitle(room)));
 				break;
 			default:
-				this.reply(translator.get(8, this.lang) + " " + ' ' + Chat.bold(rank) + ' ' + translator.get(9, this.lang) +
-					' ' + translator.get(10, this.lang) + ' ' + Chat.italics(this.parser.getRoomTitle(room)));
+				this.reply(this.mlt(8) + " " + ' ' + Chat.bold(rank) + ' ' + this.mlt(9) +
+					' ' + this.mlt(10) + ' ' + Chat.italics(this.parser.getRoomTitle(room)));
 			}
 		} else {
-			return this.errorReply(translator.get(11, this.lang) + ": " + groups.join(', '));
+			return this.errorReply(this.mlt(11) + ": " + groups.join(', '));
 		}
 	},
 };

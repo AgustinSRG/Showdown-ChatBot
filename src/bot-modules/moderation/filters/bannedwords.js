@@ -5,9 +5,8 @@
 'use strict';
 
 const Path = require('path');
-const Translator = Tools('translate');
 
-const translator = new Translator(Path.resolve(__dirname, 'bannedwords.translations'));
+const Lang_File = Path.resolve(__dirname, 'bannedwords.translations');
 
 exports.id = 'bannedwords';
 
@@ -48,16 +47,16 @@ exports.parse = function (context) {
 			context.pointVal = val;
 			switch (wordType) {
 			case 'b':
-				context.muteMessage = translator.get('banword', this.getLanguage(context.room));
+				context.muteMessage = context.mlt(Lang_File, 'banword');
 				break;
 			case 'i':
-				context.muteMessage = translator.get('inap', this.getLanguage(context.room));
+				context.muteMessage = context.mlt(Lang_File, 'inap');
 				break;
 			case 'o':
-				context.muteMessage = translator.get('offense', this.getLanguage(context.room));
+				context.muteMessage = context.mlt(Lang_File, 'offense');
 				break;
 			default:
-				context.muteMessage = translator.get('banword', this.getLanguage(context.room));
+				context.muteMessage = context.mlt(Lang_File, 'banword');
 				break;
 			}
 		}

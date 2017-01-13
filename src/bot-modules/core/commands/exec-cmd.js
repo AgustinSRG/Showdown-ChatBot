@@ -12,12 +12,12 @@ const Path = require('path');
 
 const Text = Tools('text');
 const Chat = Tools('chat');
-const Translator = Tools('translate');
 
-const translator = new Translator(Path.resolve(__dirname, 'exec-cmd.translations'));
+const Lang_File = Path.resolve(__dirname, 'exec-cmd.translations');
 
 module.exports = {
 	"exec": function () {
+		this.setLangFile(Lang_File);
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
 		let spl = this.arg.split(' ');
 		this.cmd = Text.toCmdid(spl.shift());
@@ -26,13 +26,14 @@ module.exports = {
 		if (!this.parser.exec(this)) {
 			if (!this.parser.execDyn(this)) {
 				let exactCmd = this.parser.searchCommand(this.cmd);
-				this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(this.cmd) + ' ' + translator.get(1, this.lang) + '.' +
-					(exactCmd ? (' ' + translator.get(2, this.lang) + ' ' + Chat.italics(exactCmd) + '?') : ''));
+				this.errorReply(this.mlt(0) + ' ' + Chat.italics(this.cmd) + ' ' + this.mlt(1) + '.' +
+					(exactCmd ? (' ' + this.mlt(2) + ' ' + Chat.italics(exactCmd) + '?') : ''));
 			}
 		}
 	},
 
 	"wall": function () {
+		this.setLangFile(Lang_File);
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
 		let spl = this.arg.split(' ');
 		this.cmd = Text.toCmdid(spl.shift());
@@ -42,20 +43,21 @@ module.exports = {
 		if (!this.parser.exec(this)) {
 			if (!this.parser.execDyn(this)) {
 				let exactCmd = this.parser.searchCommand(this.cmd);
-				this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(this.cmd) + ' ' + translator.get(1, this.lang) + '.' +
-					(exactCmd ? (' ' + translator.get(2, this.lang) + ' ' + Chat.italics(exactCmd) + '?') : ''));
+				this.errorReply(this.mlt(0) + ' ' + Chat.italics(this.cmd) + ' ' + this.mlt(1) + '.' +
+					(exactCmd ? (' ' + this.mlt(2) + ' ' + Chat.italics(exactCmd) + '?') : ''));
 			}
 		}
 	},
 
 	"execdyn": function () {
+		this.setLangFile(Lang_File);
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
 		let spl = this.arg.split(' ');
 		this.cmd = Text.toCmdid(spl.shift());
 		this.arg = spl.join(' ');
 		this.args = this.arg.split(',');
 		if (!this.parser.execDyn(this)) {
-			this.errorReply(translator.get(0, this.lang) + ' ' + Chat.italics(this.cmd) + ' ' + translator.get(1, this.lang) + '.');
+			this.errorReply(this.mlt(0) + ' ' + Chat.italics(this.cmd) + ' ' + this.mlt(1) + '.');
 		}
 	},
 };

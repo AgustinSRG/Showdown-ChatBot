@@ -23,7 +23,20 @@ exports.setup = function (App) {
 		}
 
 		let error = null, ok = null;
-		if (context.post.setdefault) {
+		if (context.post.setfilter) {
+			for (let lang in App.languages) {
+				delete App.languages[lang];
+			}
+			for (let lang in App.supportedLanguages) {
+				App.config.langfilter[lang] = !!context.post['lang-' + lang];
+				if (App.config.langfilter[lang]) {
+					App.languages[lang] = App.supportedLanguages[lang];
+				}
+			}
+			App.db.write();
+			App.logServerAction(context.user.id, "Change language configuration");
+			ok = "Changed language configuration.";
+		} else if (context.post.setdefault) {
 			let lang = Text.toId(context.post.language);
 			try {
 				check(lang && App.languages[lang], "Invalid Language.");
@@ -68,6 +81,13 @@ exports.setup = function (App) {
 		}
 
 		let htmlVars = {};
+
+		htmlVars.langchecks = '';
+		for (let lang in App.supportedLanguages) {
+			htmlVars.langchecks += '<p><input type="checkbox" name="lang-' + lang + '" value="true" ' +
+				(App.config.langfilter[lang] === false ? '' : 'checked="checked"') + ' />&nbsp;' +
+				Text.escapeHTML(App.supportedLanguages[lang]) + '</p>';
+		}
 
 		htmlVars.list_a = getLanguageComboBox(App.config.language['default']);
 		htmlVars.list_b = getLanguageComboBox();

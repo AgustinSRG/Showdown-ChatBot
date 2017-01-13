@@ -10,20 +10,20 @@
 'use strict';
 
 const Path = require('path');
-const Translator = Tools('translate');
 const Text = Tools('text');
 const Chat = Tools('chat');
 const Hastebin = Tools('hastebin');
 
-const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
+const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
 module.exports = {
 	ab: "blacklist",
 	blacklist: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('blacklist', this.room)) return this.replyAccessDenied('blacklist');
 		let room = this.targetRoom;
 		if (!room || this.getRoomType(room) !== 'chat') {
-			return this.errorReply(translator.get('nochat', this.lang));
+			return this.errorReply(this.mlt('nochat'));
 		}
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: '...', optional: true}));
 		let added = [];
@@ -35,7 +35,7 @@ module.exports = {
 			}
 		}
 		if (added.length > 0) {
-			this.reply(translator.get(0, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)) + ": " + added.join(', '));
+			this.reply(this.mlt(0) + " " + Chat.italics(this.parser.getRoomTitle(room)) + ": " + added.join(', '));
 			App.modules.blacklist.system.db.write();
 			App.logCommandAction(this);
 			let cmds = App.modules.blacklist.system.getInitCmds();
@@ -43,16 +43,17 @@ module.exports = {
 				App.bot.send(cmds);
 			}
 		} else {
-			this.errorReply(translator.get(1, this.lang));
+			this.errorReply(this.mlt(1));
 		}
 	},
 
 	unab: "unblacklist",
 	unblacklist: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('blacklist', this.room)) return this.replyAccessDenied('blacklist');
 		let room = this.targetRoom;
 		if (!room || this.getRoomType(room) !== 'chat') {
-			return this.errorReply(translator.get('nochat', this.lang));
+			return this.errorReply(this.mlt('nochat'));
 		}
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: '...', optional: true}));
 		let removed = [];
@@ -63,20 +64,21 @@ module.exports = {
 			}
 		}
 		if (removed.length > 0) {
-			this.reply(translator.get(2, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)) + ": " + removed.join(', '));
+			this.reply(this.mlt(2) + " " + Chat.italics(this.parser.getRoomTitle(room)) + ": " + removed.join(', '));
 			App.modules.blacklist.system.db.write();
 			App.logCommandAction(this);
 		} else {
-			this.errorReply(translator.get(3, this.lang));
+			this.errorReply(this.mlt(3));
 		}
 	},
 
 	vab: "viewblacklist",
 	viewblacklist: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('viewblacklist', this.room)) return this.replyAccessDenied('viewblacklist');
 		let room = this.targetRoom;
 		if (!room || this.getRoomType(room) !== 'chat') {
-			return this.errorReply(translator.get('nochat', this.lang));
+			return this.errorReply(this.mlt('nochat'));
 		}
 		let server = App.config.server.url;
 		if (!server) {
@@ -85,7 +87,7 @@ module.exports = {
 		}
 		let bl = App.modules.blacklist.system.data[room];
 		if (!bl || Object.keys(bl).length === 0) {
-			return this.pmReply(translator.get(5, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)));
+			return this.pmReply(this.mlt(5) + " " + Chat.italics(this.parser.getRoomTitle(room)));
 		}
 		let html = '';
 		html += '<html>';
@@ -109,14 +111,15 @@ module.exports = {
 	},
 
 	viewblacklisthastebin: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('viewblacklist', this.room)) return this.replyAccessDenied('viewblacklist');
 		let room = this.targetRoom;
 		if (!room || this.getRoomType(room) !== 'chat') {
-			return this.errorReply(translator.get('nochat', this.lang));
+			return this.errorReply(this.mlt('nochat'));
 		}
 		let bl = App.modules.blacklist.system.data[room];
 		if (!bl || Object.keys(bl).length === 0) {
-			return this.pmReply(translator.get(5, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)));
+			return this.pmReply(this.mlt(5) + " " + Chat.italics(this.parser.getRoomTitle(room)));
 		}
 		let text = '';
 		text += 'Users blacklisted in ' + this.parser.getRoomTitle(room) + ':\n\n';
@@ -126,7 +129,7 @@ module.exports = {
 		}
 		Hastebin.upload(text, function (link, err) {
 			if (err) {
-				this.pmReply(translator.get(4, this.lang));
+				this.pmReply(this.mlt(4));
 			} else {
 				this.pmReply(link);
 			}

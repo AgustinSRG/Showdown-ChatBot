@@ -10,9 +10,8 @@ const MAX_MODTIME_RELEVANCE = 60 * 60 * 1000;
 const Path = require('path');
 const FileSystem = require('fs');
 const Text = Tools('text');
-const Translator = Tools('translate');
 
-const translator = new Translator(Path.resolve(__dirname, 'mod.translations'));
+const Lang_File = Path.resolve(__dirname, 'mod.translations');
 
 class ModeratorBot {
 	constructor(app, path) {
@@ -86,7 +85,7 @@ class ModeratorBot {
 		} else if (val === 'max') {
 			context.pointVal += 3;
 		}
-		context.muteMessage += ' (' + translator.get('0tol', this.getLanguage(context.room)) + ')';
+		context.muteMessage += ' (' + this.app.multilang.mlt(Lang_File, '0tol') + ')';
 	}
 
 	botCanModerate(room) {
@@ -142,7 +141,7 @@ class ModeratorBot {
 	}
 
 	parse(room, time, by, msg) {
-		let context = new ModerationContext(this.app, room, time, by, msg);
+		let context = new ModerationContext(this.app, room, time, by, msg, this.getLanguage(room));
 		let user = context.byIdent.id;
 
 		if (!this.chatLog[room]) {
@@ -202,7 +201,7 @@ class ModeratorBot {
 			if (cmd === 'roomban' && !this.botCanBan(room)) cmd = 'hourmute'; // Bot cannot ban
 			if (this.app.config.modules.core.privaterooms.indexOf(room) >= 0 && cmd === 'warn') cmd = 'mute'; // Cannot warn in private rooms
 
-			this.app.bot.sendTo(room, '/' + cmd + ' ' + user + ', ' + translator.get('mod', this.getLanguage(room)) +
+			this.app.bot.sendTo(room, '/' + cmd + ' ' + user + ', ' + this.app.multilang.mlt(Lang_File, this.getLanguage(room), 'mod') +
 				': ' + context.muteMessage + this.getRulesLink(room));
 		}
 	}
@@ -245,8 +244,8 @@ class ModeratorBot {
 			if (cmd === 'roomban' && !this.botCanBan(room)) cmd = 'hourmute'; // Bot cannot ban
 			if (this.app.config.modules.core.privaterooms.indexOf(room) >= 0 && cmd === 'warn') cmd = 'mute'; // Cannot warn in private rooms
 
-			this.app.bot.sendTo(room, '/' + cmd + ' ' + by + ', ' + translator.get('mod', this.getLanguage(room)) +
-				': ' + translator.get('ztmsg', this.getLanguage(room)));
+			this.app.bot.sendTo(room, '/' + cmd + ' ' + by + ', ' + this.app.multilang.mlt(Lang_File, this.getLanguage(room), 'mod') +
+				': ' + this.app.multilang.mlt(Lang_File, this.getLanguage(room), 'ztmsg'));
 		}
 	}
 
@@ -256,9 +255,10 @@ class ModeratorBot {
 }
 
 class ModerationContext {
-	constructor(app, room, time, by, msg) {
+	constructor(app, room, time, by, msg, lang) {
 		this.app = app;
 		this.room = room;
+		this.lang = lang;
 		this.time = time;
 		this.by = by;
 		this.byIdent = Text.parseUserIdent(by);
@@ -285,6 +285,10 @@ class ModerationContext {
 		}
 		this.noNicksMsg = this.noNicksMsg.trim();
 		this.noNicksMsgLow = this.noNicksMsg.toLowerCase();
+	}
+
+	mlt(file, key, vars) {
+		return this.app.multilang.mlt(file, this.lang, key, vars);
 	}
 }
 

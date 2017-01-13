@@ -6,11 +6,10 @@
 
 const Path = require('path');
 
-const Translator = Tools('translate');
 const normalize = Tools('normalize');
 const Chat = Tools('chat');
 
-const translator = new Translator(Path.resolve(__dirname, 'hangman.translations'));
+const Lang_File = Path.resolve(__dirname, 'hangman.translations');
 
 function isNotAlphanumeric(str) {
 	return (/[^a-z0-9\u00f1]/g).test(str);
@@ -54,6 +53,10 @@ exports.setup = function (App) {
 			this.lang = getLanguage(this.room);
 		}
 
+		mlt(key, vars) {
+			return App.multilang.mlt(Lang_File, this.lang, key, vars);
+		}
+
 		send(txt) {
 			App.bot.sendTo(this.room, txt);
 		}
@@ -79,8 +82,8 @@ exports.setup = function (App) {
 			txt += this.generateHangman();
 			txt += ' | ';
 			txt += Chat.bold(this.clue) + ' | ';
-			txt += translator.get(0, this.lang) + " " + Chat.code((App.config.parser.tokens[0] || "") +
-			translator.get(1, this.lang)) + " " + translator.get(2, this.lang) + ".";
+			txt += this.mlt(0) + " " + Chat.code((App.config.parser.tokens[0] || "") +
+			this.mlt(1)) + " " + this.mlt(2) + ".";
 			this.send(txt);
 		}
 
@@ -137,13 +140,13 @@ exports.setup = function (App) {
 		end(winner, lose) {
 			let txt = '';
 			this.ended = true;
-			txt += Chat.bold(translator.get(3, this.lang)) + ' ';
+			txt += Chat.bold(this.mlt(3)) + ' ';
 			if (lose) {
-				txt += winner + ' ' + translator.get(4, this.lang) + '! ';
+				txt += winner + ' ' + this.mlt(4) + '! ';
 			} else if (winner) {
-				txt += translator.get(5, this.lang) + ' ' + winner + ' ' + translator.get(6, this.lang) + ' ';
+				txt += this.mlt(5) + ' ' + winner + ' ' + this.mlt(6) + ' ';
 			}
-			txt += translator.get(7, this.lang) + ' ' + Chat.italics(this.word);
+			txt += this.mlt(7) + ' ' + Chat.italics(this.word);
 			this.send(txt);
 			App.modules.games.system.terminateGame(this.room);
 		}

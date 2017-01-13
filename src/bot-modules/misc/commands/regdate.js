@@ -15,9 +15,8 @@ const Path = require('path');
 const Text = Tools('text');
 const Chat = Tools('chat');
 const Cache = Tools('cache').BufferCache;
-const Translator = Tools('translate');
 
-const translator = new Translator(Path.resolve(__dirname, 'regdate.translations'));
+const Lang_File = Path.resolve(__dirname, 'regdate.translations');
 const regdateCache = new Cache(10);
 
 function getESTDiff(timestamp) {
@@ -44,18 +43,19 @@ function markDownload(user, b) {
 
 module.exports = {
 	regdate: function (App) {
+		this.setLangFile(Lang_File);
 		let target = Text.toId(this.arg) || Text.toId(this.by);
-		if (!target || target.length > 18) return this.pmReply(translator.get('inv', this.lang));
+		if (!target || target.length > 18) return this.pmReply(this.mlt('inv'));
 		let url = "http://pokemonshowdown.com/users/" + target + ".json";
-		if (markDownload(this.byIdent.id)) return this.pmReply(translator.get('busy', this.lang));
+		if (markDownload(this.byIdent.id)) return this.pmReply(this.mlt('busy'));
 		let cacheData = regdateCache.get(target);
 		let callback = function (data) {
 			// Parse Data
 			let regTimestamp = data.registertime * 1000;
 			regTimestamp += (1000 * 60 * 60 * getESTDiff(regTimestamp)) +
 				(new Date().getTimezoneOffset() * 60 * 1000) - 364000;
-			this.pmReply(translator.get('user', this.lang) + " " + (data.username || target) +
-				" " + translator.get('regdate', this.lang) + " " +
+			this.pmReply(this.mlt('user') + " " + (data.username || target) +
+				" " + this.mlt('regdate') + " " +
 				Chat.italics((new Date(regTimestamp)).toString().substr(4, 20)) + " (EST)");
 		}.bind(this);
 		if (cacheData) {
@@ -65,19 +65,19 @@ module.exports = {
 			App.data.wget(url, function (data, err) {
 				markDownload(this.byIdent.id, false);
 				if (err) {
-					return this.pmReply(translator.get('err', this.lang) + " " + url);
+					return this.pmReply(this.mlt('err') + " " + url);
 				}
 				try {
 					data = JSON.parse(data);
 				} catch (error) {
-					return this.pmReply(translator.get('err', this.lang) + " " + url);
+					return this.pmReply(this.mlt('err') + " " + url);
 				}
 				if (typeof data.registertime !== "number") {
-					return this.pmReply(translator.get('err', this.lang) + " " + url);
+					return this.pmReply(this.mlt('err') + " " + url);
 				}
 				if (data.registertime <= 0) {
-					return this.pmReply(translator.get('user', this.lang) + " " +
-						(data.username || target) + " " + translator.get('not', this.lang));
+					return this.pmReply(this.mlt('user') + " " +
+						(data.username || target) + " " + this.mlt('not'));
 				}
 				regdateCache.cache(target, data);
 				return callback(data);
@@ -86,10 +86,11 @@ module.exports = {
 	},
 
 	regtime: function (App) {
+		this.setLangFile(Lang_File);
 		let target = Text.toId(this.arg) || Text.toId(this.by);
-		if (!target || target.length > 18) return this.pmReply(translator.get('inv', this.lang));
+		if (!target || target.length > 18) return this.pmReply(this.mlt('inv'));
 		let url = "http://pokemonshowdown.com/users/" + target + ".json";
-		if (markDownload(this.byIdent.id)) return this.pmReply(translator.get('busy', this.lang));
+		if (markDownload(this.byIdent.id)) return this.pmReply(this.mlt('busy'));
 		let cacheData = regdateCache.get(target);
 		let callback = function (data) {
 			// Parse Data
@@ -99,19 +100,19 @@ module.exports = {
 			let aux;
 			/* Get Time difference */
 			aux = time % 60; // Seconds
-			if (aux > 0 || time === 0) times.unshift(aux + ' ' + (aux === 1 ? translator.get(2, this.lang) : translator.get(3, this.lang)));
+			if (aux > 0 || time === 0) times.unshift(aux + ' ' + (aux === 1 ? this.mlt(2) : this.mlt(3)));
 			time = Math.floor(time / 60);
 			aux = time % 60; // Minutes
-			if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? translator.get(4, this.lang) : translator.get(5, this.lang)));
+			if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? this.mlt(4) : this.mlt(5)));
 			time = Math.floor(time / 60);
 			aux = time % 24; // Hours
-			if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? translator.get(6, this.lang) : translator.get(7, this.lang)));
+			if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? this.mlt(6) : this.mlt(7)));
 			time = Math.floor(time / 24); // Days
-			if (time > 0) times.unshift(time + ' ' + (time === 1 ? translator.get(8, this.lang) : translator.get(9, this.lang)));
+			if (time > 0) times.unshift(time + ' ' + (time === 1 ? this.mlt(8) : this.mlt(9)));
 			/* Reply */
-			this.pmReply(translator.get('user', this.lang) + " " + (data.username || target) +
-				" " + translator.get('regtime1', this.lang) + " " + Chat.italics(times.join(', ')) +
-				" " + translator.get('regtime2', this.lang));
+			this.pmReply(this.mlt('user') + " " + (data.username || target) +
+				" " + this.mlt('regtime1') + " " + Chat.italics(times.join(', ')) +
+				" " + this.mlt('regtime2'));
 		}.bind(this);
 		if (cacheData) {
 			return callback(cacheData);
@@ -120,19 +121,19 @@ module.exports = {
 			App.data.wget(url, function (data, err) {
 				markDownload(this.byIdent.id, false);
 				if (err) {
-					return this.pmReply(translator.get('err', this.lang) + " " + url);
+					return this.pmReply(this.mlt('err') + " " + url);
 				}
 				try {
 					data = JSON.parse(data);
 				} catch (error) {
-					return this.pmReply(translator.get('err', this.lang) + " " + url);
+					return this.pmReply(this.mlt('err') + " " + url);
 				}
 				if (typeof data.registertime !== "number") {
-					return this.pmReply(translator.get('err', this.lang) + " " + url);
+					return this.pmReply(this.mlt('err') + " " + url);
 				}
 				if (data.registertime <= 0) {
-					return this.pmReply(translator.get('user', this.lang) + " " +
-						(data.username || target) + " " + translator.get('not', this.lang));
+					return this.pmReply(this.mlt('user') + " " +
+						(data.username || target) + " " + this.mlt('not'));
 				}
 				regdateCache.cache(target, data);
 				return callback(data);
@@ -141,10 +142,11 @@ module.exports = {
 	},
 
 	autoconfirmedhelp: function (App) {
+		this.setLangFile(Lang_File);
 		let target = Text.toId(this.arg) || Text.toId(this.by);
-		if (!target || target.length > 18) return this.pmReply(translator.get('inv', this.lang));
+		if (!target || target.length > 18) return this.pmReply(this.mlt('inv'));
 		let url = "http://pokemonshowdown.com/users/" + target + ".json";
-		if (markDownload(this.byIdent.id)) return this.pmReply(translator.get('busy', this.lang));
+		if (markDownload(this.byIdent.id)) return this.pmReply(this.mlt('busy'));
 		let cacheData = regdateCache.get(target);
 		let callback = function (data) {
 			// Parse Data
@@ -153,9 +155,9 @@ module.exports = {
 			let acCurr = AutoConfirmed_RegTime - time;
 			if (acCurr <= 0) {
 				if (typeof data.ratings !== "object" || Object.keys(data.ratings).length === 0) {
-					this.pmReply(translator.get(10, this.lang) + " " + Chat.bold(data.username || target) + " " + translator.get(11, this.lang));
+					this.pmReply(this.mlt(10) + " " + Chat.bold(data.username || target) + " " + this.mlt(11));
 				} else {
-					this.pmReply(translator.get(10, this.lang) + " " + Chat.bold(data.username || target) + " " + translator.get(12, this.lang));
+					this.pmReply(this.mlt(10) + " " + Chat.bold(data.username || target) + " " + this.mlt(12));
 				}
 				return;
 			}
@@ -164,19 +166,19 @@ module.exports = {
 			let aux;
 			/* Get Time difference */
 			aux = time % 60; // Seconds
-			if (aux > 0 || time === 0) times.unshift(aux + ' ' + (aux === 1 ? translator.get(2, this.lang) : translator.get(3, this.lang)));
+			if (aux > 0 || time === 0) times.unshift(aux + ' ' + (aux === 1 ? this.mlt(2) : this.mlt(3)));
 			time = Math.floor(time / 60);
 			aux = time % 60; // Minutes
-			if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? translator.get(4, this.lang) : translator.get(5, this.lang)));
+			if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? this.mlt(4) : this.mlt(5)));
 			time = Math.floor(time / 60);
 			aux = time % 24; // Hours
-			if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? translator.get(6, this.lang) : translator.get(7, this.lang)));
+			if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? this.mlt(6) : this.mlt(7)));
 			time = Math.floor(time / 24); // Days
-			if (time > 0) times.unshift(time + ' ' + (time === 1 ? translator.get(8, this.lang) : translator.get(9, this.lang)));
+			if (time > 0) times.unshift(time + ' ' + (time === 1 ? this.mlt(8) : this.mlt(9)));
 			/* Reply */
-			this.pmReply(translator.get(14, this.lang) + " " + Chat.bold(data.username || target) +
-				" " + translator.get(15, this.lang) + " " + Chat.italics(times.join(', ')) +
-				" " + translator.get(16, this.lang));
+			this.pmReply(this.mlt(14) + " " + Chat.bold(data.username || target) +
+				" " + this.mlt(15) + " " + Chat.italics(times.join(', ')) +
+				" " + this.mlt(16));
 		}.bind(this);
 		if (cacheData) {
 			return callback(cacheData);
@@ -185,19 +187,19 @@ module.exports = {
 			App.data.wget(url, function (data, err) {
 				markDownload(this.byIdent.id, false);
 				if (err) {
-					return this.pmReply(translator.get('err', this.lang) + " " + url);
+					return this.pmReply(this.mlt('err') + " " + url);
 				}
 				try {
 					data = JSON.parse(data);
 				} catch (error) {
-					return this.pmReply(translator.get('err', this.lang) + " " + url);
+					return this.pmReply(this.mlt('err') + " " + url);
 				}
 				if (typeof data.registertime !== "number") {
-					return this.pmReply(translator.get('err', this.lang) + " " + url);
+					return this.pmReply(this.mlt('err') + " " + url);
 				}
 				if (data.registertime <= 0) {
-					return this.pmReply(translator.get(10, this.lang) + " " +
-						Chat.italics(data.username || target) + " " + translator.get(13, this.lang));
+					return this.pmReply(this.mlt(10) + " " +
+						Chat.italics(data.username || target) + " " + this.mlt(13));
 				}
 				regdateCache.cache(target, data);
 				return callback(data);

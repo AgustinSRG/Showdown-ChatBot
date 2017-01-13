@@ -9,19 +9,19 @@
 'use strict';
 
 const Path = require('path');
-const Translator = Tools('translate');
 const Text = Tools('text');
 const Chat = Tools('chat');
 const Hastebin = Tools('hastebin');
 
-const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
+const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
 module.exports = {
 	joinphrase: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('joinphrases', this.room)) return this.replyAccessDenied('joinphrases');
 		let config = App.modules.joinphrases.system.config;
 		let room = this.targetRoom;
-		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
+		if (this.getRoomType(room) !== 'chat') return this.errorReply(this.mlt('nochat'));
 		let user;
 		switch (Text.toId(this.args[0])) {
 		case 'add':
@@ -30,14 +30,14 @@ module.exports = {
 			let phrase = Text.trim(this.args.slice(2).join(','));
 			if (!user || !phrase) {
 				return this.errorReply(this.usage({desc: 'get'}, {desc: this.usageTrans('user')},
-					{desc: translator.get('phrase', this.lang)}));
+					{desc: this.mlt('phrase')}));
 			}
-			if (user.length > 19) return this.errorReply(translator.get('inv', this.lang));
+			if (user.length > 19) return this.errorReply(this.mlt('inv'));
 			if (!config.rooms[room]) config.rooms[room] = {};
 			config.rooms[room][user] = phrase;
 			App.modules.joinphrases.system.db.write();
 			App.logCommandAction(this);
-			this.reply(translator.get(0, this.lang) + ' ' + Chat.italics(user) + ' ' + translator.get(1, this.lang) +
+			this.reply(this.mlt(0) + ' ' + Chat.italics(user) + ' ' + this.mlt(1) +
 				' ' + Chat.italics(this.parser.getRoomTitle(room)));
 			break;
 		case 'remove':
@@ -51,11 +51,11 @@ module.exports = {
 				}
 				App.modules.joinphrases.system.db.write();
 				App.logCommandAction(this);
-				this.reply(translator.get(2, this.lang) + '' + Chat.italics(user) + ' ' + translator.get(1, this.lang) +
+				this.reply(this.mlt(2) + '' + Chat.italics(user) + ' ' + this.mlt(1) +
 					' ' + Chat.italics(this.parser.getRoomTitle(room)));
 			} else {
-				this.errorReply(translator.get(3, this.lang) + ' ' + Chat.italics(user) + ' ' +
-					translator.get(1, this.lang) + ' ' + Chat.italics(this.parser.getRoomTitle(room)));
+				this.errorReply(this.mlt(3) + ' ' + Chat.italics(user) + ' ' +
+					this.mlt(1) + ' ' + Chat.italics(this.parser.getRoomTitle(room)));
 			}
 			break;
 		case 'get':
@@ -64,8 +64,8 @@ module.exports = {
 			if (config.rooms[room] && config.rooms[room][user]) {
 				this.reply(Text.stripCommands(config.rooms[room][user]));
 			} else {
-				this.errorReply(translator.get(3, this.lang) + ' ' + Chat.italics(user) + ' ' +
-					translator.get(1, this.lang) + ' ' + Chat.italics(this.parser.getRoomTitle(room)));
+				this.errorReply(this.mlt(3) + ' ' + Chat.italics(user) + ' ' +
+					this.mlt(1) + ' ' + Chat.italics(this.parser.getRoomTitle(room)));
 			}
 			break;
 		default:
@@ -74,6 +74,7 @@ module.exports = {
 	},
 
 	listjoinphrases: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('joinphrases', this.room)) return this.replyAccessDenied('joinphrases');
 		let config = App.modules.joinphrases.system.config;
 		let server = App.config.server.url;
@@ -82,9 +83,9 @@ module.exports = {
 			return App.parser.exec(this);
 		}
 		let room = this.targetRoom;
-		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
+		if (this.getRoomType(room) !== 'chat') return this.errorReply(this.mlt('nochat'));
 		if (!config.rooms[room]) {
-			return this.errorReply(translator.get(4, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)));
+			return this.errorReply(this.mlt(4) + " " + Chat.italics(this.parser.getRoomTitle(room)));
 		}
 		let html = '';
 		html += '<html>';
@@ -110,12 +111,13 @@ module.exports = {
 	},
 
 	listjoinphraseshastebin: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('joinphrases', this.room)) return this.replyAccessDenied('joinphrases');
 		let config = App.modules.joinphrases.system.config;
 		let room = this.targetRoom;
-		if (this.getRoomType(room) !== 'chat') return this.errorReply(translator.get('nochat', this.lang));
+		if (this.getRoomType(room) !== 'chat') return this.errorReply(this.mlt('nochat'));
 		if (!config.rooms[room]) {
-			return this.errorReply(translator.get(4, this.lang) + " " + Chat.italics(this.parser.getRoomTitle(room)));
+			return this.errorReply(this.mlt(4) + " " + Chat.italics(this.parser.getRoomTitle(room)));
 		}
 		let text = '';
 		text += 'Join-Phrases in ' + this.parser.getRoomTitle(room) + ':\n\n';
@@ -126,7 +128,7 @@ module.exports = {
 		}
 		Hastebin.upload(text, function (link, err) {
 			if (err) {
-				this.pmReply(translator.get(5, this.lang));
+				this.pmReply(this.mlt(5));
 			} else {
 				this.pmReply(link);
 			}

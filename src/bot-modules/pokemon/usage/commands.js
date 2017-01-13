@@ -11,10 +11,9 @@ const Path = require('path');
 
 const Text = Tools('text');
 const Chat = Tools('chat');
-const Translator = Tools('translate');
 const LineSplitter = Tools('line-splitter');
 
-const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
+const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
 /* Usage utils */
 
@@ -98,12 +97,13 @@ const Tier_Error_Expires = 2 * 60 * 60 * 1000;
 
 module.exports = {
 	usage: function (App) {
+		this.setLangFile(Lang_File);
 		getUsageLink(App, function (link) {
 			if (!link) {
-				return this.errorReply(translator.get('error', this.lang));
+				return this.errorReply(this.mlt('error'));
 			}
 			if (!this.arg) {
-				return this.restrictReply(translator.get('stats', this.lang) + ": " + link, 'usage');
+				return this.restrictReply(this.mlt('stats') + ": " + link, 'usage');
 			}
 			let poke = "garchomp", searchIndex = -1;
 			let tier = 'ou';
@@ -121,7 +121,7 @@ module.exports = {
 			if (args[1]) {
 				tier = parseAliases(args[1], App);
 				if (!App.bot.formats[tier] && !App.bot.formats[tier + "suspecttest"]) {
-					return this.errorReply(translator.get('tiererr1', this.lang) + ' "' + tier + '" ' + translator.get('tiererr2', this.lang));
+					return this.errorReply(this.mlt('tiererr1') + ' "' + tier + '" ' + this.mlt('tiererr2'));
 				}
 			}
 			if (!poke || !tier) return this.errorReply(this.usage({desc: 'pokemon'}, {desc: 'tier', optional: true}));
@@ -133,7 +133,7 @@ module.exports = {
 			}
 			let url = link + tier + "-" + ladderType + ".txt";
 			if (markDownload(url)) {
-				return this.errorReply(translator.get('busy', this.lang));
+				return this.errorReply(this.mlt('busy'));
 			}
 			if (!App.data.cache.has(url)) {
 				markDownload(url, true);
@@ -141,7 +141,7 @@ module.exports = {
 			App.data.wget(url, function (data, err) {
 				markDownload(url, false);
 				if (err) {
-					return this.errorReply(translator.get('err', this.lang) + " " + url);
+					return this.errorReply(this.mlt('err') + " " + url);
 				}
 				let lines = data.split("\n");
 				if (lines[0].indexOf("Total battles:") === -1) {
@@ -152,8 +152,8 @@ module.exports = {
 						this.usageRankExceptionFlag = true;
 						return App.parser.exec(this);
 					} else {
-						return this.errorReply(translator.get('tiererr1', this.lang) + " \"" +
-							tierName(tier, App) + "\" " + translator.get('tiererr3', this.lang) + '. ' + translator.get('pokeerr3', this.lang));
+						return this.errorReply(this.mlt('tiererr1') + " \"" +
+							tierName(tier, App) + "\" " + this.mlt('tiererr3') + '. ' + this.mlt('pokeerr3'));
 					}
 				} else {
 					if (!App.data.cache.has(url)) {
@@ -203,27 +203,28 @@ module.exports = {
 				}
 				if (!dataRes.pos || dataRes.pos < 1) {
 					if (!dataResAux.pos || dataResAux.pos < 1) {
-						return this.errorReply(translator.get('pokeerr1', this.lang) + " \"" + poke + "\" " +
-							translator.get('pokeerr2', this.lang) + " " + tierName(tier, App) + " " + translator.get('pokeerr3', this.lang));
+						return this.errorReply(this.mlt('pokeerr1') + " \"" + poke + "\" " +
+							this.mlt('pokeerr2') + " " + tierName(tier, App) + " " + this.mlt('pokeerr3'));
 					} else {
-						return this.restrictReply(translator.get('pokeerr1', this.lang) + " \"" + poke + "\" " +
-							translator.get('pokeerr2', this.lang) + " " + tierName(tier, App) + " " + translator.get('pokeerr3', this.lang) +
-							' | ' + Chat.bold(dataResAux.name) + ", #" + dataResAux.pos + " " + translator.get('in', this.lang) +
-							" " + Chat.bold(tierName(tier, App)) + ". " + translator.get('pokeusage', this.lang) + ": " + dataResAux.usage + ", " +
-							translator.get('pokeraw', this.lang) + ": " + dataResAux.raw, 'usage');
+						return this.restrictReply(this.mlt('pokeerr1') + " \"" + poke + "\" " +
+							this.mlt('pokeerr2') + " " + tierName(tier, App) + " " + this.mlt('pokeerr3') +
+							' | ' + Chat.bold(dataResAux.name) + ", #" + dataResAux.pos + " " + this.mlt('in') +
+							" " + Chat.bold(tierName(tier, App)) + ". " + this.mlt('pokeusage') + ": " + dataResAux.usage + ", " +
+							this.mlt('pokeraw') + ": " + dataResAux.raw, 'usage');
 					}
 				}
-				this.restrictReply(Chat.bold(dataRes.name) + ", #" + dataRes.pos + " " + translator.get('in', this.lang) +
-					" " + Chat.bold(tierName(tier, App)) + ". " + translator.get('pokeusage', this.lang) + ": " + dataRes.usage + ", " +
-					translator.get('pokeraw', this.lang) + ": " + dataRes.raw, 'usage');
+				this.restrictReply(Chat.bold(dataRes.name) + ", #" + dataRes.pos + " " + this.mlt('in') +
+					" " + Chat.bold(tierName(tier, App)) + ". " + this.mlt('pokeusage') + ": " + dataRes.usage + ", " +
+					this.mlt('pokeraw') + ": " + dataRes.raw, 'usage');
 			}.bind(this));
 		}.bind(this));
 	},
 
 	usagedata: function (App) {
+		this.setLangFile(Lang_File);
 		getUsageLink(App, function (link) {
 			if (!link) {
-				return this.errorReply(translator.get('error', this.lang));
+				return this.errorReply(this.mlt('error'));
 			}
 			let args = this.args;
 			if (!this.arg || this.args.length < 2) {
@@ -249,7 +250,7 @@ module.exports = {
 			if (args[2]) {
 				tier = parseAliases(args[2], App);
 				if (!App.bot.formats[tier] && !App.bot.formats[tier + "suspecttest"]) {
-					return this.errorReply(translator.get('tiererr1', this.lang) + ' "' + tier + '" ' + translator.get('tiererr2', this.lang));
+					return this.errorReply(this.mlt('tiererr1') + ' "' + tier + '" ' + this.mlt('tiererr2'));
 				}
 			}
 			if (this.usageRankExceptionFlag) {
@@ -260,7 +261,7 @@ module.exports = {
 			}
 			let url = link + "moveset/" + tier + "-" + ladderType + ".txt";
 			if (markDownload(url)) {
-				return this.errorReply(translator.get('busy', this.lang));
+				return this.errorReply(this.mlt('busy'));
 			}
 			if (!App.data.cache.has(url)) {
 				markDownload(url, true);
@@ -268,7 +269,7 @@ module.exports = {
 			App.data.wget(url, function (data, err) {
 				markDownload(url, false);
 				if (err) {
-					return this.errorReply(translator.get('err', this.lang) + " " + url);
+					return this.errorReply(this.mlt('err') + " " + url);
 				}
 				if (data.indexOf("+----------------------------------------+") === -1) {
 					if (!App.data.cache.has(url)) {
@@ -278,8 +279,8 @@ module.exports = {
 						this.usageRankExceptionFlag = true;
 						return App.parser.exec(this);
 					} else {
-						return this.errorReply(translator.get('tiererr1', this.lang) + " \"" +
-							tierName(tier, App) + "\" " + translator.get('tiererr3', this.lang) + '. ' + translator.get('pokeerr4', this.lang));
+						return this.errorReply(this.mlt('tiererr1') + " \"" +
+							tierName(tier, App) + "\" " + this.mlt('tiererr3') + '. ' + this.mlt('pokeerr4'));
 					}
 				} else {
 					if (!App.data.cache.has(url)) {
@@ -295,8 +296,8 @@ module.exports = {
 					break;
 				}
 				if (!chosen) {
-					return this.errorReply(translator.get('pokeerr1', this.lang) + " \"" + poke + "\" " +
-						translator.get('pokeerr2', this.lang) + " " + tierName(tier, App) + " " + translator.get('pokeerr4', this.lang));
+					return this.errorReply(this.mlt('pokeerr1') + " \"" + poke + "\" " +
+						this.mlt('pokeerr2') + " " + tierName(tier, App) + " " + this.mlt('pokeerr4'));
 				}
 				let result = [];
 				let resultName = "";
@@ -322,7 +323,7 @@ module.exports = {
 						default:
 							continue;
 						}
-						resultName = translator.get(dataType, this.lang);
+						resultName = this.mlt(dataType);
 						i = i + 2;
 						let auxRes, percent;
 						while (i < pokeData.length) {
@@ -340,15 +341,15 @@ module.exports = {
 					}
 				}
 				if (!result.length) {
-					return this.errorReply(translator.get('notfound', this.lang) + " " +
-						translator.get('usagedata1', this.lang).replace("#NAME", resultName) + pokeName +
-						translator.get('usagedata2', this.lang).replace("#NAME", resultName) + " " +
-						translator.get('in', this.lang) + " " + tierName(tier, App));
+					return this.errorReply(this.mlt('notfound') + " " +
+						this.mlt('usagedata1').replace("#NAME", resultName) + pokeName +
+						this.mlt('usagedata2').replace("#NAME", resultName) + " " +
+						this.mlt('in') + " " + tierName(tier, App));
 				}
 				let spl = new LineSplitter(App.config.bot.maxMessageLength);
-				spl.add(Chat.bold((translator.get('usagedata1', this.lang).replace("#NAME", resultName) + ' ' + pokeName +
-					translator.get('usagedata2', this.lang).replace("#NAME", resultName) + " " +
-					translator.get('in', this.lang) + " " + tierName(tier, App)).trim()) + ":");
+				spl.add(Chat.bold((this.mlt('usagedata1').replace("#NAME", resultName) + ' ' + pokeName +
+					this.mlt('usagedata2').replace("#NAME", resultName) + " " +
+					this.mlt('in') + " " + tierName(tier, App)).trim()) + ":");
 				for (let i = 0; i < result.length; i++) {
 					spl.add(" " + result[i] + (i < (result.length - 1) ? ',' : ''));
 				}

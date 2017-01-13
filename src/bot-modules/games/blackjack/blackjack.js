@@ -8,10 +8,9 @@ const Wait_Interval = 2000;
 
 const Path = require('path');
 const Chat = Tools('chat');
-const Translator = Tools('translate');
 const randomize = Tools('randomize');
 
-const translator = new Translator(Path.resolve(__dirname, 'blackjack.translations'));
+const Lang_File = Path.resolve(__dirname, 'blackjack.translations');
 
 exports.setup = function (App) {
 	function getLanguage(room) {
@@ -74,6 +73,10 @@ exports.setup = function (App) {
 			this.lang = getLanguage(this.room);
 		}
 
+		mlt(key, vars) {
+			return App.multilang.mlt(Lang_File, this.lang, key, vars);
+		}
+
 		send(txt) {
 			App.bot.sendTo(this.room, txt);
 		}
@@ -107,9 +110,9 @@ exports.setup = function (App) {
 
 		start() {
 			this.status = 'signups';
-			this.send(Chat.bold(translator.get("init", this.lang)) + " " + translator.get("init2", this.lang) + " " +
-			Chat.code((App.config.parser.tokens[0] || "") + "in") + " " + translator.get("init3", this.lang) + " " +
-			Chat.code((App.config.parser.tokens[0] || "") + "start") + " " + translator.get("init4", this.lang));
+			this.send(Chat.bold(this.mlt("init")) + " " + this.mlt("init2") + " " +
+			Chat.code((App.config.parser.tokens[0] || "") + "in") + " " + this.mlt("init3") + " " +
+			Chat.code((App.config.parser.tokens[0] || "") + "start") + " " + this.mlt("init4"));
 		}
 
 		userJoin(ident) {
@@ -139,7 +142,7 @@ exports.setup = function (App) {
 			this.turn = -1;
 			this.dealerHand = [this.getNextCard(), this.getNextCard()];
 			let txt = '';
-			txt += Chat.bold(translator.get("start", this.lang)) + " " + translator.get("topcard", this.lang) +
+			txt += Chat.bold(this.mlt("start")) + " " + this.mlt("topcard") +
 			": " + Chat.bold("[" + this.dealerHand[0].card + this.dealerHand[0].value + "]");
 			this.send(txt);
 			this.wait();
@@ -165,14 +168,14 @@ exports.setup = function (App) {
 			this.currPlayer.hand = [this.getNextCard(), this.getNextCard()];
 			this.status = 'turn';
 			let cmds = [];
-			cmds.push(Chat.bold("Blackjack:") + " " + translator.get("turn1", this.lang) + " " + this.currPlayer.name +
-			translator.get("turn2", this.lang) + " " + translator.get("helpturn1", this.lang) + " " +
-			Chat.code((App.config.parser.tokens[0] || "") + "hit") + " " + translator.get("helpturn2", this.lang) + " " +
-			Chat.code((App.config.parser.tokens[0] || "") + "stand") + " " + translator.get("helpturn3", this.lang) +
-			" " + Math.floor(this.turnTime / 1000).toString() + " " + translator.get("helpturn4", this.lang));
-			cmds.push(Chat.bold("Blackjack:") + " " + translator.get("hand1", this.lang) + " " + this.currPlayer.name + "" +
-			translator.get("hand2", this.lang) + ": " +
-			formateHand(this.currPlayer.hand, this.getHandValue(this.currPlayer.hand), translator.get("total", this.lang)));
+			cmds.push(Chat.bold("Blackjack:") + " " + this.mlt("turn1") + " " + this.currPlayer.name +
+			this.mlt("turn2") + " " + this.mlt("helpturn1") + " " +
+			Chat.code((App.config.parser.tokens[0] || "") + "hit") + " " + this.mlt("helpturn2") + " " +
+			Chat.code((App.config.parser.tokens[0] || "") + "stand") + " " + this.mlt("helpturn3") +
+			" " + Math.floor(this.turnTime / 1000).toString() + " " + this.mlt("helpturn4"));
+			cmds.push(Chat.bold("Blackjack:") + " " + this.mlt("hand1") + " " + this.currPlayer.name + "" +
+			this.mlt("hand2") + ": " +
+			formateHand(this.currPlayer.hand, this.getHandValue(this.currPlayer.hand), this.mlt("total")));
 			this.send(cmds);
 			this.timer = setTimeout(this.timeout.bind(this), this.turnTime);
 		}
@@ -180,22 +183,22 @@ exports.setup = function (App) {
 		dealerTurn() {
 			this.status = 'dealer';
 			let cmds = [];
-			cmds.push(Chat.bold("Blackjack:") + " " + translator.get("dhand", this.lang) + ": " +
-			formateHand(this.dealerHand, this.getHandValue(this.dealerHand), translator.get("total", this.lang)));
+			cmds.push(Chat.bold("Blackjack:") + " " + this.mlt("dhand") + ": " +
+			formateHand(this.dealerHand, this.getHandValue(this.dealerHand), this.mlt("total")));
 			let dealerTotal = this.getHandValue(this.dealerHand);
 			if (dealerTotal >= 17) {
-				cmds.push(Chat.bold("Blackjack:") + " " + translator.get("dealer", this.lang) + " " + translator.get("stand", this.lang) + "!");
+				cmds.push(Chat.bold("Blackjack:") + " " + this.mlt("dealer") + " " + this.mlt("stand") + "!");
 			} else {
 				this.dealerHand.push(this.getNextCard());
-				cmds.push(Chat.bold("Blackjack:") + " " + translator.get("dealer", this.lang) + " " + translator.get("hit", this.lang) + ": " +
-				formateHand(this.dealerHand, this.getHandValue(this.dealerHand), translator.get("total", this.lang)));
+				cmds.push(Chat.bold("Blackjack:") + " " + this.mlt("dealer") + " " + this.mlt("hit") + ": " +
+				formateHand(this.dealerHand, this.getHandValue(this.dealerHand), this.mlt("total")));
 			}
 			let handval = this.getHandValue(this.dealerHand);
 			if (handval === 21) {
-				cmds.push(Chat.bold("Blackjack:") + " " + translator.get("dbj", this.lang));
+				cmds.push(Chat.bold("Blackjack:") + " " + this.mlt("dbj"));
 			} else if (handval > 21) {
-				cmds.push(Chat.bold("Blackjack:") + " " + translator.get("dbust1", this.lang) + " " + handval + ". " +
-				translator.get("dbust2", this.lang));
+				cmds.push(Chat.bold("Blackjack:") + " " + this.mlt("dbust1") + " " + handval + ". " +
+				this.mlt("dbust2"));
 			}
 			this.send(cmds);
 			this.wait();
@@ -207,14 +210,14 @@ exports.setup = function (App) {
 			this.currPlayer.hand.push(this.getNextCard());
 			let cmds = [];
 			let endTurn = false;
-			cmds.push(Chat.bold("Blackjack:") + " " + this.currPlayer.name + " " + translator.get("hit", this.lang) + ": " +
-			formateHand(this.currPlayer.hand, this.getHandValue(this.currPlayer.hand), translator.get("total", this.lang)));
+			cmds.push(Chat.bold("Blackjack:") + " " + this.currPlayer.name + " " + this.mlt("hit") + ": " +
+			formateHand(this.currPlayer.hand, this.getHandValue(this.currPlayer.hand), this.mlt("total")));
 			let handval = this.getHandValue(this.currPlayer.hand);
 			if (handval === 21) {
-				cmds.push(Chat.bold("Blackjack:") + " " + this.currPlayer.name + " " + translator.get("bj", this.lang) + "!");
+				cmds.push(Chat.bold("Blackjack:") + " " + this.currPlayer.name + " " + this.mlt("bj") + "!");
 				endTurn = true;
 			} else if (handval > 21) {
-				cmds.push(Chat.bold("Blackjack:") + " " + this.currPlayer.name + " " + translator.get("bust", this.lang) + " " + handval + "");
+				cmds.push(Chat.bold("Blackjack:") + " " + this.currPlayer.name + " " + this.mlt("bust") + " " + handval + "");
 				endTurn = true;
 			}
 			if (endTurn) {
@@ -235,12 +238,12 @@ exports.setup = function (App) {
 			if (ident.id !== this.currPlayer.id) return;
 			this.status = 'wait';
 			let cmds = [];
-			cmds.push(Chat.bold("Blackjack:") + " " + this.currPlayer.name + " " + translator.get("stand", this.lang) + "!");
+			cmds.push(Chat.bold("Blackjack:") + " " + this.currPlayer.name + " " + this.mlt("stand") + "!");
 			let handval = this.getHandValue(this.currPlayer.hand);
 			if (handval === 21) {
-				cmds.push(Chat.bold("Blackjack:") + " " + this.currPlayer.name + " " + translator.get("bj", this.lang) + "!");
+				cmds.push(Chat.bold("Blackjack:") + " " + this.currPlayer.name + " " + this.mlt("bj") + "!");
 			} else if (handval > 21) {
-				cmds.push(Chat.bold("Blackjack:") + " " + this.currPlayer.name + " " + translator.get("bust", this.lang) + " " + handval + "");
+				cmds.push(Chat.bold("Blackjack:") + " " + this.currPlayer.name + " " + this.mlt("bust") + " " + handval + "");
 			}
 			if (this.timer) {
 				clearTimeout(this.timer);
@@ -254,20 +257,20 @@ exports.setup = function (App) {
 			if (this.status !== 'turn') return;
 			if (ident.id !== this.currPlayer.id) return;
 			this.send('/msg ' + ident.id + ', ' + Chat.bold("Blackjack:") + " " +
-			formateHand(this.currPlayer.hand, this.getHandValue(this.currPlayer.hand), translator.get("total", this.lang)));
+			formateHand(this.currPlayer.hand, this.getHandValue(this.currPlayer.hand), this.mlt("total")));
 		}
 
 		timeout() {
 			this.status = 'timeout';
 			this.timer = null;
 			let cmds = [];
-			cmds.push(Chat.bold("Blackjack:") + " " + translator.get("timeout1", this.lang) + " " +
-			this.currPlayer.name + " " + translator.get("timeout2", this.lang));
+			cmds.push(Chat.bold("Blackjack:") + " " + this.mlt("timeout1") + " " +
+			this.currPlayer.name + " " + this.mlt("timeout2"));
 			let handval = this.getHandValue(this.currPlayer.hand);
 			if (handval === 21) {
-				cmds.push(Chat.bold("Blackjack:") + " " + this.currPlayer.name + " " + translator.get("bj", this.lang) + "!");
+				cmds.push(Chat.bold("Blackjack:") + " " + this.currPlayer.name + " " + this.mlt("bj") + "!");
 			} else if (handval > 21) {
-				cmds.push(Chat.bold("Blackjack:") + " " + this.currPlayer.name + " " + translator.get("bust", this.lang) + " " + handval + "");
+				cmds.push(Chat.bold("Blackjack:") + " " + this.currPlayer.name + " " + this.mlt("bust") + " " + handval + "");
 			}
 			this.send(cmds);
 			this.wait();
@@ -280,7 +283,7 @@ exports.setup = function (App) {
 				this.timer = null;
 			}
 			if (forced) {
-				this.send(translator.get("forceend", this.lang));
+				this.send(this.mlt("forceend"));
 				App.modules.games.system.terminateGame(this.room);
 				return;
 			}
@@ -295,15 +298,15 @@ exports.setup = function (App) {
 			}
 			let cmds = [];
 			if (naturals.length) {
-				cmds.push(translator.get("grats1", this.lang) + " " +
-				joinArray(naturals, translator.get("and", this.lang)) + " " + translator.get("natural", this.lang) + "!");
+				cmds.push(this.mlt("grats1") + " " +
+				joinArray(naturals, this.mlt("and")) + " " + this.mlt("natural") + "!");
 			}
-			let txt = Chat.bold(translator.get("end", this.lang));
+			let txt = Chat.bold(this.mlt("end"));
 			if (winners.length) {
-				txt += " " + translator.get("grats1", this.lang) + " " +
-				joinArray(winners, translator.get("and", this.lang)) + " " + translator.get("grats2", this.lang) + "!";
+				txt += " " + this.mlt("grats1") + " " +
+				joinArray(winners, this.mlt("and")) + " " + this.mlt("grats2") + "!";
 			} else {
-				txt += " " + translator.get("lose", this.lang);
+				txt += " " + this.mlt("lose");
 			}
 			while (txt.length > 300) {
 				cmds.push(txt.substr(0, 300));

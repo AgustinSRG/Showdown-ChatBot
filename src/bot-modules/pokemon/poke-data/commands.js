@@ -18,15 +18,15 @@ const Moves = require(Path.resolve(__dirname, 'moves.js'));
 
 const Text = Tools('text');
 const Chat = Tools('chat');
-const Translator = Tools('translate');
 const Inexact = Tools('inexact-pokemon');
 
-const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
+const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
 module.exports = {
 	gen: function (App) {
+		this.setLangFile(Lang_File);
 		let id = Text.toId(this.arg);
-		if (!id) return this.errorReply(this.usage({desc: translator.get(17, this.lang)}));
+		if (!id) return this.errorReply(this.usage({desc: this.mlt(17)}));
 		let gen;
 		try {
 			let aliases = App.data.getAliases();
@@ -34,26 +34,27 @@ module.exports = {
 			gen = getGeneration(id, App);
 		} catch (err) {
 			App.reportCrash(err);
-			return this.errorReply(translator.get('error', this.lang));
+			return this.errorReply(this.mlt('error'));
 		}
 		let inexact, text = '';
 		switch (gen.gen) {
 		case 'metronome':
-			text = translator.get(0, this.lang);
+			text = this.mlt(0);
 			break;
 		case 0:
 			inexact = Inexact.safeResolve(App, id, {natures: 0, formats: 0, others: 1});
-			text = translator.get(1, this.lang) + " " + Chat.italics(id) + " " + translator.get(2, this.lang) +
-				(inexact ? (". " + translator.get('inexact', this.lang) + " " + Chat.italics(inexact) + "?") : "");
+			text = this.mlt(1) + " " + Chat.italics(id) + " " + this.mlt(2) +
+				(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : "");
 			break;
 		default:
-			text = translator.get(3, this.lang) + " " + Chat.italics(gen.name) + ": " + translator.get(4, this.lang) + " " + Chat.italics(gen.gen);
+			text = this.mlt(3) + " " + Chat.italics(gen.name) + ": " + this.mlt(4) + " " + Chat.italics(gen.gen);
 		}
 		this.restrictReply(text, 'pokemon');
 	},
 
 	viablemoves: 'randommoves',
 	randommoves: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.arg) return this.errorReply(this.usage({desc: 'pokemon'}, {desc: 'singles/doubles', optional: true}));
 		let id = Text.toId(this.args[0]);
 		let type = Text.toId(this.args[1]);
@@ -73,22 +74,23 @@ module.exports = {
 			moves = Moves.getRandomBattleMoves(id, type, App);
 		} catch (err) {
 			App.reportCrash(err);
-			return this.errorReply(translator.get('error', this.lang));
+			return this.errorReply(this.mlt('error'));
 		}
 		if (moves === null) {
 			let inexact = Inexact.safeResolve(App, id, {pokemon: 1, others: 0});
-			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang) +
-				(inexact ? (". " + translator.get('inexact', this.lang) + " " + Chat.italics(inexact) + "?") : ""));
+			return this.errorReply(this.mlt(5) + ' ' + Chat.italics(id) + ' ' + this.mlt(2) +
+				(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
 		} else if (!moves.length) {
-			return this.errorReply(translator.get(6, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id, App)));
+			return this.errorReply(this.mlt(6) + ' ' + Chat.italics(Moves.getPokeName(id, App)));
 		} else if (doubles) {
-			return this.restrictReply(translator.get(7, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + ': ' + moves.join(', '), 'pokemon');
+			return this.restrictReply(this.mlt(7) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + ': ' + moves.join(', '), 'pokemon');
 		} else {
-			return this.restrictReply(translator.get(8, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + ': ' + moves.join(', '), 'pokemon');
+			return this.restrictReply(this.mlt(8) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + ': ' + moves.join(', '), 'pokemon');
 		}
 	},
 
 	priority: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.arg) return this.errorReply(this.usage({desc: 'pokemon'}));
 		let id = Text.toId(this.args[0]);
 		if (!id) return this.errorReply(this.usage({desc: 'pokemon'}));
@@ -99,20 +101,21 @@ module.exports = {
 			moves = Moves.getPriorityMoves(id, App);
 		} catch (err) {
 			App.reportCrash(err);
-			return this.errorReply(translator.get('error', this.lang));
+			return this.errorReply(this.mlt('error'));
 		}
 		if (moves === null) {
 			let inexact = Inexact.safeResolve(App, id, {pokemon: 1, others: 0});
-			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang) +
-				(inexact ? (". " + translator.get('inexact', this.lang) + " " + Chat.italics(inexact) + "?") : ""));
+			return this.errorReply(this.mlt(5) + ' ' + Chat.italics(id) + ' ' + this.mlt(2) +
+				(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
 		} else if (!moves.length) {
-			return this.errorReply(translator.get(9, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id, App)));
+			return this.errorReply(this.mlt(9) + ' ' + Chat.italics(Moves.getPokeName(id, App)));
 		} else {
-			return this.restrictReply(translator.get(10, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + ': ' + moves.join(', '), 'pokemon');
+			return this.restrictReply(this.mlt(10) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + ': ' + moves.join(', '), 'pokemon');
 		}
 	},
 
 	boosting: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.arg) return this.errorReply(this.usage({desc: 'pokemon'}));
 		let id = Text.toId(this.args[0]);
 		if (!id) return this.errorReply(this.usage({desc: 'pokemon'}));
@@ -123,20 +126,21 @@ module.exports = {
 			moves = Moves.getBoostingMoves(id, App);
 		} catch (err) {
 			App.reportCrash(err);
-			return this.errorReply(translator.get('error', this.lang));
+			return this.errorReply(this.mlt('error'));
 		}
 		if (moves === null) {
 			let inexact = Inexact.safeResolve(App, id, {pokemon: 1, others: 0});
-			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang) +
-				(inexact ? (". " + translator.get('inexact', this.lang) + " " + Chat.italics(inexact) + "?") : ""));
+			return this.errorReply(this.mlt(5) + ' ' + Chat.italics(id) + ' ' + this.mlt(2) +
+				(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
 		} else if (!moves.length) {
-			return this.errorReply(translator.get(11, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id, App)));
+			return this.errorReply(this.mlt(11) + ' ' + Chat.italics(Moves.getPokeName(id, App)));
 		} else {
-			return this.restrictReply(translator.get(12, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + ': ' + moves.join(', '), 'pokemon');
+			return this.restrictReply(this.mlt(12) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + ': ' + moves.join(', '), 'pokemon');
 		}
 	},
 
 	recovery: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.arg) return this.errorReply(this.usage({desc: 'pokemon'}));
 		let id = Text.toId(this.args[0]);
 		if (!id) return this.errorReply(this.usage({desc: 'pokemon'}));
@@ -147,20 +151,21 @@ module.exports = {
 			moves = Moves.getRecoveryMoves(id, App);
 		} catch (err) {
 			App.reportCrash(err);
-			return this.errorReply(translator.get('error', this.lang));
+			return this.errorReply(this.mlt('error'));
 		}
 		if (moves === null) {
 			let inexact = Inexact.safeResolve(App, id, {pokemon: 1, others: 0});
-			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang) +
-				(inexact ? (". " + translator.get('inexact', this.lang) + " " + Chat.italics(inexact) + "?") : ""));
+			return this.errorReply(this.mlt(5) + ' ' + Chat.italics(id) + ' ' + this.mlt(2) +
+				(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
 		} else if (!moves.length) {
-			return this.errorReply(translator.get(13, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id, App)));
+			return this.errorReply(this.mlt(13) + ' ' + Chat.italics(Moves.getPokeName(id, App)));
 		} else {
-			return this.restrictReply(translator.get(14, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + ': ' + moves.join(', '), 'pokemon');
+			return this.restrictReply(this.mlt(14) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + ': ' + moves.join(', '), 'pokemon');
 		}
 	},
 
 	hazards: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.arg) return this.errorReply(this.usage({desc: 'pokemon'}));
 		let id = Text.toId(this.args[0]);
 		if (!id) return this.errorReply(this.usage({desc: 'pokemon'}));
@@ -171,16 +176,16 @@ module.exports = {
 			moves = Moves.getHazardsMoves(id, App);
 		} catch (err) {
 			App.reportCrash(err);
-			return this.errorReply(translator.get('error', this.lang));
+			return this.errorReply(this.mlt('error'));
 		}
 		if (moves === null) {
 			let inexact = Inexact.safeResolve(App, id, {pokemon: 1, others: 0});
-			return this.errorReply(translator.get(5, this.lang) + ' ' + Chat.italics(id) + ' ' + translator.get(2, this.lang) +
-				(inexact ? (". " + translator.get('inexact', this.lang) + " " + Chat.italics(inexact) + "?") : ""));
+			return this.errorReply(this.mlt(5) + ' ' + Chat.italics(id) + ' ' + this.mlt(2) +
+				(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
 		} else if (!moves.length) {
-			return this.errorReply(translator.get(15, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + '');
+			return this.errorReply(this.mlt(15) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + '');
 		} else {
-			return this.restrictReply(translator.get(16, this.lang) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + ': ' + moves.join(', '), 'pokemon');
+			return this.restrictReply(this.mlt(16) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + ': ' + moves.join(', '), 'pokemon');
 		}
 	},
 };

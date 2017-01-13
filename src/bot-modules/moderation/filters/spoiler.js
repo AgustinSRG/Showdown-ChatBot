@@ -7,9 +7,8 @@
 const Spoiler_Default_Value = 2;
 
 const Path = require('path');
-const Translator = Tools('translate');
 
-const translator = new Translator(Path.resolve(__dirname, 'spoiler.translations'));
+const Lang_File = Path.resolve(__dirname, 'spoiler.translations');
 
 exports.id = 'spoiler';
 
@@ -21,7 +20,7 @@ exports.parse = function (context) {
 		context.totalPointVal += val;
 		if (context.pointVal < val) {
 			context.pointVal = val;
-			context.muteMessage = translator.get('spoiler', this.getLanguage(context.room));
+			context.muteMessage = context.mlt(Lang_File, 'spoiler');
 		}
 	}
 };

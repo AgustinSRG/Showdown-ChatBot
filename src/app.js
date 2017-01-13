@@ -130,7 +130,17 @@ class ChatBotApp {
 		}
 
 		/* Languages */
-		this.languages = require(Path.resolve(__dirname, 'languages.json'));
+		if (!this.config.langfilter) {
+			this.config.langfilter = {};
+		}
+		this.multilang = new LanguageManager(this.config.langfilter);
+		this.supportedLanguages = require(Path.resolve(__dirname, 'languages.json'));
+		this.languages = {};
+		for (let lang in this.supportedLanguages) {
+			if (this.config.langfilter[lang] !== false) {
+				this.languages[lang] = this.supportedLanguages[lang];
+			}
+		}
 		if (!this.config.language) {
 			this.config.language = {
 				"default": "english",
@@ -221,12 +231,6 @@ class ChatBotApp {
 
 		/* Monitor */
 		this.connMonitor = new ConnectionMonitor(this);
-
-		/* Multi - Lang */
-		if (!this.config.langfilter) {
-			this.config.langfilter = {};
-		}
-		this.multilang = new LanguageManager(this.config.langfilter);
 
 		/* User data manager */
 		this.userdata = new UserDataManager(this);

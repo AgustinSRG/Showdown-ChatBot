@@ -8,12 +8,12 @@
 'use strict';
 
 const Path = require('path');
-const Translator = Tools('translate');
 
-const translator = new Translator(Path.resolve(__dirname, 'commands.translations'));
+const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
 module.exports = {
 	gitban: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('gitban', this.room)) return this.replyAccessDenied('gitban');
 		const bl = App.config.modules.github.blacklist;
 		let target = this.arg.toLowerCase().trim();
@@ -21,16 +21,17 @@ module.exports = {
 			return this.errorReply(this.usage({desc: 'user'}));
 		}
 		if (bl[target]) {
-			return this.errorReply(translator.get(0, this.lang) + " __" + target + "__ " + translator.get(1, this.lang));
+			return this.errorReply(this.mlt(0) + " __" + target + "__ " + this.mlt(1));
 		} else {
 			bl[target] = true;
 			App.db.write();
-			this.reply(translator.get(0, this.lang) + " __" + target + "__ " + translator.get(2, this.lang));
+			this.reply(this.mlt(0) + " __" + target + "__ " + this.mlt(2));
 			App.logCommandAction(this);
 		}
 	},
 
 	gitunban: function (App) {
+		this.setLangFile(Lang_File);
 		if (!this.can('gitban', this.room)) return this.replyAccessDenied('gitban');
 		const bl = App.config.modules.github.blacklist;
 		let target = this.arg.toLowerCase().trim();
@@ -38,11 +39,11 @@ module.exports = {
 			return this.errorReply(this.usage({desc: 'user'}));
 		}
 		if (!bl[target]) {
-			return this.errorReply(translator.get(0, this.lang) + " __" + target + "__ " + translator.get(3, this.lang));
+			return this.errorReply(this.mlt(0) + " __" + target + "__ " + this.mlt(3));
 		} else {
 			delete bl[target];
 			App.db.write();
-			this.reply(translator.get(0, this.lang) + " __" + target + "__ " + translator.get(4, this.lang));
+			this.reply(this.mlt(0) + " __" + target + "__ " + this.mlt(4));
 			App.logCommandAction(this);
 		}
 	},
