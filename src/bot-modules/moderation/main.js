@@ -5,13 +5,12 @@
 'use strict';
 
 const Path = require('path');
-const DataBase = Tools('json-db');
 const ModeratorBot = require(Path.resolve(__dirname, 'moderator-bot.js')).ModeratorBot;
 
 exports.setup = function (App) {
 	class ModerationModule {
 		constructor() {
-			this.db = new DataBase(Path.resolve(App.confDir, 'moderation.json'));
+			this.db = App.dam.getDataBase('moderation.json');
 			let data = this.data = this.db.data;
 			if (!data.punishments) {
 				data.punishments = ['warn', 'mute', 'hourmute', 'roomban'];

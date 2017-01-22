@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node run-forever",
-    "test": "eslint --cache showdown-chatbot src/"
+    "test": "eslint --cache showdown-chatbot config-example.js src/"
   },
   "main": "showdown-chatbot",
   "bin": "showdown-chatbot",
@@ -22,7 +22,7 @@
     "websocket": "1.0.23",
     "githubhook": "1.6.1",
     "pem": "1.8.3",
-    "readline-sync": "1.3.0"
+	"mysql": "2.12.0"
   },
   "description": "Chat Bot for Pokemon Showdown",
   "homepage": "https://github.com/asanrom/Showdown-ChatBot",

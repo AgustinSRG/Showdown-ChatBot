@@ -5,12 +5,11 @@
 'use strict';
 
 const Path = require('path');
-const DataBase = Tools('json-db');
 
 exports.setup = function (App) {
 	const WordGamesSystem = {};
 
-	const db = WordGamesSystem.db = new DataBase(Path.resolve(App.confDir, 'word-games.json'));
+	const db = WordGamesSystem.db = App.dam.getDataBase('word-games.json');
 	const data = WordGamesSystem.data = db.data;
 
 	WordGamesSystem.getRandomWord = function () {

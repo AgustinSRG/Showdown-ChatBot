@@ -7,7 +7,6 @@
 'use strict';
 
 const Path = require('path');
-const FileSystem = require('fs');
 const Text = Tools('text');
 const check = Tools('check');
 const Template = Tools('html-template');
@@ -44,11 +43,11 @@ exports.setup = function (App) {
 			if (addon && App.addons[addon]) {
 				App.removeAddon(addon);
 				try {
-					FileSystem.unlinkSync(Path.resolve(App.addonsDir, addon));
+					App.dam.removeFile(App.addonsDir + '/' + addon);
 				} catch (err) {
 					App.reportCrash(err);
 				}
-				App.logServerAction(context.user.id, 'Add-on uninstalled: ' + addon + '.js');
+				App.logServerAction(context.user.id, 'Add-on uninstalled: ' + addon);
 				ok = "Addon " + addon + " deleted sucessfully";
 			} else {
 				error = "Invalid add-on";
@@ -79,13 +78,14 @@ exports.setup = function (App) {
 			let content = (context.post.content || "").trim();
 			try {
 				check(addon, "You must specify an addon filename");
+				check(addon.length <= 20, "Addon filename is too long");
 				check(content, "Addon content cannot be blank");
 				check(!App.addons[addon + '.js'], "Addon " + addon + ".js already exists");
 			} catch (err) {
 				error = err.message;
 			}
 			if (!error) {
-				FileSystem.writeFileSync(Path.resolve(App.addonsDir, addon + '.js'), content);
+				App.dam.setFileContent(App.addonsDir + '/' + addon + '.js', content);
 				if (!App.installAddon(addon + '.js')) {
 					error = "Failed to install the add-on";
 				} else {
@@ -110,8 +110,11 @@ exports.setup = function (App) {
 		if (!file) {
 			return context.endWith404();
 		}
-		let path = Path.resolve(App.addonsDir, file);
-		if (!FileSystem.existsSync(path) || !FileSystem.statSync(path).isFile()) {
+		let path = App.addonsDir + '/' + file;
+		let addonContent = '';
+		try {
+			addonContent = App.dam.getFileContent(path);
+		} catch (err) {
 			return context.endWith404();
 		}
 
@@ -129,7 +132,7 @@ exports.setup = function (App) {
 			}
 			if (!error) {
 				App.removeAddon(addon);
-				FileSystem.writeFileSync(Path.resolve(App.addonsDir, addon), content);
+				App.dam.setFileContent(App.addonsDir + '/' + addon, content);
 				if (!App.installAddon(addon)) {
 					error = "Failed to re-install the add-on";
 				} else {
@@ -139,10 +142,8 @@ exports.setup = function (App) {
 			}
 		}
 
-		let content = FileSystem.readFileSync(path).toString();
-
 		let htmlVars = {};
-		htmlVars.content = content;
+		htmlVars.content = addonContent;
 		htmlVars.file = file;
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));

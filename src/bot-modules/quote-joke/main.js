@@ -4,12 +4,9 @@
 
 'use strict';
 
-const Path = require('path');
-const DataBase = Tools('json-db');
-
 class QuoteMod {
 	constructor(App) {
-		this.db = new DataBase(Path.resolve(App.confDir, 'quote-joke.json'));
+		this.db = App.dam.getDataBase('quote-joke.json');
 		this.data = this.db.data;
 		if (!this.data.jokes) {
 			this.data.jokes = {};

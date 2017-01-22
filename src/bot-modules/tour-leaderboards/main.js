@@ -9,7 +9,6 @@ const Top_Table_Length = 100;
 const Path = require('path');
 const FileSystem = require('fs');
 const Text = Tools('text');
-const DataBase = Tools('json-db');
 const parseTourTree = Tools('tour-tree');
 const checkDir = Tools('checkdir');
 
@@ -22,7 +21,7 @@ exports.setup = function (App) {
 
 	class TourLeaderBoardsModule {
 		constructor() {
-			this.db = new DataBase(Path.resolve(App.confDir, 'leaderloards.json'));
+			this.db = App.dam.getDataBase('leaderloards.json');
 			this.data = this.db.data;
 			this.tourData = {};
 			this.isOfficial = {};

@@ -6,10 +6,8 @@
 
 const Path = require('path');
 const Text = Tools('text');
-const DataBase = Tools('json-db');
-const Translator = Tools('translate');
 
-const translator = new Translator(Path.resolve(__dirname, 'blacklist.translations'));
+const Lang_File = Path.resolve(__dirname, 'blacklist.translations');
 
 exports.setup = function (App) {
 	function getLanguage(room) {
@@ -24,7 +22,7 @@ exports.setup = function (App) {
 
 	class BacklistModule {
 		constructor() {
-			this.db = new DataBase(Path.resolve(App.confDir, 'blacklist.json'));
+			this.db = App.dam.getDataBase('blacklist.json');
 			this.data = this.db.data;
 		}
 
@@ -63,7 +61,7 @@ exports.setup = function (App) {
 					if (App.parser.equalOrHigherGroup({group: group}, 'driver')) continue; // Do not ban staff
 					if (!botCanBan(room)) continue; // Bot cannot ban
 					if (this.data[room] && this.data[room][id]) {
-						cmds.push(room + '|/roomban ' + id + ', ' + translator.get('ban', getLanguage(room)));
+						cmds.push(room + '|/roomban ' + id + ', ' + App.multilang.mlt(Lang_File, getLanguage(room), 'ban'));
 					}
 				}
 			}
@@ -79,7 +77,7 @@ exports.setup = function (App) {
 		if (App.parser.equalOrHigherGroup(user, 'driver')) return; // Do not ban staff
 		if (!botCanBan(room)) return; // Bot cannot ban
 		if (data[room] && data[room][user.id]) {
-			App.bot.sendTo(room, '/roomban ' + user.id + ', ' + translator.get('ban', getLanguage(room)));
+			App.bot.sendTo(room, '/roomban ' + user.id + ', ' + App.multilang.mlt(Lang_File, getLanguage(room), 'ban'));
 		}
 	});
 
@@ -88,7 +86,7 @@ exports.setup = function (App) {
 		if (App.parser.equalOrHigherGroup(user, 'driver')) return; // Do not ban staff
 		if (!botCanBan(room)) return; // Bot cannot ban
 		if (data[room] && data[room][user.id]) {
-			App.bot.sendTo(room, '/roomban ' + user.id + ', ' + translator.get('ban', getLanguage(room)));
+			App.bot.sendTo(room, '/roomban ' + user.id + ', ' + App.multilang.mlt(Lang_File, getLanguage(room), 'ban'));
 		}
 	});
 

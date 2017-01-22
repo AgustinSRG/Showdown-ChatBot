@@ -15,10 +15,10 @@ const Default_Server_Port = 8080;
 const Path = require('path');
 const FileSystem = require('fs');
 
-const CryptoDataBase = Tools('crypto-json');
 const Logger = Tools('logs');
 const BotMod = Tools('bot-mod');
 const Text = Tools('text');
+const RequireEval = Tools('require-eval');
 
 const Server = require(Path.resolve(__dirname, 'server/server.js')).Server;
 const DataManager = require(Path.resolve(__dirname, 'data.js'));
@@ -32,14 +32,16 @@ const checkDir = Tools('checkdir');
 
 class ChatBotApp {
 	/**
+	 * @param {DataAccessManager} dam - The data access system
 	 * @param {Path} confDir - A path to store the bot configuration
 	 * @param {Path} dataDir - A path to store the bot data (dowloaded or temporal data)
 	 * @param {Object} env
 	 */
-	constructor(confDir, dataDir, env) {
+	constructor(dam, confDir, dataDir, env) {
 		/* Initial Status */
 		this.status = 'stopped';
 		this.env = env;
+		this.dam = dam;
 
 		/* Check paths */
 		this.confDir = confDir;
@@ -54,11 +56,13 @@ class ChatBotApp {
 		}.bind(this));
 
 		/* Configuration DataBase */
-		if (!FileSystem.existsSync(Path.resolve(confDir, 'config.key'))) {
-			FileSystem.writeFileSync(Path.resolve(confDir, 'config.key'), Text.randomToken(20));
+		try {
+			this.privatekey = this.dam.getFileContent('config.key');
+		} catch (err) {
+			this.privatekey = Text.randomToken(20);
+			this.dam.setFileContent('config.key', this.privatekey);
 		}
-		this.privatekey = FileSystem.readFileSync(Path.resolve(confDir, 'config.key')).toString();
-		this.db = new CryptoDataBase(Path.resolve(confDir, 'config.crypto'), this.privatekey);
+		this.db = this.dam.getDataBase('config.crypto', {crypto: true, key: this.privatekey});
 
 		if (Object.keys(this.db.data).length === 0 && FileSystem.existsSync(Path.resolve(confDir, 'config.json'))) {
 			try {
@@ -242,8 +246,8 @@ class ChatBotApp {
 		this.modules = {};
 
 		/* Add-ons */
-		this.addonsDir = Path.resolve(this.confDir, 'add-ons/');
-		checkDir(this.addonsDir);
+		this.addonsDir = 'add-ons';
+		this.dam.checkSubpath(this.addonsDir);
 		this.addons = {};
 	}
 
@@ -341,12 +345,9 @@ class ChatBotApp {
 	 * Reads the add-ons path and installs the add-ons
 	 */
 	loadAddons() {
-		let files = FileSystem.readdirSync(this.addonsDir);
+		let files = this.dam.getFiles(this.addonsDir);
 		files.forEach(function (file) {
-			let absFile = Path.resolve(this.addonsDir, file);
-			if (FileSystem.existsSync(absFile) && FileSystem.statSync(absFile).isFile()) {
-				this.installAddon(file);
-			}
+			this.installAddon(file);
 		}.bind(this));
 	}
 
@@ -355,9 +356,8 @@ class ChatBotApp {
 	 * @param {String} file - Add-on filename
 	 */
 	installAddon(file) {
-		let path = Path.resolve(this.addonsDir, file);
 		try {
-			this.addons[file] = require(path);
+			this.addons[file] = RequireEval.run(this, this.dam.getFileContent(file));
 			if (typeof this.addons[file].setup === "function") {
 				let addon = this.addons[file].setup(this);
 				if (addon) {
@@ -383,10 +383,6 @@ class ChatBotApp {
 				this.reportCrash(err);
 			}
 		}
-		let path = Path.resolve(this.addonsDir, file);
-		try {
-			uncacheTree(path);
-		} catch (e) {}
 		delete this.addons[file];
 	}
 

@@ -1,5 +1,6 @@
 # Config and data
 config
+config.js
 data
 !src/bot-modules/battle/data
 

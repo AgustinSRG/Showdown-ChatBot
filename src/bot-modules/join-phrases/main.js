@@ -4,13 +4,11 @@
 
 'use strict';
 
-const Path = require('path');
 const Text = Tools('text');
-const DataBase = Tools('json-db');
 
 exports.setup = function (App) {
 	const JoinPhrasesMod = {};
-	JoinPhrasesMod.db = new DataBase(Path.resolve(App.confDir, 'join-phrases.json'));
+	JoinPhrasesMod.db = App.dam.getDataBase('join-phrases.json');
 	JoinPhrasesMod.config = JoinPhrasesMod.db.data;
 	if (!JoinPhrasesMod.config.rooms) {
 		JoinPhrasesMod.config.rooms = {};

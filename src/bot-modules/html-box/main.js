@@ -4,13 +4,10 @@
 
 'use strict';
 
-const Path = require('path');
-const DataBase = Tools('json-db');
-
 exports.setup = function (App) {
 	class HtmlBoxModule {
 		constructor() {
-			this.db = new DataBase(Path.resolve(App.confDir, 'html-cmd.json'));
+			this.db = App.dam.getDataBase('html-cmd.json');
 			this.data = this.db.data;
 			if (!this.data.commands) {
 				this.data.commands = {};

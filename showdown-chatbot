@@ -115,6 +115,13 @@ for (let key in shellOpts) {
 
 env.package = Package;
 
+try {
+	env.config = require(Path.resolve(__dirname, 'config.js'));
+} catch (err) {
+	console.log("Configuration file not found or corruped. Using default configuration.");
+	env.config = require(Path.resolve(__dirname, 'config-example.js'));
+}
+
 /* Require Main File */
 
 require(Path.resolve(__dirname, 'src/index.js')).setup(env);

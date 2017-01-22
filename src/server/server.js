@@ -24,7 +24,6 @@ const QueryString = require('querystring');
 const Crypto = require('crypto');
 
 const Static = Tools('server-static');
-const DataBase = Tools('crypto-json');
 const AbuseMonitor = Tools('abuse-monitor');
 const Text = Tools('text');
 
@@ -121,11 +120,13 @@ class Server {
 		};
 
 		/* User database */
-		if (!FileSystem.existsSync(Path.resolve(path, 'users.key'))) {
-			FileSystem.writeFileSync(Path.resolve(path, 'users.key'), Text.randomToken(20));
+		try {
+			this.privatekey = app.dam.getFileContent('users.key');
+		} catch (err) {
+			this.privatekey = Text.randomToken(20);
+			app.dam.setFileContent('users.key', this.privatekey);
 		}
-		this.privatekey = FileSystem.readFileSync(Path.resolve(path, 'users.key')).toString();
-		this.userdb = new DataBase(Path.resolve(path, 'users.crypto'), this.privatekey);
+		this.userdb = app.dam.getDataBase('users.crypto', {crypto: true, key: this.privatekey});
 		this.users = this.userdb.data;
 		if (Object.keys(this.users).length === 0) {
 			console.log('Users Database empty. Creating initial admin account');
@@ -136,6 +137,18 @@ class Server {
 				group: 'Administrator',
 				permissions: {root: true},
 			};
+		}
+		if (app.env && app.env.config && app.env.config.Static_Admin_Account) {
+			let account = Text.toId(app.env.config.Static_Admin_Account);
+			if (!this.users[account]) {
+				this.users[account] = {
+					id: account,
+					password: app.env.config.Static_Admin_Account_Password,
+					name: app.env.config.Static_Admin_Account,
+					group: 'Administrator',
+					permissions: {root: true},
+				};
+			}
 		}
 
 		let usersChange = false;

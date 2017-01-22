@@ -19,7 +19,6 @@ const Command_Reply_Wait_Interval = 10 * 1000;
 const Util = require('util');
 const Path = require('path');
 
-const DataBase = Tools('json-db');
 const Text = Tools('text');
 const Chat = Tools('chat');
 const AbuseMonitor = Tools('abuse-monitor');
@@ -50,7 +49,7 @@ class CommandParser {
 		this.lastReplyCommand = {};
 
 		/* Configuration DataBase */
-		this.db = new DataBase(Path.resolve(path, 'cmd-parser.json'));
+		this.db = app.dam.getDataBase('cmd-parser.json');
 		this.data = this.db.data;
 		if (!this.data.aliases) this.data.aliases = {}; /* Command Aliases */
 		if (!this.data.exceptions) this.data.exceptions = {}; /* Excepted users */

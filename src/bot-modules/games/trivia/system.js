@@ -5,12 +5,11 @@
 'use strict';
 
 const Path = require('path');
-const DataBase = Tools('json-db');
 
 exports.setup = function (App) {
 	const TriviaSystem = {};
 
-	const db = TriviaSystem.db = new DataBase(Path.resolve(App.confDir, 'trivia.json'));
+	const db = TriviaSystem.db = App.dam.getDataBase('trivia.json');
 	const data = TriviaSystem.data = db.data;
 
 	TriviaSystem.getQuestionId = function (text) {
