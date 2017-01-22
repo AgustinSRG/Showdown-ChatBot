@@ -51,6 +51,9 @@ exports.setup = function (App) {
 					group: (group || ""),
 					permissions: {chpass: true},
 				};
+				if (context.post.makeadmin) {
+					App.server.users[userid].permissions['root'] = true;
+				}
 				App.server.userdb.write();
 				ok = 'User <strong>' + userid + '</strong> sucessfully created.';
 				App.logServerAction(context.user.id, "Create User: " + userid);
