@@ -181,7 +181,7 @@ class ChatBotApp {
 				console.log('Installing dependencies... (websocket)');
 				require('child_process').spawnSync('sh', ['-c', 'npm install websocket'], {stdio: 'inherit'});
 			}
-			ShowdownBot = require(Path.resolve(__dirname, 'lib/showdown-ws.js')).Bot;
+			ShowdownBot = require(Path.resolve(__dirname, 'showdown/showdown-ws.js')).Bot;
 		} else {
 			try {
 				require('sockjs-client');
@@ -189,7 +189,7 @@ class ChatBotApp {
 				console.log('Installing dependencies... (sockjs-client)');
 				require('child_process').spawnSync('sh', ['-c', 'npm install sockjs-client'], {stdio: 'inherit'});
 			}
-			ShowdownBot = require(Path.resolve(__dirname, 'lib/showdown-sockjs.js')).Bot;
+			ShowdownBot = require(Path.resolve(__dirname, 'showdown/showdown-sockjs.js')).Bot;
 		}
 
 		this.bot = new ShowdownBot(this.config.bot.server, this.config.bot.port, this.config.bot.serverid,
