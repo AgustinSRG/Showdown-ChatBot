@@ -5,7 +5,7 @@
 'use strict';
 
 const Util = require('util');
-const Http = require('http');
+const Https = require('https');
 
 const Hastebin_Request_Options = {hostname: "hastebin.com", method: "POST", path: '/documents'};
 
@@ -16,11 +16,11 @@ const Hastebin_Request_Options = {hostname: "hastebin.com", method: "POST", path
  */
 exports.upload = function (data, callback) {
 	if (typeof callback !== "function") throw new Error("callback must be a function");
-	let request = Http.request(Hastebin_Request_Options, response => {
+	let request = Https.request(Hastebin_Request_Options, response => {
 		response.on('data', chunk => {
 			try {
 				let key = JSON.parse(chunk.toString())['key'];
-				return callback(Util.format('http://hastebin.com/%s', key));
+				return callback(Util.format('https://hastebin.com/%s', key));
 			} catch (err) {
 				return callback(null, err);
 			}
@@ -43,8 +43,8 @@ exports.upload = function (data, callback) {
  */
 exports.download = function (key, callback) {
 	if (typeof callback !== "function") throw new Error("callback must be a function");
-	let url = Util.format('http://hastebin.com/raw/%s', key);
-	Http.get(url, response => {
+	let url = Util.format('https://hastebin.com/raw/%s', key);
+	Https.get(url, response => {
 		let data = '';
 		response.on('data', chunk => {
 			data += chunk;
