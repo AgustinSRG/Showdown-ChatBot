@@ -34,7 +34,12 @@ class JSONDataBase {
 
 	load() {
 		try {
-			this.data = JSON.parse(this.dam.getFileContent(this.file));
+			let data = this.dam.getFileContent(this.file);
+			try {
+				this.data = JSON.parse(data);
+			} catch (err) {
+				this.data = JSON.parse(this.dam.getFileContent(this.file, true));
+			}
 		} catch (err) {
 			this.data = {};
 		}

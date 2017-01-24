@@ -66,7 +66,12 @@ class JSONDataBase {
 
 	load() {
 		try {
-			this.data = JSON.parse(decrypt(this.dam.getFileContent(this.file), this.algo, this.password));
+			let data = this.dam.getFileContent(this.file);
+			try {
+				this.data = JSON.parse(decrypt(data, this.algo, this.password));
+			} catch (err) {
+				this.data = JSON.parse(decrypt(this.dam.getFileContent(this.file, true), this.algo, this.password));
+			}
 		} catch (err) {
 			this.data = {};
 		}

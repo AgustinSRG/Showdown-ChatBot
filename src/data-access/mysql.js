@@ -62,7 +62,7 @@ class DataAccessManager {
 		}.bind(this));
 	}
 
-	getFileContent(filename) {
+	getFileContent(filename, locked_id) {
 		let files = {};
 		for (let row of this.data) {
 			if (row.file === filename) {
@@ -76,6 +76,15 @@ class DataAccessManager {
 		for (let id in files) {
 			if (file === null || file.id < id) {
 				file = files[id];
+			}
+		}
+		if (locked_id && file !== null) {
+			let locked_file = file;
+			file = null;
+			for (let id in files) {
+				if (id !== locked_file.id && (file === null || file.id < id)) {
+					file = files[id];
+				}
 			}
 		}
 		if (!file) {
