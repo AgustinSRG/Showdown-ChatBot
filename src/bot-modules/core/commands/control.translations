@@ -15,6 +15,7 @@ $7 = hours
 $8 = day
 $9 = days
 $10 = Bot Uptime
+$11 = Connection Time
 
 %spanish
 
@@ -31,3 +32,4 @@ $7 = horas
 $8 = día
 $9 = días
 $10 = Tiempo de Actividad del Bot
+$11 = Tiempo de Conexión

@@ -13,6 +13,7 @@
  * version: gets the package version
  * time: gets the bot time
  * uptime: gets the process uptime
+ * contime: gets the connection time
  */
 
 'use strict';
@@ -166,5 +167,24 @@ module.exports = {
 		time = Math.floor(time / 24); // Days
 		if (time > 0) times.unshift(time + ' ' + (time === 1 ? this.mlt(8) : this.mlt(9)));
 		this.restrictReply(Chat.bold(this.mlt(10) + ':') + ' ' + Chat.italics(times.join(', ')), 'info');
+	},
+
+	contime: function (App) {
+		if (!App.bot.conntime) return;
+		this.setLangFile(Lang_File);
+		let times = [];
+		let time = Math.round((Date.now() - App.bot.conntime) / 1000);
+		let aux;
+		aux = time % 60; // Seconds
+		if (aux > 0 || time === 0) times.unshift(aux + ' ' + (aux === 1 ? this.mlt(2) : this.mlt(3)));
+		time = Math.floor(time / 60);
+		aux = time % 60; // Minutes
+		if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? this.mlt(4) : this.mlt(5)));
+		time = Math.floor(time / 60);
+		aux = time % 24; // Hours
+		if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? this.mlt(6) : this.mlt(7)));
+		time = Math.floor(time / 24); // Days
+		if (time > 0) times.unshift(time + ' ' + (time === 1 ? this.mlt(8) : this.mlt(9)));
+		this.restrictReply(Chat.bold(this.mlt(11) + ':') + ' ' + Chat.italics(times.join(', ')), 'info');
 	},
 };

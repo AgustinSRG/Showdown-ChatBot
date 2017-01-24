@@ -61,6 +61,7 @@ class Bot {
 
 		this.socket = null;
 		this.connecting = false;
+		this.conntime = 0;
 		this.closed = false;
 		this.status = new BotStatus();
 		this.events = new Events();
@@ -166,6 +167,7 @@ class Bot {
 		}
 		this.nextSend = 0;
 		this.rooms = {};
+		this.conntime = 0;
 		this.status.onDisconnect();
 	}
 
@@ -206,6 +208,7 @@ class Bot {
 		this.socket.onopen = function () {
 			this.connecting = false;
 			this.status.onConnection();
+			this.conntime = Date.now();
 			this.events.emit('connect', this.socket);
 		}.bind(this);
 		this.socket.onclose = function (e) {

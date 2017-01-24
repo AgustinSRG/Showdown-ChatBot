@@ -11,6 +11,7 @@
 			try {
 				data = JSON.parse(data);
 				document.getElementById('bot-connection').innerHTML = data.con;
+				document.getElementById('bot-conntime').innerHTML = data.ctime;
 				document.getElementById('bot-nick').innerHTML = data.nick;
 				document.getElementById('bot-rooms').innerHTML = escapeHtml(data.rooms.join(', '));
 				document.getElementById('bot-battles').innerHTML = escapeHtml(data.battles.join(', '));
@@ -44,6 +45,7 @@
 		<table border="1">
 			<tr><td colspan="2"><div align="center"><strong>Bot Status </strong></div></td></tr>
 			<tr><td width="150"><strong>Connection</strong></td><td width="150">${CONNECTION}</td></tr>
+			<tr><td width="150"><strong>Connection Date</strong></td><td width="150">${CONNTIME}</td></tr>
 			<tr><td><strong>Nickname</strong></td><td><span id="bot-nick">${NICK}</span></td></tr>
 			<tr><td><strong>Rooms</strong></td><td><span id="bot-rooms">${ROOMS}</span></td></tr>
 			<tr><td><strong>Battles</strong></td><td><span id="bot-battles">${BATTLES}</span></td></tr>

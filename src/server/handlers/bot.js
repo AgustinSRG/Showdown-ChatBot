@@ -8,6 +8,7 @@
 
 const Path = require('path');
 const check = Tools('check');
+const Text = Tools('text');
 const Template = Tools('html-template');
 
 const mainTemplate = new Template(Path.resolve(__dirname, 'templates', 'bot-config.html'));
@@ -29,11 +30,15 @@ exports.setup = function (App) {
 		if (context.get.getbotstatus) {
 			let data = {};
 			if (App.bot.status.connected) {
+				let ct = new Date(App.bot.conntime);
 				data.con = '<font color="green"><strong>CONNECTED</strong></font>';
+				data.ctime = '<i>' + Text.escapeHTML(ct.toString()) + '</i>';
 			} else if (App.bot.connecting) {
 				data.con = '<font color="orange"><strong>CONNECTING...</strong></font>';
+				data.ctime = '&nbsp;';
 			} else {
 				data.con = '<font color="red"><strong>NOT CONNECTED</strong></font>';
+				data.ctime = '&nbsp;';
 			}
 			data.nick = (App.bot.getBotNick() || "-");
 			data.rooms = [];
@@ -107,11 +112,15 @@ exports.setup = function (App) {
 		}
 
 		if (App.bot.status.connected) {
+			let ct = new Date(App.bot.conntime);
 			htmlVars.connection = '<span id="bot-connection"><font color="green"><strong>CONNECTED</strong></font></span>';
+			htmlVars.conntime = '<span id="bot-conntime"><i>' + Text.escapeHTML(ct.toString()) + '</i></span>';
 		} else if (App.bot.connecting) {
 			htmlVars.connection = '<span id="bot-connection"><font color="orange"><strong>CONNECTING...</strong></font></span>';
+			htmlVars.conntime = '<span id="bot-conntime"><i>&nbsp;</i></span>';
 		} else {
 			htmlVars.connection = '<span id="bot-connection"><font color="red"><strong>NOT CONNECTED</strong></font></span>';
+			htmlVars.conntime = '<span id="bot-conntime"><i>&nbsp;</i></span>';
 		}
 
 		htmlVars.nick = (App.bot.getBotNick() || "-");

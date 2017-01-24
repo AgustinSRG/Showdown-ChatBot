@@ -62,6 +62,7 @@ class Bot {
 
 		this.connection = null;
 		this.connecting = false;
+		this.conntime = 0;
 		this.closed = false;
 		this.status = new BotStatus();
 		this.events = new Events();
@@ -89,6 +90,7 @@ class Bot {
 		webSocket.on('connect', function (connection) {
 			this.connecting = false;
 			this.connection = connection;
+			this.conntime = Date.now();
 			this.status.onConnection();
 			this.prepareConnection();
 			this.startConnectionMonitor();
@@ -217,6 +219,7 @@ class Bot {
 			delete this.sending[k];
 		}
 		this.nextSend = 0;
+		this.conntime = 0;
 		this.rooms = {};
 		this.status.onDisconnect();
 	}
