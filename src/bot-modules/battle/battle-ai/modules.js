@@ -4,7 +4,7 @@
 
 'use strict';
 
-const modFiles = ['singles-eff.js', 'ingame-nostatus.js'];
+const modFiles = ['singles-eff.js', 'ingame-nostatus.js', 'random.js'];
 
 const Path = require('path');
 const Text = Tools('text');
@@ -27,9 +27,25 @@ exports.setup = function (App, BattleData) {
 	BattleModulesManager.choose = function (battle) {
 		if (!battle.tier) return null;
 
+		/* Configured Modules */
+
+		let tier = Text.toId(battle.tier);
+
+		if (App.config.modules.battle.battlemods[tier]) {
+			let modid = App.config.modules.battle.battlemods[tier];
+			if (battle.gametype === "singles" || modid !== "singles-eff") {
+				if (modules[modid]) {
+					battle.debug("Battle module [" + battle.id + "] - Using " + modid + " (user configuration)");
+					return modules[modid];
+				}
+			} else {
+				battle.debug("Battle module [" + battle.id + "] - Incompatible (user configuration)");
+			}
+		}
+
 		/* Module decision by default */
 
-		if (Text.toId(battle.tier) in {'challengecup1v1': 1, '1v1': 1}) {
+		if (tier in {'challengecup1v1': 1, '1v1': 1}) {
 			if (modules["ingame-nostatus"]) {
 				battle.debug("Battle module [" + battle.id + "] - Using ingame-nostatus");
 				return modules["ingame-nostatus"];

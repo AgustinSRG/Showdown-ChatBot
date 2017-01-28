@@ -18,6 +18,10 @@ exports.setup = function (App) {
 		};
 	}
 
+	if (!App.config.modules.battle.battlemods) {
+		App.config.modules.battle.battlemods = {};
+	}
+
 	const BattleModule = {};
 
 	const BattleBot = BattleModule.BattleBot = require(Path.resolve(__dirname, 'battle-ai', 'index.js')).setup(App);

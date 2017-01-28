@@ -34,6 +34,7 @@ exports.setup = function (App) {
 
 		let submenu = new SubMenu("Battle&nbsp;Bot", parts, context, [
 			{id: 'config', title: 'Configuration', url: '/battle/', handler: battleConfigurationHandler},
+			{id: 'algo', title: 'Battle&nbsp;Algorithms', url: '/battle/algo/', handler: battleAlgorithmsHandler},
 			{id: 'chall', title: 'Challenge', url: '/battle/chall/', handler: battleChallengeHandler},
 			{id: 'ladder', title: 'Ladder', url: '/battle/ladder/', handler: battleLadderHandler},
 		], 'config');
@@ -91,6 +92,54 @@ exports.setup = function (App) {
 
 		html += configTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Battle Bot - Showdown ChatBot"});
+	}
+
+	function battleAlgorithmsHandler(context, html) {
+		let ok = null, error = null;
+
+		if (context.post.edit) {
+			let newData = {};
+			for (let f in App.bot.formats) {
+				let chosen = context.post[f];
+				if (chosen && chosen !== "default") {
+					try {
+						check(chosen in {"random": 1, "ingame-nostatus": 1, "singles-eff": 1}, "Invalid algorithm: " + chosen);
+					} catch (err) {
+						error = err.message;
+						break;
+					}
+					newData[f] = chosen;
+				}
+			}
+
+			if (!error) {
+				Config.battlemods = newData;
+				App.db.write();
+				App.logServerAction(context.user.id, "Edit battle algorithms configuration");
+				ok = 'Battle algorithms configuration saved';
+			}
+		}
+
+		html += '<form method="post" action=""><table>';
+		html += '<tr><td width="300"><div align="center"><strong>Format</strong></div></td>' +
+			'<td width="200"><div align="center"><strong>Battle Algorithm</strong></div></td></tr>';
+		for (let f in App.bot.formats) {
+			html += '<tr>';
+			html += '<td>' + Text.escapeHTML(App.bot.formats[f].name) + '</td>';
+			html += '<td>' + getAlgoMenu(f, Config.battlemods[f]) + '</td>';
+			html += '</tr>';
+		}
+		html += '</table>';
+
+		html += '<p><input type="submit" name="edit" value="Save Changes" /></p></form>';
+
+		if (error) {
+			html += '<p style="padding:5px;"><span class="error-msg">' + error + '</span></p>';
+		} else if (ok) {
+			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
+		}
+
+		context.endWithWebPage(html, {title: "Battle Algorithm - Showdown ChatBot"});
 	}
 
 	function battleChallengeHandler(context, html) {
@@ -333,6 +382,21 @@ exports.setup = function (App) {
 		} else {
 			return '<input name="format" type="text" size="40" value="" />';
 		}
+	}
+
+	function getAlgoMenu(format, selected) {
+		let opts = {
+			"default": "Use Default",
+			"random": "Random Decision",
+			"ingame-nostatus": "Go for the highest damage / No swithes (Standard)",
+			"singles-eff": "Improvement with status moves and switches (only for singles)",
+		};
+		let tags = [];
+		for (let opt in opts) {
+			tags.push('<option value="' + opt + '"' + (selected === opt ? 'selected="selected"' : '') +
+				'>' + opts[opt] + '</option>');
+		}
+		return ('<select name="' + format + '">' + tags.join() + '</select>');
 	}
 
 	function getTeamsMenu() {
