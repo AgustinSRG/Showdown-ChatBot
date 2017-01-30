@@ -1,7 +1,6 @@
 {
   "id": "quote",
   "name": "Quotes & Jokes",
-  "version": "2.0",
   "main": "main.js",
   "commands": [
     "commands.js"

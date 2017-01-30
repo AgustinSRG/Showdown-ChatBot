@@ -1,7 +1,6 @@
 {
   "id": "htmlbox",
   "name": "HtmlBox Commands",
-  "version": "2.0",
   "main": "main.js",
   "commands": [
     "commands.js"

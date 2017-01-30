@@ -1,7 +1,6 @@
 {
   "id": "games",
   "name": "Games",
-  "version": "3.0",
   "main": "main.js",
   "commands": [
      "commands.js",

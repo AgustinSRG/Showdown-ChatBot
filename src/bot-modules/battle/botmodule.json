@@ -1,7 +1,6 @@
 {
   "id": "battle",
   "name": "Battle",
-  "version": "1.4",
   "main": "main.js",
   "commands": [
      "commands.js"

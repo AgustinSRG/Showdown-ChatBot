@@ -1,7 +1,6 @@
 {
   "id": "tourleaderboards",
   "name": "Tour Leaderboards",
-  "version": "1.0",
   "main": "main.js",
   "commands": [
     "commands.js"

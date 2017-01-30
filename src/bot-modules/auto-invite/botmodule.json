@@ -1,7 +1,6 @@
 {
   "id": "autoinvite",
   "name": "Auto-Invite",
-  "version": "2.0",
   "main": "main.js",
   "commands": [],
   "handlers": [

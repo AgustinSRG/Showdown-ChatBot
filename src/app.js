@@ -286,13 +286,12 @@ class ChatBotApp {
 							let mod = new BotMod(Path.resolve(path, file), conf, this);
 							this.modules[mod.id] = mod;
 							this.parser.addCommands(mod.commands);
-							console.log('NEW MODULE: ' + mod.name + ' (v' + mod.version + ')');
+							console.log('NEW MODULE: ' + mod.name);
 						} else if (!this.modules[conf.id]) {
 							this.modules[conf.id] = {
 								id: conf.id,
 								name: conf.name,
 								description: conf.description,
-								version: conf.version,
 								commands: {},
 								system: null,
 								enabled: false,

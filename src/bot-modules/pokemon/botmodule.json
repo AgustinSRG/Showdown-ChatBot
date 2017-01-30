@@ -1,7 +1,6 @@
 {
   "id": "pokemon",
   "name": "Pokemon",
-  "version": "1.0",
   "main": "main.js",
   "commands": [
     "poke-trans/commands.js",

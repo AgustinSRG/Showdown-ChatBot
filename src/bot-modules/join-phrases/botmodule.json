@@ -1,7 +1,6 @@
 {
   "id": "joinphrases",
   "name": "Join-Phrases",
-  "version": "1.0",
   "main": "main.js",
   "commands": [
     "commands.js"

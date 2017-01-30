@@ -1,7 +1,6 @@
 {
   "id": "core",
   "name": "Core",
-  "version": "1.0",
   "main": "core.js",
   "commands": [
     "commands/exec-cmd.js",

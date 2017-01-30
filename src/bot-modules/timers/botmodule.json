@@ -1,7 +1,6 @@
 {
   "id": "timers",
   "name": "Timers",
-  "version": "1.0",
   "main": "main.js",
   "commands": [
     "commands.js"
