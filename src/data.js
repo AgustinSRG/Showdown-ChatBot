@@ -190,9 +190,11 @@ class DataManager {
 	 * @param {String} url - The requested url
 	 * @param {function(String, Error)} callback
 	 */
-	wget(url, callback) {
+	wget(url, callback, customCache) {
 		this.cache.sweep();
-		if (this.cache.has(url)) {
+		if (customCache && customCache.has(url)) {
+			return customCache.get(url);
+		} else if (this.cache.has(url)) {
 			let cache = this.cache.get(url);
 			if (cache) {
 				return callback(cache.data);

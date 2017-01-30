@@ -12,6 +12,9 @@ const Path = require('path');
 const Text = Tools('text');
 const Chat = Tools('chat');
 const LineSplitter = Tools('line-splitter');
+const Cache = Tools('cache').BufferCache;
+
+const UsageFailureCache = new Cache(20);
 
 const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
@@ -74,7 +77,7 @@ function markDownload(link, b) {
 function tierName(tier, App) {
 	if (!tier) return "";
 	if (App.bot.formats[tier]) return App.bot.formats[tier].name;
-	return tier.toUpperCase();
+	return tier;
 }
 
 function parseAliases(format, App) {
@@ -91,7 +94,6 @@ function parseAliases(format, App) {
 const Default_Rank = 1630;
 const Rank_Exception = 1695;
 const Rank_Exceptions = {};
-const Tier_Error_Expires = 2 * 60 * 60 * 1000;
 
 /* Commands */
 
@@ -120,9 +122,6 @@ module.exports = {
 			if (!isNaN(parseInt(poke))) searchIndex = parseInt(poke);
 			if (args[1]) {
 				tier = parseAliases(args[1], App);
-				if (!App.bot.formats[tier] && !App.bot.formats[tier + "suspecttest"]) {
-					return this.errorReply(this.mlt('tiererr1') + ' "' + tier + '" ' + this.mlt('tiererr2'));
-				}
 			}
 			if (!poke || !tier) return this.errorReply(this.usage({desc: 'pokemon'}, {desc: 'tier', optional: true}));
 			if (this.usageRankExceptionFlag) {
@@ -146,7 +145,9 @@ module.exports = {
 				let lines = data.split("\n");
 				if (lines[0].indexOf("Total battles:") === -1) {
 					if (!App.data.cache.has(url)) {
-						App.data.cache.cache(url, data, Tier_Error_Expires, {'smogon-usage': 1});
+						if (!UsageFailureCache.has(url)) {
+							UsageFailureCache.cache(url, data);
+						}
 					}
 					if (!this.usageRankExceptionFlag) {
 						this.usageRankExceptionFlag = true;
@@ -216,7 +217,7 @@ module.exports = {
 				this.restrictReply(Chat.bold(dataRes.name) + ", #" + dataRes.pos + " " + this.mlt('in') +
 					" " + Chat.bold(tierName(tier, App)) + ". " + this.mlt('pokeusage') + ": " + dataRes.usage + ", " +
 					this.mlt('pokeraw') + ": " + dataRes.raw, 'usage');
-			}.bind(this));
+			}.bind(this), UsageFailureCache);
 		}.bind(this));
 	},
 
@@ -249,9 +250,6 @@ module.exports = {
 			}
 			if (args[2]) {
 				tier = parseAliases(args[2], App);
-				if (!App.bot.formats[tier] && !App.bot.formats[tier + "suspecttest"]) {
-					return this.errorReply(this.mlt('tiererr1') + ' "' + tier + '" ' + this.mlt('tiererr2'));
-				}
 			}
 			if (this.usageRankExceptionFlag) {
 				ladderType = Rank_Exception;
@@ -273,7 +271,9 @@ module.exports = {
 				}
 				if (data.indexOf("+----------------------------------------+") === -1) {
 					if (!App.data.cache.has(url)) {
-						App.data.cache.cache(url, data, Tier_Error_Expires, {'smogon-usage': 1});
+						if (!UsageFailureCache.has(url)) {
+							UsageFailureCache.cache(url, data);
+						}
 					}
 					if (!this.usageRankExceptionFlag) {
 						this.usageRankExceptionFlag = true;
@@ -354,7 +354,7 @@ module.exports = {
 					spl.add(" " + result[i] + (i < (result.length - 1) ? ',' : ''));
 				}
 				this.restrictReply(spl.getLines(), 'usagedata');
-			}.bind(this));
+			}.bind(this), UsageFailureCache);
 		}.bind(this));
 	},
 };
