@@ -78,6 +78,7 @@ module.exports = {
 
 	alts: function (App) {
 		this.setLangFile(Lang_File);
+		if (!this.can('alts', this.room)) return this.replyAccessDenied('alts');
 		let targetUser = Text.toId(this.arg);
 		if (!targetUser) {
 			this.pmReply(this.usage({desc: this.usageTrans('user')}));

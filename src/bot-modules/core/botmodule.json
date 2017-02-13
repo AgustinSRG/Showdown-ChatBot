@@ -14,7 +14,8 @@
 	"set": {"group": "owner"},
 	"joinroom": {"group": "admin"},
 	"send": {"group": "admin"},
-	"say": {"group": "mod"}
+	"say": {"group": "mod"},
+	"alts": {"group": "user"}
   },
   "handlers": [
     "handlers/autojoin.js",
