@@ -11,8 +11,10 @@ const Path = require('path');
 
 const Text = Tools('text');
 const Chat = Tools('chat');
+const LineSplitter = Tools('line-splitter');
 
 const Lang_File = Path.resolve(__dirname, 'seen.translations');
+const Max_Alts_No_Full = 7;
 
 module.exports = {
 	seen: function (App) {
@@ -80,19 +82,29 @@ module.exports = {
 		this.setLangFile(Lang_File);
 		if (!this.can('alts', this.room)) return this.replyAccessDenied('alts');
 		let targetUser = Text.toId(this.arg);
+		let fullList = false;
+		if (this.args[1] && Text.toId(this.args[1]) === "all") {
+			if (!this.can('fullalts', this.room)) return this.replyAccessDenied('fullalts');
+			fullList = true;
+			targetUser = Text.toId(this.args[0]);
+		}
 		if (!targetUser) {
 			this.pmReply(this.usage({desc: this.usageTrans('user')}));
 		} else if (targetUser.length > 19) {
 			this.pmReply(this.mlt('inv'));
 		} else if (App.userdata.users[targetUser]) {
 			let alts = App.userdata.getAlts(targetUser);
-			if (alts.length > 10) {
+			if (alts.length > Max_Alts_No_Full && !fullList) {
 				this.pmReply(this.mlt(17) + ' ' +
-					Chat.bold(App.userdata.users[targetUser].name) + ': ' + alts.slice(0, 10).join(', ').trim() +
-					", (" + (alts.length - 10) + ' ' + this.mlt('more') + ')');
+					Chat.bold(App.userdata.users[targetUser].name) + ': ' + alts.slice(0, Max_Alts_No_Full).join(', ').trim() +
+					", (" + (alts.length - Max_Alts_No_Full) + ' ' + this.mlt('more') + '). ' + this.mlt('full'));
 			} else if (alts.length > 0) {
-				this.pmReply(this.mlt(17) + ' ' +
-					Chat.bold(App.userdata.users[targetUser].name) + ': ' + alts.join(', ').trim() + '');
+				let spl = new LineSplitter(App.config.bot.maxMessageLength);
+				spl.add(this.mlt(17) + ' ' + Chat.bold(App.userdata.users[targetUser].name) + ': ');
+				for (let i = 0; i < alts.length; i++) {
+					spl.add(" " + alts[i] + (i < (alts.length - 1) ? ',' : ''));
+				}
+				this.pmReply(spl.getLines());
 			} else {
 				this.pmReply(this.mlt(18) + ' ' + Chat.italics(targetUser) + '');
 			}

@@ -17,6 +17,7 @@ $9 = days
 $seen = was last seen
 $ago = ago
 $more = more
+$full = Retry the command with "all" to view the complete list.
 
 $10 = joining
 $11 = leaving
@@ -50,6 +51,7 @@ $9 = días
 $seen = fue visto por última vez hace
 $ago = 
 $more = más
+$full = Utiliza el comando con "all" para ver la lista completa.
 
 $10 = entrando en
 $11 = saliendo de

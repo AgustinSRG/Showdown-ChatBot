@@ -15,7 +15,8 @@
 	"joinroom": {"group": "admin"},
 	"send": {"group": "admin"},
 	"say": {"group": "mod"},
-	"alts": {"group": "user"}
+	"alts": {"group": "user"},
+	"fullalts": {"group": "admin"}
   },
   "handlers": [
     "handlers/autojoin.js",
