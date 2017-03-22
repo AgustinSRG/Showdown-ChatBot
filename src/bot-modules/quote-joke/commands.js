@@ -2,8 +2,10 @@
  * Commands File
  *
  * quote: gets a random quote
+ * searchquote: filters quotes
  * listquotes: gets a link to the list of quotes
  * joke: gets a random joke
+ * searchjoke: filters jokes
  * listjokes: gets a link to the list of jokes
  * addquote: adds a quote
  * rmquote: removes a quote
@@ -30,6 +32,19 @@ module.exports = {
 		}
 	},
 
+	squote: "searchquote",
+	searchquote: function (App) {
+		this.setLangFile(Lang_File);
+		let arg = Text.trim(this.arg);
+		if (!arg) return this.errorReply(this.usage({desc: this.mlt(13)}));
+		let text = App.modules.quote.system.searchQuote(arg);
+		if (text) {
+			return this.restrictReply(Text.stripCommands(text), 'quote');
+		} else {
+			return this.errorReply(this.mlt(5));
+		}
+	},
+
 	listquotes: function (App) {
 		this.setLangFile(Lang_File);
 		let server = App.config.server.url;
@@ -51,6 +66,19 @@ module.exports = {
 			return this.restrictReply(Text.stripCommands(text), 'joke');
 		} else {
 			return this.errorReply(this.mlt(1));
+		}
+	},
+
+	sjoke: "searchjoke",
+	searchjoke: function (App) {
+		this.setLangFile(Lang_File);
+		let arg = Text.trim(this.arg);
+		if (!arg) return this.errorReply(this.usage({desc: this.mlt(13)}));
+		let text = App.modules.quote.system.searchJoke(arg);
+		if (text) {
+			return this.restrictReply(Text.stripCommands(text), 'joke');
+		} else {
+			return this.errorReply(this.mlt(9));
 		}
 	},
 

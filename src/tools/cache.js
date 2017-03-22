@@ -58,6 +58,17 @@ class BufferCache {
 		}
 		return null;
 	}
+
+	/**
+	 * @param {String} key
+	 */
+	remove(key) {
+		for (let i = 0; i < this.length; i++) {
+			if (this.data[i] && this.data[i].key === key) {
+				this.data[i] = null;
+			}
+		}
+	}
 }
 
 /**

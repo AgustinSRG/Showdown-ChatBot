@@ -9,86 +9,135 @@
 
 'use strict';
 
+const Path = require("path");
+const FileSystem = require("fs");
 const Text = Tools('text');
+const checkDir = Tools('checkdir');
+const BufferCache = Tools('cache').BufferCache;
 
 class UserDataManager {
 	constructor(App) {
 		this.app = App;
-		this.users = {};
+		this.path = Path.resolve(this.app.dataDir, "seen");
+		checkDir(this.path);
 		this.altstree = {};
+
+		this.cache = new BufferCache(50);
 
 		App.bot.on('disconnect', function () {
 			if (App.config.autoremoveuserdata) {
 				this.clean();
-			} else {
-				this.cleanAlts();
 			}
 		}.bind(this));
 
 		App.bot.on('userjoin', function (room, user) {
-			this.addUser(user, true);
-			this.updateLastSeen(user, "J", room);
+			this.updateLastSeen(user.substr(1), "J", room);
 		}.bind(this));
 
 		App.bot.on('userleave', function (room, user) {
-			this.addUser(user, false);
-			this.updateLastSeen(user, "L", room);
+			this.updateLastSeen(user, "L", room, null, true);
 		}.bind(this));
 
 		App.bot.on('userrename', function (room, user, newName) {
 			if (Text.toId(user) === Text.toId(newName)) {
-				this.addUser(newName, true);
 				return;
 			}
-			this.addUser(user, false);
-			this.addUser(newName, true);
-			this.updateLastSeen(user, "R", null, newName);
-			this.parseNameChange(user, newName);
+			this.updateLastSeen(user, "R", null, newName, true);
+			this.parseNameChange(user, newName.substr(1));
+			this.updateLastSeen(newName.substr(1), "J", room);
 		}.bind(this));
 
 		App.bot.on('userchat', function (room, time, user) {
-			this.addUser(user, true);
-			this.updateLastSeen(user, "C", room);
+			this.updateLastSeen(user.substr(1), "C", room);
 		}.bind(this));
+	}
+
+	getSeenFile(userid) {
+		if (!userid) return null;
+		let firstChar = userid.charAt(0);
+		try {
+			return FileSystem.readFileSync(Path.resolve(this.path, firstChar + ".seen.log")).toString();
+		} catch (err) {
+			return null;
+		}
+	}
+
+	cleanSeen() {
+		let files = FileSystem.readdirSync(this.path);
+		for (let i = 0; i < files.length; i++) {
+			try {
+				FileSystem.unlinkSync(Path.resolve(this.path, files[i]));
+			} catch (err) {}
+		}
+	}
+
+	getLastSeen(user) {
+		let id = Text.toId(user);
+		if (this.cache.has(id)) {
+			return this.cache.get(id);
+		}
+		let data = this.getSeenFile(id);
+		if (data === null) {
+			return null;
+		}
+		data = data.split("\n");
+		for (let line of data) {
+			if (line.substr(0, id.length + 1) === (id + ",")) {
+				try {
+					let userData = JSON.parse(line.substr(id.length + 1));
+					this.cache.cache(id, userData);
+					return userData;
+				} catch (err) {
+					return null;
+				}
+			}
+		}
+		return null;
+	}
+
+	updateLastSeen(user, type, room, detail, doNotChangeName) {
+		let id = Text.toId(user);
+		if (!id) return;
+		this.cache.remove(id);
+		let name = user;
+		let firstChar = id.charAt(0);
+		let data = this.getSeenFile(id);
+		if (data === null) {
+			data = [];
+		} else {
+			data = data.split("\n");
+		}
+		let index = -1;
+		for (let i = 0; i < data.length; i++) {
+			if (data[i].substr(0, id.length + 1) === (id + ",")) {
+				index = i;
+				break;
+			}
+		}
+		if (index === -1) {
+			data.push("");
+			index = data.length - 1;
+		} else if (doNotChangeName) {
+			try {
+				let obj = JSON.parse(data[index].substr(id.length + 1));
+				name = obj.name;
+			} catch (err) {}
+		}
+		let seenObj = {
+			type: type,
+			room: room,
+			time: Date.now(),
+		};
+		if (detail) {
+			seenObj.detail = detail;
+		}
+		data[index] = id + "," + JSON.stringify({name: name, lastSeen: seenObj});
+		FileSystem.writeFileSync(Path.resolve(this.path, firstChar + ".seen.log"), data.join("\n"));
 	}
 
 	cleanAlts() {
 		for (let k in this.altstree) {
 			delete this.altstree[k];
-		}
-	}
-
-	clean() {
-		this.cleanAlts();
-		for (let k in this.users) {
-			delete this.users[k];
-		}
-	}
-
-	addUser(name, updateName) {
-		let id = Text.toId(name);
-		if (!this.users[id]) {
-			this.users[id] = {
-				name: name,
-				lastSeen: null,
-			};
-		}
-		if (updateName) {
-			this.users[id].name = name;
-		}
-	}
-
-	updateLastSeen(user, type, room, detail) {
-		let id = Text.toId(user);
-		if (this.users[id]) {
-			this.users[id].lastSeen = {
-				type: type,
-				room: room,
-				time: Date.now(),
-			};
-			if (detail) {
-				this.users[id].lastSeen.detail = detail;
-			}
 		}
 	}
 
@@ -147,6 +196,11 @@ class UserDataManager {
 			}
 		}
 		return alts;
+	}
+
+	clean() {
+		this.cleanAlts();
+		this.cleanSeen();
 	}
 }
 

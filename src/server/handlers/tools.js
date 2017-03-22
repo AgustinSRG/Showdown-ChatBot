@@ -119,52 +119,55 @@ exports.setup = function (App) {
 				context.endWithText(Text.escapeHTML("Error: Invalid Username"));
 			} else if (user === Text.toId(App.bot.getBotNick())) {
 				context.endWithText(Text.escapeHTML("Bot nickname: " + App.bot.getBotNick() + " | No seen information"));
-			} else if (App.userdata.users[user] && App.userdata.users[user].lastSeen) {
-				let name = App.userdata.users[user].name;
-				let seen = App.userdata.users[user].lastSeen;
-				let time = Math.round((Date.now() - seen.time) / 1000);
-				let times = [];
-				let aux;
-				/* Get Time difference */
-				aux = time % 60; // Seconds
-				if (aux > 0 || time === 0) times.unshift(aux + ' ' + (aux === 1 ? "second" : "seconds"));
-				time = Math.floor(time / 60);
-				aux = time % 60; // Minutes
-				if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? "minute" : "minutes"));
-				time = Math.floor(time / 60);
-				aux = time % 24; // Hours
-				if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? "hour" : "hours"));
-				time = Math.floor(time / 24); // Days
-				if (time > 0) times.unshift(time + ' ' + (time === 1 ? "day" : "days"));
-				/* Reply */
-				let reply = "User" + ' ' + name.trim() + ' ' +
-				"was last seen" + ' ' + times.join(', ') + ' ' + "ago ";
-				switch (seen.type) {
-				case 'J':
-					reply += 'joining' + ' ';
-					break;
-				case 'L':
-					reply += 'leaving' + ' ';
-					break;
-				case 'C':
-					reply += 'chatting in' + ' ';
-					break;
-				case 'R':
-					reply += 'changing nick to' + ' ' + seen.detail;
-					break;
-				}
-				if (seen.type in {'J': 1, 'L': 1, 'C': 1}) {
-					reply += tryGetRoomTitle(seen.room);
-				}
-				reply = Text.escapeHTML(reply);
-				let alts = App.userdata.getAlts(user);
-				if (alts.length > 0) {
-					reply += '<br /><br />';
-					reply += 'Alts: ' + Text.escapeHTML(alts.join(', '));
-				}
-				context.endWithText(reply);
 			} else {
-				context.endWithText(Text.escapeHTML("User \"" + user + "\" has never been seen, at least since the last restart"));
+				let userData = App.userdata.getLastSeen(user);
+				if (userData) {
+					let name = userData.name;
+					let seen = userData.lastSeen;
+					let time = Math.round((Date.now() - seen.time) / 1000);
+					let times = [];
+					let aux;
+					/* Get Time difference */
+					aux = time % 60; // Seconds
+					if (aux > 0 || time === 0) times.unshift(aux + ' ' + (aux === 1 ? "second" : "seconds"));
+					time = Math.floor(time / 60);
+					aux = time % 60; // Minutes
+					if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? "minute" : "minutes"));
+					time = Math.floor(time / 60);
+					aux = time % 24; // Hours
+					if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? "hour" : "hours"));
+					time = Math.floor(time / 24); // Days
+					if (time > 0) times.unshift(time + ' ' + (time === 1 ? "day" : "days"));
+					/* Reply */
+					let reply = "User" + ' ' + name.trim() + ' ' +
+						"was last seen" + ' ' + times.join(', ') + ' ' + "ago ";
+					switch (seen.type) {
+					case 'J':
+						reply += 'joining' + ' ';
+						break;
+					case 'L':
+						reply += 'leaving' + ' ';
+						break;
+					case 'C':
+						reply += 'chatting in' + ' ';
+						break;
+					case 'R':
+						reply += 'changing nick to' + ' ' + seen.detail;
+						break;
+					}
+					if (seen.type in {'J': 1, 'L': 1, 'C': 1}) {
+						reply += tryGetRoomTitle(seen.room);
+					}
+					reply = Text.escapeHTML(reply);
+					let alts = App.userdata.getAlts(user);
+					if (alts.length > 0) {
+						reply += '<br /><br />';
+						reply += 'Alts: ' + Text.escapeHTML(alts.join(', '));
+					}
+					context.endWithText(reply);
+				} else {
+					context.endWithText(Text.escapeHTML("User \"" + user + "\" has never been seen, at least since the last restart"));
+				}
 			}
 		} else {
 			html += seenTemplate.get();

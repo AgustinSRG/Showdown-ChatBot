@@ -747,6 +747,7 @@ class BotRoom {
 		this.type = type || "chat";
 		this.title = "";
 		this.users = {};
+		this.localNames = {};
 	}
 
 	/**
@@ -762,6 +763,7 @@ class BotRoom {
 	userJoin(userIdent) {
 		let ident = Text.parseUserIdent(userIdent);
 		this.users[ident.id] = ident.group;
+		this.localNames[ident.id] = ident.name;
 	}
 
 	/**
@@ -769,6 +771,7 @@ class BotRoom {
 	 */
 	userLeave(user) {
 		delete this.users[Text.toId(user)];
+		delete this.localNames[Text.toId(user)];
 	}
 
 	/**
