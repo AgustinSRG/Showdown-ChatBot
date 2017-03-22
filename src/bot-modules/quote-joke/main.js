@@ -28,6 +28,18 @@ class QuoteMod {
 		return this.quotes[data[Math.floor(Math.random() * data.length)]];
 	}
 
+	searchQuote(words) {
+		words = words.toLowerCase();
+		let quotes = [];
+		for (let q in this.quotes) {
+			if (this.quotes[q].toLowerCase().indexOf(words) >= 0) {
+				quotes.push(this.quotes[q]);
+			}
+		}
+		if (!quotes.length) return null;
+		return quotes[Math.floor(Math.random() * quotes.length)];
+	}
+
 	addQuote(text) {
 		let num = 0;
 		while (this.quotes[num]) {
@@ -55,6 +67,18 @@ class QuoteMod {
 		let data = Object.keys(this.jokes);
 		if (!data.length) return null;
 		return this.jokes[data[Math.floor(Math.random() * data.length)]];
+	}
+
+	searchJoke(words) {
+		words = words.toLowerCase();
+		let jokes = [];
+		for (let j in this.jokes) {
+			if (this.jokes[j].toLowerCase().indexOf(words) >= 0) {
+				jokes.push(this.jokes[j]);
+			}
+		}
+		if (!jokes.length) return null;
+		return jokes[Math.floor(Math.random() * jokes.length)];
 	}
 
 	addJoke(text) {

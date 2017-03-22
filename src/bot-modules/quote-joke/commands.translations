@@ -15,6 +15,7 @@ $9 = Joke not found
 $10 = quote
 $11 = joke
 $12 = Feature not availbale
+$13 = text
 
 %spanish
 
@@ -31,3 +32,4 @@ $9 = Chiste no encontrado
 $10 = cita
 $11 = chiste
 $12 = Funcionalidad no disponible
+$13 = texto
