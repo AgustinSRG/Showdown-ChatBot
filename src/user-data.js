@@ -23,6 +23,8 @@ class UserDataManager {
 		this.altstree = {};
 
 		this.cache = new BufferCache(50);
+		this.writeBuffer = {};
+		this.writeTimer = setInterval(this.write.bind(this), (60 * 1000));
 
 		App.bot.on('disconnect', function () {
 			if (App.config.autoremoveuserdata) {
@@ -74,7 +76,7 @@ class UserDataManager {
 	getLastSeen(user) {
 		let id = Text.toId(user);
 		if (this.cache.has(id)) {
-			return this.cache.get(id);
+			return this.applyBuffer(id, this.cache.get(id));
 		}
 		let data = this.getSeenFile(id);
 		if (data === null) {
@@ -86,20 +88,46 @@ class UserDataManager {
 				try {
 					let userData = JSON.parse(line.substr(id.length + 1));
 					this.cache.cache(id, userData);
-					return userData;
+					return this.applyBuffer(id, userData);
 				} catch (err) {
 					return null;
 				}
 			}
 		}
-		return null;
+		if (this.writeBuffer[id]) {
+			return this.applyBuffer(id, {name: id, lastSeen: {}});
+		} else {
+			return null;
+		}
 	}
 
-	updateLastSeen(user, type, room, detail, doNotChangeName) {
-		let id = Text.toId(user);
-		if (!id) return;
+	applyBuffer(id, data) {
+		let newData = {};
+		for (let k in data) {
+			newData[k] = data[k];
+		}
+		if (this.writeBuffer[id]) {
+			if (this.writeBuffer[id].user) {
+				newData.name = this.writeBuffer[id].user;
+			}
+			newData.lastSeen.type = this.writeBuffer[id].type;
+			newData.lastSeen.room = this.writeBuffer[id].room;
+			newData.lastSeen.time = this.writeBuffer[id].time;
+			newData.lastSeen.detail = this.writeBuffer[id].detail;
+		}
+		return newData;
+	}
+
+	write() {
+		for (let id in this.writeBuffer) {
+			this.writeLastSeen(id);
+		}
+	}
+
+	writeLastSeen(id) {
+		if (!id || !this.writeBuffer[id]) return;
 		this.cache.remove(id);
-		let name = user;
+		let name = this.writeBuffer[id].user;
 		let firstChar = id.charAt(0);
 		let data = this.getSeenFile(id);
 		if (data === null) {
@@ -117,22 +145,37 @@ class UserDataManager {
 		if (index === -1) {
 			data.push("");
 			index = data.length - 1;
-		} else if (doNotChangeName) {
+		} else if (!name) {
 			try {
 				let obj = JSON.parse(data[index].substr(id.length + 1));
 				name = obj.name;
 			} catch (err) {}
 		}
 		let seenObj = {
-			type: type,
-			room: room,
-			time: Date.now(),
+			type: this.writeBuffer[id].type,
+			room: this.writeBuffer[id].room,
+			time: this.writeBuffer[id].time,
 		};
-		if (detail) {
-			seenObj.detail = detail;
+		if (this.writeBuffer[id].detail) {
+			seenObj.detail = this.writeBuffer[id].detail;
 		}
 		data[index] = id + "," + JSON.stringify({name: name, lastSeen: seenObj});
 		FileSystem.writeFileSync(Path.resolve(this.path, firstChar + ".seen.log"), data.join("\n"));
+		delete this.writeBuffer[id];
+	}
+
+	updateLastSeen(user, type, room, detail, doNotChangeName) {
+		let id = Text.toId(user);
+		if (!id) return;
+		let entry = this.writeBuffer[id] || {};
+		if (!doNotChangeName) {
+			entry.user = user;
+		}
+		entry.type = type;
+		entry.room = room;
+		entry.detail = detail;
+		entry.time = Date.now();
+		this.writeBuffer[id] = entry;
 	}
 
 	cleanAlts() {

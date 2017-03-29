@@ -26,6 +26,11 @@ exports.setup = function (App) {
 
 		if (context.post.exit) {
 			App.logServerAction(context.user.id, 'Exit Process');
+			try {
+				App.userdata.write(); /* Sync user-data */
+			} catch (err) {
+				App.reportCrash(err);
+			}
 			let buf = '';
 			buf += '<html><head><title>Process Exited</title></head><body><p>The application exits sucessfully.</p>' +
 			'<a href=""><button>Refresh Page</button></a></body></html>';
