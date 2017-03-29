@@ -14,6 +14,7 @@ const Max_Request_Flood = 100;
 const Flood_Interval = 30 * 1000;
 const Token_Max_Duration = 24 * 60 * 60 * 1000;
 const Encrypt_Algo = "aes-256-ctr";
+const Max_Body_Request_Size = 5 * 1024 * 1024;
 
 const Path = require('path');
 const Url = require('url');
@@ -22,6 +23,8 @@ const Https = require('https');
 const FileSystem = require('fs');
 const QueryString = require('querystring');
 const Crypto = require('crypto');
+const Stream = require('stream');
+const Busboy = require('busboy');
 
 const Static = Tools('server-static');
 const AbuseMonitor = Tools('abuse-monitor');
@@ -549,18 +552,54 @@ class RequestContext {
 		if (this.request.method === 'POST') {
 			let body = '';
 			this.request.on('data', function (data) {
+				if ((body.length + data.length) > Max_Body_Request_Size) {
+					this.request.connection.destroy();
+					return;
+				}
 				body += data;
-				if (body.length > 1e6) this.request.connection.destroy();
 			}.bind(this));
 			this.request.on('end', function () {
-				this.post = QueryString.parse(body);
-				/* Transform POST to string */
-				for (let key in this.post) {
-					if (typeof this.post[key] !== 'string') {
-						this.post[key] = JSON.stringify(this.post[key]);
-					}
+				let busboy = null;
+				try {
+					busboy = new Busboy({headers: this.request.headers});
+				} catch (err) {
+					this.server.app.reportCrash(err);
 				}
-				if (typeof callback === "function") return callback();
+				if (busboy) {
+					let files = this.files = {};
+					let post = this.post = {};
+					busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+						files[fieldname] = {
+							name: filename,
+							encoding: encoding,
+							mimetype: mimetype,
+							data: "",
+						};
+						file.on('data', function (data) {
+							files[fieldname].data += data;
+						});
+					});
+					busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
+						post[fieldname] = "" + val;
+					});
+					busboy.on('finish', function () {
+						if (typeof callback === "function") return callback();
+					});
+					let stream = new Stream.PassThrough();
+					stream.write(body);
+					stream.pipe(busboy);
+					stream.end();
+				} else {
+					this.post = QueryString.parse(body);
+					this.files = {};
+					/* Transform POST to string */
+					for (let key in this.post) {
+						if (typeof this.post[key] !== 'string') {
+							this.post[key] = JSON.stringify(this.post[key]);
+						}
+					}
+					if (typeof callback === "function") return callback();
+				}
 			}.bind(this));
 			return;
 		}
