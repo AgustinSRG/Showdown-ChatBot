@@ -131,6 +131,13 @@ class CommandParser {
 			}
 		}
 
+		for (let command in this.data.aliases) {
+			let ld = Text.levenshtein(command, cmd, maxLd);
+			if (ld <= maxLd) {
+				results.push({cmd: command, ld: ld});
+			}
+		}
+
 		let currLd = 10;
 		let chosen = '';
 
