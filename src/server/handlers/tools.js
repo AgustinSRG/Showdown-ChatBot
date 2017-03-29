@@ -10,6 +10,7 @@ const Text = Tools('text');
 const getEvalResult = Tools('eval');
 const SubMenu = Tools('submenu');
 const Template = Tools('html-template');
+const Crypto = require('crypto');
 
 const getServerTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-getserver.html'));
 const botSendTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-botsend.html'));
@@ -20,6 +21,7 @@ const hotpatchTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool
 const dowloadDataTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-ddata.html'));
 const cacheTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-cache.html'));
 const monitorTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-monitor.html'));
+const backupsTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-backups.html'));
 const evalTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-eval.html'));
 
 exports.setup = function (App) {
@@ -43,6 +45,7 @@ exports.setup = function (App) {
 			{id: 'ddata', title: 'Reload&nbsp;Data', url: '/tools/ddata/', handler: toolDownloadData},
 			{id: 'cache', title: 'Clear&nbsp;Cache', url: '/tools/cache/', handler: toolClearCache},
 			{id: 'cnnmonitor', title: 'Connection&nbsp;Monitor', url: '/tools/cnnmonitor/', handler: toolConnectionMonitor},
+			{id: 'backups', title: 'Backups', url: '/tools/backups/', handler: toolBackups},
 			{id: 'eval', title: 'Eval&nbsp;(JavaScript)', url: '/tools/eval/', handler: toolEval},
 		], 'getserver');
 
@@ -312,6 +315,88 @@ exports.setup = function (App) {
 		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
 	}
 
+	function toolBackups(context, html, parts) {
+		let ok = null, error = null;
+
+		if (App.dam.type !== "RAW") {
+			html += '<p><span class="error-msg">This tool is only available for raw-files mode.</span></p>';
+			context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
+			return;
+		}
+
+		if (context.post.savebackup) {
+			if (!context.post.cryptopassword) {
+				context.endWithText("Error: You must specify a password.");
+			} else {
+				let f = new Date();
+				context.response.writeHead(200, {'Content-Type': 'application/force-download',
+					'Content-Disposition': 'inline; filename="showdown_chatbot_' + f.getFullYear() + '_' +
+					(f.getMonth() + 1) + '_' + f.getDate() + '.backup"'});
+				let backupData = App.dam.getBackup();
+				let backup = {
+					signature: "$BACKUP$NATIVE$ENCRYPTED$/Showdown-Chatbot/" + App.env.package.version,
+					time: Date.now(),
+					files: backupData.files,
+					directories: backupData.directories,
+				};
+				context.response.end(encrypt(JSON.stringify(backup), "aes-256-ctr", context.post.cryptopassword));
+			}
+			return;
+		} else if (context.post.restorebackup) {
+			if (!context.post.cryptopassword) {
+				error = "You must specify a password.";
+			} else {
+				if (!context.files.backupfile) {
+					error = "You must upload a backup file.";
+				} else {
+					let backup = context.files.backupfile.data;
+					try {
+						backup = decrypt(backup, "aes-256-ctr", context.post.cryptopassword);
+					} catch (err) {
+						App.reportCrash(err);
+						error = "Invalid backup file: Corrupted data.";
+					}
+					if (!error) {
+						try {
+							backup = JSON.parse(backup);
+							if (typeof backup !== "object" || typeof backup.signature !== "string") {
+								throw new Error("Invalid backup.");
+							}
+						} catch (err) {
+							error = "Invalid backup file: Invalid password or corrupted file.";
+						}
+						if (!error) {
+							let signature = "$BACKUP$NATIVE$ENCRYPTED$";
+							if (backup.signature.substr(0, signature.length) === signature) {
+								App.dam.restoreBackup(backup.directories, backup.files);
+								App.logServerAction(context.user.id, 'Restore Backup | ' + backup.signature +
+									" | " + (new Date(backup.time)).toString());
+								App.logServerAction(context.user.id, 'Exit due to backup restore.');
+								let buf = '';
+								buf += '<html><head><title>Process Exited</title></head><body><p>Backup Completed.' +
+									' The application exits sucessfully.</p><a href=""><button>Refresh Page</button></a></body></html>';
+								context.response.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
+								context.response.end(buf);
+								console.log("Backup Completed | Exit via server, By: " + context.user.id);
+								process.exit(0);
+							} else {
+								error = "Invalid backup file: Invalid signature.";
+							}
+						}
+					}
+				}
+			}
+		}
+
+		let htmlVars = {};
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
+
+		html += backupsTemplate.make(htmlVars);
+
+		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
+	}
+
 	/* Auxiliar Functions */
 	function tryGetRoomTitle(room) {
 		if (App.bot.rooms[room]) {
@@ -319,5 +404,19 @@ exports.setup = function (App) {
 		} else {
 			return room;
 		}
+	}
+
+	function encrypt(text, algorithm, password) {
+		let cipher = Crypto.createCipher(algorithm, password);
+		let crypted = cipher.update(text, 'utf8', 'hex');
+		crypted += cipher.final('hex');
+		return crypted;
+	}
+
+	function decrypt(text, algorithm, password) {
+		let decipher = Crypto.createDecipher(algorithm, password);
+		let data = decipher.update(text, 'hex', 'utf8');
+		data += decipher.final('utf8');
+		return data;
 	}
 };

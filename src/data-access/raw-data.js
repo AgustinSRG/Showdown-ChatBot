@@ -13,6 +13,7 @@ const FileSystem = require('fs');
 
 class DataAccessManager {
 	constructor(options) {
+		this.type = "RAW";
 		this.path = options.path || Path.resolve(__dirname, '../../config/');
 	}
 
@@ -55,6 +56,39 @@ class DataAccessManager {
 
 	removeFile(filename) {
 		FileSystem.unlinkSync(Path.resolve(this.path, filename));
+	}
+
+	getBackup() {
+		let data = {files: [], directories: []};
+		this.searchFiles(this.path, data, "");
+		return data;
+	}
+
+	searchFiles(path, data, hierarchy) {
+		let files = FileSystem.readdirSync(path);
+		for (let file of files) {
+			let subpath = Path.resolve(path, file);
+			let stat = FileSystem.statSync(subpath);
+			if (stat.isFile()) {
+				data.files.push({
+					file: (hierarchy + file),
+					content: FileSystem.readFileSync(subpath).toString(),
+				});
+			} else if (stat.isDirectory()) {
+				data.directories.push(hierarchy + file + "/");
+				this.searchFiles(subpath, data, hierarchy + file + "/");
+			}
+		}
+	}
+
+	restoreBackup(directories, files) {
+		for (let dir of directories) {
+			checkDir(Path.resolve(this.path, dir));
+		}
+
+		for (let file of files) {
+			FileSystem.writeFileSync(Path.resolve(this.path, file.file), file.content);
+		}
 	}
 }
 

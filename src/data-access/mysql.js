@@ -34,6 +34,7 @@ function splitDataInRows(file, id, data) {
 
 class DataAccessManager {
 	constructor(options) {
+		this.type = "MYSQL";
 		this.pool = MYSQL.createPool(options.MYSQL);
 		this.data = [];
 		this.running = {};
