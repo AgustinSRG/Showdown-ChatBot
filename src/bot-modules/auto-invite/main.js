@@ -28,6 +28,10 @@ exports.setup = function (App) {
 			let cmds = [];
 			if (App.config.modules.autoinvite.room) {
 				cmds.push(App.config.modules.autoinvite.room + '|/roomauth');
+				if (this.popupHandler) {
+					App.bot.removeListener('popup', this.popupHandler);
+					this.popupHandler = null;
+				}
 				this.popupHandler = this.parsePopup.bind(this);
 				App.bot.on('popup', this.popupHandler);
 			}
@@ -53,6 +57,7 @@ exports.setup = function (App) {
 				this.roomAuth = auth;
 				App.log("[AUTO-INVITE] Roomauth realoaded from room: " + App.config.modules.autoinvite.room);
 				App.bot.removeListener('popup', this.popupHandler);
+				this.popupHandler = null;
 			}
 		}
 
