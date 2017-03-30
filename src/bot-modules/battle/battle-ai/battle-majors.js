@@ -184,7 +184,7 @@ exports.setup = function (App, BattleData) {
 				}
 			}
 			if (!poke) {
-				poke = new BattleData.Pokemon(BattleData.getPokemon(details.species, this.gen), {name: name});
+				poke = new BattleData.Pokemon(BattleData.getPokemon(details.species || Text.toId(name), this.gen), {name: name});
 				this.players[p].pokemon.push(poke);
 			}
 			poke.active = true;
