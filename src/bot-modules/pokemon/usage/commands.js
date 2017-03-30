@@ -108,7 +108,10 @@ module.exports = {
 				return this.restrictReply(this.mlt('stats') + ": " + link, 'usage');
 			}
 			let poke = "garchomp", searchIndex = -1;
-			let tier = 'ou';
+			let tier = App.config.modules.pokemon.gtier || 'ou';
+			if (this.room && App.config.modules.pokemon.roomtier && App.config.modules.pokemon.roomtier[this.room]) {
+				tier = App.config.modules.pokemon.roomtier[this.room];
+			}
 			let ladderType = Default_Rank;
 			let args = this.args;
 			for (let i = 0; i < args.length; i++) args[i] = Text.toId(args[i]);
@@ -233,7 +236,10 @@ module.exports = {
 					{desc: 'moves / items / abilities / spreads / teammates'}, {desc: 'tier', optional: true}));
 			}
 			let poke = "garchomp";
-			let tier = 'ou';
+			let tier = App.config.modules.pokemon.gtier || 'ou';
+			if (this.room && App.config.modules.pokemon.roomtier && App.config.modules.pokemon.roomtier[this.room]) {
+				tier = App.config.modules.pokemon.roomtier[this.room];
+			}
 			let dataType = Text.toId(args[1]);
 			if (!(dataType in {"moves": 1, "items": 1, "abilities": 1, "teammates": 1, "spreads": 1})) {
 				return this.errorReply(this.usage({desc: 'pokemon'},

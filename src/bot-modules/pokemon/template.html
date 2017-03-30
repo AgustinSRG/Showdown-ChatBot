@@ -1,0 +1,17 @@
+<h2>Pokemon Module Configuration</h2>
+<form method="post" action="">
+	<p>Default Format for Commands: <input name="format" type="text" size="30" value="${DEF_FORMAT}" /></p>
+	<p><input type="submit" name="save" value="Set Default Format" /></p>
+</form>
+<hr />
+<table border="1">
+	<tr><td width="200px"><div align="center"><strong>Room</strong></div></td><td width="200px"><div align="center"><strong>Default Format</strong></div></td><td width="150px"><div align="center"><strong>Options</strong></div></td></tr>
+	${ROOMS}
+</table>
+<hr />
+<form method="post" action="">
+	<p>Room: <input name="room" type="text" size="30" value="" /></p>
+	<p>Default Format: <input name="format" type="text" size="30" value="" /></p>
+	<p><input type="submit" name="setroom" value="Set Room Default Format" /></p>
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

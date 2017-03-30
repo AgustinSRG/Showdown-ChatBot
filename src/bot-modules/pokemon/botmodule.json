@@ -2,6 +2,9 @@
   "id": "pokemon",
   "name": "Pokemon",
   "main": "main.js",
+  "handlers": [
+    "server-handler.js"
+  ],
   "commands": [
     "poke-trans/commands.js",
 	"poke-data/commands.js",
