@@ -441,6 +441,14 @@ exports.setup = function (App) {
 			if (!this.side[condition]) this.side[condition] = 0;
 			this.side[condition]++;
 		}
+
+		countAlivePokemon() {
+			let alive = this.teamPv.length || 6;
+			for (let poke of this.pokemon) {
+				if (poke.fainted) alive--;
+			}
+			return alive;
+		}
 	}
 
 	BattleDataManager.Player = Player;

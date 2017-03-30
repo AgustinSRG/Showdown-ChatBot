@@ -203,6 +203,12 @@ exports.setup = function (Data) {
 				res.unviable.push(decisions[i]);
 				continue;
 			}
+			if (move.id in {"spikes": 1, "toxicspikes": 1, "stealthrock": 1, "stickyweb": 1}) {
+				if (battle.foe.countAlivePokemon() < 2) {
+					res.unviable.push(decisions[i]);
+					continue;
+				}
+			}
 			switch (move.id) {
 			case "spikes":
 				if (foeCanSwitch(battle) && conditionsB.side["spikes"] !== 3) res.viable.push(decisions[i]);
