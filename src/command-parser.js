@@ -599,22 +599,30 @@ class DynamicCommand {
 			context.restrictReply(Text.stripCommands(conf), 'info');
 			break;
 		case "object":
-			if (context.args.length > 0) {
-				let arg = Text.toCmdid(context.args.shift());
-				let cmd = context.cmd;
-				context.cmd += " " + arg;
-				if (conf[arg]) {
-					this.execNext(conf[arg], context);
-				} else if (Object.keys(conf).length) {
-					let spl = new LineSplitter(context.parser.app.config.bot.maxMessageLength);
-					spl.add((arg ? (context.parser.app.multilang.mlt(Lang_File, context.lang, 4) + ". ") : "") +
-						context.parser.app.multilang.mlt(Lang_File, context.lang, 5) + " " + Chat.bold(cmd) + ":");
-					let subCmds = Object.keys(conf);
-					for (let i = 0; i < subCmds.length; i++) {
-						spl.add(" " + subCmds[i] + (i < (subCmds.length - 1) ? ',' : ''));
-					}
-					context.errorReply(spl.getLines());
+			let spaceIndex = context.arg.indexOf(" ");
+			let arg;
+			if (spaceIndex === -1) {
+				arg = Text.toCmdid(context.arg);
+			} else {
+				arg = Text.toCmdid(context.arg.substr(0, spaceIndex));
+				context.arg = context.arg.substr(spaceIndex + 1);
+			}
+			let cmd = context.cmd;
+			context.cmd += " " + arg;
+			if (conf[arg]) {
+				this.execNext(conf[arg], context);
+			} else if (Object.keys(conf).length > 1) {
+				let spl = new LineSplitter(context.parser.app.config.bot.maxMessageLength);
+				spl.add((arg ? (context.parser.app.multilang.mlt(Lang_File, context.lang, 4) + ". ") : "") +
+					context.parser.app.multilang.mlt(Lang_File, context.lang, 5) + " " + Chat.bold(cmd) + ":");
+				let subCmds = Object.keys(conf);
+				for (let i = 0; i < subCmds.length; i++) {
+					spl.add(" " + subCmds[i] + (i < (subCmds.length - 1) ? ',' : ''));
 				}
+				context.errorReply(spl.getLines());
+			} else if (Object.keys(conf).length === 1) {
+				arg = Object.keys(conf)[0];
+				this.execNext(conf[arg], context);
 			}
 			break;
 		}
