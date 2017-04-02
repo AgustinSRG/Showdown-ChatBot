@@ -131,7 +131,7 @@ module.exports = {
 						(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
 				}
 				if (!App.bot.formats[format].chall || App.bot.formats[format].disableTournaments) {
-					return this.reply(this.mlt('e31') + ' ' + Chat.italics(App.bot.formats[format]) +
+					return this.reply(this.mlt('e31') + ' ' + Chat.italics(App.bot.formats[format].name) +
 						' ' + this.mlt('e32'));
 				}
 				details.format = format;
