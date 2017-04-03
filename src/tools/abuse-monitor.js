@@ -15,13 +15,14 @@ class AbuseMonitor {
 	 * @param {Number} maxFlood - Max number of hits
 	 * @param {Number} intervalFlood - Interval of time
 	 */
-	constructor(maxFlood, intervalFlood) {
+	constructor(maxFlood, intervalFlood, expireTime) {
 		this.events = new EventsManager();
 		this.usage = {};
 		this.times = {};
 		this.locked = {};
 		this.maxFlood = maxFlood;
 		this.intervalFlood = intervalFlood;
+		this.expireTime = expireTime || 0;
 	}
 
 	/**
@@ -45,6 +46,14 @@ class AbuseMonitor {
 	 * @returns {Boolean}
 	 */
 	isLocked(user) {
+		if (this.expireTime) {
+			for (let u in this.locked) {
+				if (Date.now() - this.locked[u].time > this.expireTime) {
+					delete this.locked[u];
+					this.events.emit('unlock', u);
+				}
+			}
+		}
 		return !!this.locked[user];
 	}
 
@@ -53,7 +62,7 @@ class AbuseMonitor {
 	 * @param {String} reason
 	 */
 	lock(user, reason) {
-		this.locked[user] = true;
+		this.locked[user] = {time: Date.now()};
 		this.events.emit('lock', user, reason);
 	}
 
@@ -79,7 +88,8 @@ class AbuseMonitor {
 		if (user in this.usage && duration < this.intervalFlood) {
 			this.usage[user]++;
 			if (this.usage[user] >= this.maxFlood) {
-				this.lock(user, 'User ' + user + ' has been locked (flood: ' + this.usage[user] + ' hits in the last ' + duration.duration() + ')');
+				this.lock(user, 'User ' + user + ' has been locked (flood: ' + this.usage[user] +
+					' hits in the last ' + (duration / 1000) + ' seconds)');
 				return true;
 			}
 		} else {

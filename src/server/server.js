@@ -12,9 +12,13 @@
 
 const Max_Request_Flood = 100;
 const Flood_Interval = 30 * 1000;
+const Lock_Max_Duration = 24 * 60 * 60 * 1000;
 const Token_Max_Duration = 24 * 60 * 60 * 1000;
 const Encrypt_Algo = "aes-256-ctr";
 const Max_Body_Request_Size = 5 * 1024 * 1024;
+const Max_Login_Flood = 5;
+const Login_Flood_Interval = 15 * 1000;
+const Login_Lock_Max_Duration = 1 * 60 * 60 * 1000;
 
 const Path = require('path');
 const Url = require('url');
@@ -111,7 +115,7 @@ class Server {
 		}
 
 		/* Server abuse monitor */
-		this.monitor = new AbuseMonitor(Max_Request_Flood, Flood_Interval);
+		this.monitor = new AbuseMonitor(Max_Request_Flood, Flood_Interval, Lock_Max_Duration);
 		this.monitor.on('lock', function (user, msg) {
 			this.app.log('[SERVER - ABUSE] [LOCK: ' + user + '] ' + msg);
 		}.bind(this));
@@ -121,6 +125,15 @@ class Server {
 		this.permissions = {
 			root: {desc: "Full access permission"},
 		};
+
+		/* Password abuse monitor */
+		this.loginMonitor = new AbuseMonitor(Max_Login_Flood, Login_Flood_Interval, Login_Lock_Max_Duration);
+		this.loginMonitor.on('lock', function (user, msg) {
+			this.app.log('[SERVER - LOGIN ABUSE] [LOCK: ' + user + '] ' + msg);
+		}.bind(this));
+		this.loginMonitor.on('unlock', function (user) {
+			this.app.log('[SERVER - LOGIN ABUSE] [UNLOCK: ' + user + ']');
+		}.bind(this));
 
 		/* User database */
 		try {
@@ -313,6 +326,11 @@ class Server {
 				}
 			}
 		} else if (user && context.post.login) {
+			let ip = context.ip;
+			if (this.loginMonitor.isLocked(ip)) {
+				context.endWithError(403, "Forbidden", "You cannot try to login. You are locked for 60 minutes.");
+				return false;
+			}
 			user = Text.toId(user);
 			if (this.users[user] && this.checkPassword(this.users[user].password, pass)) {
 				this.app.log('[LOGIN] Userid: ' + user + ' | IP: ' + context.ip);
@@ -321,10 +339,12 @@ class Server {
 				user = new User(this.users[user]);
 				context.setUser(user);
 			} else {
+				this.loginMonitor.count(ip);
 				this.app.log('[INVALID PASSWORD] Userid: ' + user + ' | IP: ' + context.ip);
 				context.setInvalidLogin(user);
 			}
 		}
+		return true;
 	}
 
 	/**
@@ -382,7 +402,7 @@ class Server {
 		}
 		let context = new RequestContext(this, request, response, ip);
 		context.resolveVars(function () {
-			this.applyLogin(context);
+			if (!this.applyLogin(context)) return;
 			try {
 				this.serve(context);
 			} catch (error) {
