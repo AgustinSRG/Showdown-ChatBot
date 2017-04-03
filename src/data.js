@@ -193,7 +193,7 @@ class DataManager {
 	wget(url, callback, customCache) {
 		this.cache.sweep();
 		if (customCache && customCache.has(url)) {
-			return customCache.get(url);
+			return callback(customCache.get(url));
 		} else if (this.cache.has(url)) {
 			let cache = this.cache.get(url);
 			if (cache) {
