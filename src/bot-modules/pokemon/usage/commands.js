@@ -157,7 +157,8 @@ module.exports = {
 						return App.parser.exec(this);
 					} else {
 						return this.errorReply(this.mlt('tiererr1') + " \"" +
-							tierName(tier, App) + "\" " + this.mlt('tiererr3') + '. ' + this.mlt('pokeerr3'));
+							tierName(tier, App) + "\" " + this.mlt('tiererr3') + '. ' + this.mlt('pokeerr3') +
+								'. ' + this.mlt('pleasecheck') + ': ' + link);
 					}
 				} else {
 					if (!App.data.cache.has(url)) {
@@ -286,7 +287,8 @@ module.exports = {
 						return App.parser.exec(this);
 					} else {
 						return this.errorReply(this.mlt('tiererr1') + " \"" +
-							tierName(tier, App) + "\" " + this.mlt('tiererr3') + '. ' + this.mlt('pokeerr4'));
+							tierName(tier, App) + "\" " + this.mlt('tiererr3') + '. ' + this.mlt('pokeerr4') +
+							'. ' + this.mlt('pleasecheck') + ': ' + link);
 					}
 				} else {
 					if (!App.data.cache.has(url)) {
