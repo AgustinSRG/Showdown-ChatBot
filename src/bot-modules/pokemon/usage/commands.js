@@ -14,7 +14,7 @@ const Chat = Tools('chat');
 const LineSplitter = Tools('line-splitter');
 const Cache = Tools('cache').BufferCache;
 
-const UsageFailureCache = new Cache(20);
+const UsageFailureCache = new Cache(20, 2 * 60 * 60 * 1000);
 
 const Lang_File = Path.resolve(__dirname, 'commands.translations');
 

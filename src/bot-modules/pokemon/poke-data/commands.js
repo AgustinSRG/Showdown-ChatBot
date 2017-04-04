@@ -108,7 +108,11 @@ module.exports = {
 			return this.errorReply(this.mlt(5) + ' ' + Chat.italics(id) + ' ' + this.mlt(2) +
 				(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
 		} else if (!moves.length) {
-			return this.errorReply(this.mlt(9) + ' ' + Chat.italics(Moves.getPokeName(id, App)));
+			if (id === "smeargle") {
+				return this.restrictReply(Chat.italics(Moves.getPokeName(id, App)) + ' ' + this.mlt(18) + '.', 'pokemon');
+			} else {
+				return this.errorReply(this.mlt(9) + ' ' + Chat.italics(Moves.getPokeName(id, App)));
+			}
 		} else {
 			return this.restrictReply(this.mlt(10) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + ': ' + moves.join(', '), 'pokemon');
 		}
@@ -133,7 +137,11 @@ module.exports = {
 			return this.errorReply(this.mlt(5) + ' ' + Chat.italics(id) + ' ' + this.mlt(2) +
 				(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
 		} else if (!moves.length) {
-			return this.errorReply(this.mlt(11) + ' ' + Chat.italics(Moves.getPokeName(id, App)));
+			if (id === "smeargle") {
+				return this.restrictReply(Chat.italics(Moves.getPokeName(id, App)) + ' ' + this.mlt(18) + '.', 'pokemon');
+			} else {
+				return this.errorReply(this.mlt(11) + ' ' + Chat.italics(Moves.getPokeName(id, App)));
+			}
 		} else {
 			return this.restrictReply(this.mlt(12) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + ': ' + moves.join(', '), 'pokemon');
 		}
@@ -158,7 +166,11 @@ module.exports = {
 			return this.errorReply(this.mlt(5) + ' ' + Chat.italics(id) + ' ' + this.mlt(2) +
 				(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
 		} else if (!moves.length) {
-			return this.errorReply(this.mlt(13) + ' ' + Chat.italics(Moves.getPokeName(id, App)));
+			if (id === "smeargle") {
+				return this.restrictReply(Chat.italics(Moves.getPokeName(id, App)) + ' ' + this.mlt(18) + '.', 'pokemon');
+			} else {
+				return this.errorReply(this.mlt(13) + ' ' + Chat.italics(Moves.getPokeName(id, App)));
+			}
 		} else {
 			return this.restrictReply(this.mlt(14) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + ': ' + moves.join(', '), 'pokemon');
 		}
@@ -183,7 +195,11 @@ module.exports = {
 			return this.errorReply(this.mlt(5) + ' ' + Chat.italics(id) + ' ' + this.mlt(2) +
 				(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
 		} else if (!moves.length) {
-			return this.errorReply(this.mlt(15) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + '');
+			if (id === "smeargle") {
+				return this.restrictReply(Chat.italics(Moves.getPokeName(id, App)) + ' ' + this.mlt(18) + '.', 'pokemon');
+			} else {
+				return this.errorReply(this.mlt(15) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + '');
+			}
 		} else {
 			return this.restrictReply(this.mlt(16) + ' ' + Chat.italics(Moves.getPokeName(id, App)) + ': ' + moves.join(', '), 'pokemon');
 		}

@@ -17,13 +17,15 @@ const EventManager = Tools('events');
 class BufferCache {
 	/**
 	 * @param {Number} length
+	 * @param {Number} expiration
 	 */
-	constructor(length) {
+	constructor(length, expiration) {
 		this.data = [];
 		this.length = length;
 		for (let i = 0; i < length; i++) {
 			this.data.push(null);
 		}
+		this.expiration = expiration || 0;
 	}
 
 	/**
@@ -32,7 +34,7 @@ class BufferCache {
 	 */
 	cache(key, value) {
 		this.data.pop();
-		this.data.unshift({key: key, value: value});
+		this.data.unshift({key: key, value: value, time: Date.now()});
 	}
 
 	/**
@@ -41,6 +43,9 @@ class BufferCache {
 	 */
 	has(key) {
 		for (let i = 0; i < this.length; i++) {
+			if (this.expiration && this.data[i] && (Date.now() - this.data[i].time) > this.expiration) {
+				this.remove(this.data[i].key);
+			}
 			if (this.data[i] && this.data[i].key === key) return true;
 		}
 		return false;
