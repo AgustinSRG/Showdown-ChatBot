@@ -84,6 +84,6 @@ exports.setup = function (App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "AutoInvite - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Pokemon - Showdown ChatBot"});
 	});
 };
