@@ -291,6 +291,7 @@ exports.setup = function (App) {
 			}
 		} else if (context.post.add) {
 			let exportable = (context.post.exportable || "");
+			console.log("EXPORTABLE = " + exportable);
 			let format = Text.toId(context.post.format);
 			let id = Text.toId(context.post.id);
 			let packed = '';
@@ -299,8 +300,9 @@ exports.setup = function (App) {
 				check(!mod.TeamBuilder.dynTeams[id], "Team already exists");
 				check(exportable, "Team cannot be blank");
 				check(format, "You must specify a format");
-				check(App.bot.formats[format], "Invalid Format");
+				check(Object.keys(App.bot.formats).length === 0 || App.bot.formats[format], "Invalid Format");
 				let team = Teams.teamToJSON(exportable);
+				console.log("JSON = " + JSON.stringify(team));
 				packed = Teams.packTeam(team);
 			} catch (err) {
 				error = err.message;

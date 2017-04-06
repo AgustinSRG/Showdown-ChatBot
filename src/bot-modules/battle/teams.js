@@ -179,8 +179,10 @@ exports.setup = function (App) {
 				App.reportCrash(e);
 				template = null;
 			}
-			if (!template) return '';
-			let abilities = template.abilities;
+			if (!template) {
+				template = {};
+			}
+			let abilities = template.abilities || {};
 			id = Text.toId(set.ability);
 			if (abilities) {
 				if (abilities['0'] && id === Text.toId(abilities['0'])) {
