@@ -144,7 +144,7 @@ exports.setup = function (App) {
 		}
 
 		let htmlVars = {};
-		htmlVars.content = addonContent;
+		htmlVars.content = JSON.stringify(addonContent);
 		htmlVars.file = path;
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));

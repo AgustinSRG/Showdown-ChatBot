@@ -119,7 +119,7 @@ exports.setup = function (App) {
 		htmlVars.useproxy = (App.config.useproxy ? 'checked="checked"' : '');
 		htmlVars.blockautodownload = (App.config.blockautodownload ? 'checked="checked"' : '');
 		htmlVars.rmuserdata = (App.config.autoremoveuserdata ? 'checked="checked"' : '');
-		htmlVars.mainhtml = (App.config.mainhtml || '');
+		htmlVars.mainhtml = JSON.stringify(App.config.mainhtml || '');
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
