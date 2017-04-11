@@ -24,20 +24,6 @@ function toWordId(str) {
 	return str.toLowerCase().replace(/[^a-z0-9\u00f1]/g, '');
 }
 
-function parseWinners(winners, lang) {
-	let res = {
-		type: 'win',
-		text: Chat.bold(winners[0]),
-	};
-	if (winners.length < 2) return res;
-	res.type = 'tie';
-	for (let i = 1; i < winners.length - 1; i++) {
-		res.text += ", " + Chat.bold(winners[i]);
-	}
-	res.text += " " + this.mlt('and', lang) + " " + Chat.bold(winners[winners.length - 1]);
-	return res;
-}
-
 exports.setup = function (App) {
 	function getLanguage(room) {
 		return App.config.language.rooms[room] || App.config.language['default'];
@@ -67,6 +53,20 @@ exports.setup = function (App) {
 
 		mlt(key, vars) {
 			return App.multilang.mlt(Lang_File, this.lang, key, vars);
+		}
+
+		parseWinners(winners) {
+			let res = {
+				type: 'win',
+				text: Chat.bold(winners[0]),
+			};
+			if (winners.length < 2) return res;
+			res.type = 'tie';
+			for (let i = 1; i < winners.length - 1; i++) {
+				res.text += ", " + Chat.bold(winners[i]);
+			}
+			res.text += " " + this.mlt('and') + " " + Chat.bold(winners[winners.length - 1]);
+			return res;
 		}
 
 		send(txt) {
@@ -171,7 +171,7 @@ exports.setup = function (App) {
 				App.modules.games.system.terminateGame(this.room);
 				return;
 			}
-			let t = parseWinners(winners);
+			let t = this.parseWinners(winners);
 			let txt = Chat.bold(this.mlt('end')) + " ";
 			switch (t.type) {
 			case 'win':
