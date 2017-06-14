@@ -44,7 +44,7 @@ class UserDataManager {
 			if (Text.toId(user) === Text.toId(newName)) {
 				return;
 			}
-			this.updateLastSeen(user, "R", null, newName, true);
+			this.updateLastSeen(user, "R", null, newName.substr(1), true);
 			this.parseNameChange(user, newName.substr(1));
 			this.updateLastSeen(newName.substr(1), "J", room);
 		}.bind(this));
