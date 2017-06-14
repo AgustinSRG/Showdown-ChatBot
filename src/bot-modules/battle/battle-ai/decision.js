@@ -238,6 +238,7 @@ exports.getDecisions = function (battle) {
 				for (let j = 0; j < zMove.length; j++) {
 					let z = zMove[j] ? zMove[j].move : "";
 					if (!z) continue;
+					if (!active.moves[j]) continue;
 					let zData = zMove[j];
 					if (active.moves[j].pp === 0) continue; // No more moves
 					let mega = false;
