@@ -246,6 +246,11 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	let typesMux = 1;
 	let moveType = move.type;
 	let inmune = false;
+	let noLevitation = false;
+
+	if (gconditions['gravity'] || conditionsB.volatiles['smackdown']) {
+		noLevitation = true;
+	}
 
 	switch (move.id) {
 	case "naturalgift":
@@ -262,6 +267,9 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		else if (gconditions.weather === "sandstorm") moveType = "Rock";
 		else if (gconditions.weather === "hail") moveType = "Ice";
 		else moveType = "Normal";
+		break;
+	case "thousandarrows":
+		noLevitation = true;
 		break;
 	}
 
@@ -320,11 +328,16 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			if (gen >= 3 && pokeA.ability && pokeA.ability.id === "scrappy") eff = 1;
 		}
 		if (move.id === "freezedry" && defTypes[t] === "Water") eff = 2;
+		if (moveType === "Ground" && noLevitation && defTypes[t] === "Flying") eff = 1;
 		if (gconditions["inversebattle"]) {
 			if (eff === 0) eff = 2;
 			else eff = 1 / eff;
 		}
 		typesMux *= eff;
+	}
+
+	if (move.id === 'thousandarrows' && !gconditions['gravity'] && !conditionsB.volatiles['smackdown'] && !pokeB.isGrounded()) {
+		typesMux = 1; /* Hit neutral */
 	}
 
 	if (gen >= 3 && pokeB.ability && (!pokeA.ability || !(pokeA.ability.id in {"moldbreaker": 1, "turboblaze": 1, "teravolt": 1}))) {
@@ -338,7 +351,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			if (moveType === "Fire") inmune = true;
 			break;
 		case "levitate":
-			if (moveType === "Ground") inmune = true;
+			if (moveType === "Ground" && !noLevitation) inmune = true;
 			break;
 		case "lightningrod":
 		case "motordrive":
@@ -526,7 +539,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	if (pokeB.item) {
 		switch (pokeB.item.id) {
 		case "airballoon":
-			if (moveType === "Ground") bp = 0;
+			if (moveType === "Ground" && !noLevitation) bp = 0;
 			break;
 		}
 	}
@@ -597,13 +610,13 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 
 	/* Field */
 
-	if (pokeA.isGrounded()) {
+	if (pokeA.isGrounded() || conditionsA.volatiles['smackdown'] || gconditions['gravity']) {
 		if (gconditions["electricterrain"] && moveType === "Electric") bp = Math.floor(bp * 1.5);
 		if (gconditions["grassyterrain"] && moveType === "Grass") bp = Math.floor(bp * 1.5);
 		if (gconditions["psychicterrain"] && moveType === "Psychic") bp = Math.floor(bp * 1.5);
 	}
 
-	if (pokeB.isGrounded()) {
+	if (pokeB.isGrounded() || conditionsB.volatiles['smackdown'] || gconditions['gravity']) {
 		if (gconditions["psychicterrain"] && move.priority > 0) bp = 0;
 		if (gconditions["grassyterrain"] && (move.id in {"bulldoze": 1, "earthquake": 1, "magnitude": 1})) bp = Math.floor(bp * 1.5);
 		if (gconditions["mistyterrain"] && moveType === "Dragon") bp = Math.floor(bp * 0.5);
