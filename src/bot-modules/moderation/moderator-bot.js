@@ -85,7 +85,7 @@ class ModeratorBot {
 		} else if (val === 'max') {
 			context.pointVal += 3;
 		}
-		context.muteMessage += ' (' + this.app.multilang.mlt(Lang_File, '0tol') + ')';
+		context.muteMessage += ' (' + this.app.multilang.mlt(Lang_File, this.getLanguage(context.room), '0tol') + ')';
 	}
 
 	botCanModerate(room) {
