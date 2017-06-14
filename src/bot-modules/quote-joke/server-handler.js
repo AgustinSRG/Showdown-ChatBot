@@ -23,9 +23,9 @@ exports.setup = function (App) {
 
 	/* Handlers */
 	App.server.setHandler('quotejoke', (context, parts) => {
-		if (parts[0].split('?')[0] === 'listquotes') {
+		if (parts[0] && parts[0].split('?')[0] === 'listquotes') {
 			return serveQuotesList(context);
-		} else if (parts[0].split('?')[0] === 'listjokes') {
+		} else if (parts[0] && parts[0].split('?')[0] === 'listjokes') {
 			return serveJokesList(context);
 		}
 
