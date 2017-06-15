@@ -12,6 +12,7 @@ const Chat = Tools('chat');
 const Inexact = Tools('inexact-pokemon');
 
 const Lang_File = Path.resolve(__dirname, 'commands.translations');
+const TourTypes = {"elimination": 1, "roundrobin": 1};
 
 function parseAliases(format, App) {
 	const Config = App.config.modules.tourcmd;
@@ -68,7 +69,9 @@ module.exports = {
 				args[i] = args[i].trim();
 				if (!args[i]) continue;
 				splArg = args[i].split("=");
-				if (splArg.length < 2) {
+				if (i > 0 && splArg.length < 2 && Text.toId(args[i]) in TourTypes) {
+					params.type = args[i];
+				} else if (splArg.length < 2) {
 					switch (i) {
 					case 0:
 						params.format = args[i];
@@ -165,7 +168,7 @@ module.exports = {
 			}
 			if (params.type) {
 				let type = Text.toId(params.type);
-				if (type !== 'elimination' && type !== 'roundrobin') {
+				if (!(type in TourTypes)) {
 					return this.reply(this.mlt('e7'));
 				}
 				details.type = type;
