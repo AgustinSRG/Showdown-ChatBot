@@ -28,7 +28,7 @@ exports.setup = function (Data) {
 	BattleModule.id = "ingame-nostatus";
 
 	/* Bad moves for 1v1 */
-	const BadMoves = ['focuspunch', 'explosion', 'selfdestruct', 'lastresort', 'futuresight'];
+	const BadMoves = ['focuspunch', 'explosion', 'selfdestruct', 'lastresort', 'futuresight', 'firstimpression', 'synchronoise'];
 
 	/* Moves which require 2 turns without any protection */
 	const DoubleTurnMoves = ['solarbeam'];
@@ -155,6 +155,11 @@ exports.setup = function (Data) {
 
 		if (a.canMegaEvo || p.canMegaEvo) {
 			if (!des.mega) return 0; // Mega evolve by default
+		}
+		if (move.id === "fakeout") {
+			if (!(battle.self.active[act].helpers.sw === battle.turn || battle.self.active[act].helpers.sw === battle.turn - 1)) {
+				return 0; // Fake out only works for first turn
+			}
 		}
 
 		let pokeA = battle.getCalcRequestPokemon(act, true);

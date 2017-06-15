@@ -574,6 +574,11 @@ exports.setup = function (Data) {
 					res.immune.push(decisions[i]);
 					continue;
 				}
+			} else if (move.id === "firstimpression") {
+				if (!(battle.self.active[0].helpers.sw === battle.turn || battle.self.active[0].helpers.sw === battle.turn - 1)) {
+					res.immune.push(decisions[i]);
+					continue;
+				}
 			} else if (move.id === "futuresight") {
 				if (battle.self.active[0].volatiles && battle.self.active[0].volatiles['futuresight']) {
 					res.immune.push(decisions[i]);
