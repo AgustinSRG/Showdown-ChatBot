@@ -9,7 +9,8 @@
 	"timer": {"group": "driver"}
   },
   "langfiles": [
-    "./commands.translations"
+    "./commands.translations",
+	"./timers.translations"
   ],
   "description": "Timeout commands for chat rooms"
 }

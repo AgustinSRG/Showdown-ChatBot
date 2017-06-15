@@ -27,6 +27,9 @@ module.exports = {
 		let seconds = parseInt(this.args[1]) || 0;
 		let time = (minutes * 60) + seconds;
 		time = time * 1000;
+		if (Mod.timers[this.room]) {
+			return this.errorReply(this.mlt(3) + ". " + this.mlt(8) + " ``" + this.token + "stoptimer`` " + this.mlt(9));
+		}
 		if (isNaN(time) || time <= 0) {
 			return this.errorReply(this.usage({desc: this.mlt(6)}, {desc: this.mlt(7)}));
 		}
