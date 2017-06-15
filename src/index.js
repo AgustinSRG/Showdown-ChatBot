@@ -53,6 +53,8 @@ function setup(env) {
 		}
 	}
 
+	dataconfig.path = confDir;
+
 	const dam = DataAccessManager.getDataAccessManager(datamode, dataconfig);
 
 	dam.init(err => {
