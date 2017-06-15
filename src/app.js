@@ -360,6 +360,8 @@ class ChatBotApp {
 			}
 			return true;
 		} catch (err) {
+			console.log("Add-on Crashed: " + file);
+			this.log("Add-on Crashed: " + file);
 			this.reportCrash(err);
 			return false;
 		}
