@@ -1,5 +1,7 @@
 ﻿# Translations File
 
+@ moderation-filter-banword
+
 %english
 
 $banword = Your message contained a banned phrase

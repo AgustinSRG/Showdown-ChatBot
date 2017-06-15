@@ -22,5 +22,13 @@
     "handlers/autojoin.js",
 	"handlers/login.js"
   ],
+  "langfiles": [
+    "../../command-parser.translations",
+	"../../command-usage.translations",
+    "./commands/cmd-admin.translations",
+	"./commands/control.translations",
+	"./commands/exec-cmd.translations",
+	"./commands/seen.translations"
+  ],
   "description": "Essential Module"
 }

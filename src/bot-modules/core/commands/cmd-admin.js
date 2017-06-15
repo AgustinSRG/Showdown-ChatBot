@@ -78,7 +78,7 @@ module.exports = {
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(this.mlt(6));
 		let lang = Text.toId(this.args[0]);
 		if (!lang) return this.errorReply(this.usage({desc: this.mlt('language')}));
-		if (lang in App.languages) {
+		if ((lang in App.multilang.getLanguages()) && App.multilang.isLangEnabled(lang)) {
 			App.config.language.rooms[room] = lang;
 			App.saveConfig();
 			this.addToSecurityLog();
@@ -87,7 +87,7 @@ module.exports = {
 				' ' + this.mlt(8) + ' ' + Chat.italics(lang));
 		} else {
 			this.errorReply(this.mlt(9) + ' ' + Chat.italics(lang) + ' ' +
-				this.mlt(10) + ': ' + Object.values(App.languages).join(', '));
+				this.mlt(10) + ': ' + Object.values(App.multilang.getLanguages()).join(', '));
 		}
 	},
 

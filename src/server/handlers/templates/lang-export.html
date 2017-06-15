@@ -1,0 +1,12 @@
+<div align="center">
+	${MENU}
+	<hr />
+</div>
+<form method="post" action="">
+	<p><textarea id="textareacontent" name="content" cols="140" rows="20"></textarea></p>
+	<p><input type="submit" name="edit" value="Save Changes" /></p>
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
+<script type="text/javascript">
+	document.getElementById("textareacontent").value = ${CONTENT};
+</script>

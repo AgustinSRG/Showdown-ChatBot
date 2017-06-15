@@ -25,7 +25,7 @@ exports.setup = function (App) {
 
 	/* Handlers */
 	App.server.setHandler('dyncmd', (context, parts) => {
-		if (parts[0].split('?')[0] === 'list') {
+		if (parts[0] && parts[0].split('?')[0] === 'list') {
 			return serveDynCmdList(context);
 		}
 

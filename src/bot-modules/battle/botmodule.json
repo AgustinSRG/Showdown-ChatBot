@@ -12,5 +12,9 @@
   "handlers": [
     "server-handler.js"
   ],
+  "langfiles": [
+    "./commands.translations",
+	"./ladder.translations"
+  ],
   "description": "Automated battle bot for ladder, challenges and tournaments"
 }

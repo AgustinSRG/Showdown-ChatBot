@@ -1,5 +1,7 @@
 # Translations File
 
+@ core-cmd
+
 %english
 
 $0 = The command

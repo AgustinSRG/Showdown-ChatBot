@@ -1,5 +1,7 @@
 ﻿# Translations File
 
+@ games-words-cmd
+
 %english
 
 $nochat = This command is only available for chat rooms

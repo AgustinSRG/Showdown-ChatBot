@@ -1,5 +1,7 @@
 ﻿# Translations file
 
+@ pokemon-usage-cmd
+
 %english
 
 $error = An error ocurred, try again later

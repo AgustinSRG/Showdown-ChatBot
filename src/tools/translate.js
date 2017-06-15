@@ -17,6 +17,7 @@ class Translator {
 	constructor(file, loadFilter) {
 		if (!loadFilter) loadFilter = {};
 		this.data = {};
+		this.id = null;
 		let str = FileSystem.readFileSync(file).toString();
 		let lines = str.split('\n');
 		let currentLang = null;
@@ -24,6 +25,11 @@ class Translator {
 			lines[i] = lines[i].trim();
 			if (!lines[i]) continue;
 			switch (lines[i].charAt(0)) {
+			case '@':
+				if (this.id === null) {
+					this.id = Text.toRoomid(lines[i].substr(1));
+				}
+				break;
 			case '%':
 				currentLang = Text.toId(lines[i].substr(1));
 				if (!currentLang || loadFilter[currentLang] === false) {
@@ -45,6 +51,13 @@ class Translator {
 	}
 
 	/**
+	 * @returns {Boolean}
+	 */
+	hasId() {
+		return !(this.id === null);
+	}
+
+	/**
 	 * @param {String|Number} key
 	 * @param {String} lang
 	 * @returns {String} Translated key
@@ -61,6 +74,19 @@ class Translator {
 			}
 			return 'undefined';
 		}
+	}
+
+	/**
+	 * @returns {Array} Keys
+	 */
+	getKeys() {
+		let keys = {};
+		for (let l in this.data) {
+			for (let k in this.data[l]) {
+				keys[k] = true;
+			}
+		}
+		return Object.keys(keys);
 	}
 }
 

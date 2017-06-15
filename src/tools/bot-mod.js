@@ -21,6 +21,7 @@ class BotMod {
 		this.name = config.name;
 		this.description = config.description || "";
 		this.version = config.version;
+		this.langfiles = config.langfiles || [];
 		if (config.main) {
 			this.system = require(Path.resolve(path, config.main));
 			if (typeof this.system.setup === "function") {

@@ -1,7 +1,23 @@
-<h2>Bot Language Configuration</h2>
+<script type="text/javascript">
+	function showRemoveConfirm(lang) {
+			var elem = document.getElementById('confirm-remove-' + lang);
+			if (elem) {
+				elem.innerHTML = '<form style="display:inline;" method="post" action=""><input type="hidden" name="lang" value="' + 
+				lang + '" />&nbsp;Are you sure?&nbsp;<input type="submit" name="removecustomlang" value="Confirm Remove" /></form>';
+			}
+		}
+</script>
 <form  method="post" action="">
 	${LANGCHECKS}
 	<p><input type="submit" name="setfilter" value="Set Available Languages" /></p>
+</form>
+<hr />
+<table>
+	${LANGDEFS}
+</table>
+<form method="post" action="">
+	<p><input name="lang" type="text" size="30" />&nbsp;&nbsp;
+	<input type="submit" name="addcustomlang" value="Add Custom Language" /></p>
 </form>
 <hr />
 <form  method="post" action="">

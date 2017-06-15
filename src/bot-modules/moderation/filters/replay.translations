@@ -1,5 +1,7 @@
 ﻿# Translations File
 
+@ moderation-filter-replay
+
 %english
 
 $replays = Replays are not allowed in this room

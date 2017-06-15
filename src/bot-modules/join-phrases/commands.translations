@@ -1,5 +1,7 @@
 ﻿# Translations file
 
+@ joinphrases-cmd
+
 %english
 
 $nochat = This command is only available for chat rooms

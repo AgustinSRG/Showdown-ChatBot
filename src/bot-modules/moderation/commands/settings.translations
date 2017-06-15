@@ -1,5 +1,7 @@
 ﻿# Translations File
 
+@ moderation-settings-cmd
+
 %english
 
 $nochat = This command is only available for chat rooms

@@ -16,5 +16,10 @@
 	"usage": {"group": "voice"},
 	"usagedata": {"group": "driver"}
   },
+  "langfiles": [
+    "./poke-data/commands.translations",
+	"./poke-trans/commands.translations",
+	"./usage/commands.translations"
+  ],
   "description": "Pokemon help commands"
 }

@@ -20,5 +20,20 @@
 	"handlers/bannedwords.js",
 	"handlers/zerotolerance.js"
   ],
+  "langfiles": [
+    "./mod.translations",
+	"./commands/banwords.translations",
+	"./commands/settings.translations",
+	"./commands/zerotolerance.translations",
+	"./filters/bannedwords.translations",
+	"./filters/caps.translations",
+	"./filters/flood.translations",
+	"./filters/replay.translations",
+	"./filters/servers.translations",
+	"./filters/spam.translations",
+	"./filters/spoiler.translations",
+	"./filters/stretching.translations",
+	"./filters/youtube.translations"
+  ],
   "description": "Automated moderation for chat rooms"
 }

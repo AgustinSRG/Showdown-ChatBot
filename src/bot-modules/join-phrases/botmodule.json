@@ -11,5 +11,8 @@
   "handlers": [
     "server-handler.js"
   ],
+  "langfiles": [
+    "./commands.translations"
+  ],
   "description": "Phrases to be sent when an user joins a room"
 }

@@ -12,5 +12,8 @@
 	"tourofficial": {"group": "mod"},
 	"toursrank": {"group": "driver"}
   },
+  "langfiles": [
+    "./commands.translations"
+  ],
   "description": "Tournament leaderboards for chat rooms"
 }

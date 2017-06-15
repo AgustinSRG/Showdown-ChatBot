@@ -1,5 +1,7 @@
 ﻿# Translations file
 
+@ tourcmd-errors
+
 %english
 
 $0 = Error: Tournaments are disabled in this room

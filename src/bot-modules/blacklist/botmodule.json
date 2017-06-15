@@ -12,5 +12,9 @@
   "handlers": [
     "server-handler.js"
   ],
+  "langfiles": [
+    "./commands.translations",
+	"./blacklist.translations"
+  ],
   "description": "An user blacklist for chat rooms"
 }

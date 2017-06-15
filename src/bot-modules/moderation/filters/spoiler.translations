@@ -1,5 +1,7 @@
 ﻿# Translations File
 
+@ moderation-filter-spoiler
+
 %english
 
 $spoiler = Spoilers are not allowed in this room

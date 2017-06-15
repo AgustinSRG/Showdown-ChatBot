@@ -9,5 +9,8 @@
   "permissions": {
     "gitban": {"group": "admin"}
   },
+  "langfiles": [
+    "./commands.translations"
+  ],
   "description": "Provides notifications of repositories updates"
 }

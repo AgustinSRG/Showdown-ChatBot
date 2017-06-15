@@ -14,5 +14,8 @@
 	"editquote": {"group": "admin"},
 	"editjoke": {"group": "admin"}
   },
+  "langfiles": [
+    "./commands.translations"
+  ],
   "description": "A database of quotes and jokes"
 }

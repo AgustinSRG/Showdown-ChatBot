@@ -1,0 +1,12 @@
+<script type="text/javascript">
+	function showRemoveConfirm () {
+			var elem = document.getElementById('confirm-remove');
+			if (elem) {
+				elem.innerHTML = '<form style="display:inline;" method="post" action="">&nbsp;Are you sure?&nbsp;<input type="submit" name="remove" value="Confirm" /></form>';
+			}
+		}
+</script>
+<big><b><u>Translations File:</u></b></big> ${FILES_MENU}
+<hr />
+${CONTENT}
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

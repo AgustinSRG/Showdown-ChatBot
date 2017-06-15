@@ -1,5 +1,7 @@
 ﻿# Translations File
 
+@ games-blackjack
+
 %english
 
 $and = and
@@ -9,9 +11,9 @@ $init2 = Use
 $init3 = to participate and
 $init4 = to start the game
 $start = The game of BlackJack has started!
-$topcard = Dealer\'s Top Card
+$topcard = Dealer's Top Card
 $turn1 = 
-$turn2 = \'s turn!
+$turn2 = 's turn!
 $helpturn1 = Use
 $helpturn2 = to obtain new cards and
 $helpturn3  to terminate your turn (you have a max of

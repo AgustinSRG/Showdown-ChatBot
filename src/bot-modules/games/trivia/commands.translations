@@ -1,5 +1,7 @@
 ﻿# Translations File
 
+@ games-trivia-cmd
+
 %english
 
 $nochat = This command is only available for chat rooms

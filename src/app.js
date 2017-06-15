@@ -137,14 +137,8 @@ class ChatBotApp {
 		if (!this.config.langfilter) {
 			this.config.langfilter = {};
 		}
-		this.multilang = new LanguageManager(this.config.langfilter);
+		this.multilang = new LanguageManager(this.config.langfilter, this);
 		this.supportedLanguages = require(Path.resolve(__dirname, 'languages.json'));
-		this.languages = {};
-		for (let lang in this.supportedLanguages) {
-			if (this.config.langfilter[lang] !== false) {
-				this.languages[lang] = this.supportedLanguages[lang];
-			}
-		}
 		if (!this.config.language) {
 			this.config.language = {
 				"default": "english",
@@ -286,6 +280,7 @@ class ChatBotApp {
 							let mod = new BotMod(Path.resolve(path, file), conf, this);
 							this.modules[mod.id] = mod;
 							this.parser.addCommands(mod.commands);
+							this.multilang.addLangFiles(mod.langfiles, Path.resolve(path, file));
 							console.log('NEW MODULE: ' + mod.name);
 						} else if (!this.modules[conf.id]) {
 							this.modules[conf.id] = {

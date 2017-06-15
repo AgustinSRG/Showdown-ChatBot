@@ -11,5 +11,8 @@
   "handlers": [
     "server-handler.js"
   ],
+  "langfiles": [
+    "./commands.translations"
+  ],
   "description": "Special subcommands using /htmlbox showdown feature"
 }

@@ -1,5 +1,7 @@
 ﻿# Translations file
 
+@ blacklist
+
 %english
 
 $ban = Blacklisted User
