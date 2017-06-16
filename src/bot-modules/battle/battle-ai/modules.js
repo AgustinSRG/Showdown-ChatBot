@@ -45,7 +45,7 @@ exports.setup = function (App, BattleData) {
 
 		/* Module decision by default */
 
-		if (tier in {'challengecup1v1': 1, '1v1': 1}) {
+		if (tier in {'gen7challengecup1v1': 1, 'challengecup1v1': 1, '1v1': 1}) {
 			if (modules["ingame-nostatus"]) {
 				battle.debug("Battle module [" + battle.id + "] - Using ingame-nostatus");
 				return modules["ingame-nostatus"];
