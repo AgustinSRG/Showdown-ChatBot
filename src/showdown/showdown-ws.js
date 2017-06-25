@@ -66,6 +66,7 @@ class Bot {
 		this.closed = false;
 		this.status = new BotStatus();
 		this.events = new Events();
+		this.events.setMaxListeners(50);
 
 		this.rooms = {};
 		this.formats = {};
