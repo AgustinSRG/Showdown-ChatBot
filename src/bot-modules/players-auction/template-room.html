@@ -1,0 +1,28 @@
+<script type="text/javascript">
+	function confirmDelete() {
+		var elem = document.getElementById('confirm-delete');
+		if (elem) {
+			elem.innerHTML = '<form style="display:inline;" method="post" action="/auction/">' + 
+			'<input type="hidden" name="room" value="${ROOM}" />' +
+			'Are you sure?&nbsp;<input type="submit" name="remove" value="Confirm Delete" /></form>';
+		}
+		return false;
+	}
+</script>
+<div align="center">
+	<h2>Players-Auction</h2>
+	${SUBMENU}
+</div>
+<hr />
+<h3>Players-Auction data for ${NAME}</h3>
+<form method="post" action="">
+	<p><textarea id="textareacontent" name="content" cols="140" rows="20"></textarea></p>
+	<p><input type="submit" name="edit" value="Save Changes" /></p>
+</form>
+<p><b>Warning:</b> Do not modify this data if you do not know what are you doing.</p>
+<p><button onclick="confirmDelete();">Delete Auction</button>&nbsp;<span id="confirm-delete"></span></p>
+<script type="text/javascript">
+	document.getElementById("textareacontent").value = ${CONTENT};
+</script>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
+

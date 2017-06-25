@@ -1,0 +1,19 @@
+{
+  "id": "playersauction",
+  "name": "Players Auction",
+  "main": "main.js",
+  "commands": [
+    "commands.js"
+  ],
+  "handlers": [
+    "server-handler.js"
+  ],
+  "permissions": {
+	"auction": {"group": "owner"},
+	"makeauction": {"group": "admin"}
+  },
+  "langfiles": [
+    "auction.translations"
+  ],
+  "description": "Players auctions for Pokemon team tournaments"
+}

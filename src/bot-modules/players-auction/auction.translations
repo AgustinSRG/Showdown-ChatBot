@@ -1,0 +1,157 @@
+﻿# Translations file
+
+@ players-auction
+
+%english
+
+$0 = Team ${TEAM} has the turn to nominate a player. The captain may use ``.nominate <player>`` or ``.passturn``
+$1 = **Time is out!** Player ${PLAYER} is assigned to team ${TEAM} for ${COST}
+$2 = **The bid is over!** Player ${PLAYER} is assigned to team ${TEAM} for ${COST}
+
+$err1 = You cannot use this command while a bid is active.
+$err2 = Players-Auction is not enabled for this room.
+$nochat = This command is only available for chat rooms
+
+$u1 = name
+$u2 = team
+$u3 = player
+$u4 = nomination cost (K)
+$u5 = players to complete a team
+$u6 = seconds
+$u7 = money (K)
+$u8 = cost
+$u9 = captain
+$u10 = sub-captain
+
+$3 = New team in the auction: ${TEAM}
+$4 = The team you want to include already exists.
+$5 = Team deleted from this auction: ${TEAM}
+$6 = The team you want to delete does not exists.
+$7 = Players registered: ${PLAYERS}
+$8 = Specified players had invalid nicknames or were already registered.
+$9 = Players deleted: ${PLAYERS}
+$10 = Specified players had invalid nicknames or were not registered in the auction.
+$11 = Money must be multiple of 0.5 K, other decimal values are not allowed.
+$12 = Nomination cost is now ${MONEY}
+$13 = The number of players to complete a team is now ${MINP}
+$14 = The time for bid must be higher than 10 seconds.
+$15 = The time for bid is now ${SEG} seconds.
+$16 = The team ${TEAM} is not registered in this auction.
+$17 = The nomination turn is now for team: ${TEAM}
+$18 = The auction has been stopped. Assign the turn to a team in order to continue it.
+$19 = The money of team ${TEAM} is now ${MONEY}
+$20 = Player ${PLAYER} is not registered in this auction.
+$21 = Player ${PLAYER} was assigned to team ${TEAM} for ${MONEY}
+$22 = Player ${PLAYER} is now free and can be nominated. ${MONEY} were returned to team ${TEAM}
+$23 = The captain of team ${TEAM} is now ${USER}
+$23b = The sub-captain of team ${TEAM} is now ${USER}
+
+$24 = Team ${TEAM} thas the turn to nominate. The captain or sub-captain may use ``.nominate <player>`` or ``.passturn``
+$25 = There is no turn assigned. Use the command ``.auction turn, <team>`` to assign the turn to a team.
+$26 = Player ${PLAYER} has been nominated by ${TEAM} for ${COST}! | Use ``.bid <money>`` to bid higher.
+
+$27 = Auction teams
+$28 = There are no teams registered in this auction
+
+$29 = ${TEAM} | ${MONEY} | Captain: ${CAPTAIN} | Sub-Captain: ${SUBCAPTAIN} | Players:
+$30 = none
+
+$31 = Auction Players
+$32 = There are no players registered
+$33 = Players without team
+$34 = There are no players without team
+$35 = Configuration failure
+
+$36 = Your team does not have enough money to bid ${COST}
+$37 = Player ${PLAYER} is already memeber of a team.
+$38 = Player ${PLAYER} has been nominated by ${TEAM} for ${COST}! | Use ``.bid <money>`` to bid higher. The time to bid is ${SEG} seconds.
+$39 = You are not captain or sub-captain of team ${TEAM}
+$40 = You cannot use this command while a bid is active.
+$41 = You cannot pass the turn. You must complete your team.
+$42 = Your team does not have enough money to bid ${COST}
+$43 = You must complete your team. You cannot bid so high.
+$44 = The money must be higher than the current bid.
+$45 = Team ${TEAM} bids ${COST} for ${PLAYER} | Use ``.bid <money>`` to bid higher. The time to bid is ${SEG} seconds.
+$46 = You already had the highest bid.
+$47 = You are not part of a team in this auction.
+$48 = There are not nominated players.
+
+$49 = There is already an auction in room ${ROOM}
+$50 = Auction created for room ${ROOM}
+
+%spanish
+
+$0 = El equipo ${TEAM} tiene el turno para nominar. El capitán o sub-capitan debe usar ``.nominate <jugador>`` o bien ``.passturn``
+$1 = **¡El tiempo ha terminado!** El jugador ${PLAYER} es asignado al equipo ${TEAM} por ${COST}
+$2 = **¡La puja ha finalizado!** El jugador ${PLAYER} es asignado al equipo ${TEAM} por ${COST}
+
+$err1 = No puedes configurar la subasta mientras se está pujando.
+$err2 = Las subastas de jugadores no están activadas en esta sala.
+$nochat = Este comando solo está disponible para las salas de chat
+
+$u1 = nombre
+$u2 = equipo
+$u3 = jugador
+$u4 = coste mínimo por jugador (K)
+$u5 = número de jugadores para completar un equipo
+$u6 = segundos
+$u7 = dinero (K)
+$u8 = coste
+$u9 = capitán
+$u10 = sub-capitán
+
+$3 = Nuevo equipo en la subasta: ${TEAM}
+$4 = El equipo que intenta incluir en la subasta ya existe.
+$5 = Equipo eliminado de la subasta: ${TEAM}
+$6 = El equipo que intenta eliminar no está registrado en la subasta.
+$7 = Jugadores registrados: ${PLAYERS}
+$8 = Los jugadores especificados tenían nicks no válidos o ya estaban registrados en la subasta.
+$9 = Jugadores eliminados: ${PLAYERS}
+$10 = Los jugadores especificados tenían nicks no válidos o no estaban registrados en la subasta.
+$11 = El dinero debe ser entero o múltiplo de 0.5 K, no se admiten otros valores decimales.
+$12 = El precio mínimo de un jugador ahora es de ${MONEY}
+$13 = El número mínimo de jugadores que un equipo debe tener es de ${MINP}
+$14 = El tiempo para pujar debe ser igual o mayor a 10 segundos.
+$15 = El tiempo de puja ahora es de ${SEG} segundos.
+$16 = El equipo ${TEAM} no está registrado en la subasta.
+$17 = El turno ahora lo tiene el equipo ${TEAM}
+$18 = La subasta se ha detenido. Asigna el turno a un equipo para continuarla.
+$19 = El dinero del equipo ${TEAM} ahora es de ${MONEY}
+$20 = El jugador ${PLAYER} no esta registrado en la subasta
+$21 = El jugador ${PLAYER} es asignado al equipo ${TEAM} por ${MONEY}
+$22 = El jugador ${PLAYER} ya no tiene equipo y puede ser nominado. Se han devuelto ${MONEY} al equipo ${TEAM}
+$23 = El capitán del equipo ${TEAM} ahora es ${USER}
+$23b = El sub-capitán del equipo ${TEAM} ahora es ${USER}
+
+$24 = El equipo ${TEAM} tiene el turno para nominar. El capitán o sub-capitán debe usar ``.nominate <jugador>`` o bien ``.passturn``
+$25 = No hay un turno establecido. Usa el comando ``.auction turn, <equipo>`` para establecerlo
+$26 = Nominado el jugador ${PLAYER} | Equipo ${TEAM} por ${COST} | Usa ``.bid <cantidad>`` para pujar más alto.
+
+$27 = Equipos de la subasta
+$28 = No hay equipos registrados en la subasta
+
+$29 = ${TEAM} | ${MONEY} | Capitán: ${CAPTAIN} | Sub-Capitán: ${SUBCAPTAIN} | Jugadores:
+$30 = ninguno
+
+$31 = Jugadores de la subasta
+$32 = No hay jugadores en la subasta
+$33 = Jugadores sin equipo
+$34 = No hay jugadores sin equipo
+$35 = Fallo en la configuración
+
+$36 = Tu equipo no tiene suficiente dinero para pujar a ${COST}
+$37 = El jugador ${PLAYER} ya es miembro de un equipo.
+$38 = Nominado el jugador ${PLAYER} | Equipo ${TEAM} por ${COST} | Usa ``.bid <cantidad>`` para pujar más alto. El tiempo para pujar es de ${SEG} segundos.
+$39 = No eres el capitán ni el sub-capitán del equipo ${TEAM}
+$40 = No puedes hacer esto cuando hay una puja en marcha
+$41 = No puedes pasar el turno. Aún debes completar tu equipo.
+$42 = Tu equipo no tiene suficiente dinero para pujar a ${MONEY}
+$43 = A tu equipo aun le faltan jugadores. No puedes pujar tan alto.
+$44 = La puja debe ser mayor a la puja actual
+$45 = El equipo ${TEAM} puja ${COST} por ${PLAYER} | Usa ``.bid <cantidad>`` para pujar más alto. El tiempo para pujar es de ${SEG} segundos.
+$46 = Ya tenias la puja más alta.
+$47 = No formas parte de ningún equipo de la subasta
+$48 = No hay ningún jugador nominado
+
+$49 = Ya existe una subasta en la sala ${ROOM}
+$50 = Subasta creada para la sala ${ROOM}
