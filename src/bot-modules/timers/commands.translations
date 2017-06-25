@@ -13,8 +13,6 @@ $4 = There is not a timer running in this room
 $5 = The timer was stopped
 $6 = minutes
 $7 = seconds
-$8 = Use
-$9 = to stop it
 
 %spanish
 
@@ -27,5 +25,3 @@ $4 = No había ningún timer activo en esta sala
 $5 = El timer se ha detenido
 $6 = minutos
 $7 = segundos
-$8 = Usa
-$9 = para detenerlo

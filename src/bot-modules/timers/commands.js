@@ -17,19 +17,19 @@ const Lang_File = Path.resolve(__dirname, 'commands.translations');
 module.exports = {
 	timer: 'starttimer',
 	starttimer: function (App) {
+		const Mod = App.modules.timers.system;
 		this.setLangFile(Lang_File);
+		if (Mod.timers[this.room]) {
+			return this.restrictReply(this.mlt(3) + " | " + Mod.timers[this.room].getAnnounce(), 'timer');
+		}
 		if (!this.can('timer', this.room)) return this.replyAccessDenied('timer');
 		if (this.getRoomType(this.room) !== 'chat') {
 			return this.errorReply(this.mlt('nochat'));
 		}
-		const Mod = App.modules.timers.system;
 		let minutes = parseFloat(this.args[0]) || 0;
 		let seconds = parseInt(this.args[1]) || 0;
 		let time = (minutes * 60) + seconds;
 		time = time * 1000;
-		if (Mod.timers[this.room]) {
-			return this.errorReply(this.mlt(3) + ". " + this.mlt(8) + " ``" + this.token + "stoptimer`` " + this.mlt(9));
-		}
 		if (isNaN(time) || time <= 0) {
 			return this.errorReply(this.usage({desc: this.mlt(6)}, {desc: this.mlt(7)}));
 		}
