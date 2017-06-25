@@ -25,6 +25,13 @@ const Package = require(Path.resolve(__dirname, 'package.json'));
 
 console.log(Util.format('Showdown-ChatBot %s', Package.version));
 
+try {
+	require('busboy');
+} catch (e) {
+	console.log('Installing dependencies...');
+	require('child_process').spawnSync('sh', ['-c', 'npm install --production'], {stdio: 'inherit'});
+}
+
 require(Path.resolve(__dirname, 'src/dependencies.js'));
 
 console.log('Initializing...');
