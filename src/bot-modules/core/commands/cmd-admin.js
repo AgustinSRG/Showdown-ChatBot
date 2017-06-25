@@ -108,6 +108,18 @@ module.exports = {
 		if (!Temp_Var) return this.errorReply(this.mlt(11) + ' ' + Chat.code(this.token + 'temp <' + this.usageTrans('text') + '>'));
 		let cmd = Text.toCmdid(this.args[0]);
 		if (!cmd) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
+		if (this.args[0].indexOf(" ") > 0) {
+			let spaceIndex = this.args[0].indexOf(" ");
+			let icmd = Text.toCmdid(this.args[0].substr(0, spaceIndex));
+			let isubcmd = Text.toCmdid(this.args[0].substr(spaceIndex));
+			if (typeof App.parser.data.dyncmds[icmd] === 'object') {
+				this.cmd = 'setsubcmd';
+				this.arg = icmd + ", " + isubcmd;
+				this.args = [icmd, isubcmd];
+				this.parser.exec(this);
+				return;
+			}
+		}
 		if (typeof App.parser.data.dyncmds[cmd] === 'object') {
 			return this.errorReply(this.mlt(0) + ' ' + Chat.italics(cmd) + ' ' + this.mlt(12));
 		}
