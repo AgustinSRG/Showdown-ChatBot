@@ -5,10 +5,9 @@
 'use strict';
 
 const Path = require('path');
-const Translator = Tools('translate');
 const Tournament = require(Path.resolve(__dirname, 'tournament.js'));
 
-const translator = new Translator(Path.resolve(__dirname, 'errors.translations'));
+const Lang_File = Path.resolve(__dirname, 'errors.translations');
 
 exports.setup = function (App) {
 	if (!App.config.modules.tourcmd) {
@@ -58,11 +57,11 @@ exports.setup = function (App) {
 			msg = msg.substr(Error_Open.length, msg.length - (Error_Open.length + Error_Close.length));
 			/* Specific error messages, may be updated frecuently */
 			if (msg === "Tournaments are disabled in this room (" + room + ").") {
-				App.bot.sendTo(room, translator.get(0, getLanguage(room)));
+				App.bot.sendTo(room, App.multilang.mlt(Lang_File, getLanguage(room), 0));
 			} else if (msg === "&#x2f;tournament - Access denied.") {
-				App.bot.sendTo(room, translator.get(1, getLanguage(room)));
+				App.bot.sendTo(room, App.multilang.mlt(Lang_File, getLanguage(room), 1));
 			} else if (msg === "The server is restarting soon, so a tournament cannot be created.") {
-				App.bot.sendTo(room, translator.get(2, getLanguage(room)));
+				App.bot.sendTo(room, App.multilang.mlt(Lang_File, getLanguage(room), 2));
 			} else {
 				return;
 			}
