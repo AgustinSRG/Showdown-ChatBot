@@ -111,6 +111,7 @@ exports.setup = function (App) {
 		if (!file) {
 			return context.endWith404();
 		}
+
 		let path = App.addonsDir + '/' + file;
 		let addonContent = '';
 		try {
@@ -134,6 +135,7 @@ exports.setup = function (App) {
 			if (!error) {
 				App.removeAddon(addon);
 				App.dam.setFileContent(addon, content);
+				addonContent = content;
 				if (!App.installAddon(addon)) {
 					error = "Failed to re-install the add-on";
 				} else {
