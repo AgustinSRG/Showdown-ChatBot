@@ -8,6 +8,16 @@
 
 'use strict';
 
+/* Dependencies */
+
+try {
+	require('sockjs-client');
+	require('busboy');
+} catch (e) {
+	console.log('Installing dependencies...');
+	require('child_process').spawnSync('sh', ['-c', 'npm install --production'], {stdio: 'inherit'});
+}
+
 /* Object extensions */
 
 if (!Object.merge) {
