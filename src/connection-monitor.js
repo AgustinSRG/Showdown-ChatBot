@@ -63,7 +63,6 @@ class ConnectionMonitor {
 			this.timer = null;
 		}
 	}
-
 }
 
 module.exports = ConnectionMonitor;

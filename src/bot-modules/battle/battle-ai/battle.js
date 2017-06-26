@@ -460,7 +460,7 @@ exports.setup = function (App) {
 			let details = this.parseDetails(p.details);
 			let condition = this.parseStatus(p.condition);
 			let pokeA = new Calc.Pokemon(BattleData.getPokemon(details.species, this.gen),
-			{level: details.level, shiny: details.shiny, gender: details.gender});
+				{level: details.level, shiny: details.shiny, gender: details.gender});
 			pokeA.item = BattleData.getItem(p.item, this.gen);
 			pokeA.ability = BattleData.getAbility(p.baseAbility, this.gen);
 			pokeA.status = condition.status;

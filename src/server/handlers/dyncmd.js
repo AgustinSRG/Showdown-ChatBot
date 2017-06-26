@@ -98,7 +98,7 @@ exports.setup = function (App) {
 			try {
 				check(cmd && sub, "You must specify a subcommand.");
 				check(typeof App.parser.data.dyncmds[cmd] === 'object' && App.parser.data.dyncmds[cmd][sub],
-				"The command <strong>" + cmd + "&nbsp;" + sub + "</strong> does not exists.");
+					"The command <strong>" + cmd + "&nbsp;" + sub + "</strong> does not exists.");
 			} catch (err) {
 				error = err.message;
 			}
