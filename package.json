@@ -16,7 +16,7 @@
     "node": "> 4.0.0"
   },
   "dependencies": {
-    "sockjs-client": "1.1.1",
+    "sockjs-client": "1.1.4",
 	"busboy": "0.2.14"
   },
   "optionalDependencies": {
@@ -34,6 +34,6 @@
   "private": true,
   "license": "MIT",
   "devDependencies": {
-    "eslint": "3.11.1"
+    "eslint": "4.1.1"
   }
 }
