@@ -89,28 +89,32 @@ class Server {
 		this.https = null;
 		this.httpsOptions = {};
 		if (config.https) {
-			let sslkey = Path.resolve(path, 'ssl-key.pem');
-			let sslcert = Path.resolve(path, 'ssl-cert.pem');
-			if (app.env.sslkey !== undefined) {
-				sslkey = app.env.sslkey;
-			}
-			if (app.env.sslcert !== undefined) {
-				sslcert = app.env.sslcert;
-			}
-			this.httpsOptions = {
-				port: config.httpsPort,
-				bindaddress: config.bindaddress,
-			};
-			try {
-				this.https = new Https.Server({key: FileSystem.readFileSync(sslkey),
-					cert: FileSystem.readFileSync(sslcert)}, this.requestHandler.bind(this));
-			} catch (err) {
+			let sslkey = Path.resolve(app.appDir, config.sslkey);
+			let sslcert = Path.resolve(app.appDir, config.sslcert);
+			if (sslkey && sslcert) {
+				if (app.env.sslkey !== undefined) {
+					sslkey = app.env.sslkey;
+				}
+				if (app.env.sslcert !== undefined) {
+					sslcert = app.env.sslcert;
+				}
+				this.httpsOptions = {
+					port: config.httpsPort,
+					bindaddress: config.bindaddress,
+				};
+				try {
+					this.https = new Https.Server({key: FileSystem.readFileSync(sslkey),
+						cert: FileSystem.readFileSync(sslcert)}, this.requestHandler.bind(this));
+				} catch (err) {
+					console.log('Could not create a ssl server. Missing key and certificate.');
+				}
+				if (this.https) {
+					this.https.on('error', function (error) {
+						this.app.log("[SERVER] HTTPS ERROR - " + error.code + ":" + error.message);
+					}.bind(this));
+				}
+			} else {
 				console.log('Could not create a ssl server. Missing key and certificate.');
-			}
-			if (this.https) {
-				this.https.on('error', function (error) {
-					this.app.log("[SERVER] HTTPS ERROR - " + error.code + ":" + error.message);
-				}.bind(this));
 			}
 		}
 

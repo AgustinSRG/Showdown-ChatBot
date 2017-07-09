@@ -44,6 +44,7 @@ class ChatBotApp {
 		this.dam = dam;
 
 		/* Check paths */
+		this.appDir = Path.resolve(__dirname, "..");
 		this.confDir = confDir;
 		checkDir(confDir);
 		this.dataDir = dataDir;
@@ -99,6 +100,8 @@ class ChatBotApp {
 				port: Default_Server_Port,
 				https: false,
 				httpsPort: 5000,
+				sslcert: "",
+				sslkey: "",
 			};
 		}
 

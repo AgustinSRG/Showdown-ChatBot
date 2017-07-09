@@ -15,6 +15,8 @@
 		<tr><td><strong>Http Port</strong>: </td><td><input type="text" name="port" value="${PORT}" /></td></tr>
 		<tr><td><strong>Https Port (optional)</strong>: </td><td><input type="text" name="sslport" value="${SSLPORT}" /></td></tr>
 		<tr><td><strong>Bind Address</strong>: </td><td><input type="text" name="bindaddress" value="${BINDADDRESS}" /></td></tr>
+		<tr><td><strong>SSL Certificate</strong>: </td><td><input type="text" name="sslcert" value="${SSLCERT}" /></td></tr>
+		<tr><td><strong>SSL Key</strong>: </td><td><input type="text" name="sslkey" value="${SSLKEY}" /></td></tr>
 		<tr><td><strong>Current Server Url</strong>: </td><td><input type="text" name="appurl" value="${APPURL}" /></td></tr>
 		<tr><td><strong>Application Title</strong>: </td><td><input type="text" name="apptitle" value="${APPTITLE}" /></td></tr>
 		<tr><td><strong>Websocket Library</strong>: </td><td><select name="wslib">
@@ -31,9 +33,6 @@
 	<p><input type="checkbox" name="rmuserdata" value="true" ${RMUSERDATA} />&nbsp;Remove User-Data on connection reset.</p>
 	<p><textarea id="textareamainhtml" name="mainhtml" cols="80" rows="4" placeholder="Custom HTML for main page. Leave this blank for default page."></textarea></p>
 	<p><input type="submit" name="savechanges" value="Save Changes" /></p>
-</form>
-<form method="post" action="">
-	<p><input type="submit" name="genssl" value="Generate SSL Certificate" /></p>
 </form>
 <input type="hidden" name="uptime" id="uptime" value="${UPTIME}" />
 <p><span id="show-uptime">&nbsp;</span></p>

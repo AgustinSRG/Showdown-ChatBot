@@ -39,33 +39,22 @@ exports.setup = function (App) {
 			console.log("Exit via server, By: " + context.user.id);
 			process.exit(0);
 			return;
-		} else if (context.post.genssl) {
-			try {
-				const Pem = require('pem');
-				Pem.createCertificate({}, (err, keys) => {
-					if (err) {
-						App.reportCrash(err);
-					} else {
-						FileSystem.writeFileSync(Path.resolve(App.confDir, 'ssl-key.pem'), keys.serviceKey);
-						FileSystem.writeFileSync(Path.resolve(App.confDir, 'ssl-cert.pem'), keys.certificate);
-					}
-				});
-				ok = "SSL Key and certificate sucessfully generated.";
-				App.logServerAction(context.user.id, 'SSL certificate was generated.');
-			} catch (err) {
-				error = "Missing dependencies: pem. Try npm install pem.";
-			}
 		} else if (context.post.savechanges) {
 			let newPort = parseInt(context.post.port);
 			let newHttpsPort = parseInt(context.post.sslport);
 			let maxlines = parseInt(context.post.maxlines);
 			let loginserv = (context.post.loginserv || "").trim();
 			let maxMsgLength = parseInt(context.post.maxmsglen);
+			let sslcertFile = context.post.sslcert || "";
+			let sslkeyFile = context.post.sslkey || "";
+
 
 			try {
 				check(!isNaN(newPort), "Invalid port.");
 				check(!isNaN(maxlines) && maxlines > 0, "Invalid lines restriction");
 				check(!isNaN(maxMsgLength) && maxMsgLength > 0, "Invialid message length restriction");
+				check(!sslcertFile || FileSystem.existsSync(Path.resolve(App.appDir, sslcertFile)), "SSl certificate file was not found.");
+				check(!sslkeyFile || FileSystem.existsSync(Path.resolve(App.appDir, sslkeyFile)), "SSl key file was not found.");
 			} catch (err) {
 				error = err.message;
 			}
@@ -80,6 +69,8 @@ exports.setup = function (App) {
 					App.config.server.httpsPort = 5000;
 					App.config.server.https = false;
 				}
+				App.config.server.sslcert = sslcertFile;
+				App.config.server.sslkey = sslkeyFile;
 				App.config.server.url = context.post.appurl || "";
 				App.config.apptitle = context.post.apptitle || "";
 				App.config.bot.loginserv = loginserv || "play.pokemonshowdown.com";
@@ -107,6 +98,8 @@ exports.setup = function (App) {
 		htmlVars.memusage = (Math.floor(((process.memoryUsage().rss / 1024) / 1024) * 1000) / 1000) + ' MB';
 		htmlVars.port = App.config.server.port;
 		htmlVars.sslport = (App.config.server.https ? App.config.server.httpsPort : "");
+		htmlVars.sslcert = (App.config.server.sslcert || "");
+		htmlVars.sslkey = (App.config.server.sslkey || "");
 		htmlVars.bindaddress = (App.config.server.bindaddress || '');
 		htmlVars.appurl = (App.config.server.url || "");
 		htmlVars.apptitle = (App.config.apptitle || 'Showdown ChatBot');
