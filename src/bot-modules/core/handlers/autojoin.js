@@ -12,7 +12,7 @@ const mainTemplate = new Template(Path.resolve(__dirname, 'templates', 'autojoin
 
 function setup(App) {
 	/* Menu Options */
-	App.server.setMenuOption('autojoin', 'Bot&nbsp;AutoJoin', '/autojoin/', 'core', 1);
+	App.server.setMenuOption('autojoin', 'Rooms&nbsp;&amp;&nbsp;Avatar', '/autojoin/', 'core', 1);
 
 	/* Handlers */
 	App.server.setHandler('autojoin', (context, parts) => {
@@ -42,7 +42,7 @@ function setup(App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "AutoJoin Configuration - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Rooms and avatar - Showdown ChatBot"});
 	});
 }
 

@@ -17,7 +17,7 @@ const customExportTemplate = new Template(Path.resolve(__dirname, 'templates', '
 
 exports.setup = function (App) {
 	/* Menu Options */
-	App.server.setMenuOption('lang', 'Bot&nbsp;Languages', '/lang/', 'bot', 1);
+	App.server.setMenuOption('lang', 'Languages', '/lang/', 'bot', 1);
 
 	/* Handlers */
 	App.server.setHandler('lang', (context, parts) => {

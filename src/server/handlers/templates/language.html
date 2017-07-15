@@ -8,19 +8,6 @@
 		}
 </script>
 <form  method="post" action="">
-	${LANGCHECKS}
-	<p><input type="submit" name="setfilter" value="Set Available Languages" /></p>
-</form>
-<hr />
-<table>
-	${LANGDEFS}
-</table>
-<form method="post" action="">
-	<p><input name="lang" type="text" size="30" />&nbsp;&nbsp;
-	<input type="submit" name="addcustomlang" value="Add Custom Language" /></p>
-</form>
-<hr />
-<form  method="post" action="">
 	<p><strong>Default Language</strong>:&nbsp;${LIST_A}</p>
 	<p><input type="submit" name="setdefault" value="Set Default Language" /></p>
 </form>
@@ -36,6 +23,19 @@
 		<tr><td><strong>Language</strong>:&nbsp;</td><td>${LIST_B}</td></tr>
 	</table>
 	<p><input type="submit" name="addroom" value="Set Room Language" /></p>
+</form>
+<hr />
+<form  method="post" action="">
+	${LANGCHECKS}
+	<p><input type="submit" name="setfilter" value="Set Available Languages" /></p>
+</form>
+<hr />
+<table>
+	${LANGDEFS}
+</table>
+<form method="post" action="">
+	<p><input name="lang" type="text" size="30" />&nbsp;&nbsp;
+	<input type="submit" name="addcustomlang" value="Add Custom Language" /></p>
 </form>
 <p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
 		
