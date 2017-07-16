@@ -6,23 +6,23 @@ Showdown ChatBot
 [![devDependency Status](https://david-dm.org/asanrom/Showdown-ChatBot/dev-status.svg)](https://david-dm.org/asanrom/Showdown-ChatBot?type=dev)
 [![optionalDependency Status](https://david-dm.org/asanrom/Showdown-ChatBot/optional-status.svg)](https://david-dm.org/asanrom/Showdown-ChatBot?type=optional)
 
-[Pokemon Showdown](https://github.com/Zarel/Pokemon-Showdown) bot written for [Node JS](http://nodejs.org/) with a toon of features often useful for chat rooms like automated moderation, blacklist, customizable help / information commands, games, tournament tools and chat logs. All of those features can be configured with an user friendly control panel that does not require any programming knowledge to be used.
+[Pokemon Showdown](https://github.com/Zarel/Pokemon-Showdown) bot written for [Node JS](http://nodejs.org/) with a toon of features often useful for chat rooms like automated moderation, blacklist, customizable help / information commands, games, tournament tools and chat logs. All of those features can be configured with a web control panel that does not require any programming knowledge to be used.
 
 Features
 ------------
 
  - **Control Panel**: You can configure your bot using a web control panel. You do not need to edit any file manually.
  - **Modular design**: You can create and install add-ons in order to add new features (for example new commands or new options for the control panel). You can also enable and disable modules depending of your requires.
- - **Multi-Language**: Bot commands and modules can operate in multiple languages as the same time (for example for language rooms). Curretly only english and spanish are implemented. However, you can create new languages and translate the key files via your bot's control panel.
- - **Dynamic commands**: You can create custom text commands (the bot repies with a plain text) and html commands (the bot replies with an /htmlbox if it has permission). You can do this using commands or using the control panel.
- - **Logs**: You can log chat rooms and bot's private messages. You also have a securyty log for important events and crash reports.
+ - **Multi-Language**: Bot commands and modules can operate in multiple languages at the same time (for example for language rooms). Curretly only english and spanish are implemented. However, you can create new languages and translate the language files via your bot's control panel.
+ - **Dynamic commands**: You can create custom text commands (the bot replies with a plain text) and html commands (the bot replies with an /htmlbox if it has permission). You can do this using commands or using the control panel.
+ - **Logs**: You can log chat rooms and bot's private messages. You also have a security log for important events and crash reports.
  - **Backups**: You can save backups and restore them later (only configuration files, not logs or seen data). You can find this option in your bot's control panel, `Tools` option, `Backups` suboption.
  - **Automated Moderation**: Filters like capitals, stretching, spoiler or banned words, with automated detection and punishment.
  - **Blacklist**: Permanent banning for chat rooms.
  - **Automated Battle Bot**: This bot can play Pokemon battles itself. It is not an artificial intelligence, but the algorithm is good enough to be a threat for less skilled players, specially in formats with random generated teams. It can participate in scripted tournaments, ladder and accept battles from users. You can give it teams via the control panel and configure it in the `Battle Bot` option.
- - **Tournaments Tools**: Tournament command (to create, start and set the auto-dq in a single commands) and tournament leaderboards, with automated top 100 tables generation and customizable points system.
+ - **Tournaments Tools**: Tournament command (to create, start and set the auto-dq in a single command) and tournament leaderboards, with automated top 100 tables generation and customizable points system.
  - **Chat Games**: Hangman, anagrams, mini-blackjack, pass the bomb, trivia and kunc.
- - **Pokemon Commands**: Useful pokemon-related commands not implemented in Pokemon Showdown, like smogon usage and transation commands.
+ - **Pokemon Commands**: Useful pokemon-related commands not implemented in Pokemon Showdown, like smogon usage stats and translation commands.
  - **Auto-Invite**: Automated `/invite` message sent to the staff (for private rooms).
  - **Players-Auction**: You can create and play players auctions using commands (for team tournaments).
  - **Finding Users Tools**: Automatically saves the last time an user did something in a room where the bot was (this data is stored in hard disk, so it is permanent). Also tracks alts from name changes. Users can use `seen` and `alts` commands to easily find other users.
@@ -53,7 +53,7 @@ Use `cd` to reach the directory of the bot and run the following command to inst
 npm install
 ```
 
-To start the bot, se the following command:
+To start the bot, use the following command:
 ```
 npm start
 ```
