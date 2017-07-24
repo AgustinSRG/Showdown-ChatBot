@@ -13,6 +13,7 @@
 	"grant": {"excepted": true},
 	"set": {"group": "owner"},
 	"joinroom": {"group": "admin"},
+	"leaveroom": {"group": "admin"},
 	"send": {"group": "admin"},
 	"say": {"group": "mod"},
 	"alts": {"group": "user"},

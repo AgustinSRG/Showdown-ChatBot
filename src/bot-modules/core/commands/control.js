@@ -50,7 +50,7 @@ module.exports = {
 	leaverooms: 'leaveroom',
 	leaveroom: function () {
 		this.setLangFile(Lang_File);
-		if (!this.can('joinroom', this.room)) return this.replyAccessDenied('joinroom');
+		if (!this.can('leaveroom', this.room)) return this.replyAccessDenied('leaveroom');
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: '...', optional: true}));
 		let rooms = [];
 		for (let i = 0; i < this.args.length; i++) {
