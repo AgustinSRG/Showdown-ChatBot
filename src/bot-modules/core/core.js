@@ -5,6 +5,7 @@
 'use strict';
 
 const Path = require('path');
+const Text = Tools('text');
 const RoomManager = require(Path.resolve(__dirname, 'rooms.js'));
 
 function setup(App) {
@@ -15,6 +16,8 @@ function setup(App) {
 			avatar: '',
 			rooms: [],
 			privaterooms: [],
+			joinall: false,
+			joinofficial: false,
 		};
 	}
 
@@ -37,6 +40,43 @@ function setup(App) {
 		}
 	}
 
+	function runFirstLogin(moreRooms) {
+		/* First login - Join the rooms */
+		let rooms = [];
+		rooms = rooms.concat(App.config.modules.core.rooms || []);
+		let tempRooms = App.config.modules.core.privaterooms || [];
+		for (let i = 0; i < tempRooms.length; i++) {
+			if (rooms.indexOf(tempRooms[i]) < 0) {
+				rooms.push(tempRooms[i]);
+			}
+		}
+		tempRooms = manager.getRooms();
+		for (let i = 0; i < tempRooms.length; i++) {
+			if (rooms.indexOf(tempRooms[i]) < 0) {
+				rooms.push(tempRooms[i]);
+			}
+		}
+		if (moreRooms) {
+			for (let i = 0; i < moreRooms.length; i++) {
+				if (rooms.indexOf(moreRooms[i]) < 0) {
+					rooms.push(moreRooms[i]);
+				}
+			}
+		}
+		let cmds = [];
+		for (let i = 0; i < rooms.length; i++) {
+			cmds.push('|/join ' + rooms[i]);
+		}
+		if (App.config.modules.core.avatar) {
+			cmds.push('|/avatar ' + App.config.modules.core.avatar);
+		}
+		if (cmds.length) {
+			App.bot.send(cmds).then(execInitCmds);
+		} else {
+			execInitCmds();
+		}
+	}
+
 	function setLoginTimer(time) {
 		CoreMod.loginTimer = setTimeout(() => {
 			CoreMod.loginTimer = null;
@@ -46,44 +86,55 @@ function setup(App) {
 		}, time);
 	}
 
+	CoreMod.waitingQueryResponse = false;
+
+	App.bot.on('queryresponse', data => {
+		if (!CoreMod.waitingQueryResponse) return;
+		data = data.split("|");
+		if (data.shift() !== "rooms") return;
+		CoreMod.waitingQueryResponse = false;
+		data = data.join("|");
+		try {
+			data = JSON.parse(data);
+			if (typeof data !== "object" || data === null) {
+				App.logToConsole("Parse Failure (queryresponse): " + JSON.stringify(data));
+				runFirstLogin();
+				return;
+			}
+		} catch (err) {
+			App.logToConsole("Parse Failure (queryresponse): " + err.message);
+			runFirstLogin();
+			return;
+		}
+		let rooms = [];
+		if (data.official && App.config.modules.core.joinofficial) {
+			for (let room of data.official) {
+				rooms.push(Text.toRoomid(room.title));
+			}
+		}
+		if (data.chat && App.config.modules.core.joinall) {
+			for (let room of data.chat) {
+				rooms.push(Text.toRoomid(room.title));
+			}
+		}
+		runFirstLogin(rooms);
+	});
+
 	App.bot.on('updateuser', (nick, named) => {
 		if (named && CoreMod.loginTimer) {
 			clearTimeout(CoreMod.loginTimer);
 			CoreMod.loginTimer = null;
 		}
-		if (!lastLogin.named && named) {
-			/* First login - Join the rooms */
-			let rooms = [];
-			rooms = rooms.concat(App.config.modules.core.rooms || []);
-			let tempRooms = App.config.modules.core.privaterooms || [];
-			for (let i = 0; i < tempRooms.length; i++) {
-				if (rooms.indexOf(tempRooms[i]) < 0) {
-					rooms.push(tempRooms[i]);
-				}
-			}
-			tempRooms = manager.getRooms();
-			for (let i = 0; i < tempRooms.length; i++) {
-				if (rooms.indexOf(tempRooms[i]) < 0) {
-					rooms.push(tempRooms[i]);
-				}
-			}
-			let cmds = [];
-			for (let i = 0; i < rooms.length; i++) {
-				cmds.push('|/join ' + rooms[i]);
-			}
-			if (App.config.modules.core.avatar) {
-				cmds.push('|/avatar ' + App.config.modules.core.avatar);
-			}
-			if (cmds.length) {
-				App.bot.send(cmds).then(execInitCmds);
-			} else {
-				execInitCmds();
-			}
+		App.logToConsole('Nick Changed: ' + nick);
+		App.log('[Bot Core] Nick Changed: ' + nick);
+		if (!lastLogin.named && named && (App.config.modules.core.joinall || App.config.modules.core.joinofficial)) {
+			CoreMod.waitingQueryResponse = true;
+			App.bot.send(["|/cmd rooms"]);
+		} else if (!lastLogin.named && named) {
+			runFirstLogin();
 		}
 		lastLogin.nick = nick;
 		lastLogin.named = named;
-		App.logToConsole('Nick Changed: ' + nick);
-		App.log('[Bot Core] Nick Changed: ' + nick);
 	});
 
 	App.bot.on('renamefailure', err => {

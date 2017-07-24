@@ -28,6 +28,8 @@ function setup(App) {
 			App.config.modules.core.rooms = rooms;
 			App.config.modules.core.privaterooms = privaterooms;
 			App.config.modules.core.avatar = context.post.avatar || '';
+			App.config.modules.core.joinofficial = !!context.post.joinofficial;
+			App.config.modules.core.joinall = !!context.post.joinall;
 			App.db.write();
 			App.logServerAction(context.user.id, 'Edit Bot Autojoin details (Core Module)');
 			ok = "Bot Auto-Join details have been set sucessfully. Restart the bot to make them effective.";
@@ -38,6 +40,9 @@ function setup(App) {
 		htmlVars.rooms = (App.config.modules.core.rooms || []).join(', ');
 		htmlVars.privaterooms = (App.config.modules.core.privaterooms || []).join(', ');
 		htmlVars.avatar = (App.config.modules.core.avatar || '');
+
+		htmlVars.joinofficial = App.config.modules.core.joinofficial ? 'checked="checked"' : '';
+		htmlVars.joinall = App.config.modules.core.joinall ? 'checked="checked"' : '';
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
