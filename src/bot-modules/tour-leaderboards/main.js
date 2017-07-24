@@ -177,10 +177,22 @@ exports.setup = function (App) {
 				this.addUser(room, results.players[i], 'A');
 			}
 			if (results.winner) {
-				this.addUser(room, results.winner, 'W');
+				if (results.winner instanceof Array) {
+					for (let win of results.winner) {
+						this.addUser(room, win, 'W');
+					}
+				} else {
+					this.addUser(room, results.winner, 'W');
+				}
 			}
 			if (results.finalist) {
-				this.addUser(room, results.finalist, 'F');
+				if (results.finalist instanceof Array) {
+					for (let finalist of results.finalist) {
+						this.addUser(room, finalist, 'F');
+					}
+				} else {
+					this.addUser(room, results.finalist, 'F');
+				}
 			}
 			for (let i = 0; i < results.semiFinalists.length; i++) {
 				this.addUser(room, results.semiFinalists[i], 'S');
@@ -228,6 +240,17 @@ exports.setup = function (App) {
 					}
 				}
 			}
+			return res;
+		} else if (generator === "roundrobin") {
+			let res = {};
+			res.players = data.bracketData.tableHeaders.cols;
+			res.general = {};
+			for (let i = 0; i < res.players.length; i++) {
+				res.general[Text.toId(res.players[i])] = data.bracketData.scores[i];
+			}
+			res.winner = data.results[0];
+			res.finalist = data.results[1];
+			res.semiFinalists = data.results[2];
 			return res;
 		} else {
 			App.log("Incompatible generator: " + data.generator);
