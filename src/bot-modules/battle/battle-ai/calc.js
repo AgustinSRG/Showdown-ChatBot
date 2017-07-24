@@ -410,6 +410,22 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			}
 		}
 		break;
+	case "heavyslam":
+		if (pokeB.template.weightkg && pokeA.template.weightkg) {
+			let relW = pokeB.template.weightkg / pokeA.template.weightkg;
+			if (relW >= 0.5) {
+				bp = 40;
+			} else if (relW >= 0.33) {
+				bp = 60;
+			} else if (relW >= 0.25) {
+				bp = 80;
+			} else if (relW >= 0.2) {
+				bp = 100;
+			} else {
+				bp = 120;
+			}
+		}
+		break;
 	case "gyroball":
 		bp = (Math.floor(25 * statsB.spe / statsA.spe) || 1);
 		if (bp > 150) bp = 150;
