@@ -117,8 +117,9 @@ env.package = Package;
 
 try {
 	env.config = require(Path.resolve(__dirname, 'config.js'));
+	console.log("Loaded configuration");
 } catch (err) {
-	console.log("Configuration file not found or corruped. Using default configuration.");
+	console.log("Using default configuration");
 	env.config = require(Path.resolve(__dirname, 'config-example.js'));
 }
 
