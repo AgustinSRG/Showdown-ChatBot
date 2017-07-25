@@ -1,6 +1,6 @@
 {
   "name": "showdown-chatbot",
-  "version": "1.7.0-beta",
+  "version": "1.7.1-beta",
   "author": {
     "name": "Agustin San Roman",
     "email": "agustinsanromanguzman@gmail.com",
@@ -24,7 +24,7 @@
     "githubhook": "1.6.1",
 	"mysql": "2.12.0"
   },
-  "description": "Chat Bot for Pokemon Showdown",
+  "description": "Bot for Pokemon Showdown",
   "homepage": "https://github.com/asanrom/Showdown-ChatBot",
   "repository": {
     "type": "git",
