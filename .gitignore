@@ -2,6 +2,7 @@
 config
 config.js
 data
+instances
 !src/bot-modules/battle/data
 
 # Logs

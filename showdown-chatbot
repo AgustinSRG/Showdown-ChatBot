@@ -10,6 +10,7 @@
  *  -p [port] to change the http port
  *  -b [address] to change the bind address
  *  -d [path] to change the data / configuration path
+ *  -i [instance] to change the instance (overwrites -d)
  *  -sp [port] to change the https port
  *  -k [ssl-key] to set the ssl key file
  *  -c [ssl-cert] to set the ssl certificate file
@@ -73,6 +74,16 @@ for (let key in shellOpts) {
 			console.log("Shell Options: DATA-DIRECTORY set to " + env.dir);
 		} else {
 			console.log("Invalid DATA-DIRECTORY set. Usage: node showdown-chatbot [-d] [DATA-DIRECTORY]");
+			process.exit(1);
+		}
+		break;
+	case '-instance':
+	case '-i':
+		if (shellOpts[key] !== true) {
+			env.dir = Path.resolve(__dirname, "instances", shellOpts[key]);
+			console.log("Shell Options: DATA-DIRECTORY set to " + env.dir);
+		} else {
+			console.log("Invalid INSTANCE set. Usage: node showdown-chatbot [-i] [INSTANCE]");
 			process.exit(1);
 		}
 		break;

@@ -16,16 +16,28 @@ const ToolsManager = require(Path.resolve(__dirname, 'tools.js'));
 ToolsManager.setPath(Path.resolve(__dirname, 'tools/'));
 ToolsManager.makeGlobal();
 
+const checkDir = Tools('checkdir');
+
 /* Application setup */
 
 function setup(env) {
 	/* Check known cloud enviroments */
+
+	try {checkDir(Path.resolve(__dirname, "instances"));} catch (e) {}
 
 	let logsDir = Path.resolve(__dirname, '../logs/');
 	let confDir = Path.resolve(__dirname, '../config/');
 	let dataDir = Path.resolve(__dirname, '../data/');
 
 	if (env && env.dir !== undefined) {
+		try {
+			checkDir(env.dir);
+		} catch (err) {
+			console.log(err.message);
+			console.log(err.stack);
+			console.log("INVALID PATH: " + env.dir);
+			process.exit(1);
+		}
 		logsDir = Path.resolve(env.dir, 'logs/');
 		confDir = Path.resolve(env.dir, 'config/');
 		dataDir = Path.resolve(env.dir, 'data/');
