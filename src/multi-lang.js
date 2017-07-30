@@ -95,6 +95,30 @@ class MultiLanguageManager {
 	}
 
 	/**
+	 * Multi-Language template (with data as object)
+	 * @param {Object} data - Translation data
+	 * @param {String} lang - Language ID
+	 * @param {String} key
+	 * @param {Object} vars
+	 * @returns {String}
+	 */
+	mltData(data, lang, key, vars) {
+		let value = 'undefined';
+		if (typeof key !== 'string') key = '' + key;
+		if (lang && data[lang] && typeof data[lang][key] === 'string') {
+			value = data[lang][key];
+		} else {
+			for (let l in data) {
+				if (typeof data[l][key] === 'string') {
+					value = data[l][key];
+					break;
+				}
+			}
+		}
+		return this.replaceVars(value, vars || {});
+	}
+
+	/**
 	 * Replace vars in format ${VAR}
 	 * @param {String} template
 	 * @param {Object} vars
@@ -131,6 +155,19 @@ class MultiLanguageManager {
 					}
 				}
 			}
+		}
+	}
+
+	/**
+	 * Returns the room configured language
+	 * @param {String} room - Room ID
+	 * @returns {String} Room language
+	 */
+	getLanguage(room) {
+		if (!room) {
+			return this.app.config.language['default'];
+		} else {
+			return this.app.config.language.rooms[room] || this.app.config.language['default'];
 		}
 	}
 

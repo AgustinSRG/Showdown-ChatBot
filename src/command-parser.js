@@ -895,13 +895,24 @@ class CommandContext {
 	}
 
 	/**
+	 * Sets Multi-Language data
+	 * @param {Object} data
+	 */
+	setLangData(data) {
+		this.langData = data;
+	}
+
+	/**
 	 * Gets a message from the language file
 	 * @param {String} key
 	 * @param {Object} vars
 	 * @returns {String}
 	 */
 	mlt(key, vars) {
-		if (!this.langFile) return "(no langfile)";
+		if (!this.langFile) {
+			if (!this.langData)	return "(no langfile)";
+			return this.parser.app.multilang.mltData(this.langData, this.lang, key, vars);
+		}
 		return this.parser.app.multilang.mlt(this.langFile, this.lang, key, vars);
 	}
 
