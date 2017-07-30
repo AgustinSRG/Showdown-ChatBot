@@ -79,6 +79,7 @@ exports.setup = function (App, BattleData) {
 			if (args[1]) {
 				if (args[1].indexOf("Battle timer is now ON") === 0 ||
 					args[1].indexOf("You have") === 0 ||
+					args[1].indexOf("Time left:") === 0 ||
 					args[1].indexOf(App.bot.getBotNick()) >= 0) {
 					this.makeDecision();
 				}
