@@ -62,7 +62,7 @@ class CommandParser {
 		if (!this.data.roomaliases) this.data.roomaliases = {}; /* Rooms aliases */
 		if (!this.data.helpmsg) this.data.helpmsg = ""; /* Help Message */
 		if (!this.data.antispam) this.data.antispam = false; /* Anti-Spam System */
-		if (!this.data.antirepeat) this.data.antispam = false; /* Anti-Repeat System */
+		if (!this.data.antirepeat) this.data.antirepeat = false; /* Anti-Repeat System */
 
 		/* Dynamic Commands */
 		if (!this.data.dyncmds) this.data.dyncmds = {};
@@ -755,7 +755,9 @@ class CommandContext {
 	 * @returns {SendManager}
 	 */
 	restrictReply(msg, perm) {
-		if (this.can(perm, this.room) && this.parser.checkReplyCommand(this.room, msg)) {
+		if (this.wall && this.can('wall', this.room)) {
+			return this.wallReply(msg);
+		} if (this.can(perm, this.room) && this.parser.checkReplyCommand(this.room, msg)) {
 			return this.reply(msg);
 		} else {
 			return this.pmReply(msg);
