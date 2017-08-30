@@ -70,6 +70,10 @@ module.exports = {
 					let privates = (App.config.modules.core.privaterooms || []);
 					if (privates.indexOf(seen.room) >= 0) {
 						reply += this.mlt(14) + '.'; // Private Room
+					} else if (seen.room.substr(0, 7) === "battle-") {
+						reply += this.mlt('14b') + '.'; // Battle
+					} else if (seen.room.substr(0, 10) === "groupchat-") {
+						reply += this.mlt('14c') + '.'; // Groupchat
 					} else {
 						reply += Chat.room(seen.room); // Public Room
 					}

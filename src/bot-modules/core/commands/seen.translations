@@ -27,6 +27,8 @@ $12 = chatting in
 $13 = changing nick to
 
 $14 = a private room
+$14b = a battle
+$14c = a groupchat
 
 $15 = User
 $16 = has never been seen, at least since the last bot restart
@@ -61,6 +63,8 @@ $12 = chateando en
 $13 = cambiando su nick a
 
 $14 = una sala privada
+$14b = una batalla
+$14c = un groupchat
 
 $15 = El usuario
 $16 = no ha sido visto, al menos desde el último reinicio del bot
