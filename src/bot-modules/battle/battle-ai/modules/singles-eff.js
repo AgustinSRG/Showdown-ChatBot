@@ -642,12 +642,12 @@ exports.setup = function (Data) {
 			boosts: battle.self.active[0].boosts,
 		});
 		if (bestSW) {
+			if (conditionsA.volatiles["perish1"] && bestSW) return bestSW; // Perish Song
 			if (Calc.getHazardsDamage(pokeA, conditionsA, battle.gen, !!battle.conditions["inversebattle"]) > pokeA.hp) bestSW = null; //No switch if you die
 			if (conditionsA.volatiles["substitute"] && damageMoves.meh.length) bestSW = null;
 			if (conditionsA.volatiles["leechseed"]) switchIfNoOption = true;
 			if (conditionsA.boosts["spa"] && conditionsA.boosts["spa"] < 1) switchIfNoOption = true;
 			if (conditionsA.boosts["atk"] && conditionsA.boosts["atk"] < 1) switchIfNoOption = true;
-			if (conditionsA.volatiles["perish1"] && bestSW) return bestSW;
 		}
 
 		/* Normal situations */
