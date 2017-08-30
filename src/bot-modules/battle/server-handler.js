@@ -383,7 +383,7 @@ exports.setup = function (App) {
 		if (formats.length > 0) {
 			return ('<select name="format">' + formats.join() + '</select>');
 		} else {
-			return '<input name="format" type="text" size="40" value="" />';
+			return '<input name="format" type="text" size="40" value="' + (selected || "") + '" />';
 		}
 	}
 
