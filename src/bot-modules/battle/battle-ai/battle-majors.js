@@ -21,7 +21,11 @@ exports.setup = function (App, BattleData) {
 				this.nextIsRequest = true;
 				return;
 			}
-			this.request = JSON.parse(data);
+			try {
+				this.request = JSON.parse(data);
+			} catch (err) {
+				return;
+			}
 			this.rqid = this.request ? this.request.rqid : -1;
 		},
 
