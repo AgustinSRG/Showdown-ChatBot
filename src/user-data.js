@@ -20,11 +20,14 @@ class UserDataManager {
 		this.app = App;
 		this.path = Path.resolve(this.app.dataDir, "seen");
 		checkDir(this.path);
-		this.altstree = {};
 
 		this.cache = new BufferCache(50);
 		this.writeBuffer = {};
 		this.writeTimer = setInterval(this.write.bind(this), (60 * 1000));
+
+		this.altsdb = App.dam.getDataBase('alts.json');
+		this.altstree = this.altsdb.data;
+		this.altsChanged = false;
 
 		App.bot.on('disconnect', function () {
 			if (App.config.autoremoveuserdata) {
@@ -122,6 +125,9 @@ class UserDataManager {
 		for (let id in this.writeBuffer) {
 			this.writeLastSeen(id);
 		}
+		if (this.altsChanged) {
+			this.altsdb.write();
+		}
 	}
 
 	writeLastSeen(id) {
@@ -182,6 +188,7 @@ class UserDataManager {
 		for (let k in this.altstree) {
 			delete this.altstree[k];
 		}
+		this.altsdb.write();
 	}
 
 	getAltsRoot(user) {
@@ -218,8 +225,10 @@ class UserDataManager {
 		}
 		if (r2 === null) {
 			this.altstree[r1].push(newName);
+			this.altsChanged = true;
 		} else if (r1 !== r2) {
 			this.mergeAlts(r1, r2);
+			this.altsChanged = true;
 		}
 	}
 
