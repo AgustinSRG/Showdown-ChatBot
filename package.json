@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "node run-forever",
-    "test": "eslint --cache showdown-chatbot config-example.js src/"
+    "test": "eslint --cache showdown-chatbot config-example.js src/",
+    "fix-test": "eslint --fix --cache showdown-chatbot config-example.js src/"
   },
   "main": "showdown-chatbot",
   "bin": "showdown-chatbot",
