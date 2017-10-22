@@ -28,13 +28,17 @@ class RoomManager {
 
 	joinRoom(roomid) {
 		if (!FileSystem.existsSync(Path.resolve(this.path, roomid))) {
-			FileSystem.writeFile(Path.resolve(this.path, roomid), ".");
+			FileSystem.writeFile(Path.resolve(this.path, roomid), ".", err => {
+				console.log("Warning: cannot save room status / Error " + err.code + ":" + err.message);
+			});
 		}
 	}
 
 	leaveRoom(roomid) {
 		if (FileSystem.existsSync(Path.resolve(this.path, roomid))) {
-			FileSystem.unlink(Path.resolve(this.path, roomid));
+			FileSystem.unlink(Path.resolve(this.path, roomid), err => {
+				console.log("Warning: cannot save room status / Error " + err.code + ":" + err.message);
+			});
 		}
 	}
 }
