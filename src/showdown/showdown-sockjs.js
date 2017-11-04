@@ -354,7 +354,6 @@ class Bot {
 		} else {
 			this.getRename(nick, pass, function (token) {
 				if (token) {
-					console.log('Token: ' + token);
 					this.sendToGlobal('/trn ' + nick + ',0,' + token);
 				}
 			}.bind(this));
