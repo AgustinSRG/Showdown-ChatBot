@@ -327,6 +327,8 @@ exports.setup = function (App) {
 		if (context.post.savebackup) {
 			if (!context.post.cryptopassword) {
 				context.endWithText("Error: You must specify a password.");
+			} else if (context.post.cryptopassword !== context.post.cryptopassword2) {
+				context.endWithText("Error: The passwords do not match.");
 			} else {
 				let f = new Date();
 				context.response.writeHead(200, {'Content-Type': 'application/force-download',
