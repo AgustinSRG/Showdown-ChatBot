@@ -226,6 +226,13 @@ exports.getDecisions = function (battle) {
 						if (mega) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, active.moves[j].move));
 						tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move));
 					}
+				} else if (active.moves[j].target in {'adjacentAllyOrSelf': 1}) {
+					for (let tar = 0; tar < battle.self.active.length; tar++) {
+						if (!battle.self.active[tar] || battle.self.active[tar].fainted) continue; // Target not found
+						if (Math.abs(tar - i) > 1) continue; // Target too far
+						if (mega) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, active.moves[j].move));
+						tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move));
+					}
 				} else {
 					// No need to set the target
 					if (mega) tables[i].push(new MoveDecision(j, null, true, active.moves[j].move));

@@ -15,6 +15,8 @@ exports.setup = function (App) {
 			losemsg: ['gg', 'wp'],
 			ladderBattles: 1,
 			joinTours: {},
+			ignoreAbandonedbattles: false,
+			maxTurns: 0,
 		};
 	}
 
@@ -67,10 +69,6 @@ exports.setup = function (App) {
 			App.reportCrash(e);
 		}
 	});
-
-	BattleModule.getInitCmds = function () {
-		return BattleBot.tryJoinAbandonedBattles();
-	};
 
 	return BattleModule;
 };

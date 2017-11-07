@@ -47,15 +47,19 @@ exports.setup = function (App) {
 		if (context.post.edit) {
 			let maxBattles = parseInt(context.post.maxbattles);
 			let ladderBattles = parseInt(context.post.maxladder);
+			let maxTurns = parseInt(context.post.maxturns);
 			try {
 				check(!isNaN(maxBattles) && maxBattles >= 0, "Invalid max battles value");
 				check(!isNaN(ladderBattles) && ladderBattles > 0, "Invalid max ladder battles value");
+				check(!isNaN(maxTurns) && maxTurns > 0, "Invalid max turns value");
 			} catch (err) {
 				error = err.message;
 			}
 
 			if (!error) {
 				Config.maxBattles = maxBattles;
+				Config.ignoreAbandonedbattles = !context.post.joinabandoned;
+				Config.maxTurns = maxTurns;
 				Config.ladderBattles = ladderBattles;
 				let joinTours = (context.post.jointours || "").split(',');
 				let aux = {};
@@ -82,7 +86,9 @@ exports.setup = function (App) {
 
 		htmlVars.maxbattles = Config.maxBattles;
 		htmlVars.maxladder = Config.ladderBattles;
+		htmlVars.maxturns = Config.maxTurns || 0;
 		htmlVars.jointours = Object.keys(Config.joinTours).join(', ');
+		htmlVars.join_abandoned = (!Config.ignoreAbandonedbattles ? "checked=\"checked\"" : "");
 		htmlVars.initmsg = Config.initBattleMsg.join('\n');
 		htmlVars.winmsg = Config.winmsg.join('\n');
 		htmlVars.losemsg = Config.losemsg.join('\n');

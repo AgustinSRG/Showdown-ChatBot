@@ -222,6 +222,11 @@ exports.setup = function (App) {
 		makeDecision(forced) {
 			if (!this.self) return; // Not playing
 			this.debug(this.id + "->MakeDecision");
+			if (Config.maxTurns && this.turn > Config.maxTurns) {
+				this.debug(this.id + "->Forfeit (Turns limit reached)");
+				this.send("/forfeit");
+				return;
+			}
 			if (!forced && this.lastSend.rqid >= 0 && this.lastSend.rqid === this.rqid) {
 				if (Date.now() - this.lastSend.time < MIN_TIME_LOCK) return;
 				if (this.lastSend.decision) {

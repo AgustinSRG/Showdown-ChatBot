@@ -1,7 +1,9 @@
 <form method="post" action="">
 		<p><strong>Max number of battles of regular users</strong>:&nbsp;<input name="maxbattles" type="text" size="10" value="${MAXBATTLES}" /></p>
 		<p><strong>Max number of ladder battles</strong>:&nbsp;<input name="maxladder" type="text" size="10" value="${MAXLADDER}" /></p>
+		<p><strong>Max number of turns (0 = no limit)</strong>:&nbsp;<input name="maxturns" type="text" size="10" value="${MAXTURNS}" /></p>
 		<p><strong>Rooms to join tournaments</strong>:&nbsp;<input name="jointours" type="text" size="50" value="${JOINTOURS}" autocomplete="off" /> (separated by commas)</p>
+		<p><input type="checkbox" name="joinabandoned" ${JOIN_ABANDONED} />&nbsp;Join abandonned / pending battles.</p>
 		<p><strong>Battle Initial Messages</strong>:</p><p><textarea name="initmsg" cols="60" rows="3">${INITMSG}</textarea></p>
 		<p><strong>Win Messages</strong>:</p><p><textarea name="winmsg" cols="60" rows="3">${WINMSG}</textarea></p>
 		<p><strong>Lose Messages</strong>:</p><p><textarea name="losemsg" cols="60" rows="3">${LOSEMSG}</textarea></p>
