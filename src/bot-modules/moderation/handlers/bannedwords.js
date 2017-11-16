@@ -77,7 +77,7 @@ exports.setup = function (App) {
 			let nonicks = !!context.post.nonicks;
 			try {
 				check(word, "You must specify a word");
-				check(type in {'banned': 1, 'inap': 1, 'insult': 1}, "Invalid Type");
+				check(type in {'banned': 1, 'inap': 1, 'insult': 1, 'emote': 1}, "Invalid Type");
 				check(config.punishments.indexOf(punishment) >= 0, "Invalid punishment");
 			} catch (err) {
 				error = err.message;
@@ -97,6 +97,9 @@ exports.setup = function (App) {
 					break;
 				case 'insult':
 					config.bannedWords[room][word].type = 'o';
+					break;
+				case 'emote':
+					config.bannedWords[room][word].type = 'e';
 					break;
 				}
 				config.bannedWords[room][word].val = config.punishments.indexOf(punishment) + 1;
@@ -146,6 +149,9 @@ exports.setup = function (App) {
 				break;
 			case 'o':
 				htmlVars.words += '<td>Insult</td>';
+				break;
+			case 'e':
+				htmlVars.words += '<td>Banned Emoticon / Character</td>';
 				break;
 			default:
 				htmlVars.words += '<td>Banned Word</td>';

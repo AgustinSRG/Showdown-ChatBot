@@ -55,6 +55,9 @@ exports.parse = function (context) {
 			case 'o':
 				context.muteMessage = context.mlt(Lang_File, 'offense');
 				break;
+			case 'e':
+				context.muteMessage = context.mlt(Lang_File, 'emote');
+				break;
 			default:
 				context.muteMessage = context.mlt(Lang_File, 'banword');
 				break;
