@@ -1,0 +1,11 @@
+﻿# Translations File
+
+@ moderation-filter-pacman
+
+%english
+
+$pacman = The emoticon "pacman" is not allowed in this room
+
+%spanish
+
+$pacman = El emiticono "pacman" no está permitido en esta sala
