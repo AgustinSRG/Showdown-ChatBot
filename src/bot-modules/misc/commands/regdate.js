@@ -46,7 +46,7 @@ module.exports = {
 		this.setLangFile(Lang_File);
 		let target = Text.toId(this.arg) || Text.toId(this.by);
 		if (!target || target.length > 18) return this.pmReply(this.mlt('inv'));
-		let url = "http://pokemonshowdown.com/users/" + target + ".json";
+		let url = "https://pokemonshowdown.com/users/" + target + ".json";
 		if (markDownload(this.byIdent.id)) return this.pmReply(this.mlt('busy'));
 		let cacheData = regdateCache.get(target);
 		let callback = function (data) {
@@ -89,7 +89,7 @@ module.exports = {
 		this.setLangFile(Lang_File);
 		let target = Text.toId(this.arg) || Text.toId(this.by);
 		if (!target || target.length > 18) return this.pmReply(this.mlt('inv'));
-		let url = "http://pokemonshowdown.com/users/" + target + ".json";
+		let url = "https://pokemonshowdown.com/users/" + target + ".json";
 		if (markDownload(this.byIdent.id)) return this.pmReply(this.mlt('busy'));
 		let cacheData = regdateCache.get(target);
 		let callback = function (data) {
@@ -145,7 +145,7 @@ module.exports = {
 		this.setLangFile(Lang_File);
 		let target = Text.toId(this.arg) || Text.toId(this.by);
 		if (!target || target.length > 18) return this.pmReply(this.mlt('inv'));
-		let url = "http://pokemonshowdown.com/users/" + target + ".json";
+		let url = "https://pokemonshowdown.com/users/" + target + ".json";
 		if (markDownload(this.byIdent.id)) return this.pmReply(this.mlt('busy'));
 		let cacheData = regdateCache.get(target);
 		let callback = function (data) {
