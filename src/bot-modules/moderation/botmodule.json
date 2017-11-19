@@ -28,6 +28,7 @@
 	"./filters/bannedwords.translations",
 	"./filters/caps.translations",
 	"./filters/flood.translations",
+	"./filters/pacman.translations",
 	"./filters/replay.translations",
 	"./filters/servers.translations",
 	"./filters/spam.translations",
