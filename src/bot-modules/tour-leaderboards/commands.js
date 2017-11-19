@@ -17,6 +17,21 @@ const Chat = Tools('chat');
 
 const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
+function toDecimalFormat(num) {
+	num = Math.floor(num * 100) / 100;
+	num = "" + num;
+	let decimal = num.split(".")[1];
+	if (decimal) {
+		while (decimal.length < 2) {
+			decimal += "0";
+			num += "0";
+		}
+		return num;
+	} else {
+		return num + ".00";
+	}
+}
+
 module.exports = {
 	rank: "toursrank",
 	toursrank: function (App) {
@@ -37,11 +52,11 @@ module.exports = {
 		let rank = mod.getUserPoints(room, user);
 		let txt = this.mlt(2) + " " + Chat.bold(rank.name) + " " +
 			this.mlt('in') + " " + Chat.italics(this.parser.getRoomTitle(room)) + " | ";
-		txt += this.mlt(3) + ": " + rank.points + " | ";
+		txt += this.mlt(3) + ": " + toDecimalFormat(rank.points) + " | ";
 		txt += this.mlt(4) + ": " + rank.wins + ", " + this.mlt(5) +
 			": " + rank.finals + ", " + this.mlt(6) + ": " + rank.semis + ". ";
 		txt += this.mlt(7) + ": " + rank.tours + " " + this.mlt(8) +
-			", " + rank.battles + " " + this.mlt(9) + ".";
+			", " + rank.battles + " " + this.mlt(9) + " (" + this.mlt('ratio') + " = " + toDecimalFormat(rank.ratio) + ").";
 		this.restrictReply(txt, 'toursrank');
 	},
 
@@ -62,7 +77,7 @@ module.exports = {
 		}
 		let topResults = [];
 		for (let i = 0; i < 5 && i < top.length; i++) {
-			topResults.push(Chat.italics("#" + (i + 1)) + " " + Chat.bold(top[i][0]) + " (" + top[i][6] + ")");
+			topResults.push(Chat.italics("#" + (i + 1)) + " " + Chat.bold(top[i][0]) + " (" + toDecimalFormat(top[i][6]) + ")");
 		}
 		this.restrictReply(Chat.bold(this.parser.getRoomTitle(room)) + " | " + topResults.join(", "), "toursrank");
 	},
@@ -81,9 +96,11 @@ module.exports = {
 			Chat.bold(Config[room].winner) + " " + this.mlt(19) + ", " + Chat.bold(Config[room].finalist) +
 			" " + this.mlt(20) + ", " + Chat.bold(Config[room].semifinalist) + " " + this.mlt(21) +
 			", " + Chat.bold(Config[room].battle) + " " + this.mlt(22) + "." +
-			(Config[room].onlyOfficial ? (" " + this.mlt(23) + ".") : ""), "toursrank");
+			(Config[room].onlyOfficial ? (" " + this.mlt(23) + ".") : "") +
+			(Config[room].useratio ? (" " + this.mlt(24) + ".") : ""), "toursrank");
 	},
 
+	top100: "tourleaderboards",
 	tourleaderboards: function (App) {
 		this.setLangFile(Lang_File);
 		const Config = App.config.modules.tourleaderboards;

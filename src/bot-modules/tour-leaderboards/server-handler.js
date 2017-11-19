@@ -56,6 +56,7 @@ exports.setup = function (App) {
 					finalist: 3,
 					semifinalist: 1,
 					battle: 0,
+					useratio: true,
 					cleanPoint: now.toString(),
 				};
 				App.db.write();
@@ -116,6 +117,7 @@ exports.setup = function (App) {
 			let semifinalist = parseInt(context.post.semifinalist);
 			let battle = parseInt(context.post.battle);
 			let official = !!context.post.onlyofficial;
+			let useratio = !!context.post.useratio;
 			try {
 				check(room, "You must specify a room");
 				check(Config[room], "Room not found");
@@ -129,6 +131,7 @@ exports.setup = function (App) {
 
 			if (!error) {
 				Config[room].onlyOfficial = official;
+				Config[room].useratio = useratio;
 				Config[room].winner = winner;
 				Config[room].finalist = finalist;
 				Config[room].semifinalist = semifinalist;
@@ -151,6 +154,7 @@ exports.setup = function (App) {
 				semifinalist: Config[room].semifinalist,
 				battle: Config[room].battle,
 				onlyofficial: (Config[room].onlyOfficial ? ' checked="checked"' : ''),
+				useratio: (Config[room].useratio ? ' checked="checked"' : ''),
 			});
 		}
 

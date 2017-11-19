@@ -12,6 +12,21 @@ const Text = Tools('text');
 const parseTourTree = Tools('tour-tree');
 const checkDir = Tools('checkdir');
 
+function toDecimalFormat(num) {
+	num = Math.floor(num * 100) / 100;
+	num = "" + num;
+	let decimal = num.split(".")[1];
+	if (decimal) {
+		while (decimal.length < 2) {
+			decimal += "0";
+			num += "0";
+		}
+		return num;
+	} else {
+		return num + ".00";
+	}
+}
+
 exports.setup = function (App) {
 	if (!App.config.modules.tourleaderboards) {
 		App.config.modules.tourleaderboards = {};
@@ -70,6 +85,9 @@ exports.setup = function (App) {
 			for (let u in ladder[room]) {
 				rank = (points.winner * ladder[room][u][1]) + (points.finalist * ladder[room][u][2]) +
 				(points.semifinalist * ladder[room][u][3]) + (points.battle * ladder[room][u][4]);
+				if (config.useratio) {
+					rank = rank * (ladder[room][u][4] / ladder[room][u][5]);
+				}
 				top.push(ladder[room][u].concat([rank]));
 			}
 			return top.sort(function (a, b) {
@@ -103,6 +121,7 @@ exports.setup = function (App) {
 				battles: 0,
 				tours: 0,
 				points: 0,
+				ratio: 0,
 			};
 			if (!ladder[room] || !ladder[room][userid]) return res;
 			res.name = ladder[room][userid][0];
@@ -111,8 +130,12 @@ exports.setup = function (App) {
 			res.semis = ladder[room][userid][3];
 			res.battles = ladder[room][userid][4];
 			res.tours = ladder[room][userid][5];
+			res.ratio = ladder[room][userid][4] / ladder[room][userid][5];
 			res.points = (points.winner * res.wins) + (res.finals * points.finalist) +
 			(res.semis * points.semifinalist) + (res.battles * points.battle);
+			if (config.useratio) {
+				res.points = res.points * (ladder[room][userid][4] / ladder[room][userid][5]);
+			}
 			return res;
 		}
 
@@ -134,22 +157,24 @@ exports.setup = function (App) {
 			html += '<tr><td><div align="center"><h3><strong>#</strong></h3></div></td>' +
 			'<td><div align="center"><h3><strong>Name</strong></h3></div></td>' +
 			'<td><div align="center"><h3><strong>Points</strong></h3></div></td>' +
-			'<td><div align="center"><h3><strong>Tours Won </strong></h3></div></td>' +
+			'<td><div align="center"><h3><strong>Winner </strong></h3></div></td>' +
 			'<td><div align="center"><h3><strong>Finalist</strong></h3></div></td>' +
 			'<td><div align="center"><h3><strong>Semi-Finalist</strong></h3></div></td>' +
 			'<td><div align="center"><h3><strong>Battles Won </strong></h3></div></td>' +
-			'<td><div align="center"><h3><strong>Tours Played </strong></h3></div></td></tr>';
+			'<td><div align="center"><h3><strong>Tours Played </strong></h3></div></td>' +
+			'<td><div align="center"><h3><strong>Ratio </strong></h3></div></td></tr>';
 
 			for (let i = 0; i < top.length && i < Top_Table_Length; i++) {
 				html += '<tr>';
 				html += '<td><div align="center">' + (i + 1) + '</div></td>';
 				html += '<td><div align="center">' + top[i][0] + '</div></td>';
-				html += '<td><div align="center">' + top[i][6] + '</div></td>';
+				html += '<td><div align="center">' + toDecimalFormat(top[i][6]) + '</div></td>';
 				html += '<td><div align="center">' + top[i][1] + '</div></td>';
 				html += '<td><div align="center">' + top[i][2] + '</div></td>';
 				html += '<td><div align="center">' + top[i][3] + '</div></td>';
 				html += '<td><div align="center">' + top[i][4] + '</div></td>';
 				html += '<td><div align="center">' + top[i][5] + '</div></td>';
+				html += '<td><div align="center">' + toDecimalFormat(top[i][4] / top[i][5]) + '</div></td>';
 				html += '</tr>';
 			}
 

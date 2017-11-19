@@ -17,6 +17,7 @@ $6 = Semi-Finalist
 $7 = Total
 $8 = tours played
 $9 = battles won
+$ratio = Ratio
 
 $10 = Leaderboards for room
 $11 = are empty
@@ -36,6 +37,7 @@ $20 = for finalist
 $21 = for semi-finalist
 $22 = per won battle
 $23 = Only official tours are rated
+$24 = The battle/tour ratio is used in order to calculate the score
 
 %spanish
 
@@ -52,6 +54,7 @@ $6 = Semi-Finalista
 $7 = Total
 $8 = torneos jugados
 $9 = batallas ganadas
+$ratio = Ratio
 
 $10 = Las clasificaciones de torneos para la sala
 $11 = están vacías
@@ -71,3 +74,4 @@ $20 = para el finalista
 $21 = para los semi-finalistas
 $22 = por batalla ganada
 $23 = Solo cuentan los torneos oficiales
+$24 = El ratio batallas/torneo es usado para calcular los puntos
