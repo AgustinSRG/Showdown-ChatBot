@@ -244,7 +244,7 @@ exports.translations.abilities = {
 	"watercompaction": "Hidrorrefuerzo",
 	"wimpout": "Huida",
 	"shieldsdown": "Escudo Limitado",
-	"neuroforce": "",
+	"neuroforce": "Fuerza Cerebral",
 };
 
 /* Battle Items */
@@ -615,7 +615,7 @@ exports.translations.items = {
 	"powerlens": "Lente Recia",
 	"powerweight": "Pesa Recia",
 	"solganiumz": "Solgaleostal Z",
-	"ultranecroziumz": "",
+	"ultranecroziumz": "Ultranecrostal Z",
 };
 
 /* Battle Moves */
@@ -1343,11 +1343,11 @@ exports.translations.moves = {
 	"zingzap": "Electropunzada",
 	"clangoroussoulblaze": "Estruendo Implacable",
 	"letssnuggleforever": "Somanta Amistosa",
-	"lightthatburnsthesky": "",
+	"lightthatburnsthesky": "Fotodestrucción Apocalíptica",
 	"menacingmoonrazemaelstrom": "Deflagración Lunar",
 	"mindblown": "Cabeza sorpresa",
 	"photongeyser": "Géiser Fotónico",
-	"plasmafists": "",
+	"plasmafists": "Puños Plasma",
 	"searingsunrazesmash": "Embestida Solar",
 	"splinteredstormshards": "Tempestad Rocosa",
 };
