@@ -27,7 +27,7 @@ function parseAliases(format, App) {
 	if (App.bot.formats[format]) return format;
 	let aliases = Config.aliases;
 	if (aliases[format]) format = Text.toId(aliases[format]);
-	return format;
+	return Text.toFormatStandard(format);
 }
 
 module.exports = {

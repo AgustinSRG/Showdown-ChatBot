@@ -45,6 +45,21 @@ exports.toCmdTokenid = function (str) {
 };
 
 /**
+ * Transforms string to format ID
+ * @param {String} str
+ * @returns {String} format ID
+ */
+exports.toFormatStandard = function (str) {
+	if (!str) return '';
+	str = ('' + str).toLowerCase().replace(/[^a-z0-9]/g, '');
+	if ((/^gen[0-9]+.*/i).test(str)) {
+		return str;
+	} else {
+		return "gen7" + str;
+	}
+};
+
+/**
  * Removes lateral blank spaces
  * @param {String} str
  * @returns {String}

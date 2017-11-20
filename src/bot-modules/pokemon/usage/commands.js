@@ -88,7 +88,7 @@ function parseAliases(format, App) {
 		let psAliases = App.data.getAliases();
 		if (psAliases[format]) format = Text.toId(psAliases[format]);
 	} catch (e) {}
-	return format;
+	return Text.toFormatStandard(format);
 }
 
 const Default_Rank = 1630;
