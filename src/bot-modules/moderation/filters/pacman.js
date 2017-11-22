@@ -19,14 +19,17 @@ exports.parse = function (context) {
 	/* Pacman emiticon detection */
 
 	if (msg.indexOf(":v") >= 0) {
+		context.infractions.push(exports.id);
 		context.pointVal = val;
 		context.totalPointVal += val;
 		context.muteMessage = context.mlt(Lang_File, 'pacman');
 	} else if ((/([^a-z0-9](:|;|=)+(\^|-|'|`|´|~|"|[ ]|_)*(v|((\\|╲)+(_|[ ])*(\/|╱)+))+[^a-z0-9])|([^a-z0-9](v|((\\|╲)+(_|[ ])*(\/|╱)+))+(\^|-|'|`|´|~|"|[ ]|_)*(:|;|=)+[^a-z0-9])/i).test(msg)) {
+		context.infractions.push(exports.id);
 		context.pointVal = val;
 		context.totalPointVal += val;
 		context.muteMessage = context.mlt(Lang_File, 'pacman');
 	} else if ((/((:|;|=)+(\^|-|'|`|´|~|"|[ ]|_)*(((\\|╲)+(_|[ ])*(\/|╱)+))+)|((((\\|╲)+(_|[ ])*(\/|╱)+))+(\^|-|'|`|´|~|"|[ ]|_)*(:|;|=)+)/i).test(msg)) {
+		context.infractions.push(exports.id);
 		context.pointVal = val;
 		context.totalPointVal += val;
 		context.muteMessage = context.mlt(Lang_File, 'pacman');
