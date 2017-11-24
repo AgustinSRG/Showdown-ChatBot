@@ -51,7 +51,7 @@ exports.setup = function (App) {
 			try {
 				check(!isNaN(maxBattles) && maxBattles >= 0, "Invalid max battles value");
 				check(!isNaN(ladderBattles) && ladderBattles > 0, "Invalid max ladder battles value");
-				check(!isNaN(maxTurns) && maxTurns > 0, "Invalid max turns value");
+				check(!isNaN(maxTurns) && maxTurns >= 0, "Invalid max turns value");
 			} catch (err) {
 				error = err.message;
 			}
