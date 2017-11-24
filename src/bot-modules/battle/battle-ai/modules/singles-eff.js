@@ -168,6 +168,9 @@ exports.setup = function (Data) {
 			if (battle.request.active[0].canMegaEvo || battle.request.side.pokemon[0].canMegaEvo) {
 				if (!des.mega) continue; // Mega evolve by default
 			}
+			if (battle.request.active[0].canUltraBurst) {
+				if (!des.ultra) continue; // Ultra burst by default
+			}
 			let move = Data.getMove(battle.request.side.pokemon[0].moves[des.moveId]);
 			if (des.zmove) {
 				move = Data.getMove(des.move);
@@ -542,6 +545,9 @@ exports.setup = function (Data) {
 			if (des.type !== "move") continue; // not a move
 			if (battle.request.active[0].canMegaEvo || battle.request.side.pokemon[0].canMegaEvo) {
 				if (!des.mega) continue; // Mega evolve by default
+			}
+			if (battle.request.active[0].canUltraBurst) {
+				if (!des.ultra) continue; // Ultra burst by default
 			}
 			let move = Data.getMove(battle.request.side.pokemon[0].moves[des.moveId]);
 			if (des.zmove) {

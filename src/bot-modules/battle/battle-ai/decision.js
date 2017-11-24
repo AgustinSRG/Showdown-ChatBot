@@ -5,12 +5,13 @@
 'use strict';
 
 class MoveDecision {
-	constructor(moveId, target, mega, move, zmove) {
+	constructor(moveId, target, mega, move, zmove, ultra) {
 		this.type = "move";
 		this.move = move || "struggle";
 		this.moveId = moveId || 0;
 		this.mega = mega || false;
 		this.zmove = zmove || false;
+		this.ultra = ultra || false;
 		this.target = target;
 	}
 }
@@ -85,6 +86,7 @@ function generateTeamCombinations(sideLength, requiredLength) {
 
 function validateDecision(des) {
 	let megaConsumed = false;
+	let ultraConsumed = false;
 	let zMoveConsumed = false;
 	let shiftConsumed = false;
 	let passed = true;
@@ -93,6 +95,10 @@ function validateDecision(des) {
 		if (des[i].mega) {
 			if (megaConsumed) return false; // 2 mega evolutions at the same time
 			megaConsumed = true;
+		}
+		if (des[i].ultra) {
+			if (ultraConsumed) return false; // 2 ultra burst at the same time
+			ultraConsumed = true;
 		}
 		if (des[i].zmove) {
 			if (zMoveConsumed) return false; // Only one z-move per battle
@@ -186,10 +192,13 @@ exports.getDecisions = function (battle) {
 			for (let j = 0; j < active.moves.length; j++) {
 				if (active.moves[j].disabled || active.moves[j].pp === 0) continue; // No more moves
 				let mega = false;
+				let ultra = false;
 				if (active.canMegaEvo || (req.side.pokemon[i] && req.side.pokemon[i].canMegaEvo)) mega = true;
+				if (active.canUltraBurst) ultra = true;
 				if (!active.moves[j].target) {
 					// No need to set the target
 					if (mega) tables[i].push(new MoveDecision(j, null, true, active.moves[j].move));
+					if (ultra) tables[i].push(new MoveDecision(j, null, false, active.moves[j].move, false, true));
 					tables[i].push(new MoveDecision(j, null, false, active.moves[j].move));
 				} else if (active.moves[j].target in {'any': 1, 'normal': 1}) {
 					auxHasTarget = false;
@@ -202,6 +211,7 @@ exports.getDecisions = function (battle) {
 						if (auxHasTarget && (!battle.foe.active[tar] || battle.foe.active[tar].fainted)) continue; // Target not found
 						if (active.moves[j].target === 'normal' && isTooFar(battle, tar, i)) continue; // Target too far
 						if (mega) tables[i].push(new MoveDecision(j, tar, true, active.moves[j].move));
+						if (ultra) tables[i].push(new MoveDecision(j, tar, false, active.moves[j].move, false, true));
 						tables[i].push(new MoveDecision(j, tar, false, active.moves[j].move));
 					}
 					for (let tar = 0; tar < battle.self.active.length; tar++) {
@@ -209,6 +219,7 @@ exports.getDecisions = function (battle) {
 						if (!battle.self.active[tar] || battle.self.active[tar].fainted) continue; // Target not found
 						if (active.moves[j].target === 'normal' && Math.abs(tar - i) > 1) continue; // Target too far
 						if (mega) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, active.moves[j].move));
+						if (ultra) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move, false, true));
 						tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move));
 					}
 				} else if (active.moves[j].target in {'adjacentAlly': 1}) {
@@ -224,6 +235,7 @@ exports.getDecisions = function (battle) {
 						if (auxHasAllies && (!battle.self.active[tar] || battle.self.active[tar].fainted)) continue; // Target not found
 						if (Math.abs(tar - i) > 1) continue; // Target too far
 						if (mega) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, active.moves[j].move));
+						if (ultra) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move, false, true));
 						tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move));
 					}
 				} else if (active.moves[j].target in {'adjacentAllyOrSelf': 1}) {
@@ -231,11 +243,13 @@ exports.getDecisions = function (battle) {
 						if (!battle.self.active[tar] || battle.self.active[tar].fainted) continue; // Target not found
 						if (Math.abs(tar - i) > 1) continue; // Target too far
 						if (mega) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, active.moves[j].move));
+						if (ultra) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move, false, true));
 						tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move));
 					}
 				} else {
 					// No need to set the target
 					if (mega) tables[i].push(new MoveDecision(j, null, true, active.moves[j].move));
+					if (ultra) tables[i].push(new MoveDecision(j, null, false, active.moves[j].move, false, true));
 					tables[i].push(new MoveDecision(j, null, false, active.moves[j].move));
 				}
 			}
@@ -249,10 +263,13 @@ exports.getDecisions = function (battle) {
 					let zData = zMove[j];
 					if (active.moves[j].pp === 0) continue; // No more moves
 					let mega = false;
+					let ultra = false;
 					if (active.canMegaEvo || (req.side.pokemon[i] && req.side.pokemon[i].canMegaEvo)) mega = true;
+					if (active.canUltraBurst) ultra = true;
 					if (!zData.target) {
 						// No need to set the target
 						if (mega) tables[i].push(new MoveDecision(j, null, true, z, true));
+						if (ultra) tables[i].push(new MoveDecision(j, null, false, z, true, true));
 						tables[i].push(new MoveDecision(j, null, false, z, true));
 					} else if (zData.target in {'any': 1, 'normal': 1}) {
 						auxHasTarget = false;
@@ -265,6 +282,7 @@ exports.getDecisions = function (battle) {
 							if (auxHasTarget && (!battle.foe.active[tar] || battle.foe.active[tar].fainted)) continue; // Target not found
 							if (zData.target === 'normal' && isTooFar(battle, tar, i)) continue; // Target too far
 							if (mega) tables[i].push(new MoveDecision(j, tar, true, z, true));
+							if (ultra) tables[i].push(new MoveDecision(j, tar, false, z, true, true));
 							tables[i].push(new MoveDecision(j, tar, false, z, true));
 						}
 						for (let tar = 0; tar < battle.self.active.length; tar++) {
@@ -272,6 +290,7 @@ exports.getDecisions = function (battle) {
 							if (!battle.self.active[tar] || battle.self.active[tar].fainted) continue; // Target not found
 							if (zData.target === 'normal' && Math.abs(tar - i) > 1) continue; // Target too far
 							if (mega) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, z, true));
+							if (ultra) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, z, true, true));
 							tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, z, true));
 						}
 					} else if (zData.target in {'adjacentAlly': 1}) {
@@ -287,11 +306,13 @@ exports.getDecisions = function (battle) {
 							if (auxHasAllies && (!battle.self.active[tar] || battle.self.active[tar].fainted)) continue; // Target not found
 							if (Math.abs(tar - i) > 1) continue; // Target too far
 							if (mega) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, z, true));
+							if (ultra) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, z, true));
 							tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, z, true));
 						}
 					} else {
 						// No need to set the target
 						if (mega) tables[i].push(new MoveDecision(j, null, true, z, true));
+						if (ultra) tables[i].push(new MoveDecision(j, null, false, z, true, true));
 						tables[i].push(new MoveDecision(j, null, false, z, true));
 					}
 				}

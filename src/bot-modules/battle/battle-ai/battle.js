@@ -113,6 +113,7 @@ exports.setup = function (App) {
 					str += "move " + (decision[i].moveId + 1);
 					if (decision[i].mega) str += " mega";
 					if (decision[i].zmove) str += " zmove";
+					if (decision[i].ultra) str += " ultra";
 					if (decision[i].target !== null) {
 						if (decision[i].target >= 0) str += " " + (decision[i].target + 1);
 						else str += " " + (decision[i].target);

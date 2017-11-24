@@ -156,6 +156,11 @@ exports.setup = function (Data) {
 		if (a.canMegaEvo || p.canMegaEvo) {
 			if (!des.mega) return 0; // Mega evolve by default
 		}
+
+		if (a.canUltraBurst) {
+			if (!des.ultra) return 0; // Ultra burst always
+		}
+
 		if (move.id === "fakeout") {
 			if (!(battle.self.active[act].helpers.sw === battle.turn || battle.self.active[act].helpers.sw === battle.turn - 1)) {
 				return 0; // Fake out only works for first turn
