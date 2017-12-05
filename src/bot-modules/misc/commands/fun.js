@@ -63,14 +63,9 @@ module.exports = {
 			return this.errorReply(this.mlt('error'));
 		}
 		let pokes = Object.keys(pokedex);
-		let h = Text.toId(this.arg) || this.byIdent.id;
-		if (h.length > 25) {
-			h = h.substr(0, 25);
-		}
-		let cipher = Crypto.createCipher('aes-256-ctr', 'pokemon');
-		let crypted = cipher.update(h, 'utf8', 'hex');
-		crypted += cipher.final('hex');
-		let intVal = parseInt(crypted, 16) % pokes.length;
+		let data = Text.toId(this.arg) || this.byIdent.id;
+		let hash = Crypto.createHash('md5').update(data).digest("hex");
+		let intVal = parseInt(hash, 16) % pokes.length;
 		let chosen = pokedex[pokes[intVal]].species;
 		this.restrictReply(Text.stripCommands(chosen), 'random');
 	},
