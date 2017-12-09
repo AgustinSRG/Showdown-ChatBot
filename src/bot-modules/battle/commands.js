@@ -23,15 +23,20 @@ function parseAliases(format, App) {
 		let psAliases = App.data.getAliases();
 		if (psAliases[format]) format = Text.toId(psAliases[format]);
 	} catch (e) {}
-	return format;
+	if (App.bot.formats[format]) return format;
+	return Text.toFormatStandard(format);
 }
 
 module.exports = {
-	chall: function (App) {
+	chall: "challenge",
+	challenge: function (App) {
 		this.setLangFile(Lang_File);
 		if (!this.can('chall', this.room)) return this.replyAccessDenied('chall');
 		let mod = App.modules.battle.system;
 		let user = Text.toId(this.args[0]) || this.byIdent.id;
+		if (user === "me") {
+			user = this.byIdent.id;
+		}
 		let format = parseAliases(this.args[1], App);
 		let teamId = Text.toId(this.args[2]);
 		if (!user || !format) {
