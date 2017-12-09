@@ -69,4 +69,13 @@ module.exports = {
 		let chosen = pokedex[pokes[intVal]].species;
 		this.restrictReply(Text.stripCommands(chosen), 'random');
 	},
+
+	randformat: "randomformat",
+	randomformat: function (App) {
+		let formats = Object.keys(App.bot.formats);
+		let chosen = formats[Math.floor(Math.random() * formats.length)];
+		if (chosen) {
+			this.restrictReply(Text.stripCommands(App.bot.formats[chosen].name), 'random');
+		}
+	},
 };
