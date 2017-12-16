@@ -1,0 +1,21 @@
+﻿# Translations file
+
+@ groupchats-commands
+
+%english
+
+$0 = Invalid username.
+$1 = This command can be used only in registered groupchats.
+$2 = User ${USER} was already ${GROUP}.
+$3 = User ${USER} was appointed room ${GROUP}.
+$4 = User ${USER} does not have any static rank at this groupchat.
+$5 = User ${USER} He has no longer any static auth at this groupchat.
+
+%spanish
+
+$0 = Nombre de usuario no válido.
+$1 = Este comando solamente puede ser usado en groupchats.
+$2 = El usuario ${USER} ya era ${GROUP} o superior.
+$3 = El usuario ${USER} ha sido asignado como ${GROUP} de este groupchat.
+$4 = El usuario ${USER} no tenía ningún rango fijado en este groupchat.
+$5 = El usuario ${USER} ha dejado de tener un rango fijado este groupchat

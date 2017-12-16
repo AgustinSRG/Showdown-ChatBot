@@ -1,0 +1,56 @@
+<script type="text/javascript">
+	function confirmDelete() {
+		var elem = document.getElementById('confirm-delete');
+		if (elem) {
+			elem.innerHTML = '<form style="display:inline;" method="post" action="/groupchats/">' + 
+			'<input type="hidden" name="room" value="${ROOM}" />' +
+			'Are you sure?&nbsp;<input type="submit" name="remove" value="Confirm Delete" /></form>';
+		}
+		return false;
+	}
+</script>
+<div align="center">
+	<h2>Groupchats</h2>
+	${SUBMENU}
+</div>
+<hr />
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
+<form method="post" action="">
+	<p><b>Name: </b> <input name="room" type="text" size="50" value="${NAME}"/></p>
+	<p><input type="checkbox" name="private" ${PRIVATE} />&nbsp;Is a private groupchat</p>
+	<p><b>Copy auth from room: </b> <input name="authfrom" type="text" size="40" value="${AUTHFROM}"/></p>
+	<p><input type="submit" name="edit" value="Save Changes" /></p>
+</form>
+<hr />
+<form method="post" action="">
+	<p><b>Room Intro:</b></p>
+	<p><textarea id="textareaintro" name="intro" cols="150" rows="5"></textarea></p>
+	<p><input type="submit" name="modintro" value="Edit RoomIntro" /></p>
+</form>
+<script type="text/javascript">
+	document.getElementById("textareaintro").value = ${INTRO};
+</script>
+<hr />
+<h3>Static Auth</h3>
+<table border="1">
+	<tr>
+		<td width="150"><div align="center"><strong>User</strong></div></td>
+		<td width="150"><div align="center"><strong>Room Group</strong></div></td>
+	</tr>
+	${USERS}
+</table>
+<hr />
+<form method="post" action="">
+	<p><strong>User</strong>: <input name="user" type="text" size="30" maxlength="19" /></p>
+	<p><strong>Group</strong>: 
+		<select name="group">
+			<option value="none">None</option>
+			<option value="voice">Room Voice</option>
+			<option value="driver">Room Driver</option>
+			<option value="mod">Room Moderator</option>
+		</select>
+	</p>
+	<p><input type="submit" name="setauth" value="Set User Group" /></p>
+</form>
+<hr />
+<p><button onclick="confirmDelete();">Delete Groupchat</button>&nbsp;<span id="confirm-delete"></span></p>

@@ -1,0 +1,18 @@
+{
+  "id": "groupchats",
+  "name": "GroupChats",
+  "main": "main.js",
+  "commands": [
+    "commands.js"
+  ],
+  "permissions": {
+	"groupchats": {"excepted": true}
+  },
+  "handlers": [
+    "server-handler.js"
+  ],
+  "langfiles": [
+    "./commands.translations"
+  ],
+  "description": "Automated group chats creation and mantainement"
+}
