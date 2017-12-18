@@ -367,6 +367,9 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		case "wonderguard":
 			if (typesMux < 2) typesMux = 0;
 			break;
+		case "bulletproof":
+			if (move.flags && move.flags['bullet']) typesMux = 0;
+			break;
 		}
 	}
 
