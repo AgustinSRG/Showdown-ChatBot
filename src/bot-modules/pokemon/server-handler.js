@@ -40,6 +40,17 @@ exports.setup = function (App) {
 			} else {
 				error = "You must specify a format";
 			}
+		} else if (context.post.savelink) {
+			let link = Text.trim(context.post.usagelink);
+			if (link) {
+				Config.usagelink = link;
+				App.saveConfig();
+				App.data.cache.uncacheAll('smogon-usage');
+				App.logServerAction(context.user.id, "Edit pokemon configuration (usage link)");
+				ok = "Pokemon configuration saved";
+			} else {
+				error = "You must specify a link";
+			}
 		} else if (context.post.setroom) {
 			let format = Text.toId(context.post.format);
 			let room = Text.toRoomid(context.post.room);
@@ -72,6 +83,7 @@ exports.setup = function (App) {
 		}
 
 		let htmlVars = {};
+		htmlVars.usage_link = Config.usagelink || "";
 		htmlVars.def_format = (Config.gtier || "");
 		htmlVars.rooms = '';
 
