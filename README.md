@@ -26,6 +26,7 @@ Features
  - **Auto-Invite**: Automated `/invite` message sent to the staff (for private rooms).
  - **Players-Auction**: You can create and play players auctions using commands (for team tournaments).
  - **Finding Users Tools**: Automatically saves the last time an user did something in a room where the bot was (this data is stored in hard disk, so it is permanent). Also tracks alts from name changes. Users can use `seen` and `alts` commands to easily find other users.
+ - **Groupchat Tools**: Automatically mantains groupchats (temporal rooms) and promotes users.
  - **Others**: Quotes and jokes, join-phrases, commands like `helix`, etc.
 
 
