@@ -10,6 +10,8 @@
 
 const AutoConfirmed_RegTime = 7 * 24 * 60 * 60;
 
+const MonthsAbv = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+
 const Path = require('path');
 
 const Text = Tools('text');
@@ -27,6 +29,22 @@ function getESTDiff(timestamp) {
 		return -4;
 	}
 	return -5;
+}
+
+function formatTime(h, m, s) {
+	h = "" + h;
+	m = "" + m;
+	s = "" + s;
+	if (h.length < 2) {
+		h = "0" + h;
+	}
+	if (m.length < 2) {
+		m = "0" + m;
+	}
+	if (s.length < 2) {
+		s = "0" + s;
+	}
+	return h + ":" + m + ":" + s;
 }
 
 const downloadingFlag = {};
@@ -54,9 +72,12 @@ module.exports = {
 			let regTimestamp = data.registertime * 1000;
 			regTimestamp += (1000 * 60 * 60 * getESTDiff(regTimestamp)) +
 				(new Date().getTimezoneOffset() * 60 * 1000) - 364000;
+			let rDate = (new Date(regTimestamp));
 			this.pmReply(this.mlt('user') + " " + (data.username || target) +
-				" " + this.mlt('regdate') + " " +
-				Chat.italics((new Date(regTimestamp)).toString().substr(4, 20)) + " (EST)");
+				" " + this.mlt('regdate') + " " + this.mlt('date', {day: rDate.getDate(),
+					month: this.mlt(MonthsAbv[rDate.getMonth()]),
+					year: rDate.getFullYear(),
+					time: formatTime(rDate.getHours(), rDate.getMinutes(), rDate.getSeconds())}));
 		}.bind(this);
 		if (cacheData) {
 			return callback(cacheData);
@@ -107,8 +128,12 @@ module.exports = {
 			time = Math.floor(time / 60);
 			aux = time % 24; // Hours
 			if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? this.mlt(6) : this.mlt(7)));
-			time = Math.floor(time / 24); // Days
-			if (time > 0) times.unshift(time + ' ' + (time === 1 ? this.mlt(8) : this.mlt(9)));
+			time = Math.floor(time / 24);
+			aux = time % 365; // Days
+			if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? this.mlt(8) : this.mlt(9)));
+			time = Math.floor(time / 365);
+			aux = time;
+			if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? this.mlt('year') : this.mlt('years')));
 			/* Reply */
 			this.pmReply(this.mlt('user') + " " + (data.username || target) +
 				" " + this.mlt('regtime1') + " " + Chat.italics(times.join(', ')) +

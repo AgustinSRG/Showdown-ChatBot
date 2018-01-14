@@ -21,6 +21,8 @@ $6 = hour
 $7 = hours
 $8 = day
 $9 = days
+$year = year
+$years = years
 
 $10 = The account
 $11 = has no ladder battles won. To be autoconfirmed you must won at least one battle using the button __Battle!__
@@ -29,6 +31,21 @@ $13 = is not registered. To be autoconfirmed first register the account in the o
 $14 = The account
 $15 = requires
 $16 = more to be autoconfirmed
+
+$date = ${MONTH} ${DAY}, ${YEAR} at ${TIME} (EST)
+
+$jan = January
+$feb = February
+$mar = March
+$apr = April
+$may = May
+$jun = June
+$jul = July
+$aug = August
+$sep = September
+$oct = October
+$nov = November
+$dec = December
 
 %spanish
 
@@ -39,7 +56,7 @@ $user = El usuario
 $not = no está registrado
 $regtime1 = está registrado desde hace
 $regtime2 = 
-$regdate = se registró en la fecha
+$regdate = se registró el
 
 $2 = segundo
 $3 = segundos
@@ -49,6 +66,8 @@ $6 = hora
 $7 = horas
 $8 = día
 $9 = días
+$year = año
+$years = años
 
 $10 = La cuenta
 $11 = no tiene ninguna batalla de ladder registrada. Pare ser autoconfirmed busca y gana una batalla con el botón __Battle!__
@@ -57,3 +76,18 @@ $13 = no está registrada. Para poder ser autoconfirmed lo primero registra la c
 $14 = A la cuenta
 $15 = le quedan
 $16 = para ser autoconfirmed
+
+$date = ${DAY} de ${MONTH} de ${YEAR} a las ${TIME} (EST)
+
+$jan = Enero
+$feb = Febrero
+$mar = Marzo
+$apr = Abril
+$may = Mayo
+$jun = Junio
+$jul = Julio
+$aug = Agosto
+$sep = Septiembre
+$oct = Octubre
+$nov = Noviembre
+$dec = Diciembre
