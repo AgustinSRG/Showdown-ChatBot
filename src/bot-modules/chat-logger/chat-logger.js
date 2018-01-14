@@ -50,6 +50,7 @@ exports.setup = function (App) {
 	const ChatLogger = new ChatLoggerModule();
 
 	App.bot.on('line', (room, line, splittedLine, initialMsg) => {
+		if (line === "") return;
 		if (splittedLine[0] === 'pm' && App.config.modules.chatlogger.logpm) {
 			if (!ChatLogger.pmLogger) {
 				let path = Path.resolve(App.logsDir, 'pm');
