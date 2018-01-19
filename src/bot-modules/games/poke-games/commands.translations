@@ -5,6 +5,7 @@
 %english
 
 $nochat = This command is only available for chat rooms
+$nobot = I do not have the permission required to create a game of Hangman
 
 $0 = Invalid answer time
 $1 = There is already a game in this room
@@ -18,6 +19,7 @@ $maxfails = max fails
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
+$nobot = No poseo los permisos necesarios para crear un juego de Hangman
 
 $0 = Tiempo de respuesta no válido
 $1 = Ya hay un juego activo en esta sala

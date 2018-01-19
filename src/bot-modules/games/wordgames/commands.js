@@ -13,6 +13,12 @@ const Text = Tools('text');
 const Lang_File = Path.resolve(__dirname, 'commands.translations');
 const trigger = require(Path.resolve(__dirname, 'cmd-trigger.js'));
 
+function botCanHangman(room, App) {
+	let roomData = App.bot.rooms[room];
+	let botid = Text.toId(App.bot.getBotNick());
+	return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({group: roomData.users[botid]}, 'driver'));
+}
+
 module.exports = {
 	anagrams: function (App) {
 		this.setLangFile(Lang_File);
@@ -65,5 +71,19 @@ module.exports = {
 		if (!App.modules.games.system.createGame(this.room, hangman, trigger.hangman)) {
 			return this.errorReply(this.mlt(1));
 		}
+	},
+
+	makehangman: function (App) {
+		this.setLangFile(Lang_File);
+		if (this.getRoomType(this.room) !== 'chat') return this.errorReply(this.mlt('nochat'));
+		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
+		if (!botCanHangman(this.room, App)) {
+			return this.errorReply(this.mlt('nobot'));
+		}
+		if (App.modules.games.system.templates.wordgames.isDataEmpty()) {
+			return this.errorReply(this.mlt(2));
+		}
+		let data = App.modules.games.system.templates.wordgames.getRandomWord();
+		this.send("/hangman create " + data.word + ", " + data.clue, this.room);
 	},
 };

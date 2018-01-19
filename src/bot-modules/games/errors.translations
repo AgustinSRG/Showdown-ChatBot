@@ -1,0 +1,11 @@
+﻿# Translations file
+
+@ games-errors
+
+%english
+
+$0 = Error: There is already a game in progress in this room.
+
+%spanish
+
+$0 = Error: Ya hay un juego en progreso en esta sala.
