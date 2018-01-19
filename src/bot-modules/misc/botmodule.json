@@ -5,6 +5,7 @@
     "misc.js"
   ],
   "permissions": {
+	"regdate": {"group": "voice"},
 	"randomanswer": {"group": "voice"},
 	"random": {"group": "voice"},
 	"randpoke": {"group": "voice"}

@@ -73,11 +73,11 @@ module.exports = {
 			regTimestamp += (1000 * 60 * 60 * getESTDiff(regTimestamp)) +
 				(new Date().getTimezoneOffset() * 60 * 1000) - 364000;
 			let rDate = (new Date(regTimestamp));
-			this.pmReply(this.mlt('user') + " " + (data.username || target) +
+			this.restrictReply(this.mlt('user') + " " + (data.username || target) +
 				" " + this.mlt('regdate') + " " + this.mlt('date', {day: rDate.getDate(),
 					month: this.mlt(MonthsAbv[rDate.getMonth()]),
 					year: rDate.getFullYear(),
-					time: formatTime(rDate.getHours(), rDate.getMinutes(), rDate.getSeconds())}));
+					time: formatTime(rDate.getHours(), rDate.getMinutes(), rDate.getSeconds())}), "regdate");
 		}.bind(this);
 		if (cacheData) {
 			return callback(cacheData);
@@ -135,9 +135,9 @@ module.exports = {
 			aux = time;
 			if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? this.mlt('year') : this.mlt('years')));
 			/* Reply */
-			this.pmReply(this.mlt('user') + " " + (data.username || target) +
+			this.restrictReply(this.mlt('user') + " " + (data.username || target) +
 				" " + this.mlt('regtime1') + " " + Chat.italics(times.join(', ')) +
-				" " + this.mlt('regtime2'));
+				" " + this.mlt('regtime2'), "regdate");
 		}.bind(this);
 		if (cacheData) {
 			return callback(cacheData);
