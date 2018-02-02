@@ -547,7 +547,7 @@ class RequestContext {
 		this.url = Url.parse(request.url);
 		this.menu = [];
 		this.ip = (ip || request.connection.remoteAddress);
-		this.headers = {};
+		this.headers = {'X-XSS-Protection': 0};
 		this.invalidLogin = false;
 		this.get = {};
 		this.post = {};
