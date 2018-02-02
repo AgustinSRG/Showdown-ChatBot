@@ -59,7 +59,7 @@ module.exports = {
 		}
 	},
 
-	pokehangman: function (App) {
+	textpokehangman: function (App) {
 		this.setLangFile(Lang_File);
 		const PokeHangman = App.modules.games.system.templates['poke-games'].hangman;
 		const PokeRand = App.modules.games.system.templates['poke-games'].pokerand;
@@ -81,7 +81,7 @@ module.exports = {
 		}
 	},
 
-	makepokehangman: function (App) {
+	pokehangman: function (App) {
 		this.setLangFile(Lang_File);
 		const PokeRand = App.modules.games.system.templates['poke-games'].pokerand;
 		if (this.getRoomType(this.room) !== 'chat') return this.errorReply(this.mlt('nochat'));

@@ -55,7 +55,7 @@ module.exports = {
 		}
 	},
 
-	hangman: function (App) {
+	texthangman: function (App) {
 		this.setLangFile(Lang_File);
 		const Hangman = App.modules.games.system.templates.wordgames.hangman;
 		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
@@ -73,7 +73,7 @@ module.exports = {
 		}
 	},
 
-	makehangman: function (App) {
+	hangman: function (App) {
 		this.setLangFile(Lang_File);
 		if (this.getRoomType(this.room) !== 'chat') return this.errorReply(this.mlt('nochat'));
 		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
