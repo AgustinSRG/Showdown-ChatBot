@@ -23,12 +23,12 @@ exports.parse = function (context) {
 		context.pointVal = val;
 		context.totalPointVal += val;
 		context.muteMessage = context.mlt(Lang_File, 'pacman');
-	} else if ((/([^a-z0-9](:|;|=)+(\^|-|'|`|´|~|"|[ ]|_)*(v|((\\|╲)+(_|[ ])*(\/|╱)+))+[^a-z0-9])|([^a-z0-9](v|((\\|╲)+(_|[ ])*(\/|╱)+))+(\^|-|'|`|´|~|"|[ ]|_)*(:|;|=)+[^a-z0-9])/i).test(msg)) {
+	} else if ((/([^a-z0-9](:|;|=)+(\^|-|'|`|´|~|"|[ ]|_|\.|\,)*(u|v|((\\|╲)+(_|[ ])*(\/|╱)+))+[^a-z0-9])|([^a-z0-9](u|v|((\\|╲)+(_|[ ])*(\/|╱)+))+(\^|-|'|`|´|~|"|[ ]|_|\.|\,)*(:|;)+[^a-z0-9])/i).test(msg)) {
 		context.infractions.push(exports.id);
 		context.pointVal = val;
 		context.totalPointVal += val;
 		context.muteMessage = context.mlt(Lang_File, 'pacman');
-	} else if ((/((:|;|=)+(\^|-|'|`|´|~|"|[ ]|_)*(((\\|╲)+(_|[ ])*(\/|╱)+))+)|((((\\|╲)+(_|[ ])*(\/|╱)+))+(\^|-|'|`|´|~|"|[ ]|_)*(:|;|=)+)/i).test(msg)) {
+	} else if ((/((:|;|=)+(\^|-|'|`|´|~|"|[ ]|_|\.|\,)*(((\\|╲)+(_|[ ])*(\/|╱)+))+)|((((\\|╲)+(_|[ ])*(\/|╱)+))+(\^|-|'|`|´|~|"|[ ]|_|\.|\,)*(:|;|=)+)/i).test(msg)) {
 		context.infractions.push(exports.id);
 		context.pointVal = val;
 		context.totalPointVal += val;
