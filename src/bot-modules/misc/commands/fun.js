@@ -64,10 +64,19 @@ module.exports = {
 		}
 		let pokes = Object.keys(pokedex);
 		let data = Text.toId(this.arg) || this.byIdent.id;
+
+		if (App.config.addons && App.config.addons.hpoke && App.config.addons.hpoke[data]) {
+			let custom = Text.toId(App.config.addons.hpoke[data]);
+			if (pokedex[custom]) {
+				return this.restrictReply(Text.stripCommands(pokedex[custom].species), 'random');
+			} else {
+				return this.restrictReply(Text.stripCommands(App.config.addons.hpoke[data]), 'random');
+			}
+		}
+
 		let hash = Crypto.createHash('md5').update(data).digest("hex");
 		let intVal = parseInt(hash, 16) % pokes.length;
-		let chosen = pokedex[pokes[intVal]].species;
-		this.restrictReply(Text.stripCommands(chosen), 'random');
+		this.restrictReply(Text.stripCommands(pokedex[pokes[intVal]].species), 'random');
 	},
 
 	randformat: "randomformat",
