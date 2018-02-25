@@ -28,7 +28,7 @@ exports.parse = function (context) {
 		context.pointVal = val;
 		context.totalPointVal += val;
 		context.muteMessage = context.mlt(Lang_File, 'pacman');
-	} else if ((/([ ](:|;|=)+(\^|-|'|`|´|~|"|[ ]|_|\.|\,)*(u|((\\|╲)+(_|[ ])*(\/|╱)+))+[^a-z0-9])|([^a-z0-9](u|((\\|╲)+(_|[ ])*(\/|╱)+))+(\^|-|'|`|´|~|"|[ ]|_|\.|\,)*(:|;)+[ ])/i).test(msg)) {
+	} else if ((/([ ](:|;|=)+(\^|-|'|`|´|~|"|[ ]|_|\.|\,)*(u|((\\|╲)+(_|[ ])*(\/|╱)+))+[^a-z0-9])|([^a-z0-9](u|((\\|╲)+(_|[ ])*(\/|╱)+))+(\^|-|'|`|´|~|"|[ ]|_|\.|\,)*(:|;)+[ ])/i).test(msg.replace(/[:;]u[:;]/, "   "))) {
 		context.infractions.push(exports.id);
 		context.pointVal = val;
 		context.totalPointVal += val;
