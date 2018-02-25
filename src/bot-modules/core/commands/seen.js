@@ -31,7 +31,7 @@ module.exports = {
 		} else {
 			let userData = App.userdata.getLastSeen(targetUser);
 			if (userData) {
-				let name = userData.name;
+				let name = userData.name || targetUser;
 				let seen = userData.lastSeen;
 				let time = Math.round((Date.now() - seen.time) / 1000);
 				let times = [];
