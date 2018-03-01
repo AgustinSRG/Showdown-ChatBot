@@ -39,7 +39,7 @@ function generateUsageLink(monthmod) {
 		month -= 12;
 		year++;
 	}
-	return "http://www.smogon.com/stats/" + addLeftZero(year, 4) + "-" + addLeftZero(month + 1, 2) + "/";
+	return "https://www.smogon.com/stats/" + addLeftZero(year, 4) + "-" + addLeftZero(month + 1, 2) + "/";
 }
 
 function getUsageLink(App, callback) {
