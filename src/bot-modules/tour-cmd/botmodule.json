@@ -13,6 +13,7 @@
   },
   "langfiles": [
     "./commands.translations",
+    "./tournaments.translations",
 	"./errors.translations"
   ],
   "description": "A single command to make a tour, start it and set the autodq"

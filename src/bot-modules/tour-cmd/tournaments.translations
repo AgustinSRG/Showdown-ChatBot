@@ -1,0 +1,19 @@
+﻿# Translations file
+
+@ tourcmd-msg
+
+%english
+
+$and = and
+
+$final = Watch the tournament finals: <<${BATTLE}>>!
+
+$winner = Congratulations to **${WINNERS}** for winning the tournament!
+
+%spanish
+
+$and = y
+
+$final = ¡La final del torneo ha comenzado: <<${BATTLE}>>!
+
+$winner = ¡Felicidades **${WINNERS}** por haber ganado el torneo!

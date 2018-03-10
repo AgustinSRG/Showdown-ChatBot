@@ -37,6 +37,8 @@ exports.setup = function (App) {
 			let scout = Text.toId(context.post.scout);
 			let msg = (context.post.creationmsg || "").trim();
 			let aliases = (context.post.aliases || "").split('\n');
+			let finals = (context.post.finals || "").split(',');
+			let winnergrats = (context.post.winnergrats || "").split(',');
 
 			try {
 				check(format, "Invalid format.");
@@ -68,6 +70,20 @@ exports.setup = function (App) {
 					}
 				}
 				Config.aliases = aux;
+				Config.finalAnnouncement = {};
+				for (let i = 0; i < finals.length; i++) {
+					let roomid = Text.toRoomid(finals[i]);
+					if (roomid) {
+						Config.finalAnnouncement[roomid] = true;
+					}
+				}
+				Config.congratsWinner = {};
+				for (let i = 0; i < winnergrats.length; i++) {
+					let roomid = Text.toRoomid(winnergrats[i]);
+					if (roomid) {
+						Config.congratsWinner[roomid] = true;
+					}
+				}
 				App.db.write();
 				App.logServerAction(context.user.id, "Changed tour cmd configuration");
 				ok = "Tournament command configuration saved.";
@@ -85,6 +101,8 @@ exports.setup = function (App) {
 		htmlVars.scout_yes = (!Config.scoutProtect ? 'selected="selected"' : '');
 		htmlVars.scout_no = (Config.scoutProtect ? 'selected="selected"' : '');
 		htmlVars.creationmsg = Config.createMessage;
+		htmlVars.finals = Config.finalAnnouncement ? (Object.keys(Config.finalAnnouncement).join(", ")) : "";
+		htmlVars.winnergrats = Config.congratsWinner ? (Object.keys(Config.congratsWinner).join(", ")) : "";
 
 		let aliases = [];
 		for (let format in Config.aliases) {
