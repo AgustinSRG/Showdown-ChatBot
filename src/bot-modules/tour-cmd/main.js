@@ -155,24 +155,19 @@ exports.setup = function (App) {
 		case 'battlestart':
 			let p1 = Text.toId(spl[2]);
 			let p2 = Text.toId(spl[3]);
-			console.log("KIK: " + p1 + ", " + p2);
 			let link = Text.toRoomid(spl[4]);
 			if (p1 && p2 && link) {
 				if (Config.finalAnnouncement && Config.finalAnnouncement[room]) {
 					if (tourData[room] && Text.toId(tourData[room].generator) === "singleelimination") {
-						console.log("WOW");
 						let data = tourData[room];
 						let p1C = false, p2C = false;
 						if (data.bracketData.rootNode.children) {
-							console.log("LOL");
 							for (let f = 0; f < data.bracketData.rootNode.children.length; f++) {
 								let team = Text.toId(data.bracketData.rootNode.children[f].team || "");
 								if (p1 === team) {
-									console.log("BOOM1");
 									p1C = true;
 								}
 								if (p2 === team) {
-									console.log("BOOM2");
 									p2C = true;
 								}
 							}
