@@ -600,9 +600,7 @@ class RequestContext {
 				let busboy = null;
 				try {
 					busboy = new Busboy({headers: this.request.headers});
-				} catch (err) {
-					this.server.app.reportCrash(err);
-				}
+				} catch (err) {}
 				if (busboy) {
 					let files = this.files = {};
 					let post = this.post = {};
