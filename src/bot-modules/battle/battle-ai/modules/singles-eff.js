@@ -183,6 +183,10 @@ exports.setup = function (Data) {
 				res.unviable.push(decisions[i]);
 				continue;
 			}
+			if (move.target !== "self" && battle.gen >= 7 && pokeA.ability && pokeA.ability.id === "prankster" && pokeB.template.types.indexOf("Dark") >= 0) {
+				res.unviable.push(decisions[i]);
+				continue;
+			}
 			if (conditionsB.volatiles["substitute"] && move.target !== "self" && move.target !== "allySide" && move.target !== "foeSide" && move.target !== "allyTeam") {
 				if (!move.flags || !move.flags['authentic']) {
 					res.unviable.push(decisions[i]);
@@ -295,7 +299,7 @@ exports.setup = function (Data) {
 				continue;
 			case "disable":
 			case "encore":
-				if (battle.foe.active[0].helpers.sw && battle.foe.active[0].helpers.lastMove && battle.foe.active[0].helpers.sw && battle.turn - battle.foe.active[0].helpers.sw > 1 && battle.foe.active[0].helpers.lastMoveTurn > battle.foe.active[0].helpers.sw) {
+				if (!conditionsB.volatiles[move.volatileStatus] && battle.foe.active[0].helpers.sw && battle.foe.active[0].helpers.lastMove && battle.foe.active[0].helpers.sw && battle.turn - battle.foe.active[0].helpers.sw > 1 && battle.foe.active[0].helpers.lastMoveTurn > battle.foe.active[0].helpers.sw) {
 					res.viable.push(decisions[i]);
 				} else {
 					res.unviable.push(decisions[i]);
