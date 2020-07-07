@@ -212,7 +212,7 @@ class ModeratorBot {
 		let indexmute = raw.indexOf(" was muted by ");
 		if (indexmute !== -1) {
 			let mutemsg = raw.split(" was muted by ");
-			if (mutemsg.length > 1 && mutemsg[1].indexOf(this.app.bot.getBotNick()) === -1) {
+			if (mutemsg.length > 1 && mutemsg[1].indexOf(this.app.bot.getBotNick().substr(1)) === -1) {
 				by = Text.toId(mutemsg[0]);
 				if (raw.indexOf("for 7 minutes") !== -1) {
 					val = 2;
@@ -222,7 +222,7 @@ class ModeratorBot {
 			}
 		} else if (indexwarn !== -1) {
 			let warnmsg = raw.split(" was warned by ");
-			if (warnmsg.length > 1 && warnmsg[1].indexOf(this.app.bot.getBotNick()) === -1) {
+			if (warnmsg.length > 1 && warnmsg[1].indexOf(this.app.bot.getBotNick().substr(1)) === -1) {
 				by = Text.toId(warnmsg[0]);
 				val = 1;
 			}

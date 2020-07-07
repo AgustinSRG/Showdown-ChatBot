@@ -121,7 +121,7 @@ exports.setup = function (App) {
 			if (user.length > 19) {
 				context.endWithText(Text.escapeHTML("Error: Invalid Username"));
 			} else if (user === Text.toId(App.bot.getBotNick())) {
-				context.endWithText(Text.escapeHTML("Bot nickname: " + App.bot.getBotNick() + " | No seen information"));
+				context.endWithText(Text.escapeHTML("Bot nickname: " + App.bot.getBotNick().substr(1) + " | No seen information"));
 			} else {
 				let userData = App.userdata.getLastSeen(user);
 				if (userData) {

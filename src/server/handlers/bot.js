@@ -40,7 +40,7 @@ exports.setup = function (App) {
 				data.con = '<font color="red"><strong>NOT CONNECTED</strong></font>';
 				data.ctime = '&nbsp;';
 			}
-			data.nick = (App.bot.getBotNick() || "-");
+			data.nick = (App.bot.getBotNick().substr(1) || "-");
 			data.rooms = [];
 			for (let r in App.bot.rooms) {
 				if (App.bot.rooms[r].type === 'chat') {
@@ -123,7 +123,7 @@ exports.setup = function (App) {
 			htmlVars.conntime = '<span id="bot-conntime"><i>&nbsp;</i></span>';
 		}
 
-		htmlVars.nick = (App.bot.getBotNick() || "-");
+		htmlVars.nick = (App.bot.getBotNick().substr(1) || "-");
 
 		let rooms = [];
 		for (let r in App.bot.rooms) {

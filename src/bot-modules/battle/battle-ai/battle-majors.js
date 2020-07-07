@@ -27,6 +27,10 @@ exports.setup = function (App, BattleData) {
 				return;
 			}
 			this.rqid = this.request ? this.request.rqid : -1;
+			if (this.waitingForRequestToMove) {
+				this.waitingForRequestToMove = false;
+				this.makeDecision();
+			}
 		},
 
 		start: function (args, kwargs) {
@@ -80,13 +84,22 @@ exports.setup = function (App, BattleData) {
 
 		inactive: function (args, kwargs) {
 			this.timer = true;
+			this.debug(this.id + "->Inactive: " + JSON.stringify(args));
 			if (args[1]) {
 				if (args[1].indexOf("Battle timer is now ON") === 0 ||
 					args[1].indexOf("You have") === 0 ||
 					args[1].indexOf("Time left:") === 0 ||
-					args[1].indexOf(App.bot.getBotNick()) >= 0) {
+					args[1].indexOf(App.bot.getBotNick().substr(1)) >= 0) {
 					this.makeDecision();
 				}
+			}
+		},
+
+		error: function (args, kwargs) {
+			this.timer = true;
+			this.debug(this.id + "->Callback error: " + JSON.stringify(kwargs));
+			if (kwargs["Unavailable choice"]) {
+				this.waitingForRequestToMove = true;
 			}
 		},
 

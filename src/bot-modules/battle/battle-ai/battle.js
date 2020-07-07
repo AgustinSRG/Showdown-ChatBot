@@ -51,6 +51,8 @@ exports.setup = function (App) {
 			this.rqid = 0;
 			this.teamPreview = 1;
 
+			this.waitingForRequestToMove = false;
+
 			this.conditions = {};
 
 			this.buffer = [];
