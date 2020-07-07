@@ -62,7 +62,7 @@ class Pokemon {
 	}
 
 	getStats(gen) {
-		if (!gen) gen = 7;
+		if (!gen) gen = 8;
 		let stats = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
 		let res = {};
 		for (let i = 0; i < stats.length; i++) {
@@ -181,7 +181,7 @@ exports.getHazardsDamage = function (poke, conditions, gen, inverse) {
 */
 
 exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gconditions, gen) {
-	if (!gen) gen = 7;
+	if (!gen) gen = 8;
 	if (!gconditions) gconditions = {};
 	if (!conditionsA) conditionsA = {};
 	if (!conditionsB) conditionsB = {};

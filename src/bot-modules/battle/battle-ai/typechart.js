@@ -16,7 +16,7 @@ exports.getMultipleEff = function (typeA, typesB, gen, notInmmune, inverse) {
 };
 
 exports.getEffectiveness = function (typeA, typeB, gen) {
-	if (!gen) gen = 6;
+	if (!gen) gen = 8;
 	let chart = exports.gen6;
 	if (exports["gen" + gen]) chart = exports["gen" + gen];
 	if (!chart[typeB] || !chart[typeB][typeA]) return 1;
@@ -32,7 +32,7 @@ exports.getEffectiveness = function (typeA, typeB, gen) {
 	}
 };
 
-exports.gen7 = exports.gen6 = {
+exports.gen8 = exports.gen7 = exports.gen6 = {
 	"Bug": {
 		"Bug": 0,
 		"Dark": 0,

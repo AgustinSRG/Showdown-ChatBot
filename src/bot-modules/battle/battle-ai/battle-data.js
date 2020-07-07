@@ -63,15 +63,15 @@ exports.setup = function (App) {
 	};
 
 	BattleDataManager.getPokemon = BattleDataManager.getTemplate = function (poke, gen) {
-		if (!gen || gen > 7 || gen < 1) gen = 7;
+		if (!gen || gen > 8 || gen < 1) gen = 8;
 		poke = Text.toId(poke || "");
 		let pokemon = {};
 		let temp;
 		try {
 			temp = App.data.getPokedex()[poke];
 			for (let i in temp) pokemon[i] = temp[i];
-		} catch (e) {}
-		for (let i = 6; i >= gen; i--) {
+		} catch (e) { }
+		for (let i = 7; i >= gen; i--) {
 			try {
 				temp = require(Path.resolve(BAT_DATA_DIR, "gen" + i, "pokedex.js")).BattlePokedex[poke];
 				if (!temp) continue;
@@ -83,13 +83,16 @@ exports.setup = function (App) {
 			}
 			for (let i in temp) pokemon[i] = temp[i];
 		}
+		if (pokemon.name) {
+			pokemon.species = pokemon.name;
+		}
 		if (!pokemon.species) {
 			return {
 				num: 235,
 				species: "Smeargle",
 				types: ["Normal"],
-				baseStats: {hp: 55, atk: 20, def: 35, spa: 20, spd: 45, spe: 75},
-				abilities: {0: "Own Tempo", 1: "Technician", H: "Moody"},
+				baseStats: { hp: 55, atk: 20, def: 35, spa: 20, spd: 45, spe: 75 },
+				abilities: { 0: "Own Tempo", 1: "Technician", H: "Moody" },
 				heightm: 1.2,
 				weightkg: 58,
 				color: "White",
@@ -99,8 +102,69 @@ exports.setup = function (App) {
 		return pokemon;
 	};
 
+
+	BattleDataManager.getZPower = function (basePower) {
+		if (basePower >= 140) {
+			return 200;
+		} else if (basePower >= 130) {
+			return 195;
+		} else if (basePower >= 120) {
+			return 190;
+		} else if (basePower >= 110) {
+			return 185;
+		} else if (basePower >= 100) {
+			return 180;
+		} else if (basePower >= 90) {
+			return 175;
+		} else if (basePower >= 80) {
+			return 160;
+		} else if (basePower >= 70) {
+			return 140;
+		} else if (basePower >= 60) {
+			return 120;
+		} else {
+			return 100;
+		}
+	};
+
+	BattleDataManager.getMaxPower = function (basePower, maxMove) {
+		if (maxMove in { maxknuckle: 1, maxooze: 1 }) {
+			if (basePower >= 150) {
+				return 100;
+			} else if (basePower >= 110) {
+				return 95;
+			} else if (basePower >= 75) {
+				return 90;
+			} else if (basePower >= 65) {
+				return 85;
+			} else if (basePower >= 55) {
+				return 80;
+			} else if (basePower >= 45) {
+				return 75;
+			} else {
+				return 70;
+			}
+		} else {
+			if (basePower >= 150) {
+				return 150;
+			} else if (basePower >= 110) {
+				return 140;
+			} else if (basePower >= 75) {
+				return 130;
+			} else if (basePower >= 65) {
+				return 120;
+			} else if (basePower >= 55) {
+				return 110;
+			} else if (basePower >= 45) {
+				return 100;
+			} else {
+				return 90;
+			}
+		}
+	};
+
 	BattleDataManager.getMove = function (move, gen) {
-		if (!gen || gen > 7 || gen < 1) gen = 7;
+		if (!gen || gen > 8 || gen < 1) gen = 8;
 		move = Text.toId(move || "");
 		if (move.indexOf("hiddenpower") === 0) {
 			move = move.replace(/[0-9]/g, "");
@@ -110,8 +174,8 @@ exports.setup = function (App) {
 		try {
 			temp = App.data.getMoves()[move];
 			for (let i in temp) moveData[i] = temp[i];
-		} catch (e) {}
-		for (let i = 6; i >= gen; i--) {
+		} catch (e) { }
+		for (let i = 7; i >= gen; i--) {
 			try {
 				temp = require(Path.resolve(BAT_DATA_DIR, "gen" + i, "moves.js")).BattleMovedex[move];
 				if (!temp) continue;
@@ -122,6 +186,9 @@ exports.setup = function (App) {
 				for (let i in moveData) delete moveData[i];
 			}
 			for (let i in temp) moveData[i] = temp[i];
+		}
+		if (moveData.name) {
+			moveData.id = Text.toId(moveData.name);
 		}
 		if (!moveData.id && move.length > 0 && move.charAt(move.length - 1) === 'z') {
 			return BattleDataManager.getMove(move.substr(0, move.length - 1), gen);
@@ -138,7 +205,7 @@ exports.setup = function (App) {
 				pp: 1,
 				noPPBoosts: true,
 				priority: 0,
-				flags: {contact: 1, protect: 1},
+				flags: { contact: 1, protect: 1 },
 				noSketch: true,
 				effectType: "Move",
 			};
@@ -148,15 +215,15 @@ exports.setup = function (App) {
 	};
 
 	BattleDataManager.getItem = function (item, gen) {
-		if (!gen || gen > 7 || gen < 1) gen = 7;
+		if (!gen || gen > 8 || gen < 1) gen = 8;
 		item = Text.toId(item || "");
 		let itemData = {};
 		let temp;
 		try {
 			temp = App.data.getItems()[item];
 			for (let i in temp) itemData[i] = temp[i];
-		} catch (e) {}
-		for (let i = 6; i >= gen; i--) {
+		} catch (e) { }
+		for (let i = 7; i >= gen; i--) {
 			try {
 				temp = require(Path.resolve(BAT_DATA_DIR, "gen" + i, "items.js")).BattleItems[item];
 				if (!temp) continue;
@@ -167,6 +234,9 @@ exports.setup = function (App) {
 				for (let i in itemData) delete itemData[i];
 			}
 			for (let i in temp) itemData[i] = temp[i];
+		}
+		if (itemData.name) {
+			itemData.id = Text.toId(itemData.name);
 		}
 		if (!itemData.id) {
 			return {
@@ -186,15 +256,15 @@ exports.setup = function (App) {
 	};
 
 	BattleDataManager.getAbility = function (ab, gen) {
-		if (!gen || gen > 7 || gen < 1) gen = 7;
+		if (!gen || gen > 8 || gen < 1) gen = 8;
 		ab = Text.toId(ab || "");
 		let ability = {};
 		let temp;
 		try {
 			temp = App.data.getAbilities()[ab];
 			for (let i in temp) ability[i] = temp[i];
-		} catch (e) {}
-		for (let i = 6; i >= gen; i--) {
+		} catch (e) { }
+		for (let i = 7; i >= gen; i--) {
 			try {
 				temp = require(Path.resolve(BAT_DATA_DIR, "gen" + i, "abilities.js")).BattleAbilities[ab];
 				if (!temp) continue;
@@ -205,6 +275,9 @@ exports.setup = function (App) {
 				for (let i in ability) delete ability[i];
 			}
 			for (let i in temp) ability[i] = temp[i];
+		}
+		if (ability.name) {
+			ability.id = Text.toId(ability.name);
 		}
 		if (!ability.id) {
 			return {
@@ -454,7 +527,7 @@ exports.setup = function (App) {
 	BattleDataManager.Player = Player;
 
 	BattleDataManager.getFormatsData = function (gen) {
-		if (!gen || gen > 7 || gen < 1) gen = 7;
+		if (!gen || gen > 8 || gen < 1) gen = 8;
 		try {
 			return require(Path.resolve(BAT_DATA_DIR, "gen" + gen, "formats-data.js")).BattleFormatsData;
 		} catch (e) {

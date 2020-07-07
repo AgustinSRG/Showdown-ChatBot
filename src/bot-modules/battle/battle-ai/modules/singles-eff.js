@@ -175,6 +175,9 @@ exports.setup = function (Data) {
 			if (des.zmove) {
 				move = Data.getMove(des.move);
 			}
+			if (des.dynamax) {
+				move = Data.getMove("protect");
+			}
 			if (move.category === "Status") res.total++;
 			if (move.flags && move.flags['reflectable'] && pokeB.ability && pokeB.ability.id === "magicbounce") {
 				res.unviable.push(decisions[i]);
@@ -552,9 +555,15 @@ exports.setup = function (Data) {
 			let move = Data.getMove(battle.request.side.pokemon[0].moves[des.moveId]);
 			if (des.zmove) {
 				let zmove = Data.getMove(des.move);
-				if (zmove.basePower === 1) zmove.basePower = move.zMovePower || 0;
+				if (zmove.basePower === 1) zmove.basePower = Data.getZPower(move.basePower || 0);
 				zmove.category = move.category;
 				move = zmove;
+			}
+			if (des.dynamax) {
+				let dmove = Data.getMove(des.move);
+				dmove.basePower = Data.getMaxPower(move.basePower || 0, Text.toId(dmove.name));
+				dmove.category = move.category;
+				move = dmove;
 			}
 			if (move.category !== "Physical" && move.category !== "Special") continue; // Status move
 			let dmg = Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, battle.conditions, battle.gen).getMax();

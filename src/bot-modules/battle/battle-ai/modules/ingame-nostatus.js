@@ -157,6 +157,10 @@ exports.setup = function (Data) {
 			if (!des.mega) return 0; // Mega evolve by default
 		}
 
+		if (a.canDynamax || p.canDynamax) {
+			if (!des.dynamax) return 0; // Dynamax by default
+		}
+
 		if (a.canUltraBurst) {
 			if (!des.ultra) return 0; // Ultra burst always
 		}
