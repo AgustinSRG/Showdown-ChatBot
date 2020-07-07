@@ -44,10 +44,13 @@ const PageMaker = require(Path.resolve(__dirname, 'html-maker.js'));
  * @returns {String} Encrypted text
  */
 function encrypt(text, algorithm, password) {
-	let cipher = Crypto.createCipher(algorithm, password);
+	const iv = Buffer.from(Crypto.randomBytes(16));
+	const hash = Crypto.createHash('sha256');
+	hash.update(password);
+	let cipher = Crypto.createCipheriv(algorithm, hash.digest(), iv);
 	let crypted = cipher.update(text, 'utf8', 'hex');
 	crypted += cipher.final('hex');
-	return crypted;
+	return iv.toString("hex") + ":" + crypted;
 }
 
 /**
@@ -58,10 +61,21 @@ function encrypt(text, algorithm, password) {
  * @returns {String} Decrypted text
  */
 function decrypt(text, algorithm, password) {
-	let decipher = Crypto.createDecipher(algorithm, password);
-	let data = decipher.update(text, 'hex', 'utf8');
-	data += decipher.final('utf8');
-	return data;
+	if (text.indexOf(":") === -1) {
+		let decipher = Crypto.createDecipher(algorithm, password);
+		let data = decipher.update(text, 'hex', 'utf8');
+		data += decipher.final('utf8');
+		return data;
+	} else {
+		const parts = text.split(":");
+		const iv = Buffer.from(parts[0], 'hex');
+		const hash = Crypto.createHash('sha256');
+		hash.update(password);
+		let decipher = Crypto.createDecipheriv(algorithm, hash.digest(), iv);
+		let data = decipher.update(parts[1], 'hex', 'utf8');
+		data += decipher.final('utf8');
+		return data;
+	}
 }
 
 /**

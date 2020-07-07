@@ -36,17 +36,17 @@ exports.setup = function (App) {
 		}
 
 		let submenu = new SubMenu("Develoment&nbsp;Tools", parts, context, [
-			{id: 'getserver', title: 'Get-Server', url: '/tools/', handler: toolGetServer},
-			{id: 'botsend', title: 'Bot-Send', url: '/tools/botsend/', handler: toolBotSend},
-			{id: 'botlogin', title: 'Bot-Login', url: '/tools/botlogin/', handler: toolBotLogin},
-			{id: 'seen', title: 'Seen', url: '/tools/seen/', handler: toolSeen},
-			{id: 'clearusers', title: 'Clear&nbsp;User-Data', url: '/tools/clearusers/', handler: toolClearUsers},
-			{id: 'hotpatch', title: 'Hotpatch', url: '/tools/hotpatch/', handler: toolHotpatch},
-			{id: 'ddata', title: 'Reload&nbsp;Data', url: '/tools/ddata/', handler: toolDownloadData},
-			{id: 'cache', title: 'Clear&nbsp;Cache', url: '/tools/cache/', handler: toolClearCache},
-			{id: 'cnnmonitor', title: 'Connection&nbsp;Monitor', url: '/tools/cnnmonitor/', handler: toolConnectionMonitor},
-			{id: 'backups', title: 'Backups', url: '/tools/backups/', handler: toolBackups},
-			{id: 'eval', title: 'Eval&nbsp;(JavaScript)', url: '/tools/eval/', handler: toolEval},
+			{ id: 'getserver', title: 'Get-Server', url: '/tools/', handler: toolGetServer },
+			{ id: 'botsend', title: 'Bot-Send', url: '/tools/botsend/', handler: toolBotSend },
+			{ id: 'botlogin', title: 'Bot-Login', url: '/tools/botlogin/', handler: toolBotLogin },
+			{ id: 'seen', title: 'Seen', url: '/tools/seen/', handler: toolSeen },
+			{ id: 'clearusers', title: 'Clear&nbsp;User-Data', url: '/tools/clearusers/', handler: toolClearUsers },
+			{ id: 'hotpatch', title: 'Hotpatch', url: '/tools/hotpatch/', handler: toolHotpatch },
+			{ id: 'ddata', title: 'Reload&nbsp;Data', url: '/tools/ddata/', handler: toolDownloadData },
+			{ id: 'cache', title: 'Clear&nbsp;Cache', url: '/tools/cache/', handler: toolClearCache },
+			{ id: 'cnnmonitor', title: 'Connection&nbsp;Monitor', url: '/tools/cnnmonitor/', handler: toolConnectionMonitor },
+			{ id: 'backups', title: 'Backups', url: '/tools/backups/', handler: toolBackups },
+			{ id: 'eval', title: 'Eval&nbsp;(JavaScript)', url: '/tools/eval/', handler: toolEval },
 		], 'getserver');
 
 		return submenu.run();
@@ -71,7 +71,7 @@ exports.setup = function (App) {
 		}
 
 		html += getServerTemplate.get();
-		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js']});
+		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js'] });
 	}
 
 	function toolBotSend(context, html, parts) {
@@ -92,7 +92,7 @@ exports.setup = function (App) {
 			return context.endWithText(result);
 		}
 		html += botSendTemplate.get();
-		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js']});
+		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js'] });
 	}
 
 	function toolBotLogin(context, html, parts) {
@@ -112,7 +112,7 @@ exports.setup = function (App) {
 			return context.endWithText(result);
 		}
 		html += botLoginTemplate.get();
-		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js']});
+		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js'] });
 	}
 
 	function toolSeen(context, html, parts) {
@@ -145,20 +145,20 @@ exports.setup = function (App) {
 					let reply = "User" + ' ' + name.trim() + ' ' +
 						"was last seen" + ' ' + times.join(', ') + ' ' + "ago ";
 					switch (seen.type) {
-					case 'J':
-						reply += 'joining' + ' ';
-						break;
-					case 'L':
-						reply += 'leaving' + ' ';
-						break;
-					case 'C':
-						reply += 'chatting in' + ' ';
-						break;
-					case 'R':
-						reply += 'changing nick to' + ' ' + seen.detail;
-						break;
+						case 'J':
+							reply += 'joining' + ' ';
+							break;
+						case 'L':
+							reply += 'leaving' + ' ';
+							break;
+						case 'C':
+							reply += 'chatting in' + ' ';
+							break;
+						case 'R':
+							reply += 'changing nick to' + ' ' + seen.detail;
+							break;
 					}
-					if (seen.type in {'J': 1, 'L': 1, 'C': 1}) {
+					if (seen.type in { 'J': 1, 'L': 1, 'C': 1 }) {
 						reply += tryGetRoomTitle(seen.room);
 					}
 					reply = Text.escapeHTML(reply);
@@ -174,19 +174,19 @@ exports.setup = function (App) {
 			}
 		} else {
 			html += seenTemplate.get();
-			context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js']});
+			context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js'] });
 		}
 	}
 
 	function toolEval(context, html, parts) {
 		if (!App.config.debug) {
 			html += '<p><span class="error-msg">This tool only works in Debug Mode.</span></p>';
-			context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
+			context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot" });
 			return;
 		}
 		if (App.env.staticmode) {
 			html += '<p><span class="error-msg">Error: Static mode does not allow eval.</span></p>';
-			context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
+			context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot" });
 			return;
 		}
 		if (context.post.scriptdata) {
@@ -195,7 +195,7 @@ exports.setup = function (App) {
 			return;
 		}
 		html += evalTemplate.get();
-		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js']});
+		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js'] });
 	}
 
 	function toolHotpatch(context, html, parts) {
@@ -216,7 +216,7 @@ exports.setup = function (App) {
 
 		html += hotpatchTemplate.make(htmlVars);
 
-		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
+		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot" });
 	}
 
 	function toolDownloadData(context, html, parts) {
@@ -233,7 +233,7 @@ exports.setup = function (App) {
 
 		html += dowloadDataTemplate.make(htmlVars);
 
-		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
+		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot" });
 	}
 
 	function toolClearCache(context, html, parts) {
@@ -254,7 +254,7 @@ exports.setup = function (App) {
 
 		html += cacheTemplate.make(htmlVars);
 
-		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
+		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot" });
 	}
 
 	function toolClearUsers(context, html, parts) {
@@ -275,7 +275,7 @@ exports.setup = function (App) {
 
 		html += clearUsersTemplate.make(htmlVars);
 
-		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
+		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot" });
 	}
 
 	function toolConnectionMonitor(context, html, parts) {
@@ -312,7 +312,7 @@ exports.setup = function (App) {
 
 		html += monitorTemplate.make(htmlVars);
 
-		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
+		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot" });
 	}
 
 	function toolBackups(context, html, parts) {
@@ -320,7 +320,7 @@ exports.setup = function (App) {
 
 		if (App.dam.type !== "RAW") {
 			html += '<p><span class="error-msg">This tool is only available for raw-files mode.</span></p>';
-			context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
+			context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot" });
 			return;
 		}
 
@@ -331,9 +331,11 @@ exports.setup = function (App) {
 				context.endWithText("Error: The passwords do not match.");
 			} else {
 				let f = new Date();
-				context.response.writeHead(200, {'Content-Type': 'application/force-download',
+				context.response.writeHead(200, {
+					'Content-Type': 'application/force-download',
 					'Content-Disposition': 'inline; filename="showdown_chatbot_' + f.getFullYear() + '_' +
-					(f.getMonth() + 1) + '_' + f.getDate() + '.backup"'});
+						(f.getMonth() + 1) + '_' + f.getDate() + '.backup"'
+				});
 				let backupData = App.dam.getBackup();
 				let backup = {
 					signature: "$BACKUP$NATIVE$ENCRYPTED$/Showdown-Chatbot/" + App.env.package.version,
@@ -377,7 +379,7 @@ exports.setup = function (App) {
 								let buf = '';
 								buf += '<html><head><title>Process Exited</title></head><body><p>Backup Completed.' +
 									' The application exits sucessfully.</p><a href=""><button>Refresh Page</button></a></body></html>';
-								context.response.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
+								context.response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
 								context.response.end(buf);
 								console.log("Backup Completed | Exit via server, By: " + context.user.id);
 								process.exit(0);
@@ -396,7 +398,7 @@ exports.setup = function (App) {
 
 		html += backupsTemplate.make(htmlVars);
 
-		context.endWithWebPage(html, {title: "Develoment Tools - Showdown ChatBot"});
+		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot" });
 	}
 
 	/* Auxiliar Functions */
@@ -408,17 +410,47 @@ exports.setup = function (App) {
 		}
 	}
 
+
+	/**
+	 * Encrypts a text
+	 * @param {String} text
+	 * @param {String} algorithm
+	 * @param {String} password
+	 * @returns {String} Encrypted text
+	 */
 	function encrypt(text, algorithm, password) {
-		let cipher = Crypto.createCipher(algorithm, password);
+		const iv = Buffer.from(Crypto.randomBytes(16));
+		const hash = Crypto.createHash('sha256');
+		hash.update(password);
+		let cipher = Crypto.createCipheriv(algorithm, hash.digest(), iv);
 		let crypted = cipher.update(text, 'utf8', 'hex');
 		crypted += cipher.final('hex');
-		return crypted;
+		return iv.toString("hex") + ":" + crypted;
 	}
 
+	/**
+	 * Decrypts a text
+	 * @param {String} text - Encrypted text
+	 * @param {String} algorithm
+	 * @param {String} password
+	 * @returns {String} Decrypted text
+	 */
 	function decrypt(text, algorithm, password) {
-		let decipher = Crypto.createDecipher(algorithm, password);
-		let data = decipher.update(text, 'hex', 'utf8');
-		data += decipher.final('utf8');
-		return data;
+		console.log("Text: " + text);
+		if (text.indexOf(":") === -1) {
+			let decipher = Crypto.createDecipher(algorithm, password);
+			let data = decipher.update(text, 'hex', 'utf8');
+			data += decipher.final('utf8');
+			return data;
+		} else {
+			const parts = text.split(":");
+			const iv = Buffer.from(parts[0], 'hex');
+			const hash = Crypto.createHash('sha256');
+			hash.update(password);
+			let decipher = Crypto.createDecipheriv(algorithm, hash.digest(), iv);
+			let data = decipher.update(parts[1], 'hex', 'utf8');
+			data += decipher.final('utf8');
+			return data;
+		}
 	}
 };

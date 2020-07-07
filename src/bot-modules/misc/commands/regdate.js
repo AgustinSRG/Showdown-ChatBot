@@ -75,9 +75,9 @@ module.exports = {
 			let rDate = (new Date(regTimestamp));
 			this.restrictReply(this.mlt('user') + " " + (data.username || target) +
 				" " + this.mlt('regdate') + " " + this.mlt('date', {day: rDate.getDate(),
-					month: this.mlt(MonthsAbv[rDate.getMonth()]),
-					year: rDate.getFullYear(),
-					time: formatTime(rDate.getHours(), rDate.getMinutes(), rDate.getSeconds())}), "regdate");
+				month: this.mlt(MonthsAbv[rDate.getMonth()]),
+				year: rDate.getFullYear(),
+				time: formatTime(rDate.getHours(), rDate.getMinutes(), rDate.getSeconds())}), "regdate");
 		}.bind(this);
 		if (cacheData) {
 			return callback(cacheData);
