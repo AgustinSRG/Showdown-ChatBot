@@ -80,7 +80,7 @@ exports.setup = function (App) {
 			break;
 		}
 		return {
-			word: chosen.species,
+			word: chosen.name,
 			clue: 'Pokemon, ' + clue,
 		};
 	};

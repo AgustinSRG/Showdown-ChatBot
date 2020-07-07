@@ -78,7 +78,7 @@ exports.resolve = function (App, word, flags) {
 			ld = Text.levenshtein(word, poke, maxLd);
 			if (ld < cld) {
 				cld = ld;
-				currWord = pokedex[poke].species;
+				currWord = pokedex[poke].name;
 			}
 		}
 	}

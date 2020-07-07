@@ -42,7 +42,7 @@ module.exports = {
 			return this.errorReply(this.mlt('error'));
 		}
 		let pokes = Object.keys(pokedex);
-		let chosen = pokedex[pokes[Math.floor(Math.random() * pokes.length)]].species;
+		let chosen = pokedex[pokes[Math.floor(Math.random() * pokes.length)]].name;
 		let roomData = App.bot.rooms[this.room];
 		let botid = Text.toId(App.bot.getBotNick());
 		if (this.can('randpoke') && roomData && roomData.users[botid] && this.parser.equalOrHigherGroup({group: roomData.users[botid]}, 'driver')) {
@@ -68,7 +68,7 @@ module.exports = {
 		if (App.config.addons && App.config.addons.hpoke && App.config.addons.hpoke[data]) {
 			let custom = Text.toId(App.config.addons.hpoke[data]);
 			if (pokedex[custom]) {
-				return this.restrictReply(Text.stripCommands(pokedex[custom].species), 'random');
+				return this.restrictReply(Text.stripCommands(pokedex[custom].name), 'random');
 			} else {
 				return this.restrictReply(Text.stripCommands(App.config.addons.hpoke[data]), 'random');
 			}
@@ -76,7 +76,7 @@ module.exports = {
 
 		let hash = Crypto.createHash('md5').update(data).digest("hex");
 		let intVal = parseInt(hash, 16) % pokes.length;
-		this.restrictReply(Text.stripCommands(pokedex[pokes[intVal]].species), 'random');
+		this.restrictReply(Text.stripCommands(pokedex[pokes[intVal]].name), 'random');
 	},
 
 	randformat: "randomformat",

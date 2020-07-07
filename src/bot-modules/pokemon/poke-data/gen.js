@@ -15,15 +15,15 @@ function getGeneration(name, App) {
 	if (id === 'metronome') {
 		return {gen: 'metronome'};
 	} else if (pokedex[id]) {
-		if (pokedex[id].num < 0) return {gen: 'CAP', name: pokedex[id].species};
-		else if (pokedex[id].num <= 151) return {gen: 1, name: pokedex[id].species};
-		else if (pokedex[id].num <= 251) return {gen: 2, name: pokedex[id].species};
-		else if (pokedex[id].num <= 386) return {gen: 3, name: pokedex[id].species};
-		else if (pokedex[id].num <= 493) return {gen: 4, name: pokedex[id].species};
-		else if (pokedex[id].num <= 649) return {gen: 5, name: pokedex[id].species};
-		else if (pokedex[id].num <= 721) return {gen: 6, name: pokedex[id].species};
-		else if (pokedex[id].num <= 809) return {gen: 7, name: pokedex[id].species};
-		else return {gen: 8, name: pokedex[id].species};
+		if (pokedex[id].num < 0) return {gen: 'CAP', name: pokedex[id].name};
+		else if (pokedex[id].num <= 151) return {gen: 1, name: pokedex[id].name};
+		else if (pokedex[id].num <= 251) return {gen: 2, name: pokedex[id].name};
+		else if (pokedex[id].num <= 386) return {gen: 3, name: pokedex[id].name};
+		else if (pokedex[id].num <= 493) return {gen: 4, name: pokedex[id].name};
+		else if (pokedex[id].num <= 649) return {gen: 5, name: pokedex[id].name};
+		else if (pokedex[id].num <= 721) return {gen: 6, name: pokedex[id].name};
+		else if (pokedex[id].num <= 809) return {gen: 7, name: pokedex[id].name};
+		else return {gen: 8, name: pokedex[id].name};
 	} else if (movedex[id]) {
 		if (!movedex[id].num) return {gen: 'CAP', name: movedex[id].name};
 		else if (movedex[id].num <= 165) return {gen: 1, name: movedex[id].name};

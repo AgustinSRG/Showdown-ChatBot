@@ -7,7 +7,7 @@
 function getPokeName(poke, App) {
 	let pokedex = App.data.getPokedex();
 	if (pokedex[poke]) {
-		return pokedex[poke].species;
+		return pokedex[poke].name;
 	} else {
 		return poke;
 	}
