@@ -10,8 +10,9 @@ const Text = Tools('text');
 
 const Eng_Trans = require(Path.resolve(__dirname, 'english-pokemon-trans.js')).translations;
 const Esp_Trans = require(Path.resolve(__dirname, 'spanish-pokemon-trans.js')).translations;
+const Lat_Trans = require(Path.resolve(__dirname, 'lat-pokemon-trans.js')).translations;
 
-const Translations = {english: Eng_Trans, spanish: Esp_Trans};
+const Translations = {en: Eng_Trans, es: Esp_Trans, lat: Lat_Trans};
 
 function searchInLanguage(lang, word, keys) {
 	let translationTemp;

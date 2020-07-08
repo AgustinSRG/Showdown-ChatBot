@@ -16,6 +16,12 @@ const Lang_File = Path.resolve(__dirname, 'commands.translations');
 const getTranslations = require(Path.resolve(__dirname, 'translate.js'));
 const Available_Languages = Object.keys(getTranslations.supportedLanguages);
 
+const abreviations = {
+	"english": "en",
+	"spanish": "es",
+	"latino": "lat",
+};
+
 module.exports = {
 	translate: function (App) {
 		this.setLangFile(Lang_File);
@@ -25,8 +31,8 @@ module.exports = {
 		}
 		let args = this.args;
 		let word = args[0].trim();
-		let from = Text.toId(args[1] || this.lang);
-		let to = Text.toId(args[2] || 'english');
+		let from = Text.toId(args[1] || abreviations[this.lang] || 'es');
+		let to = Text.toId(args[2] || 'en');
 		let bidirectional = true;
 		if (!word || !from || !to || from === to) {
 			return this.errorReply(this.usage({desc: this.mlt(6)},
@@ -43,7 +49,7 @@ module.exports = {
 				this.mlt(5) + ": " + Chat.italics(Available_Languages.join(', ')));
 		}
 
-		if (args[1] || args[2]) {
+		if (args[1] && args[2]) {
 			bidirectional = false;
 		}
 

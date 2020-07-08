@@ -13,8 +13,9 @@ $6 = pokemon / item / ability / move / nature
 $7 = origin language
 $8 = target language
 
-$english = English
-$spanish = Spanish
+$en = English
+$es = Spanish
+$lat = Latin Spanish
 
 $pokemon = Pokemon
 $abilities = Ability
@@ -33,8 +34,9 @@ $6 = pokemon / objeto / habilidad / movimiento / naturaleza
 $7 = idioma origen
 $8 = idioma destino
 
-$english = Inglés
-$spanish = Español
+$en = Inglés
+$es = Español
+$lat = Español Latino
 
 $pokemon = Pokemon
 $abilities = Habilidad
