@@ -725,7 +725,9 @@ class CommandContext {
 	wallReply(msg) {
 		let roomData = this.parser.bot.rooms[this.room];
 		let botid = Text.toId(this.parser.bot.getBotNick());
-		if (roomData && roomData.users[botid] && this.parser.equalOrHigherGroup({group: roomData.users[botid]}, 'driver')) {
+		if (this.isPM) {
+			return this.sendPM(this.byIdent.id, msg);
+		} else if (roomData && roomData.users[botid] && this.parser.equalOrHigherGroup({group: roomData.users[botid]}, 'driver')) {
 			if (msg instanceof Array) {
 				for (let i = 0; i < msg.length; i++) {
 					msg[i] = "/announce " + msg[i];

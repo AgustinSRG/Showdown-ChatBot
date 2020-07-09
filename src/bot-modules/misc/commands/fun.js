@@ -27,8 +27,12 @@ module.exports = {
 				opts.push(opt);
 			}
 		}
-		if (opts.length < 2) return this.errorReply(this.usage({desc: 'opt1'}, {desc: 'opt2'}, {desc: '...', optional: true}));
-		this.restrictReply(Chat.bold(this.mlt('pick') + ':') + ' ' + opts[Math.floor(Math.random() * opts.length)], 'random');
+		if (opts.length < 2) return this.errorReply(this.usage({ desc: 'opt1' }, { desc: 'opt2' }, { desc: '...', optional: true }));
+		if (this.wall) {
+			this.restrictReply(Text.stripCommands(Chat.bold(opts[Math.floor(Math.random() * opts.length)])), 'random');
+		} else {
+			this.restrictReply(Text.stripCommands(Chat.code(opts[Math.floor(Math.random() * opts.length)])), 'random');
+		}
 	},
 
 	rpoke: 'poke',
@@ -45,7 +49,7 @@ module.exports = {
 		let chosen = pokedex[pokes[Math.floor(Math.random() * pokes.length)]].name;
 		let roomData = App.bot.rooms[this.room];
 		let botid = Text.toId(App.bot.getBotNick());
-		if (this.can('randpoke') && roomData && roomData.users[botid] && this.parser.equalOrHigherGroup({group: roomData.users[botid]}, 'driver')) {
+		if (this.can('randpoke') && roomData && roomData.users[botid] && this.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'driver')) {
 			this.send('!dt ' + chosen, this.room);
 		} else {
 			this.pmReply(Text.stripCommands(chosen));
