@@ -134,8 +134,6 @@ exports.setup = function (App) {
 			if (!tournaments[room]) break;
 			if (tournaments[room].signups) {
 				tournaments[room].signups = false;
-				clearTimeout(tournaments[room].startTimer);
-				tournaments[room].setAutodq();
 			}
 			break;
 		case 'update':

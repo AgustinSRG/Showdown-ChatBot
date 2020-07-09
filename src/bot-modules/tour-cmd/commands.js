@@ -12,7 +12,7 @@ const Chat = Tools('chat');
 const Inexact = Tools('inexact-pokemon');
 
 const Lang_File = Path.resolve(__dirname, 'commands.translations');
-const TourTypes = {"elimination": 1, "roundrobin": 1};
+const TourTypes = { "elimination": 1, "roundrobin": 1 };
 
 function parseAliases(format, App) {
 	const Config = App.config.modules.tourcmd;
@@ -53,6 +53,7 @@ module.exports = {
 			timeToStart: Config.time,
 			autodq: Config.autodq,
 			scoutProtect: Config.scoutProtect,
+			forcedTimer: Config.forcedTimer,
 		};
 		if (this.arg && this.arg.length) {
 			let args = this.args;
@@ -63,6 +64,7 @@ module.exports = {
 				timeToStart: null,
 				autodq: null,
 				scout: null,
+				timer: null,
 			};
 			let splArg;
 			for (let i = 0; i < args.length; i++) {
@@ -73,63 +75,67 @@ module.exports = {
 					params.type = args[i];
 				} else if (splArg.length < 2) {
 					switch (i) {
-					case 0:
-						params.format = args[i];
-						break;
-					case 1:
-						params.timeToStart = args[i];
-						break;
-					case 2:
-						params.autodq = args[i];
-						break;
-					case 3:
-						params.maxUsers = args[i];
-						break;
-					case 4:
-						params.type = args[i];
-						break;
+						case 0:
+							params.format = args[i];
+							break;
+						case 1:
+							params.timeToStart = args[i];
+							break;
+						case 2:
+							params.autodq = args[i];
+							break;
+						case 3:
+							params.maxUsers = args[i];
+							break;
+						case 4:
+							params.type = args[i];
+							break;
 					}
 				} else {
 					let idArg = Text.toId(splArg[0]);
 					let valueArg = splArg[1].trim();
 					switch (idArg) {
-					case 'format':
-					case 'tier':
-						params.format = valueArg;
-						break;
-					case 'time':
-					case 'singups':
-					case 'timer':
-						params.timeToStart = valueArg;
-						break;
-					case 'autodq':
-					case 'dq':
-						params.autodq = valueArg;
-						break;
-					case 'maxusers':
-					case 'users':
-						params.maxUsers = valueArg;
-						break;
-					case 'generator':
-					case 'type':
-						params.type = valueArg;
-						break;
-					case 'scouting':
-					case 'scout':
-					case 'setscout':
-					case 'setscouting':
-						params.scout = valueArg;
-						break;
-					default:
-						return this.reply(this.mlt('param') + ' ' + idArg + ' ' +
-								this.mlt('paramhelp') + ": tier, timer, dq, users, type, scout");
+						case 'format':
+						case 'tier':
+							params.format = valueArg;
+							break;
+						case 'singups':
+						case 'start':
+						case 'autostart':
+							params.timeToStart = valueArg;
+							break;
+						case 'autodq':
+						case 'dq':
+							params.autodq = valueArg;
+							break;
+						case 'maxusers':
+						case 'users':
+							params.maxUsers = valueArg;
+							break;
+						case 'generator':
+						case 'type':
+							params.type = valueArg;
+							break;
+						case 'scouting':
+						case 'scout':
+						case 'setscout':
+						case 'setscouting':
+							params.scout = valueArg;
+							break;
+						case 'timer':
+						case 'forcetimer':
+							params.timer = valueArg;
+							break;
+						default:
+							return this.reply(this.mlt('param') + ' ' + idArg + ' ' +
+								this.mlt('paramhelp') + ": tier, autostart, dq, users, type, scout, timer");
 					}
 				}
 			}
 			if (params.format) {
 				let format = parseAliases(params.format, App);
 				if (!App.bot.formats[format]) {
-					let inexact = Inexact.safeResolve(App, format, {formats: 1, others: 0});
+					let inexact = Inexact.safeResolve(App, format, { formats: 1, others: 0 });
 					return this.reply(this.mlt('e31') + ' "' + format + '" ' + this.mlt('e33') +
 						(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
 				}
@@ -143,9 +149,9 @@ module.exports = {
 				if (Text.toId(params.timeToStart) === 'off' || Text.toId(params.timeToStart) === 'infinite') {
 					details.timeToStart = null;
 				} else {
-					let time = parseInt(params.timeToStart);
-					if (!time || time < 10) return this.reply(this.mlt('e4'));
-					details.timeToStart = time * 1000;
+					let time = parseFloat(params.timeToStart);
+					if (!time || time < 0.1) return this.reply(this.mlt('e4'));
+					details.timeToStart = Math.floor(time * 60) * 1000;
 				}
 			}
 			if (params.autodq) {
@@ -175,10 +181,18 @@ module.exports = {
 			}
 			if (params.scout) {
 				let scout = Text.toId(params.scout);
-				if (scout in {'yes': 1, 'on': 1, 'true': 1, 'allow': 1, 'allowed': 1}) {
+				if (scout in { 'yes': 1, 'on': 1, 'true': 1, 'allow': 1, 'allowed': 1 }) {
 					details.scoutProtect = false;
 				} else {
 					details.scoutProtect = true;
+				}
+			}
+			if (params.timer) {
+				let timer = Text.toId(params.timer);
+				if (timer in { 'yes': 1, 'on': 1, 'true': 1, 'forced': 1 }) {
+					details.forcedTimer = true;
+				} else {
+					details.forcedTimer = false;
 				}
 			}
 		}

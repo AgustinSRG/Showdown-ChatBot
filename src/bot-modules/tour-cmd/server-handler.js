@@ -35,6 +35,7 @@ exports.setup = function (App) {
 			let time = parseInt(context.post.time);
 			let autodq = parseFloat(context.post.autodq);
 			let scout = Text.toId(context.post.scout);
+			let timer = Text.toId(context.post.timer);
 			let msg = (context.post.creationmsg || "").trim();
 			let aliases = (context.post.aliases || "").split('\n');
 			let finals = (context.post.finals || "").split(',');
@@ -47,6 +48,7 @@ exports.setup = function (App) {
 				check(!isNaN(time) && time >= 0, "Invalid signups time.");
 				check(!isNaN(autodq) && autodq >= 0, "Invalid autodq time.");
 				check(scout in {'yes': 1, 'no': 1}, "Invalid scout mode.");
+				check(timer in {'yes': 1, 'no': 1}, "Invalid timer mode.");
 				check(msg.length <= 300, "Messages cannot be longer than 300 characters.");
 			} catch (err) {
 				error = err.message;
@@ -59,6 +61,7 @@ exports.setup = function (App) {
 				Config.time = time * 1000;
 				Config.autodq = autodq;
 				Config.scoutProtect = (scout === 'no');
+				Config.forcedTimer = (timer === 'yes');
 				Config.createMessage = msg;
 				let aux = {};
 				for (let i = 0; i < aliases.length; i++) {
@@ -100,6 +103,8 @@ exports.setup = function (App) {
 		htmlVars.autodq = Config.autodq;
 		htmlVars.scout_yes = (!Config.scoutProtect ? 'selected="selected"' : '');
 		htmlVars.scout_no = (Config.scoutProtect ? 'selected="selected"' : '');
+		htmlVars.timer_yes = (Config.forcedTimer ? 'selected="selected"' : '');
+		htmlVars.timer_no = (!Config.forcedTimer ? 'selected="selected"' : '');
 		htmlVars.creationmsg = Config.createMessage;
 		htmlVars.finals = Config.finalAnnouncement ? (Object.keys(Config.finalAnnouncement).join(", ")) : "";
 		htmlVars.winnergrats = Config.congratsWinner ? (Object.keys(Config.congratsWinner).join(", ")) : "";

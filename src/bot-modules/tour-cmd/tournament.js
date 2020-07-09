@@ -18,6 +18,7 @@ class Tournament {
 		this.timeToStart = details.timeToStart || 30 * 1000;
 		this.autodq = details.autodq || false;
 		this.scoutProtect = details.scoutProtect || false;
+		this.forcedTimer = details.forcedTimer || false;
 	}
 
 	create() {
@@ -28,18 +29,22 @@ class Tournament {
 		if (!this.timeToStart) return;
 		this.signups = true;
 		let cmds = [];
+		if (this.timeToStart) {
+			cmds.push('/tournament autostart ' + (this.timeToStart / 60000));
+		}
+		if (this.autodq) {
+			cmds.push('/tournament autodq ' + this.autodq);
+		}
 		if (this.scoutProtect) {
 			cmds.push('/tournament setscouting disallow');
+		}
+		if (this.forcedTimer) {
+			cmds.push('/tournament forcetimer on');
 		}
 		if (this.app.config.modules.tourcmd.createMessage) {
 			cmds.push(this.app.config.modules.tourcmd.createMessage);
 		}
 		if (cmds.length > 0) this.app.bot.sendTo(this.room, cmds);
-		this.startTimer = setTimeout(function () {
-			this.start();
-			this.started = true;
-			this.startTimer = null;
-		}.bind(this), this.timeToStart);
 	}
 
 	checkUsers() {
@@ -49,11 +54,6 @@ class Tournament {
 
 	start() {
 		this.app.bot.sendTo(this.room, '/tournament start');
-	}
-
-	setAutodq() {
-		if (!this.autodq) return;
-		this.app.bot.sendTo(this.room, '/tournament autodq ' + this.autodq);
 	}
 
 	end() {
