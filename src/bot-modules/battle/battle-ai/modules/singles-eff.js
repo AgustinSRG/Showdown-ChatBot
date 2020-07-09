@@ -213,6 +213,10 @@ exports.setup = function (Data) {
 				res.unviable.push(decisions[i]);
 				continue;
 			}
+			if (move.id === "auroraveil" && battle.conditions.weather !== "hail") {
+				res.unviable.push(decisions[i]);
+				continue;
+			}
 			if (move.id in {"spikes": 1, "toxicspikes": 1, "stealthrock": 1, "stickyweb": 1}) {
 				if (battle.foe.countAlivePokemon() < 2) {
 					res.unviable.push(decisions[i]);
