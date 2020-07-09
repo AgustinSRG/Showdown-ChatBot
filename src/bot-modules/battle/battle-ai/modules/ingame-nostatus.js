@@ -144,21 +144,23 @@ exports.setup = function (Data) {
 		let move = Data.getMove(p.moves[des.moveId]);
 		if (des.zmove) {
 			let zmove = Data.getMove(des.move);
-			if (zmove.basePower === 1) zmove.basePower = move.zMovePower || 0;
+			if (zmove.basePower === 1) zmove.basePower = Data.getZPower(move.basePower || 0);
 			zmove.category = move.category;
 			move = zmove;
+		}
+		if (des.dynamax) {
+			let dmove = Data.getMove(des.move);
+			dmove.basePower = Data.getMaxPower(move.basePower || 0, Text.toId(dmove.name));
+			dmove.category = move.category;
+			move = dmove;
 		}
 
 		if (move.category === "Status") return 0;
 		if (BadMoves.indexOf(move.id) >= 0) return 0;
-		if (des.target < 0) return 0; // Do not kill your own allies
+		if (des.target < 0) return -1000000; // Do not kill your own allies
 
 		if (a.canMegaEvo || p.canMegaEvo) {
 			if (!des.mega) return 0; // Mega evolve by default
-		}
-
-		if (a.canDynamax || p.canDynamax) {
-			if (!des.dynamax) return 0; // Dynamax by default
 		}
 
 		if (a.canUltraBurst) {

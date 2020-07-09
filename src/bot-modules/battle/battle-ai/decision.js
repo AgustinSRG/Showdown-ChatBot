@@ -197,38 +197,49 @@ exports.getDecisions = function (battle) {
 			//moves
 			for (let j = 0; j < active.moves.length; j++) {
 				if (active.moves[j].disabled || active.moves[j].pp === 0) continue; // No more moves
+				let target = active.moves[j].target;
+				let dmax = false;
+				if (battle.self && battle.self.active && battle.self.active[i] && battle.self.active[i].volatiles && battle.self.active[i].volatiles.dynamax) {
+					if (active.maxMoves && active.maxMoves[j]) {
+						target = active.maxMoves[j].target;
+						dmax = 'still';
+					} else if (active.maxMoves && active.maxMoves.maxMoves && active.maxMoves.maxMoves[j]) {
+						target = active.maxMoves.maxMoves[j].target;
+						dmax = 'still';
+					}
+				}
 				let mega = false;
 				let ultra = false;
 				if (active.canMegaEvo || (req.side.pokemon[i] && req.side.pokemon[i].canMegaEvo)) mega = true;
 				if (active.canUltraBurst) ultra = true;
-				if (!active.moves[j].target) {
+				if (!target) {
 					// No need to set the target
-					if (mega) tables[i].push(new MoveDecision(j, null, true, active.moves[j].move));
-					if (ultra) tables[i].push(new MoveDecision(j, null, false, active.moves[j].move, false, true));
-					tables[i].push(new MoveDecision(j, null, false, active.moves[j].move));
-				} else if (active.moves[j].target in {'any': 1, 'normal': 1, 'adjacentFoe': 1}) {
+					if (mega) tables[i].push(new MoveDecision(j, null, true, active.moves[j].move, false, false, dmax));
+					if (ultra) tables[i].push(new MoveDecision(j, null, false, active.moves[j].move, false, true, dmax));
+					tables[i].push(new MoveDecision(j, null, false, active.moves[j].move, false, false, dmax));
+				} else if (target in {'any': 1, 'normal': 1, 'adjacentFoe': 1}) {
 					auxHasTarget = false;
 					for (let tar = 0; tar < battle.foe.active.length; tar++) {
 						if (!battle.foe.active[tar] || battle.foe.active[tar].fainted) continue; // Target not found
-						if (active.moves[j].target === 'normal' && isTooFar(battle, tar, i)) continue; // Target too far
+						if (target in {'normal': 1, 'adjacentFoe': 1} && isTooFar(battle, tar, i)) continue; // Target too far
 						auxHasTarget = true;
 					}
 					for (let tar = 0; tar < battle.foe.active.length; tar++) {
 						if (auxHasTarget && (!battle.foe.active[tar] || battle.foe.active[tar].fainted)) continue; // Target not found
-						if (active.moves[j].target in {'normal': 1, 'adjacentFoe': 1} && isTooFar(battle, tar, i)) continue; // Target too far
-						if (mega) tables[i].push(new MoveDecision(j, tar, true, active.moves[j].move));
-						if (ultra) tables[i].push(new MoveDecision(j, tar, false, active.moves[j].move, false, true));
-						tables[i].push(new MoveDecision(j, tar, false, active.moves[j].move));
+						if (target in {'normal': 1, 'adjacentFoe': 1} && isTooFar(battle, tar, i)) continue; // Target too far
+						if (mega) tables[i].push(new MoveDecision(j, tar, true, active.moves[j].move, false, false, dmax));
+						if (ultra) tables[i].push(new MoveDecision(j, tar, false, active.moves[j].move, false, true, dmax));
+						tables[i].push(new MoveDecision(j, tar, false, active.moves[j].move, false, false, dmax));
 					}
 					for (let tar = 0; tar < battle.self.active.length; tar++) {
 						if (tar === i) continue; // Not self target allowed
 						if (!battle.self.active[tar] || battle.self.active[tar].fainted) continue; // Target not found
-						if (active.moves[j].target in {'normal': 1, 'adjacentFoe': 1} && Math.abs(tar - i) > 1) continue; // Target too far
-						if (mega) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, active.moves[j].move));
-						if (ultra) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move, false, true));
-						tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move));
+						if (target  in {'normal': 1, 'adjacentFoe': 1} && Math.abs(tar - i) > 1) continue; // Target too far
+						if (mega) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, active.moves[j].move, false, false, dmax));
+						if (ultra) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move, false, true, dmax));
+						tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move, false, false, dmax));
 					}
-				} else if (active.moves[j].target in {'adjacentAlly': 1}) {
+				} else if (target in {'adjacentAlly': 1}) {
 					let auxHasAllies = false;
 					for (let tar = 0; tar < battle.self.active.length; tar++) {
 						if (tar === i) continue; // Not self target allowed
@@ -240,23 +251,23 @@ exports.getDecisions = function (battle) {
 						if (tar === i) continue; // Not self target allowed
 						if (auxHasAllies && (!battle.self.active[tar] || battle.self.active[tar].fainted)) continue; // Target not found
 						if (Math.abs(tar - i) > 1) continue; // Target too far
-						if (mega) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, active.moves[j].move));
-						if (ultra) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move, false, true));
-						tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move));
+						if (mega) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, active.moves[j].move, false, false, dmax));
+						if (ultra) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move, false, true, dmax));
+						tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move, false, false, dmax));
 					}
-				} else if (active.moves[j].target in {'adjacentAllyOrSelf': 1}) {
+				} else if (target in {'adjacentAllyOrSelf': 1}) {
 					for (let tar = 0; tar < battle.self.active.length; tar++) {
 						if (!battle.self.active[tar] || battle.self.active[tar].fainted) continue; // Target not found
 						if (Math.abs(tar - i) > 1) continue; // Target too far
-						if (mega) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, active.moves[j].move));
-						if (ultra) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move, false, true));
-						tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move));
+						if (mega) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, active.moves[j].move, false, false, dmax));
+						if (ultra) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move, false, true, dmax));
+						tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move, false, false, dmax));
 					}
 				} else {
 					// No need to set the target
-					if (mega) tables[i].push(new MoveDecision(j, null, true, active.moves[j].move));
-					if (ultra) tables[i].push(new MoveDecision(j, null, false, active.moves[j].move, false, true));
-					tables[i].push(new MoveDecision(j, null, false, active.moves[j].move));
+					if (mega) tables[i].push(new MoveDecision(j, null, true, active.moves[j].move, false, false, dmax));
+					if (ultra) tables[i].push(new MoveDecision(j, null, false, active.moves[j].move, false, true, dmax));
+					tables[i].push(new MoveDecision(j, null, false, active.moves[j].move, false, false, dmax));
 				}
 			}
 			//z-moves -----------------------------------------------------------------------------------
