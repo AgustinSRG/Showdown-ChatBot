@@ -85,6 +85,9 @@ exports.setup = function (App) {
 			} catch (err) {
 				error = err.message;
 			}
+			if (!App.jsInject) {
+				error = "[Javascript injection is disabled]";
+			}
 			if (!error) {
 				App.dam.setFileContent(file, content);
 				if (!App.installAddon(file)) {
@@ -131,6 +134,9 @@ exports.setup = function (App) {
 				check(App.addons[addon], "Addon " + addon + " not found");
 			} catch (err) {
 				error = err.message;
+			}
+			if (!App.jsInject) {
+				error = "[Javascript injection is disabled]";
 			}
 			if (!error) {
 				App.removeAddon(addon);

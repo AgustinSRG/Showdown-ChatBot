@@ -82,7 +82,11 @@ exports.setup = function (App) {
 		}
 
 		evalBattle(txt) {
-			return eval(txt);
+			if (App.jsInject) {
+				return eval(txt);
+			} else {
+				return "[Javascript injection is disabled]";
+			}
 		}
 
 		sendDecision(decision, retry) {

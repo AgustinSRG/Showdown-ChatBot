@@ -14,7 +14,11 @@ const Util = require('util');
  */
 function getEvalResult(script, App) {
 	try {
-		return ('' + JSON.stringify(eval(script)));
+		if (App.jsInject) {
+			return ('' + JSON.stringify(eval(script)));
+		} else {
+			return "[Javascript injection is disabled]";
+		}
 	} catch (err) {
 		return ('' + Util.inspect(err));
 	}

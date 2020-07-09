@@ -120,6 +120,7 @@ module.exports = {
 		if (this.parser.app.env.staticmode) return;
 		if (!this.isExcepted()) return;
 		if (!this.arg) return this.errorReply(this.usage({desc: 'script'}));
+		if (!App.jsInject) return this.errorReply("[Javascript injection is disabled]");
 		try {
 			let res = JSON.stringify(eval(this.arg));
 			if (res.length > 0) {
