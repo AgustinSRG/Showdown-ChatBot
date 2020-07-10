@@ -554,6 +554,23 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		}
 	}
 
+	if (move.multihit) {
+		let minhits = 1;
+		let maxhits = 5;
+		if (move.multihit instanceof Array) {
+			minhits = move.multihit[0] || 0;
+			maxhits = move.multihit[1] || move.multihit[0] || 0;
+		} else {
+			minhits = move.multihit;
+			maxhits = move.multihit;
+		}
+		if (gen >= 3 && pokeA.ability && pokeA.ability.id === "skilllink") {
+			bp = Math.floor(bp * maxhits);
+		} else {
+			bp = Math.floor(bp * ((minhits + maxhits) / 2));
+		}
+	}
+
 	if (pokeA.item) {
 		switch (pokeA.item.id) {
 			case "choiceband":
