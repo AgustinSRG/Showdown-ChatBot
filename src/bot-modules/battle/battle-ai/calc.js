@@ -579,7 +579,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	if (pokeA.item && pokeA.item.id === "lifeorb") modifier *= 1.3;
 
 	/* STAB */
-	if (pokeA.template.types.indexOf(moveType) >= 0) {
+	if (pokeA.template.types.indexOf(moveType) >= 0 || (gen >= 3 && pokeA.ability && pokeA.ability.id in {"protean": 1, "libero": 1})) {
 		if (gen >= 3 && pokeA.ability && pokeA.ability.id === "adaptability") modifier *= 2;
 		else modifier *= 1.5;
 	}
