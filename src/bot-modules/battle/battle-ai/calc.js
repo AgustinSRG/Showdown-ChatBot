@@ -643,11 +643,19 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		if (gconditions["electricterrain"] && moveType === "Electric") bp = Math.floor(bp * 1.5);
 		if (gconditions["grassyterrain"] && moveType === "Grass") bp = Math.floor(bp * 1.5);
 		if (gconditions["psychicterrain"] && moveType === "Psychic") bp = Math.floor(bp * 1.5);
+
+		if (gconditions["electricterrain"] && move.id === "risingvoltage") {
+			bp = Math.floor(bp * 2);
+		}
+
+		if (gconditions["psychicterrain"] && move.id === "expandingforce") {
+			bp = Math.floor(bp * 2);
+		}
 	}
 
 	if (pokeB.isGrounded() || conditionsB.volatiles['smackdown'] || gconditions['gravity']) {
 		if (gconditions["psychicterrain"] && move.priority > 0) bp = 0;
-		if (gconditions["grassyterrain"] && (move.id in { "bulldoze": 1, "earthquake": 1, "magnitude": 1 })) bp = Math.floor(bp * 1.5);
+		if (gconditions["grassyterrain"] && (move.id in { "bulldoze": 1, "earthquake": 1, "magnitude": 1 })) bp = Math.floor(bp * 0.5);
 		if (gconditions["mistyterrain"] && moveType === "Dragon") bp = Math.floor(bp * 0.5);
 	}
 
