@@ -278,6 +278,11 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		case "normalize":
 			moveType = "Normal";
 			break;
+		case "liquidvoice":
+			if (move.flags && move.flags.sound) {
+				moveType = "Water";
+			}
+			break;
 		case "aerilate":
 			if (moveType === "Normal") moveType = "Flying";
 			break;
