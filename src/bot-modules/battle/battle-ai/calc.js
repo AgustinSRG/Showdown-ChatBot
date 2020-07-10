@@ -196,10 +196,10 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	*******************************/
 	if (gen > 3) {
 		if (move.category === "Special") {
-			atk = statsA.spa;
+			atk = move.useSourceDefensiveAsOffensive ? statsA.spd : statsA.spa;
 			atkStat = "spa";
 		} else if (move.category === "Physical") {
-			atk = statsA.atk;
+			atk = move.useSourceDefensiveAsOffensive ? statsA.def : statsA.atk;
 			atkStat = "atk";
 		} else {
 			return new Damage(statsB.hp);
