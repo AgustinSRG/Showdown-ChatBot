@@ -33,7 +33,7 @@ Features
 Installation
 ------------
 
-Showdown ChatBot requires [node.js](http://nodejs.org/) to run. Install version 4.0.0 or newer (recommended to install the lastest stable version to avoid bugs).
+Showdown ChatBot requires [node.js](http://nodejs.org/) to run. Install version 12.0.0 or newer (recommended to install the lastest stable version to avoid bugs).
 
 Install [Git](https://git-scm.com/) if you do not have it.
 
