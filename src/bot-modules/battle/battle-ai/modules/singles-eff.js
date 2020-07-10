@@ -200,7 +200,7 @@ exports.setup = function (Data) {
 			if (des.zmove) {
 				move = Data.getMove(des.move);
 			}
-			if (des.dynamax) {
+			if (des.dynamax && move.category === "Status") {
 				move = Data.getMove("protect");
 			}
 			if (move.category === "Status") res.total++;
