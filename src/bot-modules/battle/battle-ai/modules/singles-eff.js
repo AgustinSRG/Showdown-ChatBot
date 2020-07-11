@@ -201,7 +201,8 @@ exports.setup = function (Data) {
 				move = Data.getMove(des.move);
 			}
 			if (des.dynamax && move.category === "Status") {
-				move = Data.getMove("protect");
+				res.unviable.push(decisions[i]);
+				continue; // Max guard in singles is usually bad
 			}
 			if (move.category === "Status") res.total++;
 			if (move.flags && move.flags['reflectable'] && pokeB.ability && pokeB.ability.id === "magicbounce") {
