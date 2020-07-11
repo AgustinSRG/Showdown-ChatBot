@@ -191,6 +191,12 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	let atk, def, bp, atkStat, defStat;
 	let cat, defcat;
 
+	let targetHP = statsB.hp;
+
+	if (conditionsB.volatiles['dynamax']) {
+		targetHP = targetHP * 2; // Dynamax doubles hp
+	}
+
 	/******************************
 	* Attack and Defense Stats
 	*******************************/
@@ -202,7 +208,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			atk = move.useSourceDefensiveAsOffensive ? statsA.def : statsA.atk;
 			atkStat = "atk";
 		} else {
-			return new Damage(statsB.hp);
+			return new Damage(targetHP);
 		}
 		cat = defcat = move.category;
 		if (move.defensiveCategory) defcat = move.defensiveCategory;
@@ -378,7 +384,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		}
 	}
 
-	if (inmune || typesMux === 0) return new Damage(statsB.hp);
+	if (inmune || typesMux === 0) return new Damage(targetHP);
 
 	/******************************
 	* Base power
@@ -447,11 +453,11 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	}
 
 	if (!bp) {
-		if (move.id === "naturesmadness" || move.id === "superfang") return new Damage(statsB.hp, [Math.floor((statsB.hp * (pokeB.hp / 2)) / 100)]);
-		if (move.id === "guardianofalola") return new Damage(statsB.hp, [Math.floor((statsB.hp * (pokeB.hp / 2)) / 100)]);
-		if (move.damage === "level") return new Damage(statsB.hp, [pokeA.level]);
-		if (typeof move.damage === "number") return new Damage(statsB.hp, [move.damage]);
-		return new Damage(statsB.hp);
+		if (move.id === "naturesmadness" || move.id === "superfang") return new Damage(targetHP, [Math.floor((statsB.hp * (pokeB.hp / 2)) / 100)]);
+		if (move.id === "guardianofalola") return new Damage(targetHP, [Math.floor((statsB.hp * (pokeB.hp / 2)) / 100)]);
+		if (move.damage === "level") return new Damage(targetHP, [pokeA.level]);
+		if (typeof move.damage === "number") return new Damage(targetHP, [move.damage]);
+		return new Damage(targetHP);
 	}
 
 	switch (move.id) {
@@ -687,5 +693,5 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	let dmg = (((((2 * pokeA.level / 5) + 2) * atk * bp / def) / 50) + 2) * typesMux * modifier;
 	if (bp === 0) dmg = 0;
 
-	return new Damage(statsB.hp, getRolls(dmg));
+	return new Damage(targetHP, getRolls(dmg));
 };
