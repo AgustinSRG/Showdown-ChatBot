@@ -836,6 +836,10 @@ class CommandContext {
 		return txt;
 	}
 
+	deprecated(alt) {
+		return (this.parser.app.multilang.mlt(Lang_File, this.lang, 'deprecated') + "").replace("#CMD", alt);
+	}
+
 	/**
 	 * @param {String} key
 	 * @returns {String} Translated Key

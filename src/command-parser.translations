@@ -9,6 +9,9 @@
 # Access Denied
 $0 = Access denied. You need the permission ${PERM} to use this command.
 
+# Deprecated
+$deprecated = This command is deprecated, use the server command ``#CMD`` instead.
+
 # Usage
 $3 = Usage
 
@@ -20,6 +23,9 @@ $5 = Options for command
 
 # Access Denied
 $0 = Acceso Denegado. Necesitas el permiso ${PERM} para usar este comando.
+
+# Deprecated
+$deprecated = Este comando está obsoleto, use el siguiente comando del servidor en su lugar: ``#CMD``.
 
 # Usage
 $3 = Uso del Comando
