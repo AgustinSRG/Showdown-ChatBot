@@ -408,7 +408,10 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			else bp = 0;
 			break;
 		case "grassknot":
-			if (pokeB.template.weightkg) {
+		case "lowkick":
+			if (conditionsB.volatiles['dynamax']) {
+				bp = 0;
+			} else if (pokeB.template.weightkg) {
 				if (pokeB.template.weightkg >= 200) {
 					bp = 120;
 				} else if (pokeB.template.weightkg >= 100) {
@@ -425,7 +428,10 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			}
 			break;
 		case "heavyslam":
-			if (pokeB.template.weightkg && pokeA.template.weightkg) {
+		case "heatcrash":
+			if (conditionsB.volatiles['dynamax']) {
+				bp = 0;
+			} else if (pokeB.template.weightkg && pokeA.template.weightkg) {
 				let relW = pokeB.template.weightkg / pokeA.template.weightkg;
 				if (relW >= 0.5) {
 					bp = 40;
