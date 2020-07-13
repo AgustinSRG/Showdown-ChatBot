@@ -226,9 +226,27 @@ module.exports = {
 						}
 					}
 
+					if (realURL.substr(0, "https:".length) !== "https:") {
+						try {
+							realURL = (new URL(realURL, url.href)).href;
+						} catch (ex) {
+							realURL = "";
+						}
+					}
+
 					probe(realURL, function (err, result) {
 						if (err) {
-							return this.errorReply(this.mlt(3));
+							if (title && this.showFullLinkInfo) {
+								imageCache.cache(url.href, {
+									image: null,
+									link: url.href,
+									title: title,
+									description: desc,
+								});
+								return this.send("/addhtmlbox " + createImageHtmlBoxNoImage(url.href, title, desc), this.room);
+							} else {
+								return this.errorReply(this.mlt(3));
+							}
 						}
 
 						let width = result.width;
