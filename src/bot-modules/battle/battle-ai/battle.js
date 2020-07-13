@@ -90,6 +90,7 @@ exports.setup = function (App) {
 		}
 
 		sendDecision(decision, retry) {
+			if (this.ended) return;
 			if (!decision || !decision.length) return;
 			this.debug("Send Decision: " + JSON.stringify(decision));
 			let str = "/choose ";
