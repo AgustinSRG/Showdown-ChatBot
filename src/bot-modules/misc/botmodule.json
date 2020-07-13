@@ -17,8 +17,8 @@
     "randpoke": {
       "group": "voice"
     },
-    "image": {
-      "link": "mod"
+    "link": {
+      "group": "mod"
     }
   },
   "langfiles": [
