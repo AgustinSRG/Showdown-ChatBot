@@ -79,7 +79,11 @@ exports.setup = function (App, BattleData) {
 		},
 
 		rule: function (args, kwargs) {
-			this.rules.push(args[1].split(':')[0]);
+			const rule = args[1].split(':')[0];
+			this.rules.push(rule);
+			if (Text.toId(rule) === "inversemod") {
+				this.conditions["inversebattle"] = true;
+			}
 		},
 
 		inactive: function (args, kwargs) {
