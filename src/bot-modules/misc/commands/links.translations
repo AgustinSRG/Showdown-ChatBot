@@ -1,0 +1,26 @@
+﻿# Translations file
+
+@ misc-links
+
+%english
+
+$nochat = This command is only available for chat rooms
+$nobot = Bot requires rank of bot or higher to use this feature
+
+$1 = The URL you provided is invalid
+$2 = Due to security reasons, the URL must be HTTPS
+$3 = The image you provided was invalid, has an unsupported format or was down at the moment
+$4 = The remote resource was unavailable. Error: #ERR
+$5 = This link has been requested recently. To prevent spam you must wait 10 seconds to do it again. If it was not shown it may be still in process.
+
+%spanish
+
+$nochat = Este comando solo está disponible para las salas de chat
+$nobot = Necesito rango de bot o superior para poder usar esta funcionalidad
+
+$1 = The URL que ha especificado no es válida
+$2 = Por motivos de seguridad, solo se admiten enlaces que usen HTTPS como protocolo
+$3 = La imagen especificada no es válida, tiene un formato no soportado o estaba caída en el momento de solicitarla
+$4 = El recurso remoto no estaba disponible en el momento de solicitarlo. Error: #ERR
+$5 = Este enlace ha sido solicitado recientemente. Para evitar el spam debes esperar 10 segundos para volver a usarlo. Si no se ha mostrado aún, es posible que siga en proceso.
+

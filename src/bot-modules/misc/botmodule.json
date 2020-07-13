@@ -5,15 +5,27 @@
     "misc.js"
   ],
   "permissions": {
-	"regdate": {"group": "voice"},
-	"randomanswer": {"group": "voice"},
-	"random": {"group": "voice"},
-	"randpoke": {"group": "voice"}
+    "regdate": {
+      "group": "voice"
+    },
+    "randomanswer": {
+      "group": "voice"
+    },
+    "random": {
+      "group": "voice"
+    },
+    "randpoke": {
+      "group": "voice"
+    },
+    "image": {
+      "link": "mod"
+    }
   },
   "langfiles": [
     "./commands/fun.translations",
-	"./commands/randomanswer.translations",
-	"./commands/regdate.translations"
+    "./commands/links.translations",
+    "./commands/randomanswer.translations",
+    "./commands/regdate.translations"
   ],
   "description": "Misc Commands Plugins"
 }

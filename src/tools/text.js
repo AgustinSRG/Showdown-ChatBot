@@ -79,6 +79,12 @@ exports.escapeHTML = function (str) {
 	return ('' + str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;').replace(/\//g, '&#x2f;');
 };
 
+
+exports.removeDoubleQuotes = function (str) {
+	if (!str) return '';
+	return ('' + str).replace(/"/g, '');
+};
+
 /**
  * Removes pokemon showdown command from a chat message
  * @param {String} text
