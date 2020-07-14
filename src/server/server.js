@@ -117,8 +117,10 @@ class Server {
 					bindaddress: config.bindaddress,
 				};
 				try {
-					this.https = new Https.Server({key: FileSystem.readFileSync(sslkey),
-						cert: FileSystem.readFileSync(sslcert)}, this.requestHandler.bind(this));
+					this.https = new Https.Server({
+						key: FileSystem.readFileSync(sslkey),
+						cert: FileSystem.readFileSync(sslcert)
+					}, this.requestHandler.bind(this));
 				} catch (err) {
 					console.log('Could not create a ssl server. Missing key and certificate.');
 				}
@@ -141,7 +143,7 @@ class Server {
 			this.app.log('[SERVER - ABUSE] [UNLOCK: ' + user + ']');
 		}.bind(this));
 		this.permissions = {
-			root: {desc: "Full access permission"},
+			root: { desc: "Full access permission" },
 		};
 
 		/* Password abuse monitor */
@@ -160,7 +162,7 @@ class Server {
 			this.privatekey = Text.randomToken(20);
 			app.dam.setFileContent('users.key', this.privatekey);
 		}
-		this.userdb = app.dam.getDataBase('users.crypto', {crypto: true, key: this.privatekey});
+		this.userdb = app.dam.getDataBase('users.crypto', { crypto: true, key: this.privatekey });
 		this.users = this.userdb.data;
 		if (Object.keys(this.users).length === 0) {
 			console.log('Users Database empty. Creating initial admin account');
@@ -169,7 +171,7 @@ class Server {
 				password: 'admin',
 				name: 'Admin',
 				group: 'Administrator',
-				permissions: {root: true},
+				permissions: { root: true },
 			};
 		}
 		if (app.env && app.env.config && app.env.config.Static_Admin_Account) {
@@ -180,7 +182,7 @@ class Server {
 					password: app.env.config.Static_Admin_Account_Password,
 					name: app.env.config.Static_Admin_Account,
 					group: 'Administrator',
-					permissions: {root: true},
+					permissions: { root: true },
 				};
 			}
 		}
@@ -208,7 +210,7 @@ class Server {
 	 * @param {String} desc - Permission description
 	 */
 	setPermission(id, desc) {
-		this.permissions[id] = {desc: desc};
+		this.permissions[id] = { desc: desc };
 	}
 
 	/**
@@ -228,7 +230,7 @@ class Server {
 	 */
 	setMenuOption(id, name, url, permission, level) {
 		if (level === undefined) level = -10;
-		this.menu[id] = {name: name, url: url, permission: permission, level: level};
+		this.menu[id] = { name: name, url: url, permission: permission, level: level };
 	}
 
 	/**
@@ -269,7 +271,7 @@ class Server {
 					level = this.app.config.menuOrder[i];
 				}
 				if (!menu[level]) menu[level] = [];
-				menu[level].push({name: this.menu[i].name, url: this.menu[i].url, selected: (selected === i)});
+				menu[level].push({ name: this.menu[i].name, url: this.menu[i].url, selected: (selected === i) });
 			}
 		}
 		let ret = [];
@@ -277,7 +279,7 @@ class Server {
 			menu[level] = menu[level].sort((a, b) => {
 				return a.name.localeCompare(b.name);
 			});
-			ret.push({level: parseInt(level), menu: menu[level]});
+			ret.push({ level: parseInt(level), menu: menu[level] });
 		}
 		ret = ret.sort((a, b) => {
 			if (a.level >= b.level) {
@@ -310,9 +312,14 @@ class Server {
 	 * @returns {String} token
 	 */
 	makeToken(userid) {
+		const ENC = {
+			'+': '-',
+			'/': '_',
+			'=': '.'
+		};
 		let token;
 		do {
-			token = Text.randomToken(12);
+			token = Crypto.randomBytes(32).toString("base64").replace(/[+/=]/g, m => ENC[m]);
 		} while (this.tokens[token]);
 		this.tokens[token] = {
 			date: Date.now(),
@@ -327,7 +334,8 @@ class Server {
 	 * @param {RequestContext} context
 	 */
 	applyLogin(context) {
-		let token = context.cookies['usertoken'];
+		//console.log(JSON.stringify(context.request.headers));
+		let token = ((context.request.method + "").toUpperCase() === "GET") ? context.cookies['usertoken'] : (context.request.headers["x-csrf-token"] || context.post["x-csrf-token"]);
 		let user = context.post.user;
 		let pass = context.post.password;
 		this.sweepTokens();
@@ -435,20 +443,20 @@ class Server {
 	 * @param {RequestContext} context
 	 */
 	serve(context) {
-		if (context.url.path in {'/favicon.ico': 1, 'favicon.ico': 1}) {
+		if (context.url.path in { '/favicon.ico': 1, 'favicon.ico': 1 }) {
 			/* Favicon.ico */
 			context.endWithStaticFile(Path.resolve(__dirname, '../../favicon.ico'));
 		} else if (!context.url.path || context.url.path === '/') {
 			/* Main page */
 			context.setMenu(this.getMenu(context));
 			if (this.app.config.mainhtml) {
-				context.endWithWebPage(this.app.config.mainhtml, {title: "Showdown ChatBot - Control Panel"});
+				context.endWithWebPage(this.app.config.mainhtml, { title: "Showdown ChatBot - Control Panel" });
 			} else {
 				FileSystem.readFile(Path.resolve(__dirname, 'main.html'), (error, data) => {
 					if (error) {
 						context.endWithError(500, 'Internal Server Error', 'Error: ' + error.code + " (" + error.message + ")");
 					} else {
-						context.endWithWebPage(data.toString(), {title: "Showdown ChatBot - Control Panel"});
+						context.endWithWebPage(data.toString(), { title: "Showdown ChatBot - Control Panel" });
 					}
 				});
 			}
@@ -561,7 +569,7 @@ class RequestContext {
 		this.url = Url.parse(request.url);
 		this.menu = [];
 		this.ip = (ip || request.connection.remoteAddress);
-		this.headers = {'X-XSS-Protection': 0};
+		this.headers = { 'X-XSS-Protection': 0 };
 		this.invalidLogin = false;
 		this.get = {};
 		this.post = {};
@@ -599,8 +607,8 @@ class RequestContext {
 			this.request.on('end', function () {
 				let busboy = null;
 				try {
-					busboy = new Busboy({headers: this.request.headers});
-				} catch (err) {}
+					busboy = new Busboy({ headers: this.request.headers });
+				} catch (err) { }
 				if (busboy) {
 					let files = this.files = {};
 					let post = this.post = {};
@@ -729,7 +737,7 @@ class RequestContext {
 		let html = '';
 		html += '<h1>Error 404</h1>';
 		html += '<p>The page you requested was not found!</p>';
-		this.endWithWebPage(html, {title: "Page not found"}, 404);
+		this.endWithWebPage(html, { title: "Page not found" }, 404);
 	}
 
 	/**
@@ -739,7 +747,7 @@ class RequestContext {
 		let html = '';
 		html += '<h1>Error 403</h1>';
 		html += '<p>You have not permission to access this feature!</p>';
-		this.endWithWebPage(html, {title: "Forbidden"}, 403);
+		this.endWithWebPage(html, { title: "Forbidden" }, 403);
 	}
 
 	/**
