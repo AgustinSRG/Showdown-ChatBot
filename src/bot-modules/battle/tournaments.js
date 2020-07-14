@@ -46,7 +46,7 @@ exports.setup = function (App) {
 			break;
 		case 'updateEnd':
 			if (Config.joinTours && Config.joinTours[room] && tourData[room].format && !tourData[room].isJoined && !tourData[room].isStarted) {
-				let format = Text.toId(tourData[room].format);
+				let format = Text.toId(tourData[room].teambuilderFormat || tourData[room].format);
 				if (App.bot.formats[format] && !App.bot.formats[format].team) {
 					cmds.push('/tour join');
 				} else {
@@ -57,21 +57,39 @@ exports.setup = function (App) {
 			}
 			if (tourData[room].challenges && tourData[room].challenges.length) {
 				if (canSendCommands(room)) {
-					let team = mod.TeamBuilder.getTeam(tourData[room].format);
+					let format = Text.toId(tourData[room].teambuilderFormat || tourData[room].format);
+					let team = mod.TeamBuilder.getTeam(format);
 					if (team) {
 						cmds.push('/useteam ' + team);
-					}
-					for (let i = 0; i < tourData[room].challenges.length; i++) {
-						cmds.push('/tour challenge ' + tourData[room].challenges[i]);
+						for (let i = 0; i < tourData[room].challenges.length; i++) {
+							cmds.push('/tour challenge ' + tourData[room].challenges[i]);
+						}
+					} else {
+						if (App.bot.formats[format] && !App.bot.formats[format].team) {
+							for (let i = 0; i < tourData[room].challenges.length; i++) {
+								cmds.push('/tour challenge ' + tourData[room].challenges[i]);
+							}
+						} else {
+							// No team (deleted?)
+							cmds.push('/tour leave');
+						}
 					}
 				}
 			} else if (tourData[room].challenged) {
 				if (canSendCommands(room)) {
-					let team = mod.TeamBuilder.getTeam(tourData[room].format);
+					let format = Text.toId(tourData[room].teambuilderFormat || tourData[room].format);
+					let team = mod.TeamBuilder.getTeam(format);
 					if (team) {
 						cmds.push('/useteam ' + team);
+						cmds.push('/tour acceptchallenge');
+					} else {
+						if (App.bot.formats[format] && !App.bot.formats[format].team) {
+							cmds.push('/tour acceptchallenge');
+						} else {
+							// No team (deleted?)
+							cmds.push('/tour leave');
+						}
 					}
-					cmds.push('/tour acceptchallenge');
 				}
 			}
 			break;
