@@ -467,6 +467,11 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	}
 
 	switch (move.id) {
+		case "behemothbash":
+		case "behemothblade":
+		case "dynamaxcannon":
+			if (conditionsB.volatiles['dynamax']) bp = Math.floor(bp * 2);
+			break;
 		case "venoshock":
 			if (pokeB.status === 'psn' || pokeB.status === 'tox') bp = Math.floor(bp * 2);
 			break;
