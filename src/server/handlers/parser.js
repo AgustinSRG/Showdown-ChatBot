@@ -66,6 +66,7 @@ exports.setup = function (App) {
 				App.parser.data.helpmsg = context.post.helpmsg;
 				App.parser.data.antispam = !!context.post.antispam;
 				App.parser.data.antirepeat = !!context.post.antirepeat;
+				App.parser.data.pmTokens = (context.post.pmtokens || "").split(' ').map(Text.toCmdTokenid).filter(id => id);
 				App.parser.data.sleep = Object.createFromKeys((context.post.sleep || "").split(',').map(Text.toRoomid).filter(room => room));
 				App.parser.data.lockedUsers = Object.createFromKeys((context.post.locklist || "").split(',').map(Text.toId).filter(u => u));
 				App.saveConfig();
@@ -78,6 +79,7 @@ exports.setup = function (App) {
 		let htmlVars = {};
 
 		htmlVars.tokens = App.config.parser.tokens.join(' ');
+		htmlVars.pmtokens = App.parser.data.pmTokens.join(' ');
 		htmlVars.groups = App.config.parser.groups.join(', ');
 		htmlVars.voice = App.config.parser.voice;
 		htmlVars.driver = App.config.parser.driver;

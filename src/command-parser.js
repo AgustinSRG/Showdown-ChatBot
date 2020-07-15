@@ -63,6 +63,7 @@ class CommandParser {
 		if (!this.data.helpmsg) this.data.helpmsg = ""; /* Help Message */
 		if (!this.data.antispam) this.data.antispam = false; /* Anti-Spam System */
 		if (!this.data.antirepeat) this.data.antirepeat = false; /* Anti-Repeat System */
+		if (!this.data.pmTokens || !(this.data.pmTokens instanceof Array)) this.data.pmTokens = []; /* Command Aliases */
 
 		/* Dynamic Commands */
 		if (!this.data.dyncmds) this.data.dyncmds = {};
@@ -374,7 +375,13 @@ class CommandParser {
 		}
 
 		/* Command Token */
-		let tokens = this.app.config.parser.tokens;
+		let tokens = (this.app.config.parser.tokens || []).slice();
+
+		if (room === null) {
+			// PM specific tokens
+			tokens = tokens.concat(this.data.pmTokens || []);
+		}
+
 		let token = null;
 		for (let i = 0; i < tokens.length; i++) {
 			if (msg.indexOf(tokens[i]) === 0) {
