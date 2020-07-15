@@ -55,24 +55,31 @@ exports.setup = function (App) {
 				clue = 'Mega-Evo';
 				break;
 			}
-			if (chosen.baseSpecies === "Pikachu") {
-				clue = 'Gen 6';
-				break;
-			}
-			if (chosen.num < 0) {
+			if (!chosen.gen && chosen.num >= 1) {
+				if (chosen.num >= 810 || ['Gmax', 'Galar', 'Galar-Zen'].includes(chosen.forme + "")) {
+					chosen.gen = 8;
+				} else if (chosen.num >= 722 || (chosen.forme + "").startsWith('Alola') || (chosen.forme + "") === 'Starter') {
+					chosen.gen = 7;
+				} else if (chosen.forme === 'Primal') {
+					chosen.gen = 6;
+				} else if (chosen.num >= 650 || chosen.isMega) {
+					chosen.gen = 6;
+				} else if (chosen.num >= 494) {
+					chosen.gen = 5;
+				} else if (chosen.num >= 387) {
+					chosen.gen = 4;
+				} else if (chosen.num >= 252) {
+					chosen.gen = 3;
+				} else if (chosen.num >= 152) {
+					chosen.gen = 2;
+				} else {
+					chosen.gen = 1;
+				}
+				clue = "Gen " + chosen.gen;
+			} else if (chosen.num < 0) {
 				clue = 'CAP';
-			} else if (chosen.num <= 151) {
-				clue = 'Gen 1';
-			} else if (chosen.num <= 251) {
-				clue = 'Gen 2';
-			} else if (chosen.num <= 386) {
-				clue = 'Gen 3';
-			} else if (chosen.num <= 493) {
-				clue = 'Gen 4';
-			} else if (chosen.num <= 649) {
-				clue = 'Gen 5';
 			} else {
-				clue = 'Gen 6';
+				clue = "Gen " + chosen.gen;
 			}
 			break;
 		case 'tier':
@@ -115,7 +122,22 @@ exports.setup = function (App) {
 		let clueType = rand(['gen', 'type']);
 		switch (clueType) {
 		case 'gen':
-			clue = 'Gen ' + chosen.gen;
+			if (!chosen.gen) {
+				if (chosen.num >= 689) {
+					chosen.gen = 7;
+				} else if (chosen.num >= 577) {
+					chosen.gen = 6;
+				} else if (chosen.num >= 537) {
+					chosen.gen = 5;
+				} else if (chosen.num >= 377) {
+					chosen.gen = 4;
+				} else {
+					chosen.gen = 3;
+				}
+				// Due to difference in gen 2 item numbering, gen 2 items must be
+				// specified manually
+			}
+			clue = chosen.gen ? ('Gen ' + chosen.gen) : "CAP";
 			break;
 		case 'type':
 			if (chosen.isBerry) {
