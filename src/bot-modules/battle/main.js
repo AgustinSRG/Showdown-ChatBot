@@ -46,15 +46,20 @@ exports.setup = function (App) {
 
 	App.bot.on('line', (room, line, spl, isIntro) => {
 		switch (spl[0]) {
-		case 'updatechallenges':
-			ChallManager.parse(room, line, isIntro, spl);
-			break;
-		case 'tournament':
-			TourManager.parse(room, line, isIntro, spl);
-			break;
-		case 'rated':
-			LadderManager.reportBattle(room);
-			break;
+			case 'popup':
+				if ((spl[1] + "").toLowerCase().startsWith("your team was rejected")) {
+					TourManager.reportRejection();
+				}
+				break;
+			case 'updatechallenges':
+				ChallManager.parse(room, line, isIntro, spl);
+				break;
+			case 'tournament':
+				TourManager.parse(room, line, isIntro, spl);
+				break;
+			case 'rated':
+				LadderManager.reportBattle(room);
+				break;
 		}
 
 		if (!App.bot.rooms[room]) {
