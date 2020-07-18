@@ -24,23 +24,30 @@
 		e.innerHTML = '<div class="chat-div">' + inner + '</div>';
 	}
 	
-	function addChat(name, message, msgTime, pm) {
+	function addChat(name, message, msgTime, pm, roomMark) {
 		group = name.charAt(0);
 		name = name.substr(1);
 		if (message.substr(0, 4) === '/me ') {
-			addLine('<span class="timestamp">' + msgTime + '</span>&nbsp;' + '<strong style="' + hashColor(toId(name)) + '">•</strong> <span class="username">' + escapeHTML(group + name) + '</span> ' + (pm ? ('<span class="pm">(Private to ' + escapeHTML(pm) + ') </span>') : '') + '<i>' + parseMessage(escapeHTML(message.substr(3).trim())) + '</i>');
+			addLine((roomMark ? ('<span class="timestamp">' + escapeHTML(roomMark) + '</span> ') : '') + '<span class="timestamp">' + escapeHTML(msgTime) + '</span>&nbsp;' + '<strong style="' + hashColor(toId(name)) + '">•</strong> <span class="username">' + escapeHTML(group + name) + '</span> ' + (pm ? ('<span class="pm">(Private to ' + escapeHTML(pm) + ') </span>') : '') + '<i>' + parseMessage(escapeHTML(message.substr(3).trim())) + '</i>');
 		} else if (message.substr(0, 5) === '/log ') {
-			addLine('<span class="timestamp">' + msgTime + '</span>&nbsp;' + escapeHTML(message.substr(5)));
+			addLine((roomMark ? ('<span class="timestamp">' + escapeHTML(roomMark) + '</span> ') : '') + '<span class="timestamp">' + escapeHTML(msgTime) + '</span>&nbsp;' + escapeHTML(message.substr(5)));
 		} else {
-			addLine('<span class="timestamp">' + msgTime + '</span>&nbsp;<span class="group">' + group + '</span><span class="username"><strong style="' + hashColor(toId(name)) + '">' + escapeHTML(name) + '</strong></span>' + (pm ? (' <span class="pm">(Private to ' + escapeHTML(pm) + ')</span>') : '') + ': ' + parseMessage(escapeHTML(message)));
+			addLine((roomMark ? ('<span class="timestamp">' + escapeHTML(roomMark) + '</span> ') : '') + '<span class="timestamp">' + escapeHTML(msgTime) + '</span>&nbsp;<span class="group">' + escapeHTML(group) + '</span><span class="username"><strong style="' + hashColor(toId(name)) + '">' + escapeHTML(name) + '</strong></span>' + (pm ? (' <span class="pm">(Private to ' + escapeHTML(pm) + ')</span>') : '') + ': ' + parseMessage(escapeHTML(message)));
 		}
 	}
 
 	$.get("#LOGURL#", function (data) {
 		var lines = data.split('\n');
-		var line, b, timestamp, isIntro, spl;
+		var line, b, timestamp, isIntro, spl, roomMark, spaceI;
 		for (var i = 0; i < lines.length; i++) {
 			line = lines[i];
+			if (line.indexOf("[groupchat-") === 0) {
+				spaceI = line.indexOf(" ");
+				roomMark = line.substr(0, spaceI);
+				line = line.substr(spaceI).trim();
+			} else {
+				roomMark = "";
+			}
 			if (line.indexOf('[INTRO]') === 0) {
 				isIntro = true;
 				line = line.substr(7).trim();
@@ -51,6 +58,11 @@
 			if (b === -1) continue;
 			timestamp = line.substr(0, b + 1);
 			line = line.substr(b + 1).trim();
+			if (line.indexOf("[groupchat-") === 0) {
+				spaceI = line.indexOf(" ");
+				roomMark = line.substr(0, spaceI) + " ";
+				line = line.substr(spaceI).trim();
+			}
 			if (!isIntro && line.indexOf('[INTRO]') === 0) {
 				isIntro = true;
 				line = line.substr(7).trim();
@@ -71,35 +83,27 @@
 					if (isIntro) {
 						time = '[Intro / ' + time.substr(1);
 					}
-					addChat(spl[2], spl.slice(3).join('|'), time);
+					addChat(spl[2], spl.slice(3).join('|'), time, null, roomMark);
 					break;
 				case 'c':
 				case 'chat':
-					addChat(spl[1], spl.slice(2).join('|'), timestamp);
-					break;
-				case 'html':
-				case 'raw':
-					addLine(spl.splice(1).join('|'));
-					break;
-				case 'uhtml':
-				case 'uhtmlchange':
-					addLine(spl.splice(2).join('|'));
+					addChat(spl[1], spl.slice(2).join('|'), timestamp, null, roomMark);
 					break;
 				case 'pm':
-					addChat(spl[1], spl.slice(3).join('|'), timestamp, spl[2]);
+					addChat(spl[1], spl.slice(3).join('|'), timestamp, spl[2], roomMark);
 					break;
 				case 'j':
 				case 'J':
-					addLine('<small class="join-msg">' + escapeHTML(spl[1]) + ' joined.</small>');
+					addLine((roomMark ? ('<span class="timestamp">' + escapeHTML(roomMark) + '</span> ') : '') + '<span class="timestamp">' + escapeHTML(timestamp) + '</span>&nbsp;' + '<small class="join-msg">' + escapeHTML(spl[1]) + ' joined.</small>');
 					break;
 				case 'l':
 				case 'L':
-					addLine('<small class="join-msg">' + escapeHTML(spl[1]) + ' left.</small>');
+					addLine((roomMark ? ('<span class="timestamp">' + escapeHTML(roomMark) + '</span> ') : '') + '<span class="timestamp">' + escapeHTML(timestamp) + '</span>&nbsp;' + '<small class="join-msg">' + escapeHTML(spl[1]) + ' left.</small>');
 					break;
 				case 'n':
 				case 'N':
 					if (toId(spl[2]) !== toId(spl[1])) {
-						addLine('<small class="join-msg"><b>Rename:</b> ' + escapeHTML(spl[2]) + ' <b>|</b> ' + escapeHTML(spl[1]) + '</small>');
+						addLine((roomMark ? ('<span class="timestamp">' + escapeHTML(roomMark) + '</span> ') : '') + '<span class="timestamp">' + escapeHTML(timestamp) + '</span>&nbsp;' + '<small class="join-msg"><b>Rename:</b> ' + escapeHTML(spl[2]) + ' <b>|</b> ' + escapeHTML(spl[1]) + '</small>');
 					}
 					break;
 				case 'unlink':

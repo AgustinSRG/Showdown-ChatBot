@@ -3,6 +3,7 @@
 	<table border="0">
 		<tr><td><strong>Rooms To Log</strong>: </td><td><label><input name="rooms" type="text" size="70" value="${ROOMS}" autocomplete="off" /> (Separated by commas) </label></td></tr>
 		<tr><td colspan="2"><label><input type="checkbox" name="logpm" value="true" ${LOGPM}/><strong>Log Private Messages </strong></label></td></tr>
+		<tr><td colspan="2"><label><input type="checkbox" name="logGroupChats" value="true" ${LOGGROUPCHATS}/><strong>Log Group chats </strong></label></td></tr>
 		<tr><td><strong>Max age of logs (days)</strong>: </td><td><input name="age" type="text" size="20" value="${AGE}" /> (0 days to keep logs indefinitely) </td></tr>
 	</table>
 	<p><input type="submit" name="save" value="Save Changes" /></p>

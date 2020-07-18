@@ -25,6 +25,7 @@ exports.setup = function (App) {
 		constructor() {
 			this.loggers = {};
 			this.pmLogger = null;
+			this.groupchatsLogger = null;
 		}
 
 		refreshLoggers() {
@@ -43,6 +44,14 @@ exports.setup = function (App) {
 					this.pmLogger = new Logger(path, 'pm', App.config.modules.chatlogger.maxold);
 				}
 				this.pmLogger.sweep();
+			}
+			if (App.config.modules.chatlogger.logGroupChats) {
+				if (!this.groupchatsLogger) {
+					let path = Path.resolve(App.logsDir, 'groupchat');
+					checkdir(path);
+					this.groupchatsLogger = new Logger(path, 'groupchat', App.config.modules.chatlogger.maxold);
+				}
+				this.groupchatsLogger.sweep();
 			}
 		}
 	}
@@ -66,6 +75,14 @@ exports.setup = function (App) {
 				ChatLogger.loggers[room] = new Logger(path, Text.toId(room), App.config.modules.chatlogger.maxold);
 			}
 			ChatLogger.loggers[room].log((initialMsg ? '[INTRO] ' : '') + line);
+		} else if (App.config.modules.chatlogger.logGroupChats && room.substr(0, "groupchat-".length) === "groupchat-") {
+			if (!this.groupchatsLogger) {
+				let path = Path.resolve(App.logsDir, 'groupchat');
+				checkdir(path);
+				this.groupchatsLogger = new Logger(path, 'groupchat', App.config.modules.chatlogger.maxold);
+			}
+			if (splittedLine[0] === 'tournament' && (splittedLine[1] === 'update' || splittedLine[1] === 'updateEnd')) return;
+			ChatLogger.groupchatsLogger.log("[" + room + "] " + (initialMsg ? '[INTRO] ' : '') + line);
 		}
 	});
 

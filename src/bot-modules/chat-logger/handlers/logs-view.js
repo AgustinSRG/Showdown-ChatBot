@@ -37,6 +37,9 @@ exports.setup = function (App) {
 		if (App.config.modules.chatlogger.logpm) {
 			opts.push('<a class="submenu-option' + (parts[0] === 'pm' ? '-selected' : '') + '" href="/logs/pm/">private-message</a>');
 		}
+		if (App.config.modules.chatlogger.logGroupChats) {
+			opts.push('<a class="submenu-option' + (parts[0] === 'groupchat' ? '-selected' : '') + '" href="/logs/groupchat/">groupchats</a>');
+		}
 		html += opts.join(' | ');
 		html += '</div>';
 
@@ -58,6 +61,13 @@ exports.setup = function (App) {
 				context.endWith404();
 				return;
 			}
+		} else if (parts[0] === 'groupchat') {
+			if (App.modules.chatlogger.system.groupchatsLogger) {
+				html += getLogsList(App.modules.chatlogger.system.groupchatsLogger, 'groupchats');
+			} else {
+				context.endWith404();
+				return;
+			}
 		}
 		context.endWithWebPage(html, {title: "Chat Logs - Showdown ChatBot"});
 	});
@@ -68,6 +78,8 @@ exports.setup = function (App) {
 		let path;
 		if (room === 'private-message') {
 			path = Path.resolve(App.logsDir, 'pm', file);
+		} else if (room === 'groupchats') {
+			path = Path.resolve(App.logsDir, 'groupchat', file);
 		} else {
 			path = Path.resolve(App.logsDir, 'rooms', room, file);
 		}

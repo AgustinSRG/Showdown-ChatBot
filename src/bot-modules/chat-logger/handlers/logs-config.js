@@ -37,6 +37,7 @@ exports.setup = function (App) {
 				}
 				App.config.modules.chatlogger.rooms = rooms;
 				App.config.modules.chatlogger.logpm = !!context.post.logpm;
+				App.config.modules.chatlogger.logGroupChats = !!context.post.logGroupChats;
 				App.config.modules.chatlogger.maxold = maxold;
 				for (let room in App.modules.chatlogger.system.loggers) {
 					App.modules.chatlogger.system.loggers[room].maxOld = maxold;
@@ -57,6 +58,7 @@ exports.setup = function (App) {
 
 		htmlVars.rooms = Object.keys(App.config.modules.chatlogger.rooms).join(', ');
 		htmlVars.logpm = (App.config.modules.chatlogger.logpm ? ' checked="checked"' : '');
+		htmlVars.loggroupchats = (App.config.modules.chatlogger.logGroupChats ? ' checked="checked"' : '');
 		htmlVars.age = App.config.modules.chatlogger.maxold;
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
