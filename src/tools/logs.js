@@ -156,7 +156,15 @@ class Logger {
 				list.push(file);
 			}
 		}
-		return list;
+		return list.sort(function (a, b) {
+			if (a.file < b.file) {
+				return -1;
+			} else if (a.file > b.file) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}).reverse();
 	}
 
 	destroy() {
