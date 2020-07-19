@@ -352,6 +352,8 @@ exports.setup = function (App) {
 			} else {
 				if (!context.files.backupfile) {
 					error = "You must upload a backup file.";
+				} else if (!App.jsInject) {
+					error = "[Javascript injection is disabled]";
 				} else {
 					let backup = context.files.backupfile.data;
 					try {
