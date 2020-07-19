@@ -436,8 +436,8 @@ exports.setup = function (App) {
 			}
 			html += '<td>';
 			html += '<select name="perm-' + i + '">';
-			html += '<option value="user"' + (rank === 'user' ? ' selected="selected"' : '') + '>Regular Users</option>';
 			html += '<option value="excepted"' + (rank === 'excepted' ? ' selected="selected"' : '') + '>Excepted Users</option>';
+			html += '<option value="user"' + (rank === 'user' ? ' selected="selected"' : '') + '>Regular Users</option>';
 			for (let j = 0; j < App.config.parser.groups.length; j++) {
 				html += '<option value="' + App.config.parser.groups[j] + '"' +
 				(rank === App.config.parser.groups[j] ? ' selected="selected"' : '') + '>Group ' + App.config.parser.groups[j] + '</option>';

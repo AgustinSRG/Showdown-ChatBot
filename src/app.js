@@ -184,8 +184,8 @@ class ChatBotApp {
 		if (!this.config.parser) {
 			this.config.parser = {
 				tokens: ['.'],
-				groups: ['+', '%', '@', '*', '#', '&', '~'],
-				admin: '~',
+				groups: ['+', '%', '@', '*', '#', '&'],
+				admin: '&',
 				owner: '#',
 				bot: '*',
 				mod: '@',
