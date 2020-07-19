@@ -2,6 +2,7 @@
 <head>
 <link rel="stylesheet" href="/static/logs.css" />
 <script type="text/javascript" src="/static/jquery-3.0.0.min.js"></script>
+<script type="text/javascript" src="/static/HtmlSanitizer.min.js"></script>
 <script type="text/javascript" src="/static/showdown-utils.js"></script>
 <title>#TITLE#</title>
 </head>
@@ -27,12 +28,16 @@
 	function addChat(name, message, msgTime, pm, roomMark) {
 		group = name.charAt(0);
 		name = name.substr(1);
-		if (message.substr(0, 4) === '/me ') {
+		if (message.substr(0, 5) === '/raw ') {
+			addLine(HtmlSanitizer.SanitizeHtml(message.substr(5)));
+		} else if (message.substr(0, 6) === '/html ') {
+			addLine(HtmlSanitizer.SanitizeHtml(message.substr(6)));
+		} else if (message.substr(0, 4) === '/me ') {
 			addLine((roomMark ? ('<span class="timestamp">' + escapeHTML(roomMark) + '</span> ') : '') + '<span class="timestamp">' + escapeHTML(msgTime) + '</span>&nbsp;' + '<strong style="' + hashColor(toId(name)) + '">•</strong> <span class="username">' + escapeHTML(group + name) + '</span> ' + (pm ? ('<span class="pm">(Private to ' + escapeHTML(pm) + ') </span>') : '') + '<i>' + parseMessage(escapeHTML(message.substr(3).trim())) + '</i>');
 		} else if (message.substr(0, 5) === '/log ') {
 			addLine((roomMark ? ('<span class="timestamp">' + escapeHTML(roomMark) + '</span> ') : '') + '<span class="timestamp">' + escapeHTML(msgTime) + '</span>&nbsp;' + escapeHTML(message.substr(5)));
 		} else {
-			addLine((roomMark ? ('<span class="timestamp">' + escapeHTML(roomMark) + '</span> ') : '') + '<span class="timestamp">' + escapeHTML(msgTime) + '</span>&nbsp;<span class="group">' + escapeHTML(group) + '</span><span class="username"><strong style="' + hashColor(toId(name)) + '">' + escapeHTML(name) + '</strong></span>' + (pm ? (' <span class="pm">(Private to ' + escapeHTML(pm) + ')</span>') : '') + ': ' + parseMessage(escapeHTML(message)));
+			addLine((roomMark ? ('<span class="timestamp">' + escapeHTML(roomMark) + '</span> ') : '') + '<span class="timestamp">' + escapeHTML(msgTime) + '</span>&nbsp;<span class="group">' + escapeHTML(group) + '</span><span class="username"><strong style="' + hashColor(toId(name)) + '">' + escapeHTML(name) + '</strong></span>' + (pm ? (' <span class="pm">(Private to ' + escapeHTML(pm) + ')</span>') : '') + ': <span' + (message.substr(0, 7) === '/error ' ? ' style="color: red;""' : "") + '>' + parseMessage(escapeHTML(message)) + '</span>');
 		}
 	}
 
@@ -105,6 +110,14 @@
 					if (toId(spl[2]) !== toId(spl[1])) {
 						addLine((roomMark ? ('<span class="timestamp">' + escapeHTML(roomMark) + '</span> ') : '') + '<span class="timestamp">' + escapeHTML(timestamp) + '</span>&nbsp;' + '<small class="join-msg"><b>Rename:</b> ' + escapeHTML(spl[2]) + ' <b>|</b> ' + escapeHTML(spl[1]) + '</small>');
 					}
+					break;
+				case 'html':
+				case 'raw':
+					addLine(HtmlSanitizer.SanitizeHtml(spl.splice(1).join('|')));
+					break;
+				case 'uhtml':
+				case 'uhtmlchange':
+					addLine(HtmlSanitizer.SanitizeHtml(spl.splice(2).join('|')));
 					break;
 				case 'unlink':
 				case 'tournament':
