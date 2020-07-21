@@ -859,7 +859,7 @@ exports.translations.moves = {
 	"bulkup": "Corpulencia",
 	"bulldoze": "Terratemblor",
 	"bulletpunch": "Puño Bala",
-	"bulletseed": "Recurrente",
+	"bulletseed": "Semilladora",
 	"calmmind": "Paz Mental",
 	"camouflage": "Camuflaje",
 	"captivate": "Seducción",

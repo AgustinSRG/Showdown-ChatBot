@@ -204,6 +204,11 @@ exports.setup = function (Data) {
 				res.unviable.push(decisions[i]);
 				continue; // Max guard in singles is usually bad
 			}
+			if (['flowershield', 'helpinghand', 'holdhands', 'followme'].indexOf(move.id) >= 0) {
+				// Moves not for singles
+				res.unviable.push(decisions[i]);
+				continue;
+			}
 			if (move.category === "Status") res.total++;
 			if (move.flags && move.flags['reflectable'] && pokeB.ability && pokeB.ability.id === "magicbounce") {
 				res.unviable.push(decisions[i]);
@@ -235,7 +240,7 @@ exports.setup = function (Data) {
 					continue;
 				}
 			}
-			if (move.id === "rest" && battle.gen > 6 && pokeB.isGrounded() && battle.conditions['electricterrain']) {
+			if (move.id === "rest" && battle.gen > 6 && pokeA.isGrounded() && battle.conditions['electricterrain']) {
 				res.unviable.push(decisions[i]);
 				continue;
 			}

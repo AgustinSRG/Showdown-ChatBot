@@ -186,6 +186,10 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	if (!conditionsA) conditionsA = {};
 	if (!conditionsB) conditionsB = {};
 
+	let offTypes = pokeA.template.types.slice();
+	if (conditionsA.volatiles["typechange"] && conditionsA.volatiles["typechange"].length) offTypes = conditionsA.volatiles["typechange"].slice();
+	if (conditionsA.volatiles["typeadd"]) offTypes.push(conditionsA.volatiles["typeadd"]);
+
 	let statsA = pokeA.getStats(gen), statsB = pokeB.getStats(gen);
 
 	let atk, def, bp, atkStat, defStat;
@@ -487,6 +491,9 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		case "poltergeist":
 			if (!pokeB.item || pokeB.onTakeItem) bp = 0;
 			break;
+		case "burnup":
+			if (offTypes.indexOf("Fire") === -1) bp = 0;
+			break;
 		case "retaliate":
 			if (conditionsA.side.faintedLastTurn) bp = Math.floor(bp * 2);
 			break;
@@ -616,7 +623,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	if (pokeA.item && pokeA.item.id === "lifeorb") modifier *= 1.3;
 
 	/* STAB */
-	if (pokeA.template.types.indexOf(moveType) >= 0 || (gen >= 3 && pokeA.ability && pokeA.ability.id in { "protean": 1, "libero": 1 })) {
+	if (offTypes.indexOf(moveType) >= 0 || (gen >= 3 && pokeA.ability && pokeA.ability.id in { "protean": 1, "libero": 1 })) {
 		if (gen >= 3 && pokeA.ability && pokeA.ability.id === "adaptability") modifier *= 2;
 		else modifier *= 1.5;
 	}
