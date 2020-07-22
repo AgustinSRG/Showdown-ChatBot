@@ -24,6 +24,7 @@ const Path = require('path');
 const Url = require('url');
 const Http = require('http');
 const Https = require('https');
+const WebSocket = require('ws');
 const FileSystem = require('fs');
 const QueryString = require('querystring');
 const Crypto = require('crypto');
@@ -99,6 +100,31 @@ class Server {
 			this.app.log("[SERVER] HTTP ERROR - " + error.code + ":" + error.message);
 		}.bind(this));
 
+		/* WS */
+		this.websoketHandlers = [];
+		this.ws = new WebSocket.Server({ server: this.http });
+		this.ws.on('connection', function (ws, req) {
+			let ip = this.getIP(req);
+			if (ip) {
+				if (this.monitor.isLocked(ip)) {
+					req.connection.destroy();
+					ws.close();
+					return;
+				}
+				this.monitor.count(ip);
+			}
+			for (let handler of this.websoketHandlers) {
+				try {
+					if (handler(ws, req)) {
+						return; // Handled
+					}
+				} catch (err) {
+					this.app.reportCrash(err);
+				}
+			}
+			ws.close();
+		}.bind(this));
+
 		/* Https */
 		this.https = null;
 		this.httpsOptions = {};
@@ -127,6 +153,29 @@ class Server {
 				if (this.https) {
 					this.https.on('error', function (error) {
 						this.app.log("[SERVER] HTTPS ERROR - " + error.code + ":" + error.message);
+					}.bind(this));
+
+					this.wss = new WebSocket.Server({ server: this.https });
+					this.wss.on('connection', function (ws, req) {
+						let ip = this.getIP(req);
+						if (ip) {
+							if (this.monitor.isLocked(ip)) {
+								req.connection.destroy();
+								ws.close();
+								return;
+							}
+							this.monitor.count(ip);
+						}
+						for (let handler of this.websoketHandlers) {
+							try {
+								if (handler(ws, req)) {
+									return; // Handled
+								}
+							} catch (err) {
+								this.app.reportCrash(err);
+							}
+						}
+						ws.close();
 					}.bind(this));
 				}
 			} else {
@@ -413,6 +462,36 @@ class Server {
 	}
 
 	/**
+	 * Resolves an absolute URL to the control panel
+	 * @param {String} path
+	 */
+	getControlPanelLink(path) {
+		if (!this.app.config.server.url) {
+			return "#";
+		}
+		try {
+			let url = new Url.URL(path, this.app.config.server.url);
+			return url.toString();
+		} catch (ex) {
+			this.app.reportCrash(ex);
+			return "#";
+		}
+	}
+
+	getPokeSimLink(path) {
+		if (!this.app.config.server.url) {
+			return "#";
+		}
+		try {
+			let url = new Url.URL("/", this.app.config.server.url);
+			return url.protocol + "//" + url.hostname + "-" + (url.port || 80) + ".psim.us" + (path || "/");
+		} catch (ex) {
+			this.app.reportCrash(ex);
+			return "#";
+		}
+	}
+
+	/**
 	 * Handler for server requests
 	 * @param {ClientRequest} request
 	 * @param {ServerResponse} response
@@ -446,6 +525,15 @@ class Server {
 		if (context.url.path in { '/favicon.ico': 1, 'favicon.ico': 1 }) {
 			/* Favicon.ico */
 			context.endWithStaticFile(Path.resolve(__dirname, '../../favicon.ico'));
+		} else if (context.url.path.startsWith("/showdown/info?") || context.url.path.startsWith("/info?")) {
+			context.headers["Access-Control-Allow-Origin"] = context.request.headers['Origin'] || context.request.headers['origin'] || "*";
+			context.headers["Access-Control-Allow-Credentials"] = "true";
+			context.endWithJSON({
+				cookie_needed: false,
+				entropy: 1858301765,
+				origins: ["*:*"],
+				websocket: true,
+			});
 		} else if (!context.url.path || context.url.path === '/') {
 			/* Main page */
 			context.setMenu(this.getMenu(context));
@@ -702,6 +790,12 @@ class RequestContext {
 		this.headers['Content-Type'] = 'text/plain; charset=utf-8';
 		this.response.writeHead(code || 200, this.headers);
 		this.response.end(text);
+	}
+
+	endWithJSON(json, code) {
+		this.headers['Content-Type'] = 'application/json; charset=utf-8';
+		this.response.writeHead(code || 200, this.headers);
+		this.response.end(JSON.stringify(json));
 	}
 
 	/**
