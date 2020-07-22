@@ -1,0 +1,24 @@
+<h3>Battle Log</h3>
+<form method="post" action="">
+	<table border="0">
+		<tr><td>Max number of battles to keep logs: </td><td><input type="text" name="maxbattles" value="${MAXBATTLES}" /></td></tr>
+	</table>
+	<p>Specify <em>0</em> to keep the logs indefinitely</p>
+	<p><input type="submit" name="editlogconfig" value="Save Changes" /></p>
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
+<hr />
+<h3>Battle Log - Files</h3>
+<blockquote>
+	<table border="1" style="width: 100%;">
+		<tr>
+			<td><div align="center"><strong>File</strong></div></td>
+			<td><div align="center"><strong>Size</strong></div></td>
+			<td><div align="center"><strong>Date</strong></div></td>
+			<td><div align="center"><strong>Title</strong></div></td>
+			<td><div align="center"><strong>Options</strong></div></td>
+		</tr>
+		${LOG_FILES}
+	</table>
+</blockquote>
+		

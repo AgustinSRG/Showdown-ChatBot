@@ -1,0 +1,9 @@
+{
+  "id": "battlelog",
+  "name": "Battle Log",
+  "main": "main.js",
+  "handlers": [
+    "server-handler.js"
+  ],
+  "description": "Log battles the bot joins to, for future analysis."
+}
