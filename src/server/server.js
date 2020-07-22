@@ -484,7 +484,7 @@ class Server {
 		}
 		try {
 			let url = new Url.URL("/", this.app.config.server.url);
-			return url.protocol + "//" + url.hostname + "-" + (url.port || 80) + ".psim.us" + (path || "/");
+			return "http://" + url.hostname + "-" + (url.port || (url.protocol === "https:" ? 443 : 80)) + ".psim.us" + (path || "/");
 		} catch (ex) {
 			this.app.reportCrash(ex);
 			return "#";
