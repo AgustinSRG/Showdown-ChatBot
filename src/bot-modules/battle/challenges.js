@@ -4,10 +4,18 @@
 
 'use strict';
 
+const Path = require('path');
 const Text = Tools('text');
+const Chat = Tools('chat');
+
+const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
 exports.setup = function (App) {
 	const Config = App.config.modules.battle;
+
+	function getLanguage(room) {
+		return App.config.language.rooms[room] || App.config.language['default'];
+	}
 
 	const ChallManager = {};
 	ChallManager.challenges = {};
@@ -41,6 +49,7 @@ exports.setup = function (App) {
 					}
 					if (App.bot.formats[format].team && !mod.TeamBuilder.hasTeam(format)) {
 						cmds.push('/reject ' + i);
+						cmds.push('/pm ' + i + "," + App.multilang.mlt(Lang_File, getLanguage(room), 2) + ' ' + Chat.italics(App.bot.formats[format].name));
 						continue;
 					}
 
@@ -55,6 +64,7 @@ exports.setup = function (App) {
 					}
 				} else {
 					cmds.push('/reject ' + i);
+					cmds.push('/pm ' + i + "," + App.multilang.mlt(Lang_File, getLanguage(room), "busy").replace("#BN", "" + nBattles));
 					if (App.config.debug) {
 						App.log("rejected battle: " + i + " | " + ChallManager.challenges.challengesFrom[i]);
 					}

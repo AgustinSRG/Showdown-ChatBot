@@ -17,6 +17,8 @@ $8 = to cancel the challenge
 
 $9 = No challenges found
 
+$busy = I can't accept the challenge because I'm already playing #BN battles right now. Try again later or use the ``.chall`` command if you have permission to use it.
+
 $format = format
 $team = team
 
@@ -34,6 +36,8 @@ $7 = Usa
 $8 = para cancelar el reto
 
 $9 = No se han encontrado retos
+
+$busy = No puedo aceptar el reto porque ya estoy jugando #BN batallas en este momento. Prueba en otro momento o usa el comando ``.chall`` si posees permisos para usarlo.
 
 $format = formato
 $team = equipo
