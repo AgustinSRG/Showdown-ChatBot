@@ -11,7 +11,6 @@ const Path = require('path');
 
 const Text = Tools('text');
 const Chat = Tools('chat');
-const LineSplitter = Tools('line-splitter');
 
 const Lang_File = Path.resolve(__dirname, 'seen.translations');
 const Max_Alts_No_Full = 7;
@@ -21,7 +20,7 @@ module.exports = {
 		this.setLangFile(Lang_File);
 		let targetUser = Text.toId(this.arg);
 		if (!targetUser) {
-			this.pmReply(this.usage({desc: this.usageTrans('user')}));
+			this.pmReply(this.usage({ desc: this.usageTrans('user') }));
 		} else if (targetUser.length > 19) {
 			this.pmReply(this.mlt('inv'));
 		} else if (targetUser === this.byIdent.id) {
@@ -49,24 +48,24 @@ module.exports = {
 				if (time > 0) times.unshift(time + ' ' + (time === 1 ? this.mlt(8) : this.mlt(9)));
 				/* Reply */
 				let reply = this.mlt(15) + ' ' + Chat.bold(name) + ' ' +
-				this.mlt('seen') + ' ' + Chat.italics(times.join(', ')) + ' ';
+					this.mlt('seen') + ' ' + Chat.italics(times.join(', ')) + ' ';
 				let ago = this.mlt('ago');
 				if (ago) reply += ago + ' ';
 				switch (seen.type) {
-				case 'J':
-					reply += this.mlt(10) + ' ';
-					break;
-				case 'L':
-					reply += this.mlt(11) + ' ';
-					break;
-				case 'C':
-					reply += this.mlt(12) + ' ';
-					break;
-				case 'R':
-					reply += this.mlt(13) + ' ' + Chat.bold(seen.detail);
-					break;
+					case 'J':
+						reply += this.mlt(10) + ' ';
+						break;
+					case 'L':
+						reply += this.mlt(11) + ' ';
+						break;
+					case 'C':
+						reply += this.mlt(12) + ' ';
+						break;
+					case 'R':
+						reply += this.mlt(13) + ' ' + Chat.bold(seen.detail);
+						break;
 				}
-				if (seen.type in {'J': 1, 'L': 1, 'C': 1}) {
+				if (seen.type in { 'J': 1, 'L': 1, 'C': 1 }) {
 					let privates = (App.config.modules.core.privaterooms || []);
 					if (privates.indexOf(seen.room) >= 0) {
 						reply += this.mlt(14) + '.'; // Private Room
@@ -89,31 +88,38 @@ module.exports = {
 		this.setLangFile(Lang_File);
 		if (!this.can('alts', this.room)) return this.replyAccessDenied('alts');
 		let targetUser = Text.toId(this.arg);
-		let fullList = false;
-		if (this.args[1] && Text.toId(this.args[1]) === "all") {
-			if (!this.can('fullalts', this.room)) return this.replyAccessDenied('fullalts');
-			fullList = true;
-			targetUser = Text.toId(this.args[0]);
-		}
+		let canFull = this.can('fullalts', this.room);
 		if (!targetUser) {
-			this.pmReply(this.usage({desc: this.usageTrans('user')}));
+			this.pmReply(this.usage({ desc: this.usageTrans('user') }));
 		} else if (targetUser.length > 19) {
 			this.pmReply(this.mlt('inv'));
 		} else {
 			let userData = App.userdata.getLastSeen(targetUser);
 			let name = userData ? userData.name : targetUser;
 			let alts = App.userdata.getAlts(targetUser);
-			if (alts.length > Max_Alts_No_Full && !fullList) {
+			if (alts.length > Max_Alts_No_Full) {
+				let fullLink = "";
+
+				if (canFull) {
+					let key = App.data.temp.createTempFile(
+						"<html>" +
+						"<body><p>" +
+						this.mlt(17) + ' <b>' +
+						Text.escapeHTML(name) + '</b>:</p><p> ' +
+						Text.escapeHTML(alts.join(", ")) +
+						"</p></body>" +
+						"</html>"
+					);
+
+					fullLink = this.mlt("seelist") + ": " + App.server.getControlPanelLink('/temp/' + key);
+				}
+
 				this.pmReply(this.mlt(17) + ' ' +
 					Chat.bold(name) + ': ' + alts.slice(0, Max_Alts_No_Full).join(', ').trim() +
-					", (" + (alts.length - Max_Alts_No_Full) + ' ' + this.mlt('more') + '). ' + this.mlt('full'));
+					", (" + (alts.length - Max_Alts_No_Full) + ' ' + this.mlt('more') + '). ' + fullLink);
 			} else if (alts.length > 0) {
-				let spl = new LineSplitter(App.config.bot.maxMessageLength);
-				spl.add(this.mlt(17) + ' ' + Chat.bold(name) + ': ');
-				for (let i = 0; i < alts.length; i++) {
-					spl.add(" " + alts[i] + (i < (alts.length - 1) ? ',' : ''));
-				}
-				this.pmReply(spl.getLines());
+				this.pmReply(this.mlt(17) + ' ' +
+					Chat.bold(name) + ': ' + alts.join(', ').trim());
 			} else {
 				this.pmReply(this.mlt(18) + ' ' + Chat.italics(name) + '');
 			}
