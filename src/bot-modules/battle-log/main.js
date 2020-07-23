@@ -155,7 +155,10 @@ exports.setup = function (App) {
 
 			ws.on("message", function (data) {
 				if (!waiting) return;
-				data = data + "";
+				data = data.utf8Data || data;
+				if (typeof data !== "string") {
+					data = JSON.stringify(data);
+				}
 				if (data.length > 1024) return; // Too big
 				if (data.charAt(0) !== "[") return; // Invalid
 				let msg;

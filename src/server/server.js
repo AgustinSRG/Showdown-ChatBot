@@ -24,7 +24,7 @@ const Path = require('path');
 const Url = require('url');
 const Http = require('http');
 const Https = require('https');
-const WebSocket = require('ws');
+const WebSocketServer = require('websocket').server;
 const FileSystem = require('fs');
 const QueryString = require('querystring');
 const Crypto = require('crypto');
@@ -102,27 +102,35 @@ class Server {
 
 		/* WS */
 		this.websoketHandlers = [];
-		this.ws = new WebSocket.Server({ server: this.http });
-		this.ws.on('connection', function (ws, req) {
-			let ip = this.getIP(req);
+		this.ws = new WebSocketServer({
+			httpServer: this.http, autoAcceptConnections: false, maxReceivedFrameSize: 10 * 1024,
+			maxReceivedMessageSize: 10 * 1024
+		});
+		this.ws.on('request', function (request) {
+			const req = request.httpRequest;
+			const ip = this.getIP(req);
 			if (ip) {
 				if (this.monitor.isLocked(ip)) {
 					req.connection.destroy();
-					ws.close();
 					return;
 				}
 				this.monitor.count(ip);
 			}
-			for (let handler of this.websoketHandlers) {
-				try {
-					if (handler(ws, req)) {
-						return; // Handled
+			try {
+				const ws = request.accept();
+				for (let handler of this.websoketHandlers) {
+					try {
+						if (handler(ws, req)) {
+							return; // Handled
+						}
+					} catch (err) {
+						this.app.reportCrash(err);
 					}
-				} catch (err) {
-					this.app.reportCrash(err);
 				}
+				ws.close();
+			} catch (ex) {
+				req.connection.destroy();
 			}
-			ws.close();
 		}.bind(this));
 
 		/* Https */
@@ -155,27 +163,35 @@ class Server {
 						this.app.log("[SERVER] HTTPS ERROR - " + error.code + ":" + error.message);
 					}.bind(this));
 
-					this.wss = new WebSocket.Server({ server: this.https });
-					this.wss.on('connection', function (ws, req) {
-						let ip = this.getIP(req);
+					this.wss = new WebSocketServer({
+						httpServer: this.https, autoAcceptConnections: false, maxReceivedFrameSize: 10 * 1024,
+						maxReceivedMessageSize: 10 * 1024
+					});
+					this.wss.on('request', function (request) {
+						const req = request.httpRequest;
+						const ip = this.getIP(req);
 						if (ip) {
 							if (this.monitor.isLocked(ip)) {
 								req.connection.destroy();
-								ws.close();
 								return;
 							}
 							this.monitor.count(ip);
 						}
-						for (let handler of this.websoketHandlers) {
-							try {
-								if (handler(ws, req)) {
-									return; // Handled
+						try {
+							const ws = request.accept();
+							for (let handler of this.websoketHandlers) {
+								try {
+									if (handler(ws, req)) {
+										return; // Handled
+									}
+								} catch (err) {
+									this.app.reportCrash(err);
 								}
-							} catch (err) {
-								this.app.reportCrash(err);
 							}
+							ws.close();
+						} catch (ex) {
+							req.connection.destroy();
 						}
-						ws.close();
 					}.bind(this));
 				}
 			} else {

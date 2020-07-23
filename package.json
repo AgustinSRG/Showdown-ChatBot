@@ -21,10 +21,9 @@
     "cheerio": "^1.0.0-rc.3",
     "probe-image-size": "^5.0.0",
     "sockjs-client": "1.4.0",
-    "ws": "^7.3.1"
+    "websocket": "^1.0.31"
   },
   "optionalDependencies": {
-    "websocket": "1.0.31",
     "githubhook": "1.9.3",
     "mysql": "2.18.1"
   },
