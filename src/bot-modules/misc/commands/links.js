@@ -22,16 +22,33 @@ const imageCache = new Cache(10);
 
 const FAKE_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36";
 
-function createImageHtmlBox(imageLink, pageLink, title, w, h) {
-	return `<div style="text-align: center;"><a href=${JSON.stringify(pageLink)} target="_blank"><img width=${JSON.stringify(w + "")} height=${JSON.stringify(h + "")} alt=${JSON.stringify(title)} title=${JSON.stringify(title)} src=${JSON.stringify(imageLink)}></a></div>`;
+function createImageHtmlBox(imageLink, pageLink, title, w, h, hideImage) {
+	const html = `<div style="${hideImage ? "padding: 4px;" : "text-align: center;"}"><a href=${JSON.stringify(pageLink)} target="_blank"><img width=${JSON.stringify(w + "")} height=${JSON.stringify(h + "")} alt=${JSON.stringify(title)} title=${JSON.stringify(title)} src=${JSON.stringify(imageLink)}></a></div>`;
+	if (hideImage) {
+		return `<details><summary>${title || "[Image]"}</summary>${html}</details>`;
+	} else {
+		return html;
+	}
 }
 
 function createImageHtmlBoxExtended(imageLink, pageLink, title, description, w, h) {
-	return `<div style="text-align: center;"><a href=${JSON.stringify(pageLink)} target="_blank"><img width=${JSON.stringify(w + "")} height=${JSON.stringify(h + "")} alt=${JSON.stringify(title)} title=${JSON.stringify(title)} src=${JSON.stringify(imageLink)}></a></div><div style="padding: 4px;text-align: center;font-size:large;"><a href=${JSON.stringify(pageLink)} target="_blank">${title}</a></div><div style="padding: 4px;text-align: center; color: gray;">${description}</div>`;
+	if (w > h) {
+		if (w > 100) {
+			h = Math.floor(h * 100 / w);
+			w = 100;
+		}
+	} else {
+		if (h > 100) {
+			w = Math.floor(w * 100 / h);
+			h = 100;
+		}
+	}
+
+	return `<table style="width: 100%; border: none;"><tr><td style="text-align: center; width: ${w}px;"><a href=${JSON.stringify(pageLink)} target="_blank"><img width=${JSON.stringify(w + "")} height=${JSON.stringify(h + "")} alt=${JSON.stringify(title)} title=${JSON.stringify(title)} src=${JSON.stringify(imageLink)}></a></td><td><div style="padding: 4px;text-align: left;font-size:large;"><a href=${JSON.stringify(pageLink)} target="_blank">${title}</a></div><div style="padding: 4px;text-align: left; color: gray;">${description}</div></td></tr></table>`;
 }
 
 function createImageHtmlBoxNoImage(pageLink, title, description) {
-	return `<div style="padding: 4px;text-align: center;font-size:large;"><a href=${JSON.stringify(pageLink)} target="_blank">${title}</a></div><div style="padding: 4px;text-align: center; color: gray;">${description}</div>`;
+	return `<div style="font-size:large;"><a href=${JSON.stringify(pageLink)} target="_blank">${title}</a></div><div style="color: gray;">${description}</div>`;
 }
 
 function botCanHtml(room, App) {
@@ -70,6 +87,33 @@ module.exports = {
 
 		this.cmd = "image";
 		this.showFullLinkInfo = true;
+		this.parser.exec(this);
+	},
+
+	"himg": "hiddenimage",
+	"hiddenimage": function (App) {
+		this.setLangFile(Lang_File);
+
+		if (this.getRoomType(this.room) !== 'chat') {
+			return this.errorReply(this.mlt('nochat'));
+		}
+
+		if (!this.can('link', this.room)) return this.replyAccessDenied('link');
+
+		if (!botCanHtml(this.room, App)) {
+			return this.errorReply(this.mlt('nobot'));
+		}
+
+		let url;
+
+		url = this.args.join(",");
+
+		if (!url) {
+			return this.errorReply(this.usage({ desc: 'URL' }));
+		}
+
+		this.cmd = "image";
+		this.hideImage = true;
 		this.parser.exec(this);
 	},
 
@@ -113,10 +157,6 @@ module.exports = {
 			return this.errorReply(this.mlt(1));
 		}
 
-		if (busy[this.room] && busy[this.room][url.href] && Date.now() - busy[this.room][url.href] < 10000) {
-			return this.errorReply(this.mlt(5));
-		}
-
 		let cached = imageCache.get(url.href);
 
 		if (cached) {
@@ -129,10 +169,14 @@ module.exports = {
 			} else if (cached.title && this.showFullLinkInfo) {
 				this.send("/addhtmlbox " + createImageHtmlBoxExtended(cached.image, cached.link, cached.title, cached.description, cached.w, cached.h), this.room);
 			} else {
-				this.send("/addhtmlbox " + createImageHtmlBox(cached.image, cached.link, cached.title, cached.w, cached.h), this.room);
+				this.send("/addhtmlbox " + createImageHtmlBox(cached.image, cached.link, cached.title, cached.w, cached.h, this.hideImage), this.room);
 			}
 
 			return;
+		}
+
+		if (busy[this.room] && busy[this.room][url.href] && Date.now() - busy[this.room][url.href] < 10000) {
+			return this.errorReply(this.mlt(5));
 		}
 
 		if (!busy[this.room]) {
@@ -146,7 +190,7 @@ module.exports = {
 				req.abort();
 				if (response.statusCode === 301 || response.statusCode === 302 || response.statusCode === 303 || response.statusCode === 307 || response.statusCode === 308) {
 					if (this.wasRedirected) {
-						return this.errorReply(this.mlt(3));
+						return this.errorReply(this.mlt(4).replace("#ERR", "TOO_MANY_REDIRECTS"));
 					} else {
 						this.args = [response.headers.location];
 						this.wasRedirected = true;
@@ -185,7 +229,7 @@ module.exports = {
 					// Find the real image URL
 
 					let realURL = '';
-					let title = "";
+					let title = url.href;
 					let desc = "...";
 
 					try {
@@ -209,7 +253,7 @@ module.exports = {
 							}
 						});
 					} catch (ex) {
-						return this.errorReply(this.mlt(3));
+						return this.errorReply(this.mlt(4).replace("#ERR", ex.message));
 					}
 
 					if (!realURL) {
@@ -272,7 +316,7 @@ module.exports = {
 						if (title && this.showFullLinkInfo) {
 							this.send("/addhtmlbox " + createImageHtmlBoxExtended(realURL, url.href, title, desc, w, h), this.room);
 						} else {
-							this.send("/addhtmlbox " + createImageHtmlBox(realURL, url.href, title || mimeType, w, h), this.room);
+							this.send("/addhtmlbox " + createImageHtmlBox(realURL, url.href, title || url.href, w, h, this.hideImage), this.room);
 						}
 					}.bind(this));
 				}.bind(this));
@@ -307,7 +351,7 @@ module.exports = {
 						h: h,
 					});
 
-					this.send("/addhtmlbox " + createImageHtmlBox(url.href, url.href, mimeType, w, h), this.room);
+					this.send("/addhtmlbox " + createImageHtmlBox(url.href, url.href, url.href, w, h, this.hideImage), this.room);
 				}.bind(this));
 			}
 		}.bind(this));
