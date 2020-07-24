@@ -54,7 +54,7 @@ module.exports = {
 			return this.errorReply(this.mlt('nochat'));
 		}
 
-		if (!this.can('image', this.room)) return this.replyAccessDenied('image');
+		if (!this.can('link', this.room)) return this.replyAccessDenied('link');
 
 		if (!botCanHtml(this.room, App)) {
 			return this.errorReply(this.mlt('nobot'));
