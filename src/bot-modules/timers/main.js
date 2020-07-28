@@ -6,6 +6,7 @@
 
 const Path = require('path');
 const Chat = Tools('chat');
+const Text = Tools('text');
 
 const Lang_File = Path.resolve(__dirname, 'timers.translations');
 
@@ -102,11 +103,56 @@ exports.setup = function (App) {
 			this.save();
 			return true;
 		}
+
+		checkRepeats() {
+			for (let repeat of Object.values(this.repeats)) {
+				if (Date.now() >= repeat.next) {
+					this.sendRepeat(repeat);
+					repeat.next = Date.now() + repeat.interval;
+					this.save();
+				}
+			}
+		}
+
+		createRepeat(room, text, interval) {
+			this.repeats[room] = {
+				room: room,
+				text: text,
+				interval: interval,
+				next: Date.now() + interval,
+			};
+			this.sendRepeat(this.repeats[room]);
+			this.save();
+			return true;
+		}
+
+		sendRepeat(repeat) {
+			let roomData = App.parser.bot.rooms[repeat.room];
+			let botid = Text.toId(App.parser.bot.getBotNick());
+			if (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({group: roomData.users[botid]}, 'driver')) {
+				// Can announce
+				App.bot.sendTo(repeat.room, "/announce " + repeat.text);
+			} else {
+				App.bot.sendTo(repeat.room, Text.stripCommands(repeat.text));
+			}
+		}
+
+		cancelRepeat(room) {
+			if (!this.repeats[room]) return false;
+			delete this.repeats[room];
+			this.save();
+			return true;
+		}
+
+		check() {
+			this.checkTimers();
+			this.checkRepeats();
+		}
 	}
 
 	const TimersMod = new TimersModule();
 
-	setInterval(TimersMod.checkTimers.bind(TimersMod), 500);
+	setInterval(TimersMod.check.bind(TimersMod), 500);
 
 	return TimersMod;
 };

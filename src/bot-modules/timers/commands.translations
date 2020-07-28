@@ -14,6 +14,12 @@ $5 = The timer was stopped
 $6 = minutes
 $7 = seconds
 
+$8 = Time to repeat must be higher then 30 seconds
+$9 = Time to repeat cannot be higher than 24 hours
+$10 = Text to repeat
+$11 = The repeat message was cleared
+$12 = There was no repeat message set for this room
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
@@ -25,3 +31,9 @@ $4 = No había ningún timer activo en esta sala
 $5 = El timer se ha detenido
 $6 = minutos
 $7 = segundos
+
+$8 = El tiempo para repetir no puede ser inferior a 30 segundos
+$9 = El tiempo para repetir no puede ser superior a 24 horas
+$10 = Texto a repetir
+$11 = El mensaje a repetir ha sido borrado
+$12 = No había ningún mensaje a repetir para esta sala
