@@ -20,7 +20,7 @@ module.exports = {
 		const Mod = App.modules.timers.system;
 		this.setLangFile(Lang_File);
 		if (Mod.timers[this.room]) {
-			return this.restrictReply(this.mlt(3) + " | " + Mod.timers[this.room].getAnnounce(), 'timer');
+			return this.restrictReply(this.mlt(3) + " | " + Mod.getAnnounce(Mod.timers[this.room]), 'timer');
 		}
 		if (!this.can('timer', this.room)) return this.replyAccessDenied('timer');
 		if (this.getRoomType(this.room) !== 'chat') {

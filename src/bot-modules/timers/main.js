@@ -15,49 +15,57 @@ exports.setup = function (App) {
 	}
 
 	function trans(room, key, vars) {
-		 return App.multilang.mlt(Lang_File, getLanguage(room), key, vars);
+		return App.multilang.mlt(Lang_File, getLanguage(room), key, vars);
 	}
 
 	class TimersModule {
 		constructor() {
-			this.timers = {};
-		}
+			this.db = App.dam.getDataBase('room-timers.json');
+			this.data = this.db.data;
 
-		createTimer(room, time) {
-			if (this.timers[room]) return false;
-			this.timers[room] = new Timer(room, time);
-			return true;
-		}
-
-		stopTimer(room) {
-			if (!this.timers[room]) return false;
-			this.timers[room].clear();
-			delete this.timers[room];
-			return true;
-		}
-	}
-
-	const TimersMod = new TimersModule();
-
-	class Timer {
-		constructor(room, time) {
-			this.room = room;
-			this.lang = getLanguage(this.room);
-			this.time = time;
-			this.started = Date.now();
-			let halfTime = Math.floor(time / 2);
-			if (halfTime > 0) {
-				this.timer2 = setTimeout(this.midAnnounce.bind(this), halfTime);
+			if (!this.data.timers) {
+				this.data.timers = {};
 			}
-			this.timer1 = setTimeout(this.end.bind(this), time);
-			let diff = this.getDiff();
-			App.bot.sendTo(this.room, Chat.bold("Timer:") + " " + trans(this.room, (diff.substr(0, 2) === '1 ' ? 3 : 0)) + ' ' +
-			diff + ' ' + trans(this.room, 1));
+
+			this.timers = this.data.timers;
+
+			if (!this.data.repeats) {
+				this.data.repeats = {};
+			}
+
+			this.repeats = this.data.repeats;
 		}
 
-		getDiff() {
+		save() {
+			this.db.write();
+		}
+
+		checkTimers() {
+			for (let timer of Object.values(this.timers)) {
+				if (Date.now() >= timer.ends) {
+					App.bot.sendTo(timer.room, Chat.bold(trans(timer.room, 2)));
+					delete this.timers[timer.room];
+					this.save();
+				} else if (!timer.midAnnounced && Date.now() >= timer.mid) {
+					let diff = this.getDiff(timer);
+					App.bot.sendTo(timer.room, Chat.bold("Timer:") + " " + trans(timer.room, (diff.substr(0, 2) === '1 ' ? 3 : 0)) + ' ' +
+						diff + ' ' + trans(timer.room, 1));
+					timer.midAnnounced = true;
+					this.save();
+				}
+			}
+		}
+
+		getAnnounce(timer) {
+			let diff = this.getDiff(timer);
+			let str = Chat.bold("Timer:") + " " + trans(timer.room, (diff.substr(0, 2) === '1 ' ? 3 : 0)) +
+				' ' + diff + ' ' + trans(timer.room, 1);
+			return str;
+		}
+
+		getDiff(timer) {
 			let dates = [];
-			let diff = Math.floor(this.time - (Date.now() - this.started));
+			let diff = Math.floor(timer.ends - Date.now());
 			if (diff % 1000 > 0) {
 				diff = Math.floor(diff / 1000) + 1;
 			} else {
@@ -66,52 +74,39 @@ exports.setup = function (App) {
 			let seconds = diff % 60;
 			let minutes = Math.floor(diff / 60);
 			if (minutes > 0) {
-				dates.push(minutes + ' ' + (minutes === 1 ? trans(this.room, 'minute') : trans(this.room, 'minutes')));
+				dates.push(minutes + ' ' + (minutes === 1 ? trans(timer.room, 'minute') : trans(timer.room, 'minutes')));
 			}
 			if (seconds > 0) {
-				dates.push(seconds + ' ' + (seconds === 1 ? trans(this.room, 'second') : trans(this.room, 'seconds')));
+				dates.push(seconds + ' ' + (seconds === 1 ? trans(timer.room, 'second') : trans(timer.room, 'seconds')));
 			}
 			return dates.join(', ');
 		}
 
-		midAnnounce() {
-			this.timer2 = null;
-			let diff = this.getDiff();
-			App.bot.sendTo(this.room, Chat.bold("Timer:") + " " + trans(this.room, (diff.substr(0, 2) === '1 ' ? 3 : 0)) + ' ' +
-			diff + ' ' + trans(this.room, 1));
+		createTimer(room, time) {
+			if (this.timers[room]) return false;
+			this.timers[room] = {
+				room: room,
+				ends: Date.now() + time,
+				mid: Date.now() + (time / 2),
+				midAnnounced: false,
+			};
+
+			App.bot.sendTo(room, this.getAnnounce(this.timers[room]));
+			this.save();
+			return true;
 		}
 
-		getAnnounce() {
-			let diff = this.getDiff();
-			let str = Chat.bold("Timer:") + " " + trans(this.room, (diff.substr(0, 2) === '1 ' ? 3 : 0)) +
-				' ' + diff + ' ' + trans(this.room, 1);
-			return str;
-		}
-
-		end() {
-			this.timer1 = null;
-			App.bot.sendTo(this.room, Chat.bold(trans(this.room, 2)));
-			TimersMod.stopTimer(this.room);
-		}
-
-		clear() {
-			if (this.timer1) {
-				clearTimeout(this.timer1);
-				this.timer1 = null;
-			}
-			if (this.timer2) {
-				clearTimeout(this.timer2);
-				this.timer2 = null;
-			}
+		stopTimer(room) {
+			if (!this.timers[room]) return false;
+			delete this.timers[room];
+			this.save();
+			return true;
 		}
 	}
 
-	App.bot.on('disconnect', () => {
-		for (let room in TimersMod.timers) {
-			TimersMod.timers[room].clear();
-			delete TimersMod.timers[room];
-		}
-	});
+	const TimersMod = new TimersModule();
+
+	setInterval(TimersMod.checkTimers.bind(TimersMod), 500);
 
 	return TimersMod;
 };
