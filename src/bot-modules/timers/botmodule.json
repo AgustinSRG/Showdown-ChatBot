@@ -5,6 +5,9 @@
   "commands": [
     "commands.js"
   ],
+  "handlers": [
+    "server-handler.js"
+  ],
   "permissions": {
     "timer": {
       "group": "driver"
