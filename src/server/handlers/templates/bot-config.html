@@ -65,6 +65,7 @@
 		<tr><td>Server-ID: </td><td><input id="text-serverid" name="serverid" type="text" size="50" value="${SERVERID}"/></td></tr>
 		<tr><td>Seconds to retry the connection: </td><td><input id="text-retry" name="retry" type="text" size="50" value="${RETRY}"/></td></tr>
 	</table>
+	<p><input type="checkbox" name="secure" value="true" ${SECURE} />&nbsp;Use secure connection (TLS).</p>
 	<p><input type="submit" name="editbot" value="Save Changes" /></p>
 </form>
 <p><button onclick="document.getElementById('text-server').value = 'sim.psim.us'; document.getElementById('text-port').value = '8000'; document.getElementById('text-serverid').value = 'showdown'; document.getElementById('text-retry').value = '10';">Set Default Values</button></p>

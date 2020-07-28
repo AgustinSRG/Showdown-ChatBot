@@ -216,7 +216,7 @@ class ChatBotApp {
 		}
 
 		this.bot = new ShowdownBot(this.config.bot.server, this.config.bot.port, this.config.bot.serverid,
-			this.config.bot.loginserv, this.config.bot.maxlines, true, this.config.bot.retrydelay);
+			this.config.bot.loginserv, this.config.bot.maxlines, true, this.config.bot.retrydelay, this.config.bot.secure);
 
 		/* Create the server */
 		this.server = new Server(this.confDir, this);

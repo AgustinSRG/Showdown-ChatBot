@@ -89,10 +89,12 @@ exports.setup = function (App) {
 			if (!error) {
 				App.config.bot.server = context.post.server || '';
 				App.config.bot.port = context.post.port;
+				App.config.bot.secure = !!context.post.secure;
 				App.config.bot.serverid = context.post.serverid || 'showdown';
 				App.config.bot.retrydelay = secRetry * 1000;
 				App.bot.server = App.config.bot.server;
 				App.bot.port = App.config.bot.port;
+				App.bot.secure = App.config.bot.secure;
 				App.bot.loginUrl.serverId = App.config.bot.serverid;
 				if (App.bot.errOptions) {
 					App.bot.errOptions.retryDelay = App.config.bot.retrydelay;
@@ -142,6 +144,7 @@ exports.setup = function (App) {
 
 		htmlVars.server = App.bot.server;
 		htmlVars.port = App.bot.port;
+		htmlVars.secure = (App.bot.secure ? 'checked="checked"' : '');
 		htmlVars.serverid = App.bot.loginUrl.serverId;
 		htmlVars.retry = Math.floor(App.config.bot.retrydelay / 1000);
 

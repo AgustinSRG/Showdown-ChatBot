@@ -45,9 +45,10 @@ class Bot {
 	 * @param {Boolean} connectionRetry - true for retrying the connectio on disconnect
 	 * @param {Number} connectionRetryDelay - miliseconds to wait before retrying the connection
 	 */
-	constructor(server, port, serverId, loginServer, maxLinesSend, connectionRetry, connectionRetryDelay) {
+	constructor(server, port, serverId, loginServer, maxLinesSend, connectionRetry, connectionRetryDelay, secure) {
 		this.server = server;
 		this.port = port;
+		this.secure = !!secure;
 
 		this.loginOptions = {};
 		this.loginOptions.serverId = serverId;
@@ -129,7 +130,7 @@ class Bot {
 	 * @returns {String} The websocket url to connect
 	 */
 	getConnectionUrl() {
-		return Util.format("http://%s:%d/showdown/", this.server, this.port);
+		return Util.format("%s://%s:%d/showdown/", this.secure ? "https" : "http", this.server, this.port);
 	}
 
 	/**
