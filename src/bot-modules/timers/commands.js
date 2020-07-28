@@ -20,6 +20,11 @@ module.exports = {
 	starttimer: function (App) {
 		const Mod = App.modules.timers.system;
 		this.setLangFile(Lang_File);
+		if (Text.toId(this.arg) === "stop") {
+			this.cmd = "stoptimer";
+			this.parser.exec(this);
+			return;
+		}
 		if (Mod.timers[this.room]) {
 			return this.restrictReply(this.mlt(3) + " | " + Mod.getAnnounce(Mod.timers[this.room]), 'timer');
 		}
