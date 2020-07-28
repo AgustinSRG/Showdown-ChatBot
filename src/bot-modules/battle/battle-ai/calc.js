@@ -498,7 +498,9 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			if (conditionsA.side.faintedLastTurn) bp = Math.floor(bp * 2);
 			break;
 		case "solarbeam":
-			if (gconditions.weather === "primordialsea" || gconditions.weather === "raindance" || gconditions.weather === "sandstorm" || gconditions.weather === "hail") bp = Math.floor(bp * 0.5);
+		case "solarblade":
+			if (gconditions.weather === "primordialsea" || gconditions.weather === "raindance" || gconditions.weather === "sandstorm" || gconditions.weather === "hail") bp = Math.floor(bp * 0.25);
+			if (gconditions.weather !== "desolateland" && gconditions.weather !== "sunnyday" && (!pokeA.item || pokeA.item.id !== "powerherb")) bp = Math.floor(bp * 0.5);
 			break;
 		case "hyperspacefury":
 			if (pokeA.template.species !== "Hoopa-Unbound") bp = 0;
@@ -593,6 +595,10 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		} else {
 			bp = Math.floor(bp * ((minhits + maxhits) / 2));
 		}
+	}
+
+	if (move.id in {skyattack: 1, skullbash: 1, razorwind: 1, meteorbeam: 1, iceburn: 1, freezeshock: 1} && (!pokeA.item || pokeA.item.id !== "powerherb")) {
+		bp = Math.floor(bp / 2);
 	}
 
 	if (pokeA.item) {

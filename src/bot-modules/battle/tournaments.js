@@ -65,6 +65,7 @@ exports.setup = function (App) {
 			if (canSendCommands(room)) {
 				const lastChallenges = JSON.stringify(tourData[room].challenges);
 				if (TournamentsManager.lastChallenges[room] === lastChallenges && Date.now() - TournamentsManager.lastRejection < 5000) {
+					tourData[room].isJoined = false;
 					return App.bot.sendTo(room, ['/tour leave']);
 				}
 				let format = Text.toId(tourData[room].teambuilderFormat || tourData[room].format);
@@ -81,6 +82,7 @@ exports.setup = function (App) {
 						}
 					} else {
 						// No team (deleted?)
+						tourData[room].isJoined = false;
 						cmds.push('/tour leave');
 					}
 				}
@@ -90,6 +92,7 @@ exports.setup = function (App) {
 			if (canSendCommands(room)) {
 				const lastChallenged = JSON.stringify(tourData[room].challenged);
 				if (TournamentsManager.lastChallenged[room] === lastChallenged && Date.now() - TournamentsManager.lastRejection < 5000) {
+					tourData[room].isJoined = false;
 					return App.bot.sendTo(room, ['/tour leave']);
 				}
 				let format = Text.toId(tourData[room].teambuilderFormat || tourData[room].format);
@@ -102,6 +105,7 @@ exports.setup = function (App) {
 						cmds.push('/tour acceptchallenge');
 					} else {
 						// No team (deleted?)
+						tourData[room].isJoined = false;
 						cmds.push('/tour leave');
 					}
 				}
@@ -117,6 +121,14 @@ exports.setup = function (App) {
 		if (spl[0] !== 'tournament') return;
 		if (!tourData[room]) tourData[room] = {};
 		switch (spl[1]) {
+			case "leave":
+			case "disqualify":
+				{
+					if (Text.toId(spl[2]) === Text.toId(App.bot.getBotNick())) {
+						tourData[room].isJoined = false;
+					}
+				}
+				break;
 			case 'update':
 				try {
 					let data = JSON.parse(spl[2]);

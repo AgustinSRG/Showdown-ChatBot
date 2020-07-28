@@ -15,13 +15,28 @@ exports.setup = function (Data) {
 	const BattleModule = {};
 	BattleModule.id = "singles-eff";
 
+	function getBestSpread(template) {
+		let stats = (template || {}).baseStats || {};
+
+		let hAtk = Math.max(stats.atk || 0, stats.spa || 0);
+		let hDef = Math.max(stats.def || 0, stats.spd || 0);
+
+		if (hAtk > hDef) {
+			return { atk: 252, spa: 252, spe: 252 };
+		} else if (hDef > hAtk) {
+			return { hp: 252, def: 120, spd: 120 };
+		} else {
+			return { hp: 252, spe: 252 };
+		}
+	}
+
 	function suposeActiveFoe(battle) {
 		let target = battle.foe.active[0];
 		let pokeB = new Pokemon(target.template, {
 			level: target.level,
 			gender: target.gender,
 			shiny: target.shiny,
-			evs: {},
+			evs: getBestSpread(target.template),
 		});
 		pokeB.hp = target.hp;
 		pokeB.status = target.status;
@@ -187,6 +202,14 @@ exports.setup = function (Data) {
 			volatiles: battle.self.active[0].volatiles,
 			boosts: battle.self.active[0].boosts,
 		});
+
+		let offTypes = pokeA.template.types.slice();
+		if (conditionsA.volatiles["typechange"] && conditionsA.volatiles["typechange"].length) offTypes = conditionsA.volatiles["typechange"].slice();
+		if (conditionsA.volatiles["typeadd"]) offTypes.push(conditionsA.volatiles["typeadd"]);
+		let defTypes = pokeB.template.types.slice();
+		if (conditionsB.volatiles["typechange"] && conditionsB.volatiles["typechange"].length) defTypes = conditionsB.volatiles["typechange"].slice();
+		if (conditionsB.volatiles["typeadd"]) defTypes.push(conditionsB.volatiles["typeadd"]);
+
 		for (let i = 0; i < decisions.length; i++) {
 			let des = decisions[i][0];
 			if (des.type !== "move") continue; // not a move
@@ -214,7 +237,7 @@ exports.setup = function (Data) {
 				res.unviable.push(decisions[i]);
 				continue;
 			}
-			if (move.target !== "self" && battle.gen >= 7 && pokeA.ability && pokeA.ability.id === "prankster" && pokeB.template.types.indexOf("Dark") >= 0) {
+			if (move.target !== "self" && battle.gen >= 7 && pokeA.ability && pokeA.ability.id === "prankster" && defTypes.indexOf("Dark") >= 0) {
 				res.unviable.push(decisions[i]);
 				continue;
 			}
@@ -612,13 +635,16 @@ exports.setup = function (Data) {
 				move = dmove;
 			}
 			if (move.category !== "Physical" && move.category !== "Special") continue; // Status move
-			let dmg = Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, battle.conditions, battle.gen).getMax();
+			let dmgData = Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, battle.conditions, battle.gen);
+			let dmg = dmgData.getMax();
+			let dmgMin = dmgData.getMin();
 			let hp = pokeB.hp;
 			if (dmg === 0 || move.id === "struggle") {
 				res.immune.push(decisions[i]);
 				continue;
 			}
 			let pc = dmg * 100 / hp;
+			let pcMin = dmgMin * 100 / hp;
 			battle.debug("Move: " + move.name + " | Damage = " + dmg + " | Percent: " + pc);
 			if (move.id === "fakeout") {
 				if (battle.self.active[0].helpers.sw === battle.turn || battle.self.active[0].helpers.sw === battle.turn - 1) {
@@ -647,7 +673,9 @@ exports.setup = function (Data) {
 				}
 			}
 			res.total++;
-			if (pc >= 100) {
+			if (pcMin >= 100) {
+				res.ohko.push(decisions[i]);
+			} else if (pc >= 100 && res.ohko.length === 0) {
 				res.ohko.push(decisions[i]);
 			} else if (pc >= 50) {
 				res.thko.push(decisions[i]);
