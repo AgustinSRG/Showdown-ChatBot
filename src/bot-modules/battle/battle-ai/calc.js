@@ -403,6 +403,11 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		case "return":
 			bp = Math.floor((pokeA.happiness * 10) / 25) || 1;
 			break;
+		case "steelroller":
+			if (!gconditions["electricterrain"] && !gconditions["grassyterrain"] && !gconditions["mistyterrain"] && !gconditions["psychicterrain"]) {
+				bp = 0;
+			}
+			break;
 		case "fling":
 			if (pokeA.item && pokeA.item.fling) bp = pokeA.item.fling.basePower || 0;
 			else bp = 0;
