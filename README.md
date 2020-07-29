@@ -5,6 +5,7 @@ Showdown ChatBot
 [![Dependency Status](https://david-dm.org/asanrom/Showdown-ChatBot.svg)](https://david-dm.org/asanrom/Showdown-ChatBot)
 [![devDependency Status](https://david-dm.org/asanrom/Showdown-ChatBot/dev-status.svg)](https://david-dm.org/asanrom/Showdown-ChatBot?type=dev)
 [![optionalDependency Status](https://david-dm.org/asanrom/Showdown-ChatBot/optional-status.svg)](https://david-dm.org/asanrom/Showdown-ChatBot?type=optional)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/asanrom/Showdown-ChatBot/blob/master/LICENSE)
 
 [Pokemon Showdown](https://github.com/Zarel/Pokemon-Showdown) bot written for [Node JS](http://nodejs.org/) with a toon of features often useful for chat rooms like automated moderation, blacklist, customizable help / information commands, games, tournament tools and chat logs. All of those features can be configured with a web control panel that does not require any programming knowledge to be used.
 
@@ -82,10 +83,3 @@ Contributing
 ------------
 
  - [Contributing guidelines](https://github.com/asanrom/Showdown-ChatBot/blob/master/CONTRIBUTING.md)
-
-Lisense
-------------
-
-[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://opensource.org/licenses/MIT)
-
-Showdown ChatBot is distributed under the terms of the [MIT License](https://github.com/asanrom/Showdown-ChatBot/blob/master/LICENSE).

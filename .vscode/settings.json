@@ -1,0 +1,7 @@
+{
+    "javascript.format.semicolons": "insert",
+    "files.exclude": {
+      "node_modules/**": true,
+      ".github/**": true
+		}
+}

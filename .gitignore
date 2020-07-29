@@ -16,6 +16,7 @@ npm-debug.log*
 # bat
 *.bat
 !runcmd.bat
+!runonwindows.bat
 
 # Runtime data
 pids

@@ -1,0 +1,12 @@
+{
+    "autorun": true,
+    "autokill": true,
+    "terminals": [
+        {
+            "name": "SHOWDOWN-BOT",
+            "description": "Terminal for building and testing",
+            "open": true,
+            "focus": true
+        }
+    ]
+}
