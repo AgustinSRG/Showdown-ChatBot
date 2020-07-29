@@ -65,8 +65,16 @@ exports.setup = function (App) {
 		if (!App.bot.rooms[room] || App.bot.rooms[room].type !== 'chat') return;
 		if (msg.substr(0, 5) === "/log ") {
 			ModerationMod.modBot.parseRaw(room, msg.substr(5));
+			ModerationMod.modBot.doHideText(room, msg.substr(5));
 		} else {
 			ModerationMod.modBot.parse(room, time, by, msg);
+		}
+	});
+
+	App.bot.on('chat', (room, time, msg) => {
+		if (!App.bot.rooms[room] || App.bot.rooms[room].type !== 'chat') return;
+		if (msg.substr(0, 5) === "/log ") {
+			ModerationMod.modBot.doHideText(room, msg.substr(5));
 		}
 	});
 

@@ -206,6 +206,26 @@ class ModeratorBot {
 		}
 	}
 
+	doHideText(room, raw) {
+		if (!this.modEnabled('hidetext', room)) return; // Not enabled
+		if (!this.botCanModerate(room)) return;
+
+		let muteregexp = /^(.+) was muted by (.+) for 7 minutes.(\s\(.*\))?$/g;
+		let hourmuteRegExp = /^(.+) was muted by (.+) for 1 hour.(\s\(.*\))?$/g;
+
+		let muteRes = muteregexp.exec(raw);
+		let hmRes = hourmuteRegExp.exec(raw);
+
+		let res = muteRes || hmRes;
+
+		if (res) {
+			let user = Text.toId(res[1]);
+			if (user) {
+				this.app.bot.sendTo(room, '/hidetext ' + user);
+			}
+		}
+	}
+
 	parseRaw(room, raw) {
 		let by = '', val = 0;
 		let indexwarn = raw.indexOf(" was warned by ");
