@@ -207,7 +207,7 @@ class ModeratorBot {
 	}
 
 	doHideText(room, raw) {
-		if (!this.modEnabled('hidetext', room)) return; // Not enabled
+		if (!this.modEnabled('hidetext', room) && !this.modEnabled('cleartext', room)) return; // Not enabled
 		if (!this.botCanModerate(room)) return;
 
 		let muteregexp = /^(.+) was muted by (.+) for 7 minutes.(\s\(.*\))?$/g;
@@ -221,7 +221,11 @@ class ModeratorBot {
 		if (res) {
 			let user = Text.toId(res[1]);
 			if (user) {
-				this.app.bot.sendTo(room, '/hidetext ' + user);
+				if (this.modEnabled('cleartext', room)) {
+					this.app.bot.sendTo(room, '/cleartext ' + user);
+				} else {
+					this.app.bot.sendTo(room, '/hidetext ' + user);
+				}
 			}
 		}
 	}
