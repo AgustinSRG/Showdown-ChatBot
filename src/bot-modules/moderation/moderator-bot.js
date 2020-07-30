@@ -210,20 +210,22 @@ class ModeratorBot {
 		if (!this.modEnabled('hidetext', room) && !this.modEnabled('cleartext', room)) return; // Not enabled
 		if (!this.botCanModerate(room)) return;
 
-		let muteregexp = /^(.+) was muted by (.+) for 7 minutes.(\s\(.*\))?$/g;
-		let hourmuteRegExp = /^(.+) was muted by (.+) for 1 hour.(\s\(.*\))?$/g;
+		let muteregexp = /^(.+) was muted by (.+) for 7 minutes\.(\s\(.*\))?$/g;
+		let hourmuteRegExp = /^(.+) was muted by (.+) for 1 hour\.(\s\(.*\))?$/g;
+		let banRegExp = /^(.+) was banned from (.+) by (.+)\.(\s\(.*\))?$/g;
 
 		let muteRes = muteregexp.exec(raw);
 		let hmRes = hourmuteRegExp.exec(raw);
+		let banRes = banRegExp.exec(raw);
 
-		let res = muteRes || hmRes;
+		let res = muteRes || hmRes || banRes;
 
 		if (res) {
 			let user = Text.toId(res[1]);
 			if (user) {
 				if (this.modEnabled('cleartext', room)) {
 					this.app.bot.sendTo(room, '/cleartext ' + user);
-				} else {
+				} else if (!banRes) {
 					this.app.bot.sendTo(room, '/hidetext ' + user);
 				}
 			}
