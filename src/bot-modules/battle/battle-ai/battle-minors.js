@@ -272,7 +272,7 @@ exports.setup = function (App, BattleData) {
 			let poke = this.getActive(args[1]);
 			let move = args[2];
 			let target = this.parsePokemonIdent(args[3]);
-			poke.prepareMove(move, target.slot);
+			poke.prepareMove(move, target ? target.slot : 0);
 		},
 
 		"-status": function (args, kwargs, isIntro) {
