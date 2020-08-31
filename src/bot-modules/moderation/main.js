@@ -66,7 +66,7 @@ exports.setup = function (App) {
 		if (msg.substr(0, 5) === "/log ") {
 			ModerationMod.modBot.parseRaw(room, msg.substr(5));
 			ModerationMod.modBot.doHideText(room, msg.substr(5));
-		} else {
+		} else if (msg.substr(0, 5) !== "/raw ") {
 			ModerationMod.modBot.parse(room, time, by, msg);
 		}
 	});
