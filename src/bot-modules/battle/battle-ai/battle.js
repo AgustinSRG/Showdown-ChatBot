@@ -114,7 +114,7 @@ exports.setup = function (App) {
 							}
 						}
 					}
-					str += "team " + team.join("");
+					str += "team " + team.join(",");
 					break;
 				case "move":
 					str += "move " + (decision[i].moveId + 1);
