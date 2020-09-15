@@ -330,6 +330,12 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		}
 	}
 
+	if (move.id === "aurawheel") {
+		if (pokeA.template.species !== "Morpeko-Hangry") {
+			moveType = "Dark";
+		}
+	}
+
 	let eff;
 	let defTypes = pokeB.template.types.slice();
 	if (conditionsB.volatiles["typechange"] && conditionsB.volatiles["typechange"].length) defTypes = conditionsB.volatiles["typechange"].slice();
@@ -355,7 +361,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		typesMux = 1; /* Hit neutral */
 	}
 
-	if (gen >= 3 && pokeB.ability && (!pokeA.ability || !(pokeA.ability.id in { "moldbreaker": 1, "turboblaze": 1, "teravolt": 1 }))) {
+	if (gen >= 3 && pokeB.ability && !move.ignoreAbility && (!pokeA.ability || !(pokeA.ability.id in { "moldbreaker": 1, "turboblaze": 1, "teravolt": 1 }))) {
 		switch (pokeB.ability.id) {
 			case "dryskin":
 			case "stormdrain":
@@ -385,7 +391,27 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			case "bulletproof":
 				if (move.flags && move.flags['bullet']) typesMux = 0;
 				break;
+			case "soundproof":
+				if (move.flags && move.flags['sound']) typesMux = 0;
+				break;
 		}
+	}
+
+	if (pokeB.item) {
+		switch (pokeB.item.id) {
+			case "airballoon":
+				if (moveType === "Ground" && !noLevitation) inmune = true;
+				break;
+		}
+	}
+
+	if (pokeB.isGrounded() || conditionsB.volatiles['smackdown'] || gconditions['gravity']) {
+		if (gconditions["psychicterrain"] && move.priority > 0) inmune = true;
+	}
+
+	if (gen < 3 || !pokeA.ability || pokeA.supressedAbility || !(pokeA.ability.id in { 'airlock': 1, 'cloudnine': 1 })) {
+		if (gconditions.weather === "desolateland" && move.type === "Water") inmune = true;
+		if (gconditions.weather === "primordialsea" && move.type === "Fire") inmune = true;
 	}
 
 	if (inmune || typesMux === 0) return new Damage(targetHP);
@@ -472,6 +498,13 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		if (move.id === "guardianofalola") return new Damage(targetHP, [Math.floor((statsB.hp * (pokeB.hp / 2)) / 100)]);
 		if (move.damage === "level") return new Damage(targetHP, [pokeA.level]);
 		if (typeof move.damage === "number") return new Damage(targetHP, [move.damage]);
+
+		if (move.ohko) {
+			if (pokeA.level < pokeB.level) return new Damage(targetHP);
+			if (gen >= 3 && pokeA.ability && pokeA.ability.id === "sturdy") return new Damage(targetHP);
+			return new Damage(targetHP, [targetHP]);
+		}
+
 		return new Damage(targetHP);
 	}
 
@@ -509,6 +542,9 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			break;
 		case "hyperspacefury":
 			if (pokeA.template.species !== "Hoopa-Unbound") bp = 0;
+			break;
+		case "aurawheel":
+			if (pokeA.template.species !== "Morpeko" && pokeA.template.species !== "Morpeko-Hangry") bp = 0;
 			break;
 		case "waterspout":
 		case "eruption":
@@ -574,7 +610,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		}
 	}
 
-	if (gen >= 3 && pokeB.ability && (!pokeA.ability || !(pokeA.ability.id in { "moldbreaker": 1, "turboblaze": 1, "teravolt": 1 }))) {
+	if (gen >= 3 && pokeB.ability && !move.ignoreAbility && (!pokeA.ability || !(pokeA.ability.id in { "moldbreaker": 1, "turboblaze": 1, "teravolt": 1 }))) {
 		switch (pokeB.ability.id) {
 			case "dryskin":
 				if (moveType === "Fire") bp = Math.floor(bp * 1.3);
@@ -613,14 +649,6 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 				break;
 			case "choicespecs":
 				if (atkStat === "spa") atk = Math.floor(atk * 1.5);
-				break;
-		}
-	}
-
-	if (pokeB.item) {
-		switch (pokeB.item.id) {
-			case "airballoon":
-				if (moveType === "Ground" && !noLevitation) bp = 0;
 				break;
 		}
 	}
