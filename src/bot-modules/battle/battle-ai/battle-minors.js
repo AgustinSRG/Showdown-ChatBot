@@ -464,11 +464,14 @@ exports.setup = function (App, BattleData) {
 				if (fromeffect.id) {
 					if (fromeffect.id === 'colorchange') {
 						poke.markAbility('Color Change');
+						poke.volatiles.typechange = (args[3] ? [args[3]] : true);
 					} else if (fromeffect.id === 'reflecttype') {
 						poke.volatiles.typechange = ofpoke.template.types.slice();
+					} else {
+						poke.volatiles.typechange = (args[3] ? [args[3]] : true);
 					}
 				} else {
-					poke.volatiles.typechange = args[3] ? [args[3]] : true;
+					poke.volatiles.typechange = (args[3] ? [args[3]] : true);
 				}
 				break;
 			case 'typeadd':
