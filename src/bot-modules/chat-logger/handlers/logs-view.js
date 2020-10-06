@@ -109,9 +109,9 @@ exports.setup = function (App) {
 		for (let i = 0; i < logs.length; i++) {
 			html += '<tr><td>' + logs[i].file + '</td><td>' + logs[i].size + ' KB</td><td>' + logs[i].date +
 			'</td><td><div align="center"><a href="/logs/raw/' + room + '/' + logs[i].file +
-			'" target="_blank"><button>View Log</button></a>&nbsp;&nbsp;' +
+			'" target="_blank" rel="noopener noreferrer"><button>View Log</button></a>&nbsp;&nbsp;' +
 			'<a href="/logs/html/' + room + '/' + logs[i].file +
-			'/get" target="_blank"><button>View HTML</button></a></div></td></tr>';
+			'/get" target="_blank" rel="noopener noreferrer"><button>View HTML</button></a></div></td></tr>';
 		}
 		html += '</table></blockquote>';
 		return html;

@@ -98,42 +98,42 @@ function parseMessage(str) {
 		}
 		// Insert http:// before URIs without a URI scheme specified.
 		var fulluri = uri.replace(/^([a-z]*[^a-z:])/g, 'http://$1');
-		return '<a href="' + fulluri + '" target="_blank">' + uri + '</a>';
+		return '<a href="' + fulluri + '" target="_blank" rel="noopener noreferrer">' + uri + '</a>';
 	});
 	// google [blah]
 	//   Google search for 'blah'
 	str = str.replace(/\bgoogle ?\[([^\]<]+)\]/ig, function (p0, p1) {
 		p1 = escapeHTML(encodeURIComponent(unescapeHTML(p1)));
 		return '<a href="http://www.google.com/search?ie=UTF-8&q=' + p1 +
-			'" target="_blank">' + p0 + '</a>';
+			'" target="_blank" rel="noopener noreferrer">' + p0 + '</a>';
 	});
 	// wiki [blah]
 	//   Search Wikipedia for 'blah' (and visit the article for 'blah' if it exists)
 	str = str.replace(/\bwiki ?\[([^\]<]+)\]/ig, function (p0, p1) {
 		p1 = escapeHTML(encodeURIComponent(unescapeHTML(p1)));
 		return '<a href="http://en.wikipedia.org/w/index.php?title=Special:Search&search=' +
-			p1 + '" target="_blank">' + p0 + '</a>';
+			p1 + '" target="_blank" rel="noopener noreferrer">' + p0 + '</a>';
 	});
 	// server issue #pullreq
 	//   Links to github Pokemon Showdown server pullreq number
 	str = str.replace(/\bserver issue ?#(\d+)/ig, function (p0, p1) {
 		p1 = escapeHTML(encodeURIComponent(unescapeHTML(p1)));
 		return '<a href="https://github.com/Zarel/Pokemon-Showdown/pull/' +
-			p1 + '" target="_blank">' + p0 + '</a>';
+			p1 + '" target="_blank" rel="noopener noreferrer">' + p0 + '</a>';
 	});
 	// client issue #pullreq
 	//   Links to github Pokemon Showdown client pullreq number
 	str = str.replace(/\bclient issue ?#(\d+)/ig, function (p0, p1) {
 		p1 = escapeHTML(encodeURIComponent(unescapeHTML(p1)));
 		return '<a href="https://github.com/Zarel/Pokemon-Showdown-Client/pull/' +
-			p1 + '" target="_blank">' + p0 + '</a>';
+			p1 + '" target="_blank" rel="noopener noreferrer">' + p0 + '</a>';
 	});
 	// [[blah]]
 	//   Short form of gl[blah]
 	str = str.replace(/\[\[([^< ](?:[^<`]*?[^< ])??)\]\]/ig, function (p0, p1) {
 		var q = escapeHTML(encodeURIComponent(unescapeHTML(p1)));
 		return '<a href="http://www.google.com/search?ie=UTF-8&btnI&q=' + q +
-			'" target="_blank">' + p1 + '</a>';
+			'" target="_blank" rel="noopener noreferrer">' + p1 + '</a>';
 	});	
 	// __italics__
 	str = str.replace(/\_\_([^< ](?:[^<]*?[^< ])??)\_\_(?![^<]*?<\/a)/g, '<i>$1</i>');
