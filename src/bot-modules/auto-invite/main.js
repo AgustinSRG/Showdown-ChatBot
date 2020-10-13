@@ -47,8 +47,8 @@ exports.setup = function (App) {
 				let parts = _message.split(':');
 				let rank = " ";
 				let usersList;
-				for (let i = 0; i < parts.length; i += 2) {
-					usersList = parts[i + 1].split(',');
+				for (let i = 0; i < parts.length - 1; i += 2) {
+					usersList = parts[i + 1].split("||||")[0].split(',');
 					if (parts[i].indexOf("(") > -1) rank = parts[i].substr(parts[i].indexOf("(") + 1, 1);
 					for (let f = 0; f < usersList.length; f++) {
 						auth[Text.toId(usersList[f])] = rank;
