@@ -109,7 +109,7 @@ exports.setup = function (App) {
 				let chosen = context.post[f];
 				if (chosen && chosen !== "default") {
 					try {
-						check(chosen in {"random": 1, "randommove": 1, "randomsw": 1, "ingame-nostatus": 1, "singles-eff": 1},
+						check(chosen in {"random": 1, "randommove": 1, "randomsw": 1, "ingame-nostatus": 1, "singles-eff": 1, "randommovenodyna": 1},
 							"Invalid algorithm: " + chosen);
 					} catch (err) {
 						error = err.message;
@@ -398,6 +398,7 @@ exports.setup = function (App) {
 			"default": "Use Default",
 			"random": "Random Decision",
 			"randommove": "Random moves, no unnecessary switches",
+			"randommovenodyna": "Random moves, no unnecessary switches, no dynamax",
 			"randomsw": "Random switches, no unnecessary moves",
 			"ingame-nostatus": "Go for the highest damage / No swithes (Standard)",
 			"singles-eff": "Improvement with status moves and switches (only for singles)",

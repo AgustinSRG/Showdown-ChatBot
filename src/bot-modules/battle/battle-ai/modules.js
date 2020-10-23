@@ -4,7 +4,7 @@
 
 'use strict';
 
-const modFiles = ['singles-eff.js', 'ingame-nostatus.js', 'random.js', 'random-move.js', 'random-switch.js'];
+const modFiles = ['singles-eff.js', 'ingame-nostatus.js', 'random.js', 'random-move.js', 'random-switch.js', 'random-move-no-dynamax.js'];
 
 const Path = require('path');
 const Text = Tools('text');

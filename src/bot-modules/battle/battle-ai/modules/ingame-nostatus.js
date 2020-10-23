@@ -131,6 +131,9 @@ exports.setup = function (Data) {
 
 	function evaluateSwitchDecision(battle, des) {
 		let final = -1000;
+		if (battle.self.active && battle.self.active[0] && battle.self.active[0].volatiles && battle.self.active[0].volatiles["perish1"]) {
+			final = 10000;
+		}
 		final += getSwitchAverage(battle, des.pokeId);
 		return final;
 	}
