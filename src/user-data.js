@@ -171,6 +171,9 @@ class UserDataManager {
 	}
 
 	updateLastSeen(user, type, room, detail, doNotChangeName) {
+		if (!room || room.substr(0, 7) === "battle-") {
+			return; // Ignore PM and battles
+		}
 		let id = Text.toId(user);
 		if (!id) return;
 		let entry = this.writeBuffer[id] || {};
