@@ -52,6 +52,7 @@ exports.setup = function (App) {
 					title: a.title,
 					date: date.toISOString(),
 					size: stats ? (Math.floor((stats.size / 1024) * 100) / 100) : 0,
+					state: a.state,
 					psim: App.server.getPokeSimLink("/" + a.id + "-" + a.token),
 				};
 			} catch (ex) {
@@ -132,6 +133,15 @@ exports.setup = function (App) {
 
 		if (spl[0] === "title") {
 			BattleLogMod.data.rooms[room].title = spl[1] || "";
+			BattleLogMod.saveData();
+		}
+
+		if (spl[0] === "win") {
+			if (Text.toId(spl[1]) === Text.toId(App.bot.getBotNick())) {
+				BattleLogMod.data.rooms[room].state = "WIN";
+			} else {
+				BattleLogMod.data.rooms[room].state = "LOSE";
+			}
 			BattleLogMod.saveData();
 		}
 

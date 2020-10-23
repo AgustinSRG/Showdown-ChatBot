@@ -63,10 +63,17 @@ exports.setup = function (App) {
 		htmlVars.log_files = '';
 		let logs = App.modules.battlelog.system.getFiles();
 		for (let i = 0; i < logs.length; i++) {
-			htmlVars.log_files += '<tr><td>' + logs[i].file + '</td><td>' + logs[i].size + ' KB</td><td>' + logs[i].date +
-			'</td><td>' + Text.escapeHTML(logs[i].title) + '</td><td style="text-align: center; white-space: nowrap;"><a href="/battlelog/' + logs[i].file +
+			htmlVars.log_files += '<tr>';
+			htmlVars.log_files += '<td>' + logs[i].file + '</td>';
+			htmlVars.log_files += '<td style="text-align: center; white-space: nowrap;"><a href="/battlelog/' + logs[i].file +
 			'" target="_blank" rel="noopener noreferrer"><button>View Log</button></a>&nbsp;|&nbsp;<a href="' + logs[i].psim +
-			'" target="_blank" rel="noopener noreferrer"><button>Recreate battle</button></a></td></tr>';
+			'" target="_blank" rel="noopener noreferrer"><button>Recreate battle</button></a></td>';
+			htmlVars.log_files += '<td>' + Text.escapeHTML(logs[i].title) + '</td>';
+			htmlVars.log_files += '<td>' + logs[i].date + '</td>';
+			htmlVars.log_files += '<td>' + logs[i].size + ' KB</td>';
+			htmlVars.log_files += '<td>' + Text.escapeHTML(logs[i].state || "-") + '</td>';
+			
+			htmlVars.log_files += '</tr>';
 		}
 
 		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Battle Log - Showdown ChatBot"});
