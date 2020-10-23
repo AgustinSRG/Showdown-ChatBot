@@ -7,9 +7,13 @@
 $0 = Command
 $1 = not found
 $2 = Maybe you mean
+$3 = Type
+$4 = for help
 
 %spanish
 
 $0 = El Comando
 $1 = no existe
 $2 = ¿Quizás quisiste decir
+$3 = Usa
+$4 = para ver la lista de comandos

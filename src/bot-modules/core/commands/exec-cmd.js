@@ -27,7 +27,7 @@ module.exports = {
 			if (!this.parser.execDyn(this)) {
 				let exactCmd = this.parser.searchCommand(this.cmd);
 				this.errorReply(this.mlt(0) + ' ' + Chat.italics(this.cmd) + ' ' + this.mlt(1) + '.' +
-					(exactCmd ? (' ' + this.mlt(2) + ' ' + Chat.italics(exactCmd) + '?') : ''));
+					(exactCmd ? (' ' + this.mlt(2) + ' ' + Chat.italics(exactCmd) + '?') : '') + " " + this.mlt(3) + " " + Chat.code(this.token + "help") + " " + this.mlt(4) + ".");
 			}
 		}
 	},
@@ -44,7 +44,7 @@ module.exports = {
 			if (!this.parser.execDyn(this)) {
 				let exactCmd = this.parser.searchCommand(this.cmd);
 				this.errorReply(this.mlt(0) + ' ' + Chat.italics(this.cmd) + ' ' + this.mlt(1) + '.' +
-					(exactCmd ? (' ' + this.mlt(2) + ' ' + Chat.italics(exactCmd) + '?') : ''));
+					(exactCmd ? (' ' + this.mlt(2) + ' ' + Chat.italics(exactCmd) + '?') : '') + " " + this.mlt(3) + " " + Chat.code(this.token + "help") + " " + this.mlt(4) + ".");
 			}
 		}
 	},

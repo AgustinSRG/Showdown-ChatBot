@@ -424,7 +424,15 @@ class CommandParser {
 					this.monitor.count(userid);
 					if (!this.data.exceptions[userid]) this.markPrivateCommand(userid, room);
 				} else {
-					this.execTriggers('after', context);
+					if (!this.execTriggers('after', context)) {
+						if (Text.toId(cmd)) {
+							context.cmd = "exec";
+							context.arg = cmd;
+							context.args = [cmd];
+							this.exec(context);
+							this.monitor.count(userid);
+						}
+					}
 				}
 			} else {
 				this.monitor.count(userid);
