@@ -501,7 +501,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 
 		if (move.ohko) {
 			if (pokeA.level < pokeB.level) return new Damage(targetHP);
-			if (gen >= 3 && pokeA.ability && pokeA.ability.id === "sturdy") return new Damage(targetHP);
+			if (gen >= 3 && pokeB.ability && pokeB.ability.id === "sturdy") return new Damage(targetHP);
 			if (conditionsB.volatiles['dynamax']) return new Damage(targetHP);
 			return new Damage(targetHP, [targetHP]);
 		}
