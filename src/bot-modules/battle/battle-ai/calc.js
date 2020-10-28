@@ -84,6 +84,9 @@ class Pokemon {
 				}
 			}
 		}
+		if (this.template && this.template.maxHP) {
+			res.hp = Math.min(this.template.maxHP, res.hp);
+		}
 		return res;
 	}
 }
@@ -103,7 +106,7 @@ class Conditions {
 }
 
 class Damage {
-	constructor(hp, rolls) {
+	constructor(hp, rolls, hasSturdy) {
 		this.rolls = rolls || [];
 		this.hp = hp || 0;
 		this.percents = [];
@@ -112,7 +115,14 @@ class Damage {
 				this.percents.push(100);
 				continue;
 			}
-			this.percents.push(this.rolls[i] * 100 / hp);
+
+			let roll = this.rolls[i];
+
+			if (hasSturdy) {
+				roll = Math.max(0, Math.min(roll, hp - 1));
+			}
+
+			this.percents.push(roll * 100 / hp);
 		}
 	}
 
@@ -684,16 +694,25 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 
 	/* Boosting */
 
-	if (conditionsA.boosts[atkStat]) {
+	let stoleBoosts = 0;
+
+	if (move.stealsBoosts) {
+		if (conditionsB.boosts[atkStat] && conditionsB.boosts[atkStat] > 0) {
+			stoleBoosts = conditionsB.boosts[atkStat];
+		}
+	}
+
+	if (conditionsA.boosts[atkStat] || stoleBoosts) {
+		let selfBoosts = conditionsA.boosts[atkStat] || 0;
 		if (!pokeB.ability || pokeB.ability.id !== "unaware") {
-			let muxOff = 1 + (0.5) * Math.abs(conditionsA.boosts[atkStat]);
-			if (conditionsA.boosts[atkStat] < 0) muxOff = 1 / muxOff;
+			let muxOff = 1 + (0.5) * Math.abs(selfBoosts + stoleBoosts);
+			if (selfBoosts + stoleBoosts < 0) muxOff = 1 / muxOff;
 			atk = Math.floor(atk * muxOff);
 		}
 	}
 
 	if (conditionsB.boosts[defStat]) {
-		if (!conditionsA.inmediate["crit"] && !move.willCrit && !move.ignoreDefensive && (!pokeA.ability || pokeA.ability.id !== "unaware")) {
+		if (!conditionsA.inmediate["crit"] && !move.willCrit && !move.ignoreDefensive && (!pokeA.ability || pokeA.ability.id !== "unaware") && !move.stealsBoosts) {
 			let muxDef = 1 + (0.5) * Math.abs(conditionsB.boosts[defStat]);
 			if (conditionsB.boosts[defStat] < 0) muxDef = 1 / muxDef;
 			def = Math.floor(def * muxDef);
@@ -751,5 +770,5 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	let dmg = (((((2 * pokeA.level / 5) + 2) * atk * bp / def) / 50) + 2) * typesMux * modifier;
 	if (bp === 0) dmg = 0;
 
-	return new Damage(targetHP, getRolls(dmg));
+	return new Damage(targetHP, getRolls(dmg), (gen >= 3 && pokeB.hp >= 100 && pokeB.ability && pokeB.ability.id === "sturdy"));
 };

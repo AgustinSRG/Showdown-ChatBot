@@ -127,7 +127,8 @@ exports.setup = function (App) {
 		}
 	};
 
-	BattleDataManager.getMaxPower = function (basePower, maxMove) {
+	BattleDataManager.getMaxPower = function (basePower, maxMove, isAlaredyMax) {
+		if (isAlaredyMax) return 1;
 		if (maxMove in { maxknuckle: 1, maxooze: 1 }) {
 			if (basePower >= 150) {
 				return 100;
