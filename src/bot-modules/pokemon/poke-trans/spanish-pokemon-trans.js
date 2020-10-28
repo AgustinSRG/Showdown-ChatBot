@@ -273,6 +273,14 @@ exports.translations.abilities = {
 	"steelyspirit": "Alma acerada",
 	"unseenfist": "Puño invisible",
 	"wanderingspirit": "Alma errante",
+	"asone": "Unidad ecuestre",
+	"asoneglastrier": "Unidad ecuestre (Glastrier)",
+	"asonespectrier": "Unidad ecuestre (Spectrier)",
+	"chillingneigh": "Relincho blanco",
+	"curiousmedicine": "Medicina extraña",
+	"dragonsmaw": "Mandíbula dragón",
+	"grimneigh": "Relincho negro",
+	"transistor": "Transistor",
 };
 
 /* Battle Items */
@@ -791,6 +799,7 @@ exports.translations.items = {
 	"utilityumbrella": "Parasol multiuso",
 	"waterstone": "Piedra agua",
 	"whippeddream": "Dulce de nata",
+	"galaricacuff": "Brazal galanuez",
 };
 
 /* Battle Moves */
@@ -1649,6 +1658,14 @@ exports.translations.moves = {
 	"visegrip": "Agarre",
 	"wickedblow": "Golpe oscuro",
 	"zippyzap": "Pikaturbo",
+	"astralbarrage": "Orbes espectro",
+	"dragonenergy": "Dracoenergía",
+	"eeriespell": "Conjuro funesto",
+	"fierywrath": "Furia candente",
+	"freezingglare": "Mirada heladora",
+	"glaciallance": "Lanza glacial",
+	"thundercage": "Electrojaula",
+	"thunderouskick": "Patada relámpago",
 };
 
 /* Natures */
@@ -2904,5 +2921,19 @@ exports.translations.pokemon = {
 	"snaelstrom": "Snaelstrom",
 	"equilibra": "Equilibra",
 	"astrolotl": "Astrolotl",
+	"articunogalar": "Articuno-Galar",
+	"zapdosgalar": "Zapdos-Galar",
+	"moltresgalar": "Moltres-Galar",
+	"slowkinggalar": "Slowking-Galar",
+	"regieleki": "Regieleki",
+	"regidrago": "Regidrago",
+	"glastrier": "Glastrier",
+	"spectrier": "Spectrier",
+	"calyrex": "Calyrex",
+	"calyrexice": "Calyrex jinete glacial",
+	"calyrexshadow": "Calyrex jinete espectral",
+	"justyke": "Justyke",
+	"solotl": "Solotl",
+	"miasmaw": "Miasmaw",
 };
 
