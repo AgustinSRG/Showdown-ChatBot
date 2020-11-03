@@ -50,7 +50,7 @@ exports.setup = function (Data) {
 			let poke = new Pokemon(template, {
 				level: pokeView.level,
 				gender: pokeView.gender,
-				evs: {hp: 192, def: 124, spd: 124},
+				evs: { hp: 192, def: 124, spd: 124 },
 			});
 			if (Text.toId(battle.tier || "").indexOf("challengecup") >= 0) poke.happiness = 100;
 			if (template.abilities) poke.ability = Data.getAbility(template.abilities[0], battle.gen);
@@ -103,7 +103,7 @@ exports.setup = function (Data) {
 					level: targets[j].level,
 					gender: targets[j].gender,
 					shiny: targets[j].shiny,
-					evs: {hp: 192, def: 124, spd: 124},
+					evs: { hp: 192, def: 124, spd: 124 },
 				});
 				pokeB.hp = targets[j].hp;
 				pokeB.status = targets[j].status;
@@ -197,7 +197,7 @@ exports.setup = function (Data) {
 			if (move.flags && move.flags['charge'] && targets[i].moves) {
 				let hasDangerousMove = false;
 				for (let dangerousMove of targets[i].moves) {
-					if (dangerousMove.id in {'protect': 1, 'detect': 1, 'kingsshield': 1, 'spikyshield': 1, 'dig': 1, 'fly': 1}) {
+					if (dangerousMove.id in { 'protect': 1, 'detect': 1, 'kingsshield': 1, 'spikyshield': 1, 'dig': 1, 'fly': 1 }) {
 						hasDangerousMove = true;
 						break;
 					}
@@ -213,7 +213,7 @@ exports.setup = function (Data) {
 				level: targets[i].level,
 				gender: targets[i].gender,
 				shiny: targets[i].shiny,
-				evs: {hp: 192, def: 124, spd: 124},
+				evs: { hp: 192, def: 124, spd: 124 },
 			});
 			pokeB.hp = targets[i].hp;
 			pokeB.status = targets[i].status;
@@ -230,9 +230,15 @@ exports.setup = function (Data) {
 				}
 			}
 			let dmg = Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, battle.conditions, battle.gen);
-			//debug("DMG [" + pokeA.species + ", " + pokeB.species + ", " + move.name + "] = " + dmg.getMax());
-			if (DoubleTurnMoves.indexOf(move.id) >= 0) final += dmg.getMax() * 0.5;
-			else final += dmg.getMax();
+			dmg = dmg.getMax();
+			if (move.ohko) {
+				if (!pokeA.ability || !(pokeA.ability.id in { 'noguard': 1 })) {
+					dmg = dmg * (0.3 * (pokeA.level / (pokeB.level || 100)));
+				}
+			}
+			//debug("DMG [" + pokeA.species + ", " + pokeB.species + ", " + move.name + "] = " + dmg);
+			if (DoubleTurnMoves.indexOf(move.id) >= 0) final += dmg * 0.5;
+			else final += dmg;
 		}
 		if (!final) return -100000; // Inmmune
 		return 100000 + final;
@@ -261,7 +267,7 @@ exports.setup = function (Data) {
 			for (let i = 0; i < decisions[d].length; i++) {
 				p += getDecisionValue(battle, decisions, decisions[d], decisions[d][i], i);
 			}
-			dTable.push({des: d, val: p});
+			dTable.push({ des: d, val: p });
 			if (maxP === null || maxP < p) maxP = p;
 		}
 		let chosen = [];
