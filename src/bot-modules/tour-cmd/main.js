@@ -56,11 +56,10 @@ exports.setup = function (App) {
 	function parseErrorMessage(room, spl) {
 		if (!tournaments[room] || tourData[room]) return;
 		let msg = spl.slice(1).join('|');
-		console.log("Error: " + msg);
 		/* Specific error messages, may be updated frecuently */
 		if (msg.indexOf("Tournaments are disabled in this room") === 0) {
 			App.bot.sendTo(room, App.multilang.mlt(Lang_File_Err, getLanguage(room), 0));
-		} else if (msg === "/tournament - Access denied.") {
+		} else if (msg === "/tournament - Access denied." || msg === "/tournament create - Access denied.") {
 			App.bot.sendTo(room, App.multilang.mlt(Lang_File_Err, getLanguage(room), 1));
 		} else if (msg === "The server is restarting soon, so a tournament cannot be created.") {
 			App.bot.sendTo(room, App.multilang.mlt(Lang_File_Err, getLanguage(room), 2));
