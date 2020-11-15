@@ -621,7 +621,17 @@ class Bot {
 			this.events.emit('roomleave', room);
 			break;
 		case 'noinit':
-			this.events.emit('roomjoinfailure', room, splittedLine[1], splittedLine[2]);
+			switch (splittedLine[1]) {
+				case "rename":
+					this.rooms[room].id = Text.toRoomid(splittedLine[2]);
+					this.rooms[room].title = splittedLine[3] || "";
+					this.rooms[this.rooms[room].id] = this.rooms[room];
+					delete this.rooms[room];
+					this.events.emit('roomrename', room, Text.toRoomid(splittedLine[2]));
+					break;
+				default:
+					this.events.emit('roomjoinfailure', room, splittedLine[1], splittedLine[2]);
+			}
 			break;
 		case 'title':
 			if (this.rooms[room]) {

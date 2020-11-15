@@ -4,6 +4,7 @@
 
 'use strict';
 
+const Text = Tools('text');
 const Path = require('path');
 
 exports.setup = function (App) {
@@ -59,6 +60,15 @@ exports.setup = function (App) {
 					} catch (e) {}
 					delete this.battles[room];
 					this.battlesCount--;
+				}
+			} else if (spl[0] === 'noinit' && spl[1] === 'rename') {
+				if (this.battles[room]) {
+					const newID = Text.toRoomid(spl[2]);
+					this.battles[newID] = this.battles[room];
+					delete this.battles[room];
+
+					this.battles[newID].id = newID;
+					this.battles[newID].title = spl[3] || "";
 				}
 			}
 		},

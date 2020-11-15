@@ -131,6 +131,24 @@ exports.setup = function (App) {
 			return;
 		}
 
+		if (spl[0] === "noinit" && spl[1] === "rename") {
+			const newID = Text.toRoomid(spl[2]);
+			BattleLogMod.data.rooms[newID] = BattleLogMod.data.rooms[room];
+			BattleLogMod.data.rooms[newID].id = newID;
+			BattleLogMod.data.rooms[newID].title = spl[3] || "";
+			delete BattleLogMod.data.rooms[room];
+
+			BattleLogMod.active[room].close();
+			delete BattleLogMod.active[room];
+
+			FileSystem.renameSync(Path.resolve(BattleLogMod.path, room + ".log"), Path.resolve(BattleLogMod.path, newID + ".log"));
+
+			BattleLogMod.active[newID] = FileSystem.createWriteStream(Path.resolve(BattleLogMod.path, newID + ".log"), { flags: 'a+' });
+
+			BattleLogMod.saveData();
+			return;
+		}
+
 		if (spl[0] === "title") {
 			BattleLogMod.data.rooms[room].title = spl[1] || "";
 			BattleLogMod.saveData();
