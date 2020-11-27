@@ -61,6 +61,9 @@ exports.setup = function (App) {
 				}
 			}
 		}
+		if (!tourData[room].isJoined || !tourData[room].isStarted) {
+			return;
+		}
 		if (tourData[room].challenges && tourData[room].challenges.length) {
 			if (canSendCommands(room)) {
 				const lastChallenges = JSON.stringify(tourData[room].challenges);
