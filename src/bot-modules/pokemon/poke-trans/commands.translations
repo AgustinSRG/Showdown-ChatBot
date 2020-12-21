@@ -22,6 +22,7 @@ $abilities = Ability
 $items = Item
 $moves = Move
 $natures = Nature
+$legacy = Legacy
 
 %spanish
 
@@ -43,3 +44,4 @@ $abilities = Habilidad
 $items = Objeto
 $moves = Movimiento
 $natures = Naturaleza
+$legacy = Antiguas generaciones

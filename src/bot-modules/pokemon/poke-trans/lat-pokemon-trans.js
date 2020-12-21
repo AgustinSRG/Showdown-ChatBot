@@ -2937,3 +2937,4 @@ exports.translations.pokemon = {
 	"miasmaw": "Miasmaw",
 };
 
+exports.translations.legacy = {};

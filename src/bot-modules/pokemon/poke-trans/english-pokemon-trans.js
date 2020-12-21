@@ -2937,3 +2937,24 @@ exports.translations.pokemon = {
 	"miasmaw": "Miasmaw",
 };
 
+/* Legacy Translation */
+
+exports.translations.legacy = {
+	"poisonsting": "Poison Sting",
+	"seismictoss": "Seismic Toss",
+	"mirrormove": "Mirror Move",
+	"barrage": "Barrage",
+	"rollout": "Rollout",
+	"falseswipe": "False Swipe",
+	"imprison": "Imprison",
+	"poisonfang": "Poison Fang",
+	"bulletseed": "Bullet Seed",
+	"powerswap": "Power Swap",
+	"guardswap": "Guard Swap",
+	"gigaimpact": "Giga Impact",
+	"gunkshot": "Gunk Shot",
+	"allyswitch": "Ally Switch",
+	"speedswap": "Speed Swap",
+	"aftermath": "Aftermath",
+	"multiscale": "Multiscale",
+};
