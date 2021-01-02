@@ -2957,4 +2957,8 @@ exports.translations.legacy = {
 	"speedswap": "Cambia Velocidad",
 	"aftermath": "Resquicio",
 	"multiscale": "Compensación",
+	"counter": "Contador",
+	"slam": "Portazo",
+	"return": "Retroceso",
+	"wrap": "Repetición",
 };

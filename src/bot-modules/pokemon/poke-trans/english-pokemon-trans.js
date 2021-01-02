@@ -2957,4 +2957,8 @@ exports.translations.legacy = {
 	"speedswap": "Speed Swap",
 	"aftermath": "Aftermath",
 	"multiscale": "Multiscale",
+	"counter": "Counter",
+	"slam": "Slam",
+	"return": "Return",
+	"wrap": "Wrap",
 };
