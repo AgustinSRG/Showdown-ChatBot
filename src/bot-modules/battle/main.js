@@ -48,7 +48,7 @@ exports.setup = function (App) {
 		switch (spl[0]) {
 			case 'popup':
 				if ((spl[1] + "").toLowerCase().startsWith("your team was rejected")) {
-					App.log("[Battle Teams] Warning: Team rejected. Given reason: " + spl[1]);
+					App.log("[Battle Teams] Warning: Team rejected. Given reason: " + spl.slice(1).join("|"));
 					TourManager.reportRejection();
 				}
 				break;

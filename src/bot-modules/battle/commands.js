@@ -57,14 +57,16 @@ module.exports = {
 		if (teamId) {
 			let team = mod.TeamBuilder.dynTeams[teamId];
 			if (team) {
-				cmds.push('|/useteam ' + team.packed);
+				cmds.push('|/utm ' + team.packed);
 			} else {
 				return this.errorReply(this.mlt(3) + " " + Chat.italics(teamId) + " " + this.mlt(4));
 			}
 		} else {
 			let team = mod.TeamBuilder.getTeam(format);
 			if (team) {
-				cmds.push('|/useteam ' + team);
+				cmds.push('|/utm ' + team);
+			} else {
+				cmds.push('|/utm null');
 			}
 		}
 		cmds.push('|/challenge ' + user + ", " + format);
@@ -104,7 +106,9 @@ module.exports = {
 		let cmds = [];
 		let team = mod.TeamBuilder.getTeam(format);
 		if (team) {
-			cmds.push('|/useteam ' + team);
+			cmds.push('|/utm ' + team);
+		} else {
+			cmds.push('|/utm null');
 		}
 		cmds.push('|/search ' + format);
 		this.send(cmds);

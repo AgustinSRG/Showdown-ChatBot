@@ -55,7 +55,9 @@ exports.setup = function (App) {
 
 					let team = mod.TeamBuilder.getTeam(format);
 					if (team) {
-						cmds.push('/useteam ' + team);
+						cmds.push('/utm ' + team);
+					} else {
+						cmds.push('/utm null');
 					}
 					cmds.push('/accept ' + i);
 					nBattles++;

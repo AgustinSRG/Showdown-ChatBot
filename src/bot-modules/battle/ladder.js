@@ -56,7 +56,9 @@ exports.setup = function (App) {
 			let cmds = [];
 			let team = mod.TeamBuilder.getTeam(format);
 			if (team) {
-				cmds.push('|/useteam ' + team);
+				cmds.push('|/utm ' + team);
+			} else {
+				cmds.push('|/utm null');
 			}
 			cmds.push('|/search ' + format);
 			App.bot.send(cmds);

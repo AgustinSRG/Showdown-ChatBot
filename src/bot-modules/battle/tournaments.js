@@ -72,13 +72,14 @@ exports.setup = function (App) {
 					let format = Text.toId(tourData[room].teambuilderFormat || tourData[room].format);
 					let team = mod.TeamBuilder.getTeam(format);
 					if (team) {
-						cmds.push('/useteam ' + team);
+						cmds.push('/utm ' + team);
 						for (let i = 0; i < tourData[room].challenges.length; i++) {
 							cmds.push('/tour challenge ' + tourData[room].challenges[i]);
 						}
 					} else {
 						if (App.bot.formats[format] && !App.bot.formats[format].team) {
 							for (let i = 0; i < tourData[room].challenges.length; i++) {
+								cmds.push('/utm null');
 								cmds.push('/tour challenge ' + tourData[room].challenges[i]);
 							}
 						} else {
@@ -99,10 +100,11 @@ exports.setup = function (App) {
 					let format = Text.toId(tourData[room].teambuilderFormat || tourData[room].format);
 					let team = mod.TeamBuilder.getTeam(format);
 					if (team) {
-						cmds.push('/useteam ' + team);
+						cmds.push('/utm ' + team);
 						cmds.push('/tour acceptchallenge');
 					} else {
 						if (App.bot.formats[format] && !App.bot.formats[format].team) {
+							cmds.push('/utm null');
 							cmds.push('/tour acceptchallenge');
 						} else {
 							// No team (deleted?)

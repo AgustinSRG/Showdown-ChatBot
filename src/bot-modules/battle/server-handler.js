@@ -168,11 +168,13 @@ exports.setup = function (App) {
 			if (!error) {
 				let cmds = [];
 				if (team) {
-					cmds.push('|/useteam ' + mod.TeamBuilder.dynTeams[team].packed);
+					cmds.push('|/utm ' + mod.TeamBuilder.dynTeams[team].packed);
 				} else {
 					let randTeam = mod.TeamBuilder.getTeam(format);
 					if (randTeam) {
-						cmds.push('|/useteam ' + randTeam);
+						cmds.push('|/utm ' + randTeam);
+					} else {
+						cmds.push('|/utm null');
 					}
 				}
 				cmds.push('|/challenge ' + user + ", " + format);
