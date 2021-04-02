@@ -36,6 +36,7 @@ module.exports = {
 	},
 
 	rpoke: 'poke',
+	randpoke: 'poke',
 	poke: function (App) {
 		this.setLangFile(Lang_File);
 		let pokedex;
@@ -47,6 +48,110 @@ module.exports = {
 		}
 		let pokes = Object.keys(pokedex);
 		let chosen = pokedex[pokes[Math.floor(Math.random() * pokes.length)]].name;
+		let roomData = App.bot.rooms[this.room];
+		let botid = Text.toId(App.bot.getBotNick());
+		if (this.can('random') && roomData && roomData.users[botid] && this.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'voice')) {
+			this.send('!dt ' + chosen, this.room);
+		} else {
+			this.pmReply(Text.stripCommands(chosen));
+		}
+	},
+
+	randmove: 'randommove',
+	randommove: function (App) {
+		this.setLangFile(Lang_File);
+		let moves;
+		try {
+			moves = App.data.getMoves();
+		} catch (err) {
+			App.reportCrash(err);
+			return this.errorReply(this.mlt('error'));
+		}
+		let movesKeys = Object.keys(moves);
+		let chosen = moves[movesKeys[Math.floor(Math.random() * movesKeys.length)]].name;
+		let roomData = App.bot.rooms[this.room];
+		let botid = Text.toId(App.bot.getBotNick());
+		if (this.can('random') && roomData && roomData.users[botid] && this.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'voice')) {
+			this.send('!dt ' + chosen, this.room);
+		} else {
+			this.pmReply(Text.stripCommands(chosen));
+		}
+	},
+
+	randitem: 'randomitem',
+	randomitem: function (App) {
+		this.setLangFile(Lang_File);
+		let items;
+		try {
+			items = App.data.getItems();
+		} catch (err) {
+			App.reportCrash(err);
+			return this.errorReply(this.mlt('error'));
+		}
+		let itemsKeys = Object.keys(items);
+		let chosen = items[itemsKeys[Math.floor(Math.random() * itemsKeys.length)]].name;
+		let roomData = App.bot.rooms[this.room];
+		let botid = Text.toId(App.bot.getBotNick());
+		if (this.can('random') && roomData && roomData.users[botid] && this.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'voice')) {
+			this.send('!dt ' + chosen, this.room);
+		} else {
+			this.pmReply(Text.stripCommands(chosen));
+		}
+	},
+
+	randability: 'randomability',
+	randomability: function (App) {
+		this.setLangFile(Lang_File);
+		let abilities;
+		try {
+			abilities = App.data.getAbilities();
+		} catch (err) {
+			App.reportCrash(err);
+			return this.errorReply(this.mlt('error'));
+		}
+		let abilityKeys = Object.keys(abilities);
+		let chosen = abilities[abilityKeys[Math.floor(Math.random() * abilityKeys.length)]].name;
+		let roomData = App.bot.rooms[this.room];
+		let botid = Text.toId(App.bot.getBotNick());
+		if (this.can('random') && roomData && roomData.users[botid] && this.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'voice')) {
+			this.send('!dt ' + chosen, this.room);
+		} else {
+			this.pmReply(Text.stripCommands(chosen));
+		}
+	},
+
+	randnature: 'randomnature',
+	randomnature: function (App) {
+		this.setLangFile(Lang_File);
+		const natures = {
+			"adamant": "Adamant",
+			"bashful": "Bashful",
+			"bold": "Bold",
+			"brave": "Brave",
+			"calm": "Calm",
+			"careful": "Careful",
+			"docile": "Docile",
+			"gentle": "Gentle",
+			"hardy": "Hardy",
+			"hasty": "Hasty",
+			"impish": "Impish",
+			"jolly": "Jolly",
+			"lax": "Lax",
+			"lonely": "Lonely",
+			"mild": "Mild",
+			"modest": "Modest",
+			"naive": "Naive",
+			"naughty": "Naughty",
+			"quiet": "Quiet",
+			"quirky": "Quirky",
+			"rash": "Rash",
+			"relaxed": "Relaxed",
+			"sassy": "Sassy",
+			"serious": "Serious",
+			"timid": "Timid",
+		};
+		let natureKeys = Object.keys(natures);
+		let chosen = natures[natureKeys[Math.floor(Math.random() * natureKeys.length)]];
 		let roomData = App.bot.rooms[this.room];
 		let botid = Text.toId(App.bot.getBotNick());
 		if (this.can('random') && roomData && roomData.users[botid] && this.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'voice')) {
