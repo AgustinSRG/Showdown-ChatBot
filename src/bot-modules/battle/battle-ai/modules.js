@@ -4,7 +4,7 @@
 
 'use strict';
 
-const modFiles = ['singles-eff.js', 'ingame-nostatus.js', 'random.js', 'random-move.js', 'random-switch.js', 'random-move-no-dynamax.js'];
+const modFiles = ['singles-eff.js', 'ingame-nostatus.js', 'free-for-all-simple.js', 'random.js', 'random-move.js', 'random-switch.js', 'random-move-no-dynamax.js'];
 
 const Path = require('path');
 const Text = Tools('text');
@@ -45,7 +45,7 @@ exports.setup = function (App, BattleData) {
 
 		/* Module decision by default */
 
-		if (tier in {'gen7challengecup1v1': 1, 'challengecup1v1': 1, '1v1': 1}) {
+		if (tier in { 'gen7challengecup1v1': 1, 'challengecup1v1': 1, '1v1': 1 }) {
 			if (modules["ingame-nostatus"]) {
 				battle.debug("Battle module [" + battle.id + "] - Using ingame-nostatus");
 				return modules["ingame-nostatus"];
@@ -59,9 +59,14 @@ exports.setup = function (App, BattleData) {
 			}
 		}
 
-		if (modules["ingame-nostatus"]) {
+		if (modules["ingame-nostatus"] && battle.gametype in { 'singles': 1, 'doubles': 1, 'triples': 1 }) {
 			battle.debug("Battle module [" + battle.id + "] - Using ingame-nostatus");
 			return modules["ingame-nostatus"];
+		}
+
+		if (modules["free-for-all-simple"] && battle.gametype in { 'freeforall': 1 }) {
+			battle.debug("Battle module [" + battle.id + "] - Using free-for-all-simple");
+			return modules["free-for-all-simple"];
 		}
 
 		/* Random, no module designed */

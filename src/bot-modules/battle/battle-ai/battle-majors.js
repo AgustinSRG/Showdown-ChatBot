@@ -58,7 +58,7 @@ exports.setup = function (App, BattleData) {
 			this.gametype = args[1];
 			this.conditions["gametype"] = args[1];
 			switch (args[1]) {
-			default:
+			case "singles":
 				this.players.p1.active = [null];
 				this.players.p2.active = [null];
 				break;
@@ -71,6 +71,13 @@ exports.setup = function (App, BattleData) {
 				this.players.p1.active = [null, null, null];
 				this.players.p2.active = [null, null, null];
 				break;
+			case 'freeforall':
+				for (let id in this.players) {
+					this.players[id].active = [null, null];
+				}
+				break;
+			default:
+				this.send("Notice: this gametype is not supported by this bot. The descision engine may be unable to progress in the battle.");
 			}
 		},
 
@@ -219,6 +226,9 @@ exports.setup = function (App, BattleData) {
 			let active = this.players[p].active[slot];
 			if (!active) {
 				/* Forced switch */
+				while (this.players[p].active.length <= slot) {
+					this.players[p].active.push(null);
+				}
 				this.players[p].active[slot] = poke;
 			} else {
 				if (!health) {

@@ -29,8 +29,13 @@ exports.setup = function (App) {
 			this.id = id;
 			this.title = "";
 			this.players = {
+				// 1v1 classic
 				p1: new Player("p1"),
 				p2: new Player("p2"),
+
+				// Free-for-all
+				p3: new Player("p3"),
+				p4: new Player("p4"),
 			};
 			this.users = {};
 
