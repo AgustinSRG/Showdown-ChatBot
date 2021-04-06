@@ -27,6 +27,8 @@ exports.setup = function (Data) {
 	const BattleModule = {};
 	BattleModule.id = "ingame-nostatus";
 
+	BattleModule.gametypes = ["singles", "doubles", "triples"];
+
 	/* Bad moves for 1v1 */
 	const BadMoves = ['focuspunch', 'explosion', 'selfdestruct', 'lastresort', 'futuresight', 'firstimpression', 'synchronoise'];
 
@@ -129,9 +131,9 @@ exports.setup = function (Data) {
 		return final / p.moves.length;
 	}
 
-	function evaluateSwitchDecision(battle, des) {
+	function evaluateSwitchDecision(battle, des, act) {
 		let final = -1000;
-		if (battle.self.active && battle.self.active[0] && battle.self.active[0].volatiles && battle.self.active[0].volatiles["perish1"]) {
+		if (battle.self.active && battle.self.active[act] && battle.self.active[act].volatiles && battle.self.active[act].volatiles["perish1"]) {
 			final = 10000;
 		}
 		final += getSwitchAverage(battle, des.pokeId);
@@ -252,7 +254,7 @@ exports.setup = function (Data) {
 		} else if (des.type === "move") {
 			return evaluateMoveDecision(battle, desEnv, des, act);
 		} else if (des.type === "switch") {
-			return evaluateSwitchDecision(battle, des);
+			return evaluateSwitchDecision(battle, des, act);
 		} else {
 			return -1000; // Pass, Shift
 		}

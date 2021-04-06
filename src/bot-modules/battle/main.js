@@ -5,6 +5,7 @@
 'use strict';
 
 const Path = require('path');
+const Text = Tools('text');
 
 exports.setup = function (App) {
 	if (!App.config.modules.battle) {
@@ -42,6 +43,10 @@ exports.setup = function (App) {
 		BattleBot.init();
 		TourManager.clearData();
 		ChallManager.clean();
+	});
+
+	App.bot.on('pm', (by, msg) => {
+		ChallManager.parsePM(Text.toId(by), msg);
 	});
 
 	App.bot.on('line', (room, line, spl, isIntro) => {

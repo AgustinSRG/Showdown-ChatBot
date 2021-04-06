@@ -15,6 +15,8 @@ exports.setup = function (Data) {
 	const BattleModule = {};
 	BattleModule.id = "singles-eff";
 
+	BattleModule.gametypes = ["singles"];
+
 	function getBestSpread(template) {
 		let stats = (template || {}).baseStats || {};
 

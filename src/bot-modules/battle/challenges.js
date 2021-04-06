@@ -27,6 +27,37 @@ exports.setup = function (App) {
 		return false;
 	}
 
+	ChallManager.parsePM = function (from, message) {
+		// Parse invites
+		let mod = App.modules.battle.system;
+		if (message.indexOf("/uhtml battleinvite") === 0) {
+			let testEXP = (/\/acceptbattle\sbattle-[a-z0-9-]+/gi).exec(message);
+			let battleRoom = "";
+			if (testEXP) {
+				testEXP = testEXP[0];
+				if (testEXP) {
+					battleRoom = (testEXP.trim().split(" ")[1] + "").trim();
+				}
+			}
+
+			let nBattles = Object.keys(mod.BattleBot.battles).length;
+
+			if (battleRoom) {
+				if (canChallenge(from, nBattles)) {
+					App.bot.sendTo('', ['/acceptbattle ' + battleRoom + ", " + from]);
+					if (App.config.debug) {
+						App.log("acepted battle: " + from + " | " + message);
+					}
+				} else {
+					App.bot.sendTo('', [
+						'/rejectbattle ' + battleRoom + ", " + from,
+						'/pm ' + from + "," + App.multilang.mlt(Lang_File, getLanguage("default"), "busy").replace("#BN", "" + nBattles)
+					]);
+				}
+			}
+		}
+	};
+
 	ChallManager.parse = function (room, message, isIntro, spl) {
 		let mod = App.modules.battle.system;
 		if (spl[0] !== 'updatechallenges') return;

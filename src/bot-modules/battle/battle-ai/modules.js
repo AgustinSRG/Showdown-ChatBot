@@ -33,19 +33,19 @@ exports.setup = function (App, BattleData) {
 
 		if (App.config.modules.battle.battlemods[tier]) {
 			let modid = App.config.modules.battle.battlemods[tier];
-			if (battle.gametype === "singles" || modid !== "singles-eff") {
-				if (modules[modid]) {
+			if (modules[modid]) {
+				if (!modules[modid].gametypes || modules[modid].gametypes.indexOf(battle.gametype) !== -1) {
 					battle.debug("Battle module [" + battle.id + "] - Using " + modid + " (user configuration)");
 					return modules[modid];
+				} else {
+					battle.debug("Battle module [" + battle.id + "] - Incompatible (user configuration)");
 				}
-			} else {
-				battle.debug("Battle module [" + battle.id + "] - Incompatible (user configuration)");
 			}
 		}
 
 		/* Module decision by default */
 
-		if (tier in { 'gen7challengecup1v1': 1, 'challengecup1v1': 1, '1v1': 1 }) {
+		if (tier in { 'gen8challengecup1v1': 1, 'challengecup1v1': 1, '1v1': 1 }) {
 			if (modules["ingame-nostatus"]) {
 				battle.debug("Battle module [" + battle.id + "] - Using ingame-nostatus");
 				return modules["ingame-nostatus"];

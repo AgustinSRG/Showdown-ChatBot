@@ -77,7 +77,7 @@ exports.setup = function (App, BattleData) {
 				}
 				break;
 			default:
-				this.send("Notice: this gametype is not supported by this bot. The descision engine may be unable to progress in the battle.");
+				App.log("Unknown gametype: " + args[1] + " / Battle: " + this.id);
 			}
 		},
 

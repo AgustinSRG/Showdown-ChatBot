@@ -47,6 +47,15 @@ function getTargets(battle) {
 	return res;
 }
 
+function findAnyNotNull(arr) {
+	for (let el of arr) {
+		if (el) {
+			return el;
+		}
+	}
+	return null;
+}
+
 function getSpecificTarget(battle, target) {
 	if (target < 0) {
 		const players = getAdjacentPlayers(battle);
@@ -99,6 +108,8 @@ function getAdjacentPlayers(battle) {
 exports.setup = function (Data) {
 	const BattleModule = {};
 	BattleModule.id = "free-for-all-simple";
+
+	BattleModule.gametypes = ["freeforall"];
 
 	/* Bad moves for 1v1 */
 	const BadMoves = ['focuspunch', 'explosion', 'selfdestruct', 'lastresort', 'futuresight', 'firstimpression', 'synchronoise'];
@@ -209,7 +220,7 @@ exports.setup = function (Data) {
 
 	function evaluateSwitchDecision(battle, des) {
 		let final = -1000;
-		if (battle.self.active && battle.self.active[0] && battle.self.active[0].volatiles && battle.self.active[0].volatiles["perish1"]) {
+		if (battle.self.active && findAnyNotNull(battle.self.active) && findAnyNotNull(battle.self.active).volatiles && findAnyNotNull(battle.self.active).volatiles["perish1"]) {
 			final = 10000;
 		}
 		final += getSwitchAverage(battle, des.pokeId);
@@ -248,7 +259,7 @@ exports.setup = function (Data) {
 		}
 
 		if (move.id === "fakeout") {
-			if (!(battle.self.active[act].helpers.sw === battle.turn || battle.self.active[act].helpers.sw === battle.turn - 1)) {
+			if (!(findAnyNotNull(battle.self.active).helpers.sw === battle.turn || findAnyNotNull(battle.self.active).helpers.sw === battle.turn - 1)) {
 				return 0; // Fake out only works for first turn
 			}
 		}
@@ -257,8 +268,8 @@ exports.setup = function (Data) {
 		if (Text.toId(battle.tier || "").indexOf("challengecup") >= 0) pokeA.happiness = 100; // Random
 		let conditionsA = new Conditions({
 			side: battle.self.side,
-			volatiles: battle.self.active[act].volatiles,
-			boosts: battle.self.active[act].boosts,
+			volatiles: findAnyNotNull(battle.self.active).volatiles,
+			boosts: findAnyNotNull(battle.self.active).boosts,
 		});
 
 		let targets = [];
