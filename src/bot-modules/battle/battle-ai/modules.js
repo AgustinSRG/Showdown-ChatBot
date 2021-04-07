@@ -4,7 +4,7 @@
 
 'use strict';
 
-const modFiles = ['singles-eff.js', 'ingame-nostatus.js', 'free-for-all-simple.js', 'random.js', 'random-move.js', 'random-switch.js', 'random-move-no-dynamax.js'];
+const modFiles = ['singles-eff.js', 'ingame-nostatus.js', 'free-for-all-simple.js', 'multi-simple.js', 'random.js', 'random-move.js', 'random-switch.js', 'random-move-no-dynamax.js'];
 
 const Path = require('path');
 const Text = Tools('text');
@@ -67,6 +67,11 @@ exports.setup = function (App, BattleData) {
 		if (modules["free-for-all-simple"] && battle.gametype in { 'freeforall': 1 }) {
 			battle.debug("Battle module [" + battle.id + "] - Using free-for-all-simple");
 			return modules["free-for-all-simple"];
+		}
+
+		if (modules["multi-simple"] && battle.gametype in { 'multi': 1 }) {
+			battle.debug("Battle module [" + battle.id + "] - Using multi-simple");
+			return modules["multi-simple"];
 		}
 
 		/* Random, no module designed */

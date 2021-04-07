@@ -405,6 +405,7 @@ exports.setup = function (App) {
 			"ingame-nostatus": "Go for the highest damage / No swithes (Standard)",
 			"singles-eff": "Improvement with status moves and switches (only for singles)",
 			"free-for-all-simple": "Free-for-all (Go for the highest damage)",
+			"multi-simple": "Multiples (Go for the highest damage)",
 		};
 		let tags = [];
 		for (let opt in opts) {

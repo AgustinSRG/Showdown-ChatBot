@@ -238,7 +238,7 @@ exports.getDecisions = function (battle) {
 				let target = active.moves[j].target;
 				let dmax = false;
 				if (battle.self && battle.self.active) {
-					if (battle.gametype === 'freeforall') {
+					if (battle.gametype in { 'freeforall': 1, 'multi': 1 }) {
 						let anyNot = findAnyNotNull(battle.self.active);
 						if (anyNot && anyNot.volatiles && anyNot.volatiles.dynamax) {
 							continue;
@@ -258,8 +258,8 @@ exports.getDecisions = function (battle) {
 					if (mega) tables[i].push(new MoveDecision(j, null, true, active.moves[j].move, false, false, dmax));
 					if (ultra) tables[i].push(new MoveDecision(j, null, false, active.moves[j].move, false, true, dmax));
 					tables[i].push(new MoveDecision(j, null, false, active.moves[j].move, false, false, dmax));
-				} else if (battle.gametype === 'freeforall') {
-					if (target in { 'any': 1, 'normal': 1, 'adjacentFoe': 1, 'adjacentAlly': 1 }) {
+				} else if (battle.gametype in { 'freeforall': 1, 'multi': 1 }) {
+					if (target in { 'any': 1, 'normal': 1, 'adjacentFoe': 1 }) {
 						const inFront = getFrontPlayers(battle);
 						for (let foe of inFront) {
 							auxHasTarget = false;
@@ -286,22 +286,55 @@ exports.getDecisions = function (battle) {
 								tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move, false, false, dmax));
 							}
 						}
+					} else if (target in { 'adjacentAlly': 1 }) {
+						if (battle.gametype in { 'freeforall': 1 }) {
+							// Allies are also foes
+							const inFront = getFrontPlayers(battle);
+							for (let foe of inFront) {
+								auxHasTarget = false;
+								for (let tar = 0; tar < foe.active.length; tar++) {
+									if (!foe.active[tar] || foe.active[tar].fainted) continue; // Target not found
+									if (target in { 'normal': 1, 'adjacentFoe': 1 } && isTooFar(battle, tar, i)) continue; // Target too far
+									auxHasTarget = true;
+								}
+								for (let tar = 0; tar < foe.active.length; tar++) {
+									if (auxHasTarget && (!foe.active[tar] || foe.active[tar].fainted)) continue; // Target not found
+									if (target in { 'normal': 1, 'adjacentFoe': 1 } && isTooFar(battle, tar, i)) continue; // Target too far
+									if (mega) tables[i].push(new MoveDecision(j, tar, true, active.moves[j].move, false, false, dmax));
+									if (ultra) tables[i].push(new MoveDecision(j, tar, false, active.moves[j].move, false, true, dmax));
+									tables[i].push(new MoveDecision(j, tar, false, active.moves[j].move, false, false, dmax));
+								}
+							}
+						}
+						const adjacent = getAdjacentPlayer(battle);
+						if (adjacent) {
+							for (let tar = 0; tar < adjacent.active.length; tar++) {
+								if (!adjacent.active[tar] || adjacent.active[tar].fainted) continue; // Target not found
+								if (target in { 'normal': 1, 'adjacentFoe': 1 } && Math.abs(tar - i) > 1) continue; // Target too far
+								if (mega) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, active.moves[j].move, false, false, dmax));
+								if (ultra) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move, false, true, dmax));
+								tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, active.moves[j].move, false, false, dmax));
+							}
+						}
 					} else if (target in { 'adjacentAllyOrSelf': 1 }) {
 						// Players in front
-						const inFront = getFrontPlayers(battle);
-						for (let foe of inFront) {
-							auxHasTarget = false;
-							for (let tar = 0; tar < foe.active.length; tar++) {
-								if (!foe.active[tar] || foe.active[tar].fainted) continue; // Target not found
-								if (target in { 'normal': 1, 'adjacentFoe': 1 } && isTooFar(battle, tar, i)) continue; // Target too far
-								auxHasTarget = true;
-							}
-							for (let tar = 0; tar < foe.active.length; tar++) {
-								if (auxHasTarget && (!foe.active[tar] || foe.active[tar].fainted)) continue; // Target not found
-								if (target in { 'normal': 1, 'adjacentFoe': 1 } && isTooFar(battle, tar, i)) continue; // Target too far
-								if (mega) tables[i].push(new MoveDecision(j, tar, true, active.moves[j].move, false, false, dmax));
-								if (ultra) tables[i].push(new MoveDecision(j, tar, false, active.moves[j].move, false, true, dmax));
-								tables[i].push(new MoveDecision(j, tar, false, active.moves[j].move, false, false, dmax));
+						if (battle.gametype in { 'freeforall': 1 }) {
+							// Allies are also foes
+							const inFront = getFrontPlayers(battle);
+							for (let foe of inFront) {
+								auxHasTarget = false;
+								for (let tar = 0; tar < foe.active.length; tar++) {
+									if (!foe.active[tar] || foe.active[tar].fainted) continue; // Target not found
+									if (target in { 'normal': 1, 'adjacentFoe': 1 } && isTooFar(battle, tar, i)) continue; // Target too far
+									auxHasTarget = true;
+								}
+								for (let tar = 0; tar < foe.active.length; tar++) {
+									if (auxHasTarget && (!foe.active[tar] || foe.active[tar].fainted)) continue; // Target not found
+									if (target in { 'normal': 1, 'adjacentFoe': 1 } && isTooFar(battle, tar, i)) continue; // Target too far
+									if (mega) tables[i].push(new MoveDecision(j, tar, true, active.moves[j].move, false, false, dmax));
+									if (ultra) tables[i].push(new MoveDecision(j, tar, false, active.moves[j].move, false, true, dmax));
+									tables[i].push(new MoveDecision(j, tar, false, active.moves[j].move, false, false, dmax));
+								}
 							}
 						}
 						// Adjacent
@@ -400,8 +433,8 @@ exports.getDecisions = function (battle) {
 						if (mega) tables[i].push(new MoveDecision(j, null, true, z, true));
 						if (ultra) tables[i].push(new MoveDecision(j, null, false, z, true, true));
 						tables[i].push(new MoveDecision(j, null, false, z, true));
-					} else if (battle.gametype === 'freeforall') {
-						if (zData.target in { 'any': 1, 'normal': 1, 'adjacentFoe': 1, 'adjacentAlly': 1 }) {
+					} else if (battle.gametype in { 'freeforall': 1, 'multi': 1 }) {
+						if (zData.target in { 'any': 1, 'normal': 1, 'adjacentFoe': 1 }) {
 							// Players in front
 							const inFront = getFrontPlayers(battle);
 							for (let foe of inFront) {
@@ -430,22 +463,55 @@ exports.getDecisions = function (battle) {
 									tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, z, true));
 								}
 							}
+						} else if (zData.target in { 'adjacentAlly': 1 }) {
+							// Players in front
+							if (battle.gametype in { 'freeforall': 1 }) {
+								const inFront = getFrontPlayers(battle);
+								for (let foe of inFront) {
+									auxHasTarget = false;
+									for (let tar = 0; tar < foe.active.length; tar++) {
+										if (!foe.active[tar] || foe.active[tar].fainted) continue; // Target not found
+										if (zData.target in { 'normal': 1, 'adjacentFoe': 1 } && isTooFar(battle, tar, i)) continue; // Target too far
+										auxHasTarget = true;
+									}
+									for (let tar = 0; tar < foe.active.length; tar++) {
+										if (auxHasTarget && (!foe.active[tar] || foe.active[tar].fainted)) continue; // Target not found
+										if (zData.target in { 'normal': 1, 'adjacentFoe': 1 } && isTooFar(battle, tar, i)) continue; // Target too far
+										if (mega) tables[i].push(new MoveDecision(j, tar, true, z, true));
+										if (ultra) tables[i].push(new MoveDecision(j, tar, false, z, true, true));
+										tables[i].push(new MoveDecision(j, tar, false, z, true));
+									}
+								}
+							}
+							// Adjacent
+							const adjacent = getAdjacentPlayer(battle);
+							if (adjacent) {
+								for (let tar = 0; tar < adjacent.active.length; tar++) {
+									if (!adjacent.active[tar] || adjacent.active[tar].fainted) continue; // Target not found
+									if (zData.target in { 'normal': 1, 'adjacentFoe': 1 } && Math.abs(tar - i) > 1) continue; // Target too far
+									if (mega) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, z, true));
+									if (ultra) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, z, true, true));
+									tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, z, true));
+								}
+							}
 						} else if (zData.target in { 'adjacentAllyOrSelf': 1 }) {
 							// Players in front
-							const inFront = getFrontPlayers(battle);
-							for (let foe of inFront) {
-								auxHasTarget = false;
-								for (let tar = 0; tar < foe.active.length; tar++) {
-									if (!foe.active[tar] || foe.active[tar].fainted) continue; // Target not found
-									if (zData.target in { 'normal': 1, 'adjacentFoe': 1 } && isTooFar(battle, tar, i)) continue; // Target too far
-									auxHasTarget = true;
-								}
-								for (let tar = 0; tar < foe.active.length; tar++) {
-									if (auxHasTarget && (!foe.active[tar] || foe.active[tar].fainted)) continue; // Target not found
-									if (zData.target in { 'normal': 1, 'adjacentFoe': 1 } && isTooFar(battle, tar, i)) continue; // Target too far
-									if (mega) tables[i].push(new MoveDecision(j, tar, true, z, true));
-									if (ultra) tables[i].push(new MoveDecision(j, tar, false, z, true, true));
-									tables[i].push(new MoveDecision(j, tar, false, z, true));
+							if (battle.gametype in { 'freeforall': 1 }) {
+								const inFront = getFrontPlayers(battle);
+								for (let foe of inFront) {
+									auxHasTarget = false;
+									for (let tar = 0; tar < foe.active.length; tar++) {
+										if (!foe.active[tar] || foe.active[tar].fainted) continue; // Target not found
+										if (zData.target in { 'normal': 1, 'adjacentFoe': 1 } && isTooFar(battle, tar, i)) continue; // Target too far
+										auxHasTarget = true;
+									}
+									for (let tar = 0; tar < foe.active.length; tar++) {
+										if (auxHasTarget && (!foe.active[tar] || foe.active[tar].fainted)) continue; // Target not found
+										if (zData.target in { 'normal': 1, 'adjacentFoe': 1 } && isTooFar(battle, tar, i)) continue; // Target too far
+										if (mega) tables[i].push(new MoveDecision(j, tar, true, z, true));
+										if (ultra) tables[i].push(new MoveDecision(j, tar, false, z, true, true));
+										tables[i].push(new MoveDecision(j, tar, false, z, true));
+									}
 								}
 							}
 							// Adjacent
@@ -534,7 +600,7 @@ exports.getDecisions = function (battle) {
 					if (active.canUltraBurst) ultra = true;
 					let dmax = true;
 					if (battle.self && battle.self.active) {
-						if (battle.gametype === 'freeforall') {
+						if (battle.gametype in { 'freeforall': 1, 'multi': 1 }) {
 							let anyNot = findAnyNotNull(battle.self.active);
 							if (anyNot && anyNot.volatiles && anyNot.volatiles.dynamax) {
 								dmax = 'still'; // Already Dynamaxed
@@ -550,8 +616,8 @@ exports.getDecisions = function (battle) {
 						if (mega) tables[i].push(new MoveDecision(j, null, true, z, false, false, dmax));
 						if (ultra) tables[i].push(new MoveDecision(j, null, false, z, false, dmax, dmax));
 						tables[i].push(new MoveDecision(j, null, false, z, false, false, dmax));
-					} else if (battle.gametype === 'freeforall') {
-						if (zData.target in { 'any': 1, 'normal': 1, 'adjacentFoe': 1, 'adjacentAlly': 1 }) {
+					} else if (battle.gametype in { 'freeforall': 1, 'multi': 1 }) {
+						if (zData.target in { 'any': 1, 'normal': 1, 'adjacentFoe': 1 }) {
 							// Players in front
 							const inFront = getFrontPlayers(battle);
 							for (let foe of inFront) {
@@ -580,22 +646,55 @@ exports.getDecisions = function (battle) {
 									tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, z, false, false, dmax));
 								}
 							}
+						} else if (zData.target in { 'adjacentAlly': 1 }) {
+							// Players in front
+							if (battle.gametype in { 'freeforall': 1 }) {
+								const inFront = getFrontPlayers(battle);
+								for (let foe of inFront) {
+									auxHasTarget = false;
+									for (let tar = 0; tar < foe.active.length; tar++) {
+										if (!foe.active[tar] || foe.active[tar].fainted) continue; // Target not found
+										if (zData.target in { 'normal': 1, 'adjacentFoe': 1 } && isTooFar(battle, tar, i)) continue; // Target too far
+										auxHasTarget = true;
+									}
+									for (let tar = 0; tar < foe.active.length; tar++) {
+										if (auxHasTarget && (!foe.active[tar] || foe.active[tar].fainted)) continue; // Target not found
+										if (zData.target in { 'normal': 1, 'adjacentFoe': 1 } && isTooFar(battle, tar, i)) continue; // Target too far
+										if (mega) tables[i].push(new MoveDecision(j, tar, true, z, false, false, dmax));
+										if (ultra) tables[i].push(new MoveDecision(j, tar, false, z, false, true, dmax));
+										tables[i].push(new MoveDecision(j, tar, false, z, false, false, dmax));
+									}
+								}
+							}
+							// Adjacent
+							const adjacent = getAdjacentPlayer(battle);
+							if (adjacent) {
+								for (let tar = 0; tar < adjacent.active.length; tar++) {
+									if (!adjacent.active[tar] || adjacent.active[tar].fainted) continue; // Target not found
+									if (zData.target in { 'normal': 1, 'adjacentFoe': 1 } && Math.abs(tar - i) > 1) continue; // Target too far
+									if (mega) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), true, z, false, false, dmax));
+									if (ultra) tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, z, false, true, dmax));
+									tables[i].push(new MoveDecision(j, (-1) * (tar + 1), false, z, false, false, dmax));
+								}
+							}
 						} else if (zData.target in { 'adjacentAllyOrSelf': 1 }) {
 							// Players in front
-							const inFront = getFrontPlayers(battle);
-							for (let foe of inFront) {
-								auxHasTarget = false;
-								for (let tar = 0; tar < foe.active.length; tar++) {
-									if (!foe.active[tar] || foe.active[tar].fainted) continue; // Target not found
-									if (zData.target in { 'normal': 1, 'adjacentFoe': 1 } && isTooFar(battle, tar, i)) continue; // Target too far
-									auxHasTarget = true;
-								}
-								for (let tar = 0; tar < foe.active.length; tar++) {
-									if (auxHasTarget && (!foe.active[tar] || foe.active[tar].fainted)) continue; // Target not found
-									if (zData.target in { 'normal': 1, 'adjacentFoe': 1 } && isTooFar(battle, tar, i)) continue; // Target too far
-									if (mega) tables[i].push(new MoveDecision(j, tar, true, z, false, false, dmax));
-									if (ultra) tables[i].push(new MoveDecision(j, tar, false, z, false, true, dmax));
-									tables[i].push(new MoveDecision(j, tar, false, z, false, false, dmax));
+							if (battle.gametype in { 'freeforall': 1 }) {
+								const inFront = getFrontPlayers(battle);
+								for (let foe of inFront) {
+									auxHasTarget = false;
+									for (let tar = 0; tar < foe.active.length; tar++) {
+										if (!foe.active[tar] || foe.active[tar].fainted) continue; // Target not found
+										if (zData.target in { 'normal': 1, 'adjacentFoe': 1 } && isTooFar(battle, tar, i)) continue; // Target too far
+										auxHasTarget = true;
+									}
+									for (let tar = 0; tar < foe.active.length; tar++) {
+										if (auxHasTarget && (!foe.active[tar] || foe.active[tar].fainted)) continue; // Target not found
+										if (zData.target in { 'normal': 1, 'adjacentFoe': 1 } && isTooFar(battle, tar, i)) continue; // Target too far
+										if (mega) tables[i].push(new MoveDecision(j, tar, true, z, false, false, dmax));
+										if (ultra) tables[i].push(new MoveDecision(j, tar, false, z, false, true, dmax));
+										tables[i].push(new MoveDecision(j, tar, false, z, false, false, dmax));
+									}
 								}
 							}
 							// Adjacent
