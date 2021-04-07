@@ -2961,4 +2961,10 @@ exports.translations.legacy = {
 	"slam": "Slam",
 	"return": "Return",
 	"wrap": "Wrap",
+	"choiceband": "Choice Band",
+	"choicescarf": "Choice Scarf",
+	"choicespecs": "Choice Specs",
+	"shellbell": "Shell Bell",
+	"stick": "Stick",
+	"waveincense": "Wave Incense",
 };
