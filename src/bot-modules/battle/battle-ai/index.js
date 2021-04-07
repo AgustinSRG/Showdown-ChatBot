@@ -27,6 +27,7 @@ exports.setup = function (App) {
 	return {
 		battles: {},
 		battlesCount: 0,
+		interval: null,
 
 		init: function () {
 			for (let room in this.battles) {
@@ -36,6 +37,21 @@ exports.setup = function (App) {
 				delete this.battles[room];
 			}
 			this.battlesCount = 0;
+
+			if (this.interval) {
+				clearInterval(this.interval);
+				this.interval = null;
+			}
+
+			this.interval = setInterval(this.tick.bind(this), 3000);
+		},
+
+		tick: function () {
+			for (let room in this.battles) {
+				try {
+					this.battles[room].tick();
+				} catch (e) {}
+			}
 		},
 
 		receive: function (room, data, isIntro) {
@@ -80,6 +96,10 @@ exports.setup = function (App) {
 				} catch (e) {}
 				delete this.battles[room];
 				this.battlesCount--;
+			}
+			if (this.interval) {
+				clearInterval(this.interval);
+				this.interval = null;
 			}
 		},
 	};

@@ -34,6 +34,7 @@ exports.setup = function (App, BattleData) {
 		},
 
 		start: function (args, kwargs) {
+			this.battleReadyToStart = true;
 			this.started = true;
 			this.checkTimer();
 		},
@@ -58,26 +59,27 @@ exports.setup = function (App, BattleData) {
 			this.gametype = args[1];
 			this.conditions["gametype"] = args[1];
 			switch (args[1]) {
-			case "singles":
-				this.players.p1.active = [null];
-				this.players.p2.active = [null];
-				break;
-			case 'doubles':
-				this.players.p1.active = [null, null];
-				this.players.p2.active = [null, null];
-				break;
-			case 'triples':
-			case 'rotation':
-				this.players.p1.active = [null, null, null];
-				this.players.p2.active = [null, null, null];
-				break;
-			case 'freeforall':
-				for (let id in this.players) {
-					this.players[id].active = [null, null];
-				}
-				break;
-			default:
-				App.log("Unknown gametype: " + args[1] + " / Battle: " + this.id);
+				case "singles":
+					this.players.p1.active = [null];
+					this.players.p2.active = [null];
+					break;
+				case 'doubles':
+					this.players.p1.active = [null, null];
+					this.players.p2.active = [null, null];
+					break;
+				case 'triples':
+				case 'rotation':
+					this.players.p1.active = [null, null, null];
+					this.players.p2.active = [null, null, null];
+					break;
+				case 'freeforall':
+				case 'multi':
+					for (let id in this.players) {
+						this.players[id].active = [null, null];
+					}
+					break;
+				default:
+					App.log("Unknown gametype: " + args[1] + " / Battle: " + this.id);
 			}
 		},
 
@@ -192,6 +194,7 @@ exports.setup = function (App, BattleData) {
 
 		teampreview: function (args, kwargs) {
 			if (args[1]) this.teamPreview = parseInt(args[1]) || 1;
+			this.battleReadyToStart = true;
 			this.makeDecision();
 			this.checkTimer();
 		},
@@ -213,7 +216,7 @@ exports.setup = function (App, BattleData) {
 				}
 			}
 			if (!poke) {
-				poke = new BattleData.Pokemon(BattleData.getPokemon(details.species || Text.toId(name), this.gen), {name: name});
+				poke = new BattleData.Pokemon(BattleData.getPokemon(details.species || Text.toId(name), this.gen), { name: name });
 				this.players[p].pokemon.push(poke);
 			}
 			poke.active = true;
@@ -297,16 +300,16 @@ exports.setup = function (App, BattleData) {
 			if (kwargs.from) fromeffect = BattleData.getEffect(kwargs.from, this.gen);
 			if (fromeffect) {
 				switch (fromeffect.id) {
-				case 'snatch':
-				case 'magicbounce':
-				case 'magiccoat':
-				case 'rebound':
-				case 'metronome':
-				case 'naturepower':
-					return; // Not a real move
-				case 'sleeptalk':
-					noDeductPP = true; // Real move, but not really used
-					break;
+					case 'snatch':
+					case 'magicbounce':
+					case 'magiccoat':
+					case 'rebound':
+					case 'metronome':
+					case 'naturepower':
+						return; // Not a real move
+					case 'sleeptalk':
+						noDeductPP = true; // Real move, but not really used
+						break;
 				}
 			}
 			let move = null;
@@ -350,26 +353,26 @@ exports.setup = function (App, BattleData) {
 			let moveTemplate = BattleData.getMove(args[3] || "", this.gen);
 			let det = this.parsePokemonIdent(args[1]);
 			switch (effect.id) {
-			case 'taunt':
-			case 'gravity':
-			case 'healblock':
-			case 'imprison':
-			case 'skydrop':
-			case 'recharge':
-			case 'focuspunch':
-			case 'nopp':
-				break;
-			case 'slp':
-				if (!poke.helpers.sleepCounter) poke.helpers.sleepCounter = 0;
-				poke.helpers.sleepCounter++;
-				if (!isIntro) this.message(effect.id, det.side, poke.name); // hax
-				return;
-			case 'par':
-			case 'frz':
-			case 'flinch':
-			case 'attract':
-				if (!isIntro) this.message(effect.id, det.side, poke.name); // hax
-				return; // No move
+				case 'taunt':
+				case 'gravity':
+				case 'healblock':
+				case 'imprison':
+				case 'skydrop':
+				case 'recharge':
+				case 'focuspunch':
+				case 'nopp':
+					break;
+				case 'slp':
+					if (!poke.helpers.sleepCounter) poke.helpers.sleepCounter = 0;
+					poke.helpers.sleepCounter++;
+					if (!isIntro) this.message(effect.id, det.side, poke.name); // hax
+					return;
+				case 'par':
+				case 'frz':
+				case 'flinch':
+				case 'attract':
+					if (!isIntro) this.message(effect.id, det.side, poke.name); // hax
+					return; // No move
 			}
 			let move = null;
 			for (let i = 0; i < poke.moves.length; i++) {
@@ -398,16 +401,16 @@ exports.setup = function (App, BattleData) {
 			let pokemon = isNaN(Number(args[1])) ? this.getActive(args[1]) : this.self.active[args[1]];
 			let requestData = this.request.active[pokemon.slot];
 			switch (args[0]) {
-			case 'trapped':
-				requestData.trapped = true;
-				break;
-			case 'cant':
-				for (let i = 0; i < requestData.moves.length; i++) {
-					if (requestData.moves[i].id === args[3]) {
-						requestData.moves[i].disabled = true;
+				case 'trapped':
+					requestData.trapped = true;
+					break;
+				case 'cant':
+					for (let i = 0; i < requestData.moves.length; i++) {
+						if (requestData.moves[i].id === args[3]) {
+							requestData.moves[i].disabled = true;
+						}
 					}
-				}
-				break;
+					break;
 			}
 			this.makeDecision(true);
 		},

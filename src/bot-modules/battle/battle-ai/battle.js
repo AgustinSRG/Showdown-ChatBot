@@ -27,6 +27,7 @@ exports.setup = function (App) {
 	class Battle {
 		constructor(id) {
 			this.id = id;
+			this.creationTimestamp = Date.now();
 			this.title = "";
 			this.players = {
 				// 1v1 classic
@@ -49,6 +50,7 @@ exports.setup = function (App) {
 			this.variations = [];
 
 			this.started = false;
+			this.battleReadyToStart = false;
 			this.timer = false;
 			this.sentTimerReq = 0;
 			this.turn = 0;
@@ -163,6 +165,31 @@ exports.setup = function (App) {
 				if (this.sentTimerReq && Date.now() - this.sentTimerReq < MIN_TIME_LOCK) return; // Do not spam timer commands
 				this.sentTimerReq = Date.now();
 				this.send("/timer on");
+			}
+		}
+
+		tick() {
+			if (!this.battleReadyToStart) {
+				if (Date.now() - this.creationTimestamp > (90 * 1000)) {
+					// 1 minute waiting, leave
+					this.leave();
+					return;
+				}
+
+				let anyPlayers = false;
+				for (let k in this.players) {
+					if (this.self !== this.players[k]) {
+						const userid = this.players[k].userid;
+						if (this.users[userid]) {
+							anyPlayers = true;
+						}
+					}
+				}
+
+				if (!anyPlayers && Date.now() - this.creationTimestamp > (10 * 1000)) {
+					// All players left and battle is not started, leave
+					this.leave();
+				}
 			}
 		}
 
