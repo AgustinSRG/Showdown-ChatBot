@@ -27,6 +27,8 @@ exports.setup = function (App) {
 
 	const BattleModule = {};
 
+	BattleModule.challengeExceptions = {};
+
 	const BattleBot = BattleModule.BattleBot = require(Path.resolve(__dirname, 'battle-ai', 'index.js')).setup(App);
 	const TeamBuilder = BattleModule.TeamBuilder = require(Path.resolve(__dirname, 'teambuilder.js')).setup(App);
 	const ChallManager = BattleModule.ChallManager = require(Path.resolve(__dirname, 'challenges.js')).setup(App);

@@ -22,7 +22,23 @@ exports.setup = function (App) {
 
 	function canChallenge(i, nBattles) {
 		if (Config.maxBattles > nBattles) return true;
-		let ident = Text.parseUserIdent(i);
+
+		// Custom exceptions
+		let mod = App.modules.battle.system;
+		for (let ex in mod.challengeExceptions) {
+			try {
+				let res = mod.challengeExceptions[ex](i, nBattles);
+
+				if (res) {
+					return true;
+				}
+			} catch (e) {
+				App.reportCrash(e);
+			}
+		}
+
+		// Check default permission
+		let ident = Text.parseUserIdent(" " + Text.toId(i));
 		if (App.parser.can(ident, 'chall')) return true;
 		return false;
 	}
