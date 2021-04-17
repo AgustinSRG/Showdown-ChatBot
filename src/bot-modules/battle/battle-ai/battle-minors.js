@@ -206,7 +206,9 @@ exports.setup = function (App, BattleData) {
 		"-clearallboost": function (args, kwargs) {
 			for (let p in this.players) {
 				for (let i = 0; i < this.players[p].active.length; i++) {
-					this.players[p].active[i].removeAllBoosts();
+					if (this.players[p].active[i]) {
+						this.players[p].active[i].removeAllBoosts();
+					}
 				}
 			}
 		},
