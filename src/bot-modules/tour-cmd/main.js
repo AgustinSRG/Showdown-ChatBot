@@ -153,7 +153,7 @@ exports.setup = function (App) {
 						if (tourData[room] && Text.toId(tourData[room].generator) === "singleelimination") {
 							let data = tourData[room];
 							let p1C = false, p2C = false;
-							if (data.bracketData.rootNode.children) {
+							if (data && data.bracketData && data.bracketData.rootNode && data.bracketData.rootNode.children) {
 								for (let f = 0; f < data.bracketData.rootNode.children.length; f++) {
 									let team = Text.toId(data.bracketData.rootNode.children[f].team || "");
 									if (p1 === team) {
