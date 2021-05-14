@@ -88,11 +88,11 @@ exports.setup = function (App) {
 		}
 		if (!pokemon.species) {
 			return {
-				num: 235,
-				species: "Smeargle",
-				types: ["Normal"],
-				baseStats: { hp: 55, atk: 20, def: 35, spa: 20, spd: 45, spe: 75 },
-				abilities: { 0: "Own Tempo", 1: "Technician", H: "Moody" },
+				num: 0,
+				species: "Unknown",
+				types: [],
+				baseStats: { hp: 100, atk: 100, def: 100, spa: 100, spd: 100, spe: 100 },
+				abilities: { },
 				heightm: 1.2,
 				weightkg: 58,
 				color: "White",
