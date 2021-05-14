@@ -47,7 +47,7 @@ exports.setup = function (Data) {
 		} else {
 			pokeB.item = target.item;
 		}
-		if (!target.supressedAbility) {
+		if (!target.supressedAbility && !battle.conditions["neutralizinggas"]) {
 			if (target.ability === "&unknown") {
 				pokeB.ability = pokeB.template.abilities ? Data.getAbility(pokeB.template.abilities[0]) : null;
 			} else {
@@ -62,6 +62,7 @@ exports.setup = function (Data) {
 		for (let hazard of Object.keys(side)) {
 			switch (hazard) {
 				case "stealthrock":
+				case "gmaxsteelsurge":
 					count += 30;
 					break;
 				case "spikes":
@@ -75,6 +76,7 @@ exports.setup = function (Data) {
 					break;
 				case "reflect":
 				case "lightscreen":
+				case "auroraveil":
 					if (!ignoreScreens) count -= 20; // Screens count as negative hazards
 					break;
 			}
@@ -234,23 +236,31 @@ exports.setup = function (Data) {
 				res.unviable.push(decisions[i]);
 				continue;
 			}
-			if (move.category === "Status") res.total++;
-			if (move.flags && move.flags['reflectable'] && pokeB.ability && pokeB.ability.id === "magicbounce") {
-				res.unviable.push(decisions[i]);
-				continue;
-			}
-			if (move.target !== "self" && battle.gen >= 7 && pokeA.ability && pokeA.ability.id === "prankster" && defTypes.indexOf("Dark") >= 0) {
-				res.unviable.push(decisions[i]);
-				continue;
-			}
-			if (conditionsB.volatiles["substitute"] && move.target !== "self" && move.target !== "allySide" && move.target !== "foeSide" && move.target !== "allyTeam") {
-				if (!move.flags || !move.flags['authentic']) {
+
+			if (move.category === "Status") {
+				res.total++;
+				if (move.flags && move.flags['reflectable'] && !battle.conditions["neutralizinggas"] && pokeB.ability && pokeB.ability.id === "magicbounce") {
 					res.unviable.push(decisions[i]);
 					continue;
 				}
+				if (move.target !== "self" && battle.gen >= 7 && !battle.conditions["neutralizinggas"] && pokeA.ability && pokeA.ability.id === "prankster" && defTypes.indexOf("Dark") >= 0) {
+					res.unviable.push(decisions[i]);
+					continue;
+				}
+				if (conditionsB.volatiles["substitute"] && move.target !== "self" && move.target !== "allySide" && move.target !== "foeSide" && move.target !== "allyTeam") {
+					if (!move.flags || !move.flags['authentic']) {
+						res.unviable.push(decisions[i]);
+						continue;
+					}
+				}
+			} else {
+				if (Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, battle.conditions, battle.gen).getMax() === 0) {
+					res.unviable.push(decisions[i]);
+				}
 			}
+
 			if (move.flags && move.flags["powder"] && battle.gen > 5) {
-				if (pokeB.ability && pokeB.ability.id === "overcoat") {
+				if (!battle.conditions["neutralizinggas"] && !pokeB.ability && pokeB.ability.id === "overcoat") {
 					res.unviable.push(decisions[i]);
 					continue;
 				}
@@ -269,11 +279,11 @@ exports.setup = function (Data) {
 				res.unviable.push(decisions[i]);
 				continue;
 			}
-			if (move.id === "auroraveil" && battle.conditions.weather !== "hail") {
+			if (move.id in { "auroraveil": 1, "gmaxresonance": 1 } && battle.conditions.weather !== "hail") {
 				res.unviable.push(decisions[i]);
 				continue;
 			}
-			if (move.id in { "spikes": 1, "toxicspikes": 1, "stealthrock": 1, "stickyweb": 1 }) {
+			if (move.id in { "spikes": 1, "toxicspikes": 1, "stealthrock": 1, "stickyweb": 1, "gmaxcannonade": 1, "gmaxsteelsurge": 1 }) {
 				if (battle.foe.countAlivePokemon() < 2) {
 					res.unviable.push(decisions[i]);
 					continue;
@@ -288,12 +298,24 @@ exports.setup = function (Data) {
 					if (foeCanSwitch(battle) && conditionsB.side["toxicspikes"] !== 2) res.viable.push(decisions[i]);
 					else res.unviable.push(decisions[i]);
 					continue;
+				case "gmaxstonesurge":
 				case "stealthrock":
 					if (foeCanSwitch(battle) && !conditionsB.side["stealthrock"]) res.viable.push(decisions[i]);
 					else res.unviable.push(decisions[i]);
 					continue;
+				case "gmaxsteelsurge":
+					if (foeCanSwitch(battle) && !conditionsB.side["gmaxsteelsurge"]) res.viable.push(decisions[i]);
+					else res.unviable.push(decisions[i]);
+					continue;
 				case "stickyweb":
 					if (foeCanSwitch(battle) && !conditionsB.side["stickyweb"]) res.viable.push(decisions[i]);
+					else res.unviable.push(decisions[i]);
+					continue;
+				case "gmaxvinelash":
+				case "gmaxvolcalith":
+				case "gmaxwildfire":
+				case "gmaxcannonade":
+					if (!conditionsB.side[move.id]) res.viable.push(decisions[i]);
 					else res.unviable.push(decisions[i]);
 					continue;
 				case "wish":
@@ -302,11 +324,7 @@ exports.setup = function (Data) {
 					continue;
 				case "rapidspin":
 					if (selfCanSwitch(battle) && countHazards(conditionsA.side, true) > 0) {
-						if (Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, battle.conditions, battle.gen).getMax() === 0) {
-							res.unviable.push(decisions[i]);
-						} else {
-							res.viable.push(decisions[i]);
-						}
+						res.viable.push(decisions[i]);
 					} else {
 						res.unviable.push(decisions[i]);
 					}
@@ -317,6 +335,13 @@ exports.setup = function (Data) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
+					if (selfCanSwitch(battle) && (countHazards(conditionsA.side) > 0 || countHazards(conditionsB.side) < 0)) {
+						res.viable.push(decisions[i]);
+					} else {
+						res.unviable.push(decisions[i]);
+					}
+					continue;
+				case "gmaxwindrage":
 					if (selfCanSwitch(battle) && (countHazards(conditionsA.side) > 0 || countHazards(conditionsB.side) < 0)) {
 						res.viable.push(decisions[i]);
 					} else {
@@ -410,7 +435,28 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "gastroacid":
-					if (!battle.foe.active[0].supressedAbility) {
+					if (!battle.foe.active[0].supressedAbility && !battle.conditions["neutralizinggas"]) {
+						res.viable.push(decisions[i]);
+					} else {
+						res.unviable.push(decisions[i]);
+					}
+					continue;
+				case "simplebeam":
+					if (battle.conditions["neutralizinggas"] || !pokeB.ability || pokeB.ability.id !== "simple") {
+						res.viable.push(decisions[i]);
+					} else {
+						res.unviable.push(decisions[i]);
+					}
+					continue;
+				case "worryseed":
+					if (battle.conditions["neutralizinggas"] || !pokeB.ability || pokeB.ability.id !== "insomnia") {
+						res.viable.push(decisions[i]);
+					} else {
+						res.unviable.push(decisions[i]);
+					}
+					continue;
+				case "entrainment":
+					if (battle.conditions["neutralizinggas"] || !pokeA.ability || !!pokeB.ability || pokeA.ability.id !== pokeB.ability.id) {
 						res.viable.push(decisions[i]);
 					} else {
 						res.unviable.push(decisions[i]);
@@ -456,7 +502,7 @@ exports.setup = function (Data) {
 				else res.unviable.push(decisions[i]);
 				continue;
 			}
-			let singleTurnMoves = { "protect": 1, "detect": 1, "endure": 1, "kingsshield": 1, "quickguard": 1, "spikyshield": 1, "wideguard": 1 };
+			let singleTurnMoves = { "protect": 1, "detect": 1, "endure": 1, "kingsshield": 1, "quickguard": 1, "spikyshield": 1, "wideguard": 1, "maxguard": 1, "obstruct": 1 };
 			if (move.id in singleTurnMoves) {
 				if (battle.self.active[0].helpers.lastMove in singleTurnMoves) res.unviable.push(decisions[i]);
 				else res.viable.push(decisions[i]);
@@ -640,6 +686,12 @@ exports.setup = function (Data) {
 			let dmgData = Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, battle.conditions, battle.gen);
 			let dmg = dmgData.getMax();
 			let dmgMin = dmgData.getMin();
+			if (move.ohko) {
+				if (battle.conditions["neutralizinggas"] || !pokeA.ability || !(pokeA.ability.id in { 'noguard': 1 })) {
+					dmg = dmg * (0.3 * (pokeA.level / (pokeB.level || 100)));
+					dmgMin = dmgMin * (0.3 * (pokeA.level / (pokeB.level || 100)));
+				}
+			}
 			let hp = pokeB.hp;
 			if (dmg === 0 || move.id === "struggle") {
 				res.immune.push(decisions[i]);

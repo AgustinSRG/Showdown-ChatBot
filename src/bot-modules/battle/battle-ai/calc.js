@@ -419,7 +419,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		if (gconditions["psychicterrain"] && move.priority > 0) inmune = true;
 	}
 
-	if (gen < 3 || !pokeA.ability || pokeA.supressedAbility || !(pokeA.ability.id in { 'airlock': 1, 'cloudnine': 1 })) {
+	if (gen < 3 || gconditions["neutralizinggas"] || !pokeA.ability || pokeA.supressedAbility || !(pokeA.ability.id in { 'airlock': 1, 'cloudnine': 1 })) {
 		if (gconditions.weather === "desolateland" && move.type === "Water") inmune = true;
 		if (gconditions.weather === "primordialsea" && move.type === "Fire") inmune = true;
 	}
@@ -559,6 +559,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			break;
 		case "waterspout":
 		case "eruption":
+		case "dragonenergy":
 			bp *= pokeA.hp / 100;
 			break;
 	}
@@ -649,7 +650,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		}
 	}
 
-	if (move.id in {skyattack: 1, skullbash: 1, razorwind: 1, meteorbeam: 1, iceburn: 1, freezeshock: 1} && (!pokeA.item || pokeA.item.id !== "powerherb")) {
+	if (move.id in { skyattack: 1, skullbash: 1, razorwind: 1, meteorbeam: 1, iceburn: 1, freezeshock: 1 } && (!pokeA.item || pokeA.item.id !== "powerherb")) {
 		bp = Math.floor(bp / 2);
 	}
 
@@ -679,7 +680,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	}
 
 	/* Weather */
-	if (gen < 3 || !pokeA.ability || pokeA.supressedAbility || !(pokeA.ability.id in { 'airlock': 1, 'cloudnine': 1 })) {
+	if (gen < 3 || gconditions["neutralizinggas"] || !pokeA.ability || pokeA.supressedAbility || !(pokeA.ability.id in { 'airlock': 1, 'cloudnine': 1 })) {
 		if (move.type === "Water" && (gconditions.weather === "primordialsea" || gconditions.weather === "raindance")) modifier *= 2;
 
 		if (move.type === "Fire" && (gconditions.weather === "desolateland" || gconditions.weather === "sunnyday")) modifier *= 2;
@@ -759,8 +760,8 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		if (gconditions["mistyterrain"] && moveType === "Dragon") bp = Math.floor(bp * 0.5);
 	}
 
-	if (gconditions["gametype"] === "doubles" || gconditions["gametype"] === "triples") {
-		if (move.target === "allAdjacentFoes") modifier *= 0.75;
+	if (gconditions["gametype"] in { "doubles": 1, "triples": 1, "multi": 1, "freeforall": 1 }) {
+		if (move.target in { "allAdjacentFoes": 1, "all": 1 }) modifier *= 0.75;
 	}
 
 	/******************************

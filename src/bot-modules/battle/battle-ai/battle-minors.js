@@ -19,40 +19,40 @@ exports.setup = function (App, BattleData) {
 					ofpoke.markAbility(effect.name);
 				}
 				switch (effect.id) {
-				case 'stealthrock':
-				case 'spikes':
-				case 'recoil':
-				case 'sandstorm':
-				case 'hail':
-				case 'baddreams':
-				case 'nightmare':
-				case 'roughskin':
-				case 'ironbarbs':
-				case 'aftermath':
-				case 'liquidooze':
-				case 'dryskin':
-				case 'solarpower':
-				case 'confusion':
-				case 'leechseed':
-				case 'flameburst':
-				case 'firepledge':
-				case 'jumpkick':
-				case 'highjumpkick':
-					break;
-				case 'brn':
-				case 'psn':
-					if (!poke.helpers.stausCounter) poke.helpers.stausCounter = 0;
-					poke.helpers.stausCounter++;
-					break;
-				default:
-					if (ofpoke) {
-						return;
-					} else if (effect.effectType === 'Item') {
-						poke.item = BattleData.getItem(effect.name, this.gen);
-					} else if (effect.effectType === 'Ability') {
-						poke.markAbility(effect.name);
-					}
-					break;
+					case 'stealthrock':
+					case 'spikes':
+					case 'recoil':
+					case 'sandstorm':
+					case 'hail':
+					case 'baddreams':
+					case 'nightmare':
+					case 'roughskin':
+					case 'ironbarbs':
+					case 'aftermath':
+					case 'liquidooze':
+					case 'dryskin':
+					case 'solarpower':
+					case 'confusion':
+					case 'leechseed':
+					case 'flameburst':
+					case 'firepledge':
+					case 'jumpkick':
+					case 'highjumpkick':
+						break;
+					case 'brn':
+					case 'psn':
+						if (!poke.helpers.stausCounter) poke.helpers.stausCounter = 0;
+						poke.helpers.stausCounter++;
+						break;
+					default:
+						if (ofpoke) {
+							return;
+						} else if (effect.effectType === 'Item') {
+							poke.item = BattleData.getItem(effect.name, this.gen);
+						} else if (effect.effectType === 'Ability') {
+							poke.markAbility(effect.name);
+						}
+						break;
 				}
 			}
 		},
@@ -68,25 +68,25 @@ exports.setup = function (App, BattleData) {
 					poke.markAbility(effect.name);
 				}
 				switch (effect.id) {
-				case 'ingrain':
-				case 'aquaring':
-				case 'drain':
-					break;
-				case 'lunardance':
-					for (let i = 0; i < poke.moves.length; i++) {
-						poke.moves[i].restorePP();
-					}
-					this.players[det.side].side.wish = null;
-					break;
-				case 'healingwish':
-				case 'wish':
-					this.players[det.side].side.wish = null;
-					break;
-				case 'leftovers':
-				case 'shellbell':
-				case 'blacksludge':
-					poke.item = BattleData.getItem(effect.name, this.gen);
-					break;
+					case 'ingrain':
+					case 'aquaring':
+					case 'drain':
+						break;
+					case 'lunardance':
+						for (let i = 0; i < poke.moves.length; i++) {
+							poke.moves[i].restorePP();
+						}
+						this.players[det.side].side.wish = null;
+						break;
+					case 'healingwish':
+					case 'wish':
+						this.players[det.side].side.wish = null;
+						break;
+					case 'leftovers':
+					case 'shellbell':
+					case 'blacksludge':
+						poke.item = BattleData.getItem(effect.name, this.gen);
+						break;
 				}
 			}
 		},
@@ -136,11 +136,11 @@ exports.setup = function (App, BattleData) {
 			if (kwargs.from) {
 				let effect = BattleData.getEffect(kwargs.from, this.gen);
 				switch (effect.id) {
-				case 'bellydrum':
-					break;
-				case 'angerpoint':
-					poke.markAbility('Anger Point');
-					break;
+					case 'bellydrum':
+						break;
+					case 'angerpoint':
+						poke.markAbility('Anger Point');
+						break;
 				}
 			}
 		},
@@ -169,7 +169,7 @@ exports.setup = function (App, BattleData) {
 		"-restoreboost": function (args, kwargs) {
 			let poke = this.getActive(args[1]);
 			for (let i in poke.boosts) {
-				if (poke.boosts[i] < 0)	delete poke.boosts[i];
+				if (poke.boosts[i] < 0) delete poke.boosts[i];
 			}
 		},
 
@@ -228,12 +228,12 @@ exports.setup = function (App, BattleData) {
 			let effect = BattleData.getEffect(args[2], this.gen);
 			let fromeffect = BattleData.getEffect(kwargs.from, this.gen);
 			switch (effect.id) {
-			case 'confusion':
-				break;
-			default:
-				if (fromeffect && fromeffect.effectType === 'Ability') {
-					poke.markAbility(fromeffect.name);
-				}
+				case 'confusion':
+					break;
+				default:
+					if (fromeffect && fromeffect.effectType === 'Ability') {
+						poke.markAbility(fromeffect.name);
+					}
 			}
 		},
 
@@ -245,28 +245,28 @@ exports.setup = function (App, BattleData) {
 				return;
 			}
 			switch (effect.id) {
-			case 'brn':
-			case 'tox':
-			case 'psn':
-			case 'slp':
-			case 'par':
-			case 'frz':
-			case 'substitute':
-				break;
-			case 'hyperspacefury':
-			case 'magikarpsrevenge':
-			case 'skydrop':
-				break;
-			case 'sunnyday':
-			case 'raindance':
-			case 'sandstorm':
-			case 'hail':
-				break;
-			case 'unboost':
-				if (fromeffect.effectType === 'Ability') {
-					poke.markAbility(fromeffect.id);
-				}
-				break;
+				case 'brn':
+				case 'tox':
+				case 'psn':
+				case 'slp':
+				case 'par':
+				case 'frz':
+				case 'substitute':
+					break;
+				case 'hyperspacefury':
+				case 'magikarpsrevenge':
+				case 'skydrop':
+					break;
+				case 'sunnyday':
+				case 'raindance':
+				case 'sandstorm':
+				case 'hail':
+					break;
+				case 'unboost':
+					if (fromeffect.effectType === 'Ability') {
+						poke.markAbility(fromeffect.id);
+					}
+					break;
 			}
 		},
 
@@ -315,38 +315,38 @@ exports.setup = function (App, BattleData) {
 			if (item.id === 'airballoon') poke.addVolatile('airballoon');
 			if (effect.id) {
 				switch (effect.id) {
-				case 'pickup':
-					poke.markAbility('Pickup');
-					poke.itemEffect = 'found';
-					break;
-				case 'recycle':
-					poke.itemEffect = 'found';
-					break;
-				case 'frisk':
-					ofpoke.markAbility('Frisk');
-					if (kwargs.identify) { // used for gen 6
-						poke.itemEffect = 'frisked';
-					}
-					break;
-				case 'magician':
-				case 'pickpocket':
-					poke.markAbility(effect.name);
-					poke.itemEffect = 'stolen';
-					break;
-				case 'thief':
-				case 'covet':
-					poke.itemEffect = 'stolen';
-					break;
-				case 'harvest':
-					poke.itemEffect = 'harvested';
-					poke.markAbility('Harvest');
-					break;
-				case 'bestow':
-					poke.itemEffect = 'bestowed';
-					break;
-				case 'trick':
-					poke.itemEffect = 'tricked';
-					break;
+					case 'pickup':
+						poke.markAbility('Pickup');
+						poke.itemEffect = 'found';
+						break;
+					case 'recycle':
+						poke.itemEffect = 'found';
+						break;
+					case 'frisk':
+						ofpoke.markAbility('Frisk');
+						if (kwargs.identify) { // used for gen 6
+							poke.itemEffect = 'frisked';
+						}
+						break;
+					case 'magician':
+					case 'pickpocket':
+						poke.markAbility(effect.name);
+						poke.itemEffect = 'stolen';
+						break;
+					case 'thief':
+					case 'covet':
+						poke.itemEffect = 'stolen';
+						break;
+					case 'harvest':
+						poke.itemEffect = 'harvested';
+						poke.markAbility('Harvest');
+						break;
+					case 'bestow':
+						poke.itemEffect = 'bestowed';
+						break;
+					case 'trick':
+						poke.itemEffect = 'tricked';
+						break;
 				}
 			}
 		},
@@ -364,57 +364,66 @@ exports.setup = function (App, BattleData) {
 				poke.prevItemEffect = 'eaten';
 			} else if (effect.id) {
 				switch (effect.id) {
-				case 'fling':
-					poke.prevItemEffect = 'flung';
-					break;
-				case 'knockoff':
-					poke.prevItemEffect = 'knocked off';
-					break;
-				case 'stealeat':
-					poke.prevItemEffect = 'stolen';
-					break;
-				case 'gem':
-					poke.prevItemEffect = 'consumed';
-					break;
-				case 'incinerate':
-					poke.prevItemEffect = 'incinerated';
-					break;
+					case 'fling':
+						poke.prevItemEffect = 'flung';
+						break;
+					case 'knockoff':
+						poke.prevItemEffect = 'knocked off';
+						break;
+					case 'stealeat':
+						poke.prevItemEffect = 'stolen';
+						break;
+					case 'gem':
+						poke.prevItemEffect = 'consumed';
+						break;
+					case 'incinerate':
+						poke.prevItemEffect = 'incinerated';
+						break;
 				}
 			} else {
 				switch (item.id) {
-				case 'airballoon':
-					poke.prevItemEffect = 'popped';
-					poke.removeVolatile('airballoon');
-					break;
-				case 'focussash':
-					poke.prevItemEffect = 'consumed';
-					break;
-				case 'focusband':
-					break;
-				case 'powerherb':
-					poke.prevItemEffect = 'consumed';
-					break;
-				case 'whiteherb':
-					poke.prevItemEffect = 'consumed';
-					break;
-				case 'ejectbutton':
-					poke.prevItemEffect = 'consumed';
-					break;
-				case 'redcard':
-					poke.prevItemEffect = 'held up';
-					break;
-				default:
-					poke.prevItemEffect = 'consumed';
+					case 'airballoon':
+						poke.prevItemEffect = 'popped';
+						poke.removeVolatile('airballoon');
+						break;
+					case 'focussash':
+						poke.prevItemEffect = 'consumed';
+						break;
+					case 'focusband':
+						break;
+					case 'powerherb':
+						poke.prevItemEffect = 'consumed';
+						break;
+					case 'whiteherb':
+						poke.prevItemEffect = 'consumed';
+						break;
+					case 'ejectbutton':
+						poke.prevItemEffect = 'consumed';
+						break;
+					case 'redcard':
+						poke.prevItemEffect = 'held up';
+						break;
+					default:
+						poke.prevItemEffect = 'consumed';
 				}
 			}
 		},
 
 		"-ability": function (args, kwargs) {
 			let poke = this.getActive(args[1]);
+			let ident = this.parsePokemonIdent(args[1]);
 			let ability = BattleData.getAbility(args[2], this.gen);
 			let effect = BattleData.getEffect(kwargs.from, this.gen);
 			poke.markAbility(ability.name, effect.id && !kwargs.fail);
 			poke.supressedAbility = false;
+			switch (ability.id) {
+				case 'neutralizinggas':
+					if (!this.conditions["neutralizinggas"]) {
+						this.conditions["neutralizinggas"] = {};
+					}
+					this.conditions["neutralizinggas"][ident.side + ident.slot] = 1;
+					break;
+			}
 		},
 
 		"-endability": function (args, kwargs) {
@@ -461,68 +470,78 @@ exports.setup = function (App, BattleData) {
 			let fromeffect = BattleData.getEffect(kwargs.from, this.gen);
 			poke.addVolatile(effect.id);
 			switch (effect.id) {
-			case 'typechange':
-				poke.removeVolatile('typeadd');
-				if (fromeffect.id) {
-					if (fromeffect.id === 'colorchange') {
-						poke.markAbility('Color Change');
-						poke.volatiles.typechange = (args[3] ? [args[3]] : true);
-					} else if (fromeffect.id === 'reflecttype') {
-						poke.volatiles.typechange = ofpoke.template.types.slice();
+				case 'typechange':
+					poke.removeVolatile('typeadd');
+					if (fromeffect.id) {
+						if (fromeffect.id === 'colorchange') {
+							poke.markAbility('Color Change');
+							poke.volatiles.typechange = (args[3] ? [args[3]] : true);
+						} else if (fromeffect.id === 'reflecttype') {
+							poke.volatiles.typechange = ofpoke.template.types.slice();
+						} else {
+							poke.volatiles.typechange = (args[3] ? [args[3]] : true);
+						}
 					} else {
 						poke.volatiles.typechange = (args[3] ? [args[3]] : true);
 					}
-				} else {
-					poke.volatiles.typechange = (args[3] ? [args[3]] : true);
-				}
-				break;
-			case 'typeadd':
-				poke.volatiles.typeadd = args[3];
-				break;
-			case 'disable':
-				poke.volatiles.disable = args[3] || true;
-				break;
-			case 'stockpile2':
-				poke.removeVolatile('stockpile1');
-				break;
-			case 'stockpile3':
-				poke.removeVolatile('stockpile2');
-				break;
-			case 'perish0':
-				poke.removeVolatile('perish1');
-				break;
-			case 'perish1':
-				poke.removeVolatile('perish2');
-				break;
-			case 'perish2':
-				poke.removeVolatile('perish3');
-				break;
-			case 'smackdown':
-				poke.removeVolatile('magnetrise');
-				poke.removeVolatile('telekinesis');
-				break;
-			case 'doomdesire':
-				this.players[ident.side].side.doomdesire = {turn: this.turn};
-				break;
-			case 'futuresight':
-				this.players[ident.side].side.futuresight = {turn: this.turn};
-				break;
+					break;
+				case 'typeadd':
+					poke.volatiles.typeadd = args[3];
+					break;
+				case 'disable':
+					poke.volatiles.disable = args[3] || true;
+					break;
+				case 'stockpile2':
+					poke.removeVolatile('stockpile1');
+					break;
+				case 'stockpile3':
+					poke.removeVolatile('stockpile2');
+					break;
+				case 'perish0':
+					poke.removeVolatile('perish1');
+					break;
+				case 'perish1':
+					poke.removeVolatile('perish2');
+					break;
+				case 'perish2':
+					poke.removeVolatile('perish3');
+					break;
+				case 'smackdown':
+					poke.removeVolatile('magnetrise');
+					poke.removeVolatile('telekinesis');
+					break;
+				case 'doomdesire':
+					this.players[ident.side].side.doomdesire = { turn: this.turn };
+					break;
+				case 'futuresight':
+					this.players[ident.side].side.futuresight = { turn: this.turn };
+					break;
 			}
 		},
 
 		"-end": function (args, kwargs) {
 			let poke = this.getActive(args[1]);
+			let ident = this.parsePokemonIdent(args[1]);
 			let effect = BattleData.getEffect(args[2], this.gen);
 			poke.removeVolatile(effect.id);
 			switch (effect.id) {
-			case 'perishsong':
-				poke.removeVolatile('perish3');
-				break;
-			case 'stockpile':
-				poke.removeVolatile('stockpile1');
-				poke.removeVolatile('stockpile2');
-				poke.removeVolatile('stockpile3');
-				break;
+				case 'perishsong':
+					poke.removeVolatile('perish3');
+					break;
+				case 'stockpile':
+					poke.removeVolatile('stockpile1');
+					poke.removeVolatile('stockpile2');
+					poke.removeVolatile('stockpile3');
+					break;
+				case 'neutralizinggas':
+					if (this.conditions["neutralizinggas"]) {
+						delete this.conditions["neutralizinggas"][ident.side + ident.slot];
+
+						if (Object.keys(this.conditions["neutralizinggas"]).length === 0) {
+							delete this.conditions["neutralizinggas"];
+						}
+					}
+					break;
 			}
 		},
 
@@ -535,41 +554,41 @@ exports.setup = function (App, BattleData) {
 				poke.markAbility(effect.name);
 			}
 			switch (effect.id) {
-			case 'brickbreak':
-				this.players[ofIdent.side].removeSideCondition('Reflect');
-				this.players[ofIdent.side].removeSideCondition('LightScreen');
-				break;
-			case 'spite':
-				let move = BattleData.getMove(args[3], this.gen).name;
-				let pp = args[4];
-				poke.markMove(move, Number(pp) * (-1));
-				break;
-			case 'gravity':
-				poke.removeVolatile('magnetrise');
-				poke.removeVolatile('telekinesis');
-				break;
-			case 'skillswap':
-				if (this.gen <= 4) break;
-				let pokeability = args[3] ? BattleData.getAbility(args[3], this.gen) : ofpoke.ability;
-				let ofpokeability = args[4] ? BattleData.getAbility(args[4], this.gen) : poke.ability;
-				if (pokeability) {
-					poke.ability = pokeability;
-					if (!ofpoke.baseAbility) ofpoke.baseAbility = pokeability;
-				}
-				if (ofpokeability) {
-					ofpoke.ability = ofpokeability;
-					if (!poke.baseAbility) poke.baseAbility = ofpokeability;
-				}
-				break;
-			case 'quickclaw':
-				poke.item = BattleData.getItem("quickclaw", this.gen);
-				break;
-			case 'focusband':
-				poke.item = BattleData.getItem("focusband", this.gen);
-				break;
-			case 'safetygoggles':
-				poke.item = BattleData.getItem("safetygoggles", this.gen);
-				break;
+				case 'brickbreak':
+					this.players[ofIdent.side].removeSideCondition('Reflect');
+					this.players[ofIdent.side].removeSideCondition('LightScreen');
+					break;
+				case 'spite':
+					let move = BattleData.getMove(args[3], this.gen).name;
+					let pp = args[4];
+					poke.markMove(move, Number(pp) * (-1));
+					break;
+				case 'gravity':
+					poke.removeVolatile('magnetrise');
+					poke.removeVolatile('telekinesis');
+					break;
+				case 'skillswap':
+					if (this.gen <= 4) break;
+					let pokeability = args[3] ? BattleData.getAbility(args[3], this.gen) : ofpoke.ability;
+					let ofpokeability = args[4] ? BattleData.getAbility(args[4], this.gen) : poke.ability;
+					if (pokeability) {
+						poke.ability = pokeability;
+						if (!ofpoke.baseAbility) ofpoke.baseAbility = pokeability;
+					}
+					if (ofpokeability) {
+						ofpoke.ability = ofpokeability;
+						if (!poke.baseAbility) poke.baseAbility = ofpokeability;
+					}
+					break;
+				case 'quickclaw':
+					poke.item = BattleData.getItem("quickclaw", this.gen);
+					break;
+				case 'focusband':
+					poke.item = BattleData.getItem("focusband", this.gen);
+					break;
+				case 'safetygoggles':
+					poke.item = BattleData.getItem("safetygoggles", this.gen);
+					break;
 			}
 		},
 
@@ -598,7 +617,7 @@ exports.setup = function (App, BattleData) {
 		"-fieldstart": function (args, kwargs) {
 			let effect = BattleData.getEffect(args[1], this.gen);
 			let pw = Text.toId(effect.name);
-			this.conditions[pw] = {turn: this.turn};
+			this.conditions[pw] = { turn: this.turn };
 		},
 
 		"-fieldend": function (args, kwargs) {
@@ -613,7 +632,7 @@ exports.setup = function (App, BattleData) {
 				this.debug(this.id + ": Changed to inverse Battle");
 			} else if (args[1] && args[1].trim() === (App.bot.getBotNick().substr(1) + ' lost due to inactivity.')) {
 				App.log("Bot lost due to inactivity. Battle system error. Room: " +
-				this.id + " | Last decision: " + JSON.stringify(this.lastSend));
+					this.id + " | Last decision: " + JSON.stringify(this.lastSend));
 				App.log("Request was: " + JSON.stringify(this.request));
 			}
 		},

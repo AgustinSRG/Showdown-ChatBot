@@ -201,7 +201,7 @@ exports.setup = function (Data) {
 				} else {
 					pokeB.item = targets[j].pokemon.item;
 				}
-				if (!targets[j].pokemon.supressedAbility) {
+				if (!targets[j].pokemon.supressedAbility && !battle.conditions["neutralizinggas"]) {
 					if (targets[j].pokemon.ability === "&unknown") {
 						pokeB.ability = pokeB.template.abilities ? pokeB.template.abilities[0] : null;
 					} else {
@@ -310,7 +310,7 @@ exports.setup = function (Data) {
 			} else {
 				pokeB.item = targets[i].pokemon.item;
 			}
-			if (!targets[i].pokemon.supressedAbility) {
+			if (!targets[i].pokemon.supressedAbility && !battle.conditions["neutralizinggas"]) {
 				if (targets[i].pokemon.ability === "&unknown") {
 					pokeB.ability = pokeB.template.abilities ? Data.getAbility(pokeB.template.abilities[0]) : null;
 				} else {
@@ -320,7 +320,7 @@ exports.setup = function (Data) {
 			let dmg = Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, battle.conditions, battle.gen);
 			dmg = dmg.getMax();
 			if (move.ohko) {
-				if (!pokeA.ability || !(pokeA.ability.id in { 'noguard': 1 })) {
+				if (battle.conditions["neutralizinggas"] || !pokeA.ability || !(pokeA.ability.id in { 'noguard': 1 })) {
 					dmg = dmg * (0.3 * (pokeA.level / (pokeB.level || 100)));
 				}
 			}
