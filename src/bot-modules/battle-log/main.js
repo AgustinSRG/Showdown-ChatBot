@@ -155,7 +155,15 @@ exports.setup = function (App) {
 		}
 
 		if (spl[0] === "win") {
-			if (Text.toId(spl[1]) === Text.toId(App.bot.getBotNick())) {
+			const winners = (spl[1] + "").split("&").map(Text.toId);
+			let win = false;
+			for (let winner of winners) {
+				if (winner === Text.toId(App.bot.getBotNick())) {
+					win = true;
+					break;
+				}
+			}
+			if (win) {
 				BattleLogMod.data.rooms[room].state = "WIN";
 			} else {
 				BattleLogMod.data.rooms[room].state = "LOSE";

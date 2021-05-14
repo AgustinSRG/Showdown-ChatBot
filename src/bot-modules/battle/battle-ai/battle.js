@@ -103,46 +103,46 @@ exports.setup = function (App) {
 			let str = "/choose ";
 			for (let i = 0; i < decision.length; i++) {
 				switch (decision[i].type) {
-				case "team":
-					let team = [];
-					for (let j = 0; j < decision[i].team.length; j++) {
-						team.push(decision[i].team[j] + 1);
-					}
-					let first = team[0] || 1;
-					for (let j = first - 1; j > 0; j--) {
-						if (team.indexOf(j) === -1) {
-							team.push(j);
+					case "team":
+						let team = [];
+						for (let j = 0; j < decision[i].team.length; j++) {
+							team.push(decision[i].team[j] + 1);
 						}
-					}
-					if (this.request && this.request.side && this.request.side.pokemon) {
-						for (let j = 1; j <= this.request.side.pokemon.length; j++) {
+						let first = team[0] || 1;
+						for (let j = first - 1; j > 0; j--) {
 							if (team.indexOf(j) === -1) {
 								team.push(j);
 							}
 						}
-					}
-					str += "team " + team.join(",");
-					break;
-				case "move":
-					str += "move " + (decision[i].moveId + 1);
-					if (decision[i].mega) str += " mega";
-					if (decision[i].zmove) str += " zmove";
-					if (decision[i].ultra) str += " ultra";
-					if (decision[i].dynamax && decision[i].dynamax !== "still") str += " dynamax";
-					if (decision[i].target !== null) {
-						if (decision[i].target >= 0) str += " " + (decision[i].target + 1);
-						else str += " " + (decision[i].target);
-					}
-					break;
-				case "switch":
-					str += "switch " + (decision[i].pokeId + 1);
-					break;
-				case "pass":
-					str += "pass";
-					break;
-				case "shift":
-					str += "shift";
-					break;
+						if (this.request && this.request.side && this.request.side.pokemon) {
+							for (let j = 1; j <= this.request.side.pokemon.length; j++) {
+								if (team.indexOf(j) === -1) {
+									team.push(j);
+								}
+							}
+						}
+						str += "team " + team.join(",");
+						break;
+					case "move":
+						str += "move " + (decision[i].moveId + 1);
+						if (decision[i].mega) str += " mega";
+						if (decision[i].zmove) str += " zmove";
+						if (decision[i].ultra) str += " ultra";
+						if (decision[i].dynamax && decision[i].dynamax !== "still") str += " dynamax";
+						if (decision[i].target !== null) {
+							if (decision[i].target >= 0) str += " " + (decision[i].target + 1);
+							else str += " " + (decision[i].target);
+						}
+						break;
+					case "switch":
+						str += "switch " + (decision[i].pokeId + 1);
+						break;
+					case "pass":
+						str += "pass";
+						break;
+					case "shift":
+						str += "shift";
+						break;
 				}
 				if (i < decision.length - 1) str += ", ";
 			}
@@ -208,14 +208,28 @@ exports.setup = function (App) {
 			if (wmsg && wmsg.length) this.send(wmsg[Math.floor(Math.random() * wmsg.length)]);
 		}
 
+		isTeamsBattle() {
+			return this.gametype in { "multi": 1 };
+		}
+
+		isMyTeamWiner(teamWin) {
+			const winners = (teamWin + "").split("&").map(Text.toId);
+			for (let winner of winners) {
+				if (winner === Text.toId(App.bot.getBotNick())) {
+					return true;
+				}
+			}
+			return false;
+		}
+
 		win(winner) {
 			if (!this.self) return; // Not playing
-			let win = (Text.toId(winner) === Text.toId(App.bot.getBotNick()));
+			let win = this.isTeamsBattle() ? this.isMyTeamWiner(winner) : (Text.toId(winner) === Text.toId(App.bot.getBotNick()));
 			let txt = '';
 			let server = App.config.server.url;
 			if (server && App.config.debug) {
 				let html = '<html><head><title>' + this.id + '</title></head><body>' +
-				this.buffer.map(line => ('<p>' + Text.escapeHTML(line) + '</p>')).join('') + '</body></html>';
+					this.buffer.map(line => ('<p>' + Text.escapeHTML(line) + '</p>')).join('') + '</body></html>';
 				let key = App.data.temp.createTempFile(html);
 				App.log("Generated battle log: " + this.id + " - " + key);
 				if (server.charAt(server.length - 1) === '/') {
@@ -370,7 +384,7 @@ exports.setup = function (App) {
 						this.debug(e.stack);
 						this.debug("Minor failed | Battle id: " + this.id + " | Minor: " + args[0]);
 						App.log("MINOR FAILED: " + e.message + "\nargs: " + args.join("|") + "\nkwargs: " +
-						JSON.stringify(kwargs) + "\nroom: " + this.id + "\n" + e.stack);
+							JSON.stringify(kwargs) + "\nroom: " + this.id + "\n" + e.stack);
 					}
 				}
 			}
@@ -394,7 +408,7 @@ exports.setup = function (App) {
 						this.debug(e.stack);
 						this.debug("Major failed | Battle id: " + this.id + " | Major: " + args[0]);
 						App.log("MAJOR FAILED: " + e.message + "\nargs: " + args.join("|") + "\nkwargs: " +
-						JSON.stringify(kwargs) + "\nroom: " + this.id + "\n" + e.stack);
+							JSON.stringify(kwargs) + "\nroom: " + this.id + "\n" + e.stack);
 					}
 				}
 			}
@@ -430,7 +444,7 @@ exports.setup = function (App) {
 		}
 
 		parseSlot(id) {
-			const slots = {a: 0, b: 1, c: 2, d: 3, e: 4, f: 5};
+			const slots = { a: 0, b: 1, c: 2, d: 3, e: 4, f: 5 };
 			return slots[id] || 0;
 		}
 
@@ -510,9 +524,9 @@ exports.setup = function (App) {
 			let details = this.parseDetails(p.details);
 			let condition = this.parseStatus(p.condition);
 			let pokeA = new Calc.Pokemon(BattleData.getPokemon(details.species, this.gen),
-				{level: details.level, shiny: details.shiny, gender: details.gender});
+				{ level: details.level, shiny: details.shiny, gender: details.gender });
 			pokeA.item = BattleData.getItem(p.item, this.gen);
-			pokeA.ability = BattleData.getAbility(p.baseAbility, this.gen);
+			pokeA.ability = p.ability ? BattleData.getAbility(p.ability, this.gen) : BattleData.getAbility(p.baseAbility, this.gen);
 			pokeA.status = condition.status;
 			pokeA.hp = condition.hp;
 			pokeA.stats = p.stats;
