@@ -540,6 +540,18 @@ exports.setup = function (App) {
 			return pokeA;
 		}
 
+		getBeatupBasePower() {
+			let res = 5;
+			if (this.request && this.request.side && this.request.side.pokemon) {
+				for (let poke of this.request.side.pokemon) {
+					if (poke.condition !== "0 fnt" && poke.stats && poke.stats.atk) {
+						res += (Math.floor(poke.stats.atk / 10));
+					}
+				}
+			}
+			return res;
+		}
+
 		destroy() {
 			if (this.leaveInterval) {
 				clearInterval(this.leaveInterval);

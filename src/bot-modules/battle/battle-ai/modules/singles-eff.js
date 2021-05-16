@@ -101,6 +101,7 @@ exports.setup = function (Data) {
 				side: battle.self.side,
 				volatiles: battle.self.active[0].volatiles,
 				boosts: battle.self.active[0].boosts,
+				inmediate: { beatup_bp: battle.getBeatupBasePower() }
 			});
 		} else {
 			conditionsA = new Conditions({
@@ -205,6 +206,7 @@ exports.setup = function (Data) {
 			side: battle.self.side,
 			volatiles: battle.self.active[0].volatiles,
 			boosts: battle.self.active[0].boosts,
+			inmediate: { beatup_bp: battle.getBeatupBasePower() },
 		});
 
 		let offTypes = pokeA.template.types.slice();
@@ -237,9 +239,11 @@ exports.setup = function (Data) {
 				continue;
 			}
 
+			let defensiveAbilityIgnored = !(battle.gen >= 3 && pokeB.ability && !move.ignoreAbility && (!pokeA.ability || !(pokeA.ability.id in { "moldbreaker": 1, "turboblaze": 1, "teravolt": 1 })));
+
 			if (move.category === "Status") {
 				res.total++;
-				if (move.flags && move.flags['reflectable'] && !battle.conditions["neutralizinggas"] && pokeB.ability && pokeB.ability.id === "magicbounce") {
+				if (move.flags && move.flags['reflectable'] && !defensiveAbilityIgnored && !battle.conditions["neutralizinggas"] && pokeB.ability && pokeB.ability.id === "magicbounce") {
 					res.unviable.push(decisions[i]);
 					continue;
 				}
@@ -260,7 +264,7 @@ exports.setup = function (Data) {
 			}
 
 			if (move.flags && move.flags["powder"] && battle.gen > 5) {
-				if (!battle.conditions["neutralizinggas"] && !pokeB.ability && pokeB.ability.id === "overcoat") {
+				if (!battle.conditions["neutralizinggas"] && !defensiveAbilityIgnored && !pokeB.ability && pokeB.ability.id === "overcoat") {
 					res.unviable.push(decisions[i]);
 					continue;
 				}
@@ -435,28 +439,28 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "gastroacid":
-					if (!battle.foe.active[0].supressedAbility && !battle.conditions["neutralizinggas"]) {
+					if (!battle.foe.active[0].supressedAbility) {
 						res.viable.push(decisions[i]);
 					} else {
 						res.unviable.push(decisions[i]);
 					}
 					continue;
 				case "simplebeam":
-					if (battle.conditions["neutralizinggas"] || !pokeB.ability || pokeB.ability.id !== "simple") {
+					if (!pokeB.ability || pokeB.ability.id !== "simple") {
 						res.viable.push(decisions[i]);
 					} else {
 						res.unviable.push(decisions[i]);
 					}
 					continue;
 				case "worryseed":
-					if (battle.conditions["neutralizinggas"] || !pokeB.ability || pokeB.ability.id !== "insomnia") {
+					if (!pokeB.ability || pokeB.ability.id !== "insomnia") {
 						res.viable.push(decisions[i]);
 					} else {
 						res.unviable.push(decisions[i]);
 					}
 					continue;
 				case "entrainment":
-					if (battle.conditions["neutralizinggas"] || !pokeA.ability || !!pokeB.ability || pokeA.ability.id !== pokeB.ability.id) {
+					if (!pokeA.ability || !!pokeB.ability || pokeA.ability.id !== pokeB.ability.id) {
 						res.viable.push(decisions[i]);
 					} else {
 						res.unviable.push(decisions[i]);
@@ -514,12 +518,20 @@ exports.setup = function (Data) {
 				else res.unviable.push(decisions[i]);
 				continue;
 			}
-			if (move.id in { "haze": 1, "whirlwind": 1, "roar": 1 }) {
+			if (move.id in { "haze": 1 }) {
 				let boostsHaze = 0;
 				for (let j in conditionsB.boosts) {
 					if (conditionsB.boosts[j] > 0) boostsHaze++;
 				}
 				if (boostsHaze) {
+					res.viable.push(decisions[i]);
+				} else {
+					res.unviable.push(decisions[i]);
+				}
+				continue;
+			}
+			if (move.id in { "whirlwind": 1, "roar": 1 }) {
+				if (foeCanSwitch(battle) && !conditionsB.volatiles["ingrain"]) {
 					res.viable.push(decisions[i]);
 				} else {
 					res.unviable.push(decisions[i]);
@@ -659,6 +671,7 @@ exports.setup = function (Data) {
 			side: battle.self.side,
 			volatiles: battle.self.active[0].volatiles,
 			boosts: battle.self.active[0].boosts,
+			inmediate: { beatup_bp: battle.getBeatupBasePower() }
 		});
 		for (let i = 0; i < decisions.length; i++) {
 			let des = decisions[i][0];
@@ -783,6 +796,7 @@ exports.setup = function (Data) {
 			side: battle.self.side,
 			volatiles: battle.self.active[0].volatiles,
 			boosts: battle.self.active[0].boosts,
+			inmediate: { beatup_bp: battle.getBeatupBasePower() }
 		});
 		if (bestSW) {
 			if (conditionsA.volatiles["perish1"] && bestSW) return bestSW; // Perish Song
