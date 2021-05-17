@@ -1,6 +1,6 @@
 {
   "name": "showdown-chatbot",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "author": {
     "name": "Agustin San Roman",
     "email": "agustinsanromanguzman@gmail.com",
@@ -18,10 +18,10 @@
   },
   "dependencies": {
     "busboy": "0.3.1",
-    "cheerio": "1.0.0-rc.3",
-    "probe-image-size": "7.0.1",
+    "cheerio": "1.0.0-rc.9",
+    "probe-image-size": "7.1.0",
     "sockjs-client": "1.5.1",
-    "websocket": "1.0.33"
+    "websocket": "1.0.34"
   },
   "optionalDependencies": {
     "githubhook": "1.9.3",
@@ -36,6 +36,6 @@
   "private": true,
   "license": "MIT",
   "devDependencies": {
-    "eslint": "7.23.0"
+    "eslint": "7.26.0"
   }
 }
