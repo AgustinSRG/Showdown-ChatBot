@@ -71,6 +71,40 @@ exports.setup = function (App) {
 					]);
 				}
 			}
+		} else if (message.indexOf("/challenge") === 0) {
+			const challData = message.substr("/challenge".length);
+			if (challData) {
+				const format = Text.toId(challData.split("|")[0]);
+				let nBattles = Object.keys(mod.BattleBot.battles).length;
+
+				let cmds = [];
+
+				if (canChallenge(from, nBattles)) {
+					if (!(format in App.bot.formats) || !App.bot.formats[format].chall) {
+						cmds.push('/reject ' + from);
+						return;
+					}
+					if (App.bot.formats[format].team && !mod.TeamBuilder.hasTeam(format)) {
+						cmds.push('/reject ' + from);
+						cmds.push('/pm ' + from + "," + App.multilang.mlt(Lang_File, getLanguage("default"), 2) + ' ' + Chat.italics(App.bot.formats[format].name));
+						return;
+					}
+
+					let team = mod.TeamBuilder.getTeam(format);
+					if (team) {
+						cmds.push('/utm ' + team);
+					} else {
+						cmds.push('/utm null');
+					}
+					cmds.push('/accept ' + from);
+				} else {
+					cmds.push('/reject ' + from);
+					cmds.push('/pm ' + from + "," + App.multilang.mlt(Lang_File, getLanguage("default"), "busy").replace("#BN", "" + nBattles));
+				}
+				if (cmds.length > 0) {
+					App.bot.sendTo('', cmds);
+				}
+			}
 		}
 	};
 
