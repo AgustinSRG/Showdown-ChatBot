@@ -172,6 +172,7 @@ exports.setup = function (App) {
 			if (!this.battleReadyToStart) {
 				if (Date.now() - this.creationTimestamp > (90 * 1000)) {
 					// 1 minute waiting, leave
+					this.leaveBattle();
 					this.leave();
 					return;
 				}
@@ -188,6 +189,7 @@ exports.setup = function (App) {
 
 				if (!anyPlayers && Date.now() - this.creationTimestamp > (10 * 1000)) {
 					// All players left and battle is not started, leave
+					this.leaveBattle();
 					this.leave();
 				}
 			}
@@ -200,6 +202,10 @@ exports.setup = function (App) {
 				}.bind(this), 5000);
 			}
 			this.send('/leave');
+		}
+
+		leaveBattle() {
+			this.send('/leavebattle');
 		}
 
 		start() {
