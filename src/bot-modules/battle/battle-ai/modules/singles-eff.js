@@ -260,6 +260,7 @@ exports.setup = function (Data) {
 			} else {
 				if (Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, battle.conditions, battle.gen).getMax() === 0) {
 					res.unviable.push(decisions[i]);
+					continue;
 				}
 			}
 
