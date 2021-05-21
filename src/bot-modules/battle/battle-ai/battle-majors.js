@@ -105,6 +105,10 @@ exports.setup = function (App, BattleData) {
 					args[1].indexOf(App.bot.getBotNick().substr(1)) >= 0) {
 					this.makeDecision();
 				}
+
+				if (args[1].indexOf(App.bot.getBotNick().substr(1) + " reconnected") === 0) {
+					this.waitingForRequestToMove = true;
+				}
 			}
 		},
 
