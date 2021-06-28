@@ -550,9 +550,12 @@ exports.setup = function (App) {
 			let res = 5;
 			if (this.request && this.request.side && this.request.side.pokemon) {
 				for (let poke of this.request.side.pokemon) {
-					if (poke.condition !== "0 fnt" && poke.stats && poke.stats.atk) {
-						res += (Math.floor(poke.stats.atk / 10));
+					try {
+						res += (Math.floor(BattleData.getPokemon(poke.species).baseStats.atk / 10));
+					} catch (ex) {
+						res += 1;
 					}
+
 				}
 			}
 			return res;
