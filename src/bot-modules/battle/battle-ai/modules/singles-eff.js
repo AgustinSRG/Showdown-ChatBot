@@ -461,7 +461,7 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "entrainment":
-					if (!pokeA.ability || !!pokeB.ability || pokeA.ability.id !== pokeB.ability.id) {
+					if (pokeA.ability && pokeB.ability && pokeA.ability.id !== pokeB.ability.id) {
 						res.viable.push(decisions[i]);
 					} else {
 						res.unviable.push(decisions[i]);
