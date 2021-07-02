@@ -71,6 +71,10 @@ exports.setup = function (App) {
 			this.lock = false;
 			this.leaveInterval = null;
 			this.nextIsRequest = false;
+			this.buCache = {
+				rqid: -1,
+				bp: 5,
+			};
 		}
 
 		send(data) {
@@ -547,6 +551,9 @@ exports.setup = function (App) {
 		}
 
 		getBeatupBasePower() {
+			if (this.buCache.rqid === this.rqid) {
+				return this.buCache.bp;
+			}
 			let res = 5;
 			if (this.request && this.request.side && this.request.side.pokemon) {
 				for (let poke of this.request.side.pokemon) {
@@ -555,9 +562,10 @@ exports.setup = function (App) {
 					} catch (ex) {
 						res += 1;
 					}
-
 				}
 			}
+			this.buCache.bp = res;
+			this.buCache.rqid = this.rqid;
 			return res;
 		}
 
