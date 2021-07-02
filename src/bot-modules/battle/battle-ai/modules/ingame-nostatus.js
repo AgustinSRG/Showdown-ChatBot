@@ -37,6 +37,19 @@ exports.setup = function (Data) {
 
 	/* Team and Switch Decisions */
 
+	function getTeamDecisionComplexity(battle, decisions) {
+		let numberOfMoves = 0;
+		let numberOfTargets = battle.foe.teamPv.length;
+		for (let p of battle.request.side.pokemon) {
+			numberOfMoves += p.moves.length;
+		}
+		let multiplier = 1;
+		if (battle.gametype === 'doubles') multiplier = 2;
+		else if (battle.gametype === 'triples') multiplier = 3;
+
+		return numberOfMoves * numberOfTargets * multiplier;
+	}
+
 	function getPokemonAverage(battle, s) {
 		if (!battle.foe.teamPv.length) return 0;
 
@@ -261,6 +274,13 @@ exports.setup = function (Data) {
 	}
 
 	BattleModule.decide = function (battle, decisions) {
+		if (battle.request.teamPreview) {
+			const complexity = getTeamDecisionComplexity(battle, decisions);
+			if (complexity > 100) {
+				return decisions[Math.floor(Math.random() * decisions.length)];
+			}
+		}
+
 		let dTable = [];
 		let p, maxP;
 		maxP = null;
