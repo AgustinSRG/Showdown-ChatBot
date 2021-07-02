@@ -92,7 +92,7 @@ exports.translations.abilities = {
 	"lightningrod": "Pararrayos",
 	"limber": "Flexibilidad",
 	"liquidooze": "Lodo Líquido",
-	"magicbounce": "Espejomágico",
+	"magicbounce": "Espejo Mágico",
 	"magicguard": "Muro Mágico",
 	"magician": "Prestidigitador",
 	"magmaarmor": "Escudo Magma",
@@ -2967,4 +2967,5 @@ exports.translations.legacy = {
 	"shellbell": "Campana Concha",
 	"stick": "Palo",
 	"waveincense": "Incienso Aqua",
+	"magicbounce": "Espejomágico",
 };

@@ -2967,4 +2967,5 @@ exports.translations.legacy = {
 	"shellbell": "Shell Bell",
 	"stick": "Stick",
 	"waveincense": "Wave Incense",
+	"magicbounce": "Magic Bounce",
 };

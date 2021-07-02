@@ -89,6 +89,9 @@ module.exports = {
 		let results = [];
 		for (let i = 0; i < translations.length; i++) {
 			if (normalize(translations[0].from) !== normalize(translations[i].from)) continue;
+			if (i !== 0 && translations[i].type === "legacy" && translations[i].to === translations[0].to) {
+				continue;
+			}
 			if (typeof translations[i].to === "string") {
 				results.push(Chat.bold(translations[i].to) + " (" +
 					(this.mlt(translations[i].type) || translations[i].type) + ")");
