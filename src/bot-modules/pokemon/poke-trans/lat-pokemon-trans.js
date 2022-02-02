@@ -50,7 +50,7 @@ exports.translations.abilities = {
 	"filter": "Filtro", // SAME
 	"flamebody": "Cuerpo llama", // LATINO
 	"flareboost": "Ímpetu Ardiente", // SAME
-	"flashfire": "Absorber Fuego",
+	"flashfire": "Absorber Fuego", // SAME
 	"flowergift": "Don Floral", // SAME
 	"flowerveil": "Velo Flor", // SAME
 	"forecast": "Predicción", // SAME
@@ -192,8 +192,8 @@ exports.translations.abilities = {
 	"unnerve": "Nerviosismo", // SAME
 	"victorystar": "Tinovictoria", // SAME
 	"vitalspirit": "Espíritu Vital", // SAME
-	"voltabsorb": "Absorber Electricidad",
-	"waterabsorb": "Absorber Agua",
+	"voltabsorb": "Absorber Electricidad", // SAME
+	"waterabsorb": "Absorber Agua", // SAME
 	"waterveil": "Velo Agua", // SAME
 	"weakarmor": "Armadura Frágil", // SAME
 	"whitesmoke": "Humo Blanco", // SAME
@@ -273,14 +273,14 @@ exports.translations.abilities = {
 	"steelyspirit": "Alma acerada", // SAME
 	"unseenfist": "Puño invisible", // SAME
 	"wanderingspirit": "Alma errante", // SAME
-	"asone": "Unidad ecuestre",
+	"asone": "Unidad ecuestre", // SAME
 	"asoneglastrier": "Unidad ecuestre (Glastrier)",
 	"asonespectrier": "Unidad ecuestre (Spectrier)",
-	"chillingneigh": "Relincho blanco",
-	"curiousmedicine": "Medicina extraña",
-	"dragonsmaw": "Mandíbula dragón",
-	"grimneigh": "Relincho negro",
-	"transistor": "Transistor",
+	"chillingneigh": "Relincho blanco", // SAME
+	"curiousmedicine": "Medicina extraña", // SAME
+	"dragonsmaw": "Mandíbula dragón", // SAME
+	"grimneigh": "Relincho negro", // SAME
+	"transistor": "Transistor", // SAME
 };
 
 /* Battle Items */
@@ -799,7 +799,9 @@ exports.translations.items = {
 	"utilityumbrella": "Parasol multiuso", // SAME
 	"waterstone": "Piedra agua", // LATINO
 	"whippeddream": "Dulce de nata", // SAME
-	"galaricacuff": "Brazal galanuez",
+	"galaricacuff": "Brazal galanuez", // SAME
+	"galaricawreath": "",
+	"vilevial": "",
 };
 
 /* Battle Moves */
@@ -1658,14 +1660,14 @@ exports.translations.moves = {
 	"visegrip": "Fuerza de garra", // LATINO
 	"wickedblow": "Golpe oscuro", // SAME
 	"zippyzap": "Pikaturbo", // SAME
-	"astralbarrage": "Orbes espectro",
-	"dragonenergy": "Dracoenergía",
-	"eeriespell": "Conjuro funesto",
-	"fierywrath": "Furia candente",
-	"freezingglare": "Mirada heladora",
-	"glaciallance": "Lanza glacial",
-	"thundercage": "Electrojaula",
-	"thunderouskick": "Patada relámpago",
+	"astralbarrage": "Orbes espectro", // SAME
+	"dragonenergy": "Dracoenergía", // SAME
+	"eeriespell": "Conjuro funesto", // SAME
+	"fierywrath": "Furia candente", // SAME
+	"freezingglare": "Mirada heladora", // SAME
+	"glaciallance": "Lanza glacial", // SAME
+	"thundercage": "Electrojaula", // SAME
+	"thunderouskick": "Patada relámpago", // SAME
 };
 
 /* Natures */
@@ -2935,6 +2937,43 @@ exports.translations.pokemon = {
 	"justyke": "Justyke",
 	"solotl": "Solotl",
 	"miasmaw": "Miasmaw",
+	"growlithehisui": "Growlithe-Hisui",
+	"arcaninehisui": "Arcanine-Hisui",
+	"voltorbhisui": "Voltorb-Hisui",
+	"electrodehisui": "Electrode-Hisui",
+	"typhlosionhisui": "Typhlosion-Hisui",
+	"qwilfishhisui": "Qwilfish-Hisui",
+	"sneaselhisui": "Sneasel-Hisui",
+	"dialgaorigin": "Dialga-Origin",
+	"palkiaorigin": "Palkia-Origin",
+	"samurotthisui": "Samurott-Hisui",
+	"lilliganthisui": "Lilligant-Hisui",
+	"basculinwhitestriped": "Basculin-White-Striped",
+	"zoruahisui": "Zorua-Hisui",
+	"zoroarkhisui": "Zoroark-Hisui",
+	"braviaryhisui": "Braviary-Hisui",
+	"sliggoohisui": "Sliggoo-Hisui",
+	"goodrahisui": "Goodra-Hisui",
+	"avalugghisui": "Avalugg-Hisui",
+	"decidueyehisui": "Decidueye-Hisui",
+	"wyrdeer": "Wyrdeer",
+	"kleavor": "Kleavor",
+	"ursaluna": "Ursaluna",
+	"basculegion": "Basculegion",
+	"basculegionf": "Basculegion-F",
+	"sneasler": "Sneasler",
+	"overqwil": "Overqwil",
+	"enamorus": "Enamorus",
+	"enamorustherian": "Enamorus-Therian",
+	"miasmite": "Miasmite",
+	"chromera": "Chromera",
+	"nohface": "Nohface",
+	"monohm": "Monohm",
+	"duohm": "Duohm",
+	"dorsoil": "Dorsoil",
+	"protowatt": "Protowatt",
+	"venomicon": "Venomicon",
+	"venomiconepilogue": "Venomicon-Epilogue",
 };
 
 exports.translations.legacy = {};
