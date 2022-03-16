@@ -697,7 +697,6 @@ class CommandContext {
 	 * Sends something to the showdown server
 	 * @param {Array<String>|String} data - Data to be sent
 	 * @param {String} room - Room to send the data
-	 * @returns {SendManager}
 	 */
 	send(data, room) {
 		if (room === undefined) {
@@ -711,7 +710,6 @@ class CommandContext {
 	 * Sends a private message
 	 * @param {String} to - User to send the message
 	 * @param {Array<String>|String} data
-	 * @returns {SendManager}
 	 */
 	sendPM(to, data) {
 		return this.parser.bot.pm(to, data);
@@ -720,7 +718,6 @@ class CommandContext {
 	/**
 	 * Standard reply method
 	 * @param {Array<String>|String} msg
-	 * @returns {SendManager}
 	 */
 	reply(msg) {
 		if (this.isPM) {
@@ -735,7 +732,6 @@ class CommandContext {
 	/**
 	 * Replies with /announce
 	 * @param {Array<String>|String} msg
-	 * @returns {SendManager}
 	 */
 	wallReply(msg) {
 		let roomData = this.parser.bot.rooms[this.room];
@@ -759,7 +755,6 @@ class CommandContext {
 	/**
 	 * Replies via private message
 	 * @param {Array<String>|String} msg
-	 * @returns {SendManager}
 	 */
 	pmReply(msg) {
 		return this.sendPM(this.byIdent.id, msg);
@@ -769,7 +764,6 @@ class CommandContext {
 	 * Replies standard or via pm depending of a permission
 	 * @param {Array<String>|String} msg
 	 * @param {String} perm - Permission to check
-	 * @returns {SendManager}
 	 */
 	restrictReply(msg, perm) {
 		if (this.wall && this.can('wall', this.room)) {
@@ -784,7 +778,6 @@ class CommandContext {
 	/**
 	 * Replies with an error message
 	 * @param {Array<String>|String} msg
-	 * @returns {SendManager}
 	 */
 	errorReply(msg) {
 		this.wall = false;
@@ -803,7 +796,6 @@ class CommandContext {
 	/**
 	 * Replies with an access denied message
 	 * @param {String} perm - Permission required to use the command
-	 * @returns {SendManager}
 	 */
 	replyAccessDenied(perm) {
 		return this.pmReply(this.parser.app.multilang.mlt(Lang_File, this.lang, 0, {perm: Chat.italics(perm)}));

@@ -47,11 +47,14 @@ exports.setup = function (App) {
 			let maxMsgLength = parseInt(context.post.maxmsglen);
 			let sslcertFile = context.post.sslcert || "";
 			let sslkeyFile = context.post.sslkey || "";
-
+			let bufLen = parseInt(context.post.buflen);
+			let senddelay = parseInt(context.post.senddelay);
 
 			try {
 				check(!isNaN(newPort), "Invalid port.");
 				check(!isNaN(maxlines) && maxlines > 0, "Invalid lines restriction");
+				check(!isNaN(bufLen) && bufLen > 0, "Invalid message buffer length");
+				check(!isNaN(senddelay) && senddelay > 0, "Invalid message sending delay");
 				check(!isNaN(maxMsgLength) && maxMsgLength > 0, "Invialid message length restriction");
 				check(!sslcertFile || FileSystem.existsSync(Path.resolve(App.appDir, sslcertFile)), "SSl certificate file was not found.");
 				check(!sslkeyFile || FileSystem.existsSync(Path.resolve(App.appDir, sslkeyFile)), "SSl key file was not found.");
@@ -75,6 +78,9 @@ exports.setup = function (App) {
 				App.config.apptitle = context.post.apptitle || "";
 				App.config.bot.loginserv = loginserv || "play.pokemonshowdown.com";
 				App.config.bot.maxlines = maxlines;
+				App.config.bot.buflen = bufLen;
+				App.config.bot.senddelay = senddelay;
+				App.config.bot.maxlines = maxlines;
 				App.config.bot.maxMessageLength = maxMsgLength;
 				App.config.debug = !!context.post.debugmode;
 				App.config.useproxy = !!context.post.useproxy;
@@ -87,6 +93,9 @@ exports.setup = function (App) {
 					App.config.websocketLibrary = 'websocket';
 				}
 				App.saveConfig();
+				App.bot.maxLinesSend = App.config.bot.maxlines;
+				App.bot.sendBufferMaxlength = App.config.bot.buflen;
+				App.bot.chatThrottleDelay = App.config.bot.senddelay;
 				ok = "Changes made successfuly.";
 				App.logServerAction(context.user.id, 'Administration options were editted');
 			}
@@ -107,6 +116,8 @@ exports.setup = function (App) {
 		htmlVars.websocket_selected = (App.config.websocketLibrary === 'websocket' ? 'selected="selected"' : '');
 		htmlVars.loginserv = (App.config.bot.loginserv || 'play.pokemonshowdown.com');
 		htmlVars.maxlines = (App.config.bot.maxlines || '3');
+		htmlVars.buflen = (App.config.bot.buflen || '6');
+		htmlVars.senddelay = (App.config.bot.senddelay || '200');
 		htmlVars.maxmsglen = (App.config.bot.maxMessageLength || '300');
 		htmlVars.debugmode = (App.config.debug ? 'checked="checked"' : '');
 		htmlVars.useproxy = (App.config.useproxy ? 'checked="checked"' : '');

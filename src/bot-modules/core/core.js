@@ -71,10 +71,9 @@ function setup(App) {
 			cmds.push('|/avatar ' + App.config.modules.core.avatar);
 		}
 		if (cmds.length) {
-			App.bot.send(cmds).then(execInitCmds);
-		} else {
-			execInitCmds();
+			App.bot.send(cmds);
 		}
+		execInitCmds();
 	}
 
 	function setLoginTimer(time) {

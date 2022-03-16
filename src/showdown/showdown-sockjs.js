@@ -25,7 +25,6 @@ const Url = require('url');
 const SockJS = require('sockjs-client');
 const Https = require('https');
 
-const Message_Sent_Delay = 2000; // Delay in order to avoid losing messages because of anti-flood system
 const Default_Room = "lobby"; // If the server sends a message without specifying the room
 
 const Default_Login_Server = "play.pokemonshowdown.com";
@@ -44,11 +43,17 @@ class Bot {
 	 * @param {Number} maxLinesSend - Pokemon Showdown server lines per message restriction
 	 * @param {Boolean} connectionRetry - true for retrying the connectio on disconnect
 	 * @param {Number} connectionRetryDelay - miliseconds to wait before retrying the connection
+	 * @param {Boolean} secure - Use HTTPS
+	 * @param {Number} sendBufferMaxlength - Max length of the sending buffer
+	 * @param {Number} chatThrottleDelay - Chat throttle delay in ms
 	 */
-	constructor(server, port, serverId, loginServer, maxLinesSend, connectionRetry, connectionRetryDelay, secure) {
+	constructor(server, port, serverId, loginServer, maxLinesSend, connectionRetry, connectionRetryDelay, secure, sendBufferMaxlength, chatThrottleDelay) {
 		this.server = server;
 		this.port = port;
 		this.secure = !!secure;
+
+		this.sendBufferMaxlength = Math.max(1, parseInt(sendBufferMaxlength + "") || 6);
+		this.chatThrottleDelay = Math.max(0, parseInt(chatThrottleDelay + "") || 200);
 
 		this.loginOptions = {};
 		this.loginOptions.serverId = serverId;
@@ -71,13 +76,14 @@ class Bot {
 		this.rooms = {};
 		this.formats = {};
 
-		this.sending = {};
-		this.nextSend = 0;
-
 		this.connectionRetryTimer = null;
 
 		this.errOptions = {};
 		this.errOptions.retryDelay = connectionRetryDelay;
+
+		this.msgQueue = [];
+		this.sendingQueue = [];
+		this.sendingQueueTimeout = null;
 
 		if (connectionRetry) {
 			this.on('connectFailed', function () {
@@ -163,13 +169,14 @@ class Bot {
 			clearTimeout(this.loginRetryTimer);
 			this.loginRetryTimer = null;
 		}
-		for (let k in this.sending) {
-			this.sending[k].kill();
-			delete this.sending[k];
-		}
-		this.nextSend = 0;
 		this.rooms = {};
 		this.conntime = 0;
+		this.sendingQueue = [];
+		this.msgQueue = [];
+		if (this.sendingQueueTimeout) {
+			clearTimeout(this.sendingQueueTimeout);
+			this.sendingQueueTimeout = null;
+		}
 		this.status.onDisconnect();
 	}
 
@@ -386,32 +393,105 @@ class Bot {
 		return this.nextSend++;
 	}
 
+	addToMsgQueue(msg) {
+		let lines = msg.split("\n");
+		for (let line of lines) {
+			this.msgQueue.push(line);
+		}
+		this.processMessageQueue();
+	}
+
+	processMessageQueue() {
+		if (this.sendingQueueTimeout) {
+			clearTimeout(this.sendingQueueTimeout);
+			this.sendingQueueTimeout = null;
+		}
+
+		if (!this.isConnected() || this.msgQueue.length === 0) {
+			return;
+		}
+
+		const now = Date.now();
+		this.sendingQueue = this.sendingQueue.filter(function (msg) {
+			return (now < msg.et);
+		});
+
+		let timeEx = (this.sendingQueue.length > 0) ? (this.sendingQueue[this.sendingQueue.length - 1].et) : Date.now();
+
+		const spaceInQueue = this.sendBufferMaxlength - this.sendingQueue.length;
+
+		if (spaceInQueue > 0) {
+			const linesToSend = [];
+
+			for (let i = 0; i < spaceInQueue && this.msgQueue.length > 0; i++) {
+				linesToSend.push(this.msgQueue.shift());
+			}
+
+			while (linesToSend.length > 0) {
+				const groupLines = [];
+				let groupLinesRoom = null;
+
+				for (let i = 0; i < this.maxLinesSend && linesToSend.length > 0; i++) {
+					const roomInLine = linesToSend.indexOf("|") >= 0 ? linesToSend[0].split("|")[0] : "";
+
+					if (groupLinesRoom === null) {
+						groupLinesRoom = roomInLine;
+					} else if (groupLinesRoom !== roomInLine) {
+						break;
+					}
+
+					groupLines.push(linesToSend.shift());
+				}
+
+				const multiLineMsg = groupLines.join("\n");
+				this.socket.send(multiLineMsg);
+				this.events.emit('send', multiLineMsg);
+
+				for (let i = 0; i < groupLines.length; i++) {
+					timeEx += this.chatThrottleDelay;
+					this.sendingQueue.push({
+						et: timeEx,
+					});
+				}
+			}
+		}
+
+		if (this.msgQueue.length > 0) {
+			const waitUntil = (this.sendingQueue.length > 0) ? (Date.now() - this.sendingQueue[0].et) : 0;
+			if (waitUntil > 0) {
+				this.sendingQueueTimeout = setTimeout(function () {
+					this.sendingQueueTimeout = null;
+					this.processMessageQueue();
+				}.bind(this), waitUntil);
+			} else {
+				this.sendingQueueTimeout = setTimeout(function () {
+					this.sendingQueueTimeout = null;
+					this.processMessageQueue();
+				}.bind(this), 1);
+			}
+		}
+	}
+
 	/**
 	 * @param {String|Array<String>} data
-	 * @returns {SendManager}
 	 */
 	send(data) {
 		if (!this.socket) return null;
-		let id = this.getSendId();
-		let manager = new SendManager(data, this.maxLinesSend,
-			function (msg) {
-				this.socket.send(msg);
-				this.events.emit('send', msg);
-			}.bind(this),
 
-			function () {
-				delete this.sending[id];
-			}.bind(this)
-		);
-		this.sending[id] = manager;
-		manager.start();
-		return manager;
+		if (!Array.isArray(data)) {
+			data = [data.toString()];
+		} else {
+			data = data.slice();
+		}
+
+		for (let msg of data) {
+			this.addToMsgQueue(msg);
+		}
 	}
 
 	/**
 	 * @param {String} room
 	 * @param {String|Array<String>} data
-	 * @returns {SendManager}
 	 */
 	sendTo(room, data) {
 		if (!(data instanceof Array)) {
@@ -425,7 +505,6 @@ class Bot {
 
 	/**
 	 * @param {String|Array<String>} data
-	 * @returns {SendManager}
 	 */
 	sendToGlobal(data) {
 		return this.sendTo('', data);
@@ -434,7 +513,6 @@ class Bot {
 	/**
 	 * @param {String} user
 	 * @param {String|Array<String>} data
-	 * @returns {SendManager}
 	 */
 	pm(user, data) {
 		if (!(data instanceof Array)) {
@@ -448,7 +526,6 @@ class Bot {
 
 	/**
 	 * @param {Array<String>} rooms
-	 * @returns {SendManager}
 	 */
 	joinRooms(rooms) {
 		let data = [];
@@ -461,7 +538,6 @@ class Bot {
 
 	/**
 	 * @param {String} room
-	 * @returns {SendManager}
 	 */
 	joinRoom(room) {
 		return this.joinRooms([room]);
@@ -469,7 +545,6 @@ class Bot {
 
 	/**
 	 * @param {Array<String>} rooms
-	 * @returns {SendManager}
 	 */
 	leaveRooms(rooms) {
 		let data = [];
@@ -482,7 +557,6 @@ class Bot {
 
 	/**
 	 * @param {String} room
-	 * @returns {SendManager}
 	 */
 	leaveRoom(room) {
 		return this.leaveRooms([room]);
@@ -795,90 +869,6 @@ class BotRoom {
 	}
 }
 
-/**
- * Represents a queue manager that sends messages
- * to a Pokemon Showdown Server
- */
-class SendManager {
-	/**
-	 * @param {String|Array<String>} data
-	 * @param {Number} msgMaxLines
-	 * @param {function(String)} sendFunc
-	 * @param {function} destroyHandler
-	 */
-	constructor(data, msgMaxLines, sendFunc, destroyHandler) {
-		this.data = data;
-		this.msgMaxLines = msgMaxLines;
-		this.sendFunc = sendFunc;
-		this.status = 'sending';
-		this.callback = null;
-		this.destroyHandler = destroyHandler;
-		this.err = null;
-		this.interval = null;
-	}
-
-	start() {
-		let data = this.data;
-		if (!(data instanceof Array)) {
-			data = [data.toString()];
-		} else {
-			data = data.slice();
-		}
-		let nextToSend = function () {
-			if (!data.length) {
-				clearInterval(this.interval);
-				this.interval = null;
-				this.finalize();
-				return;
-			}
-			let toSend = [];
-			let firstMsg = data.shift();
-			toSend.push(firstMsg);
-			let roomToSend = "";
-			if (firstMsg.indexOf('|') >= 0) {
-				roomToSend = firstMsg.split('|')[0];
-			}
-			while (data.length > 0 && toSend.length < this.msgMaxLines) {
-				let subMsg = data[0];
-				if (subMsg.split('|')[0] !== roomToSend) {
-					break;
-				} else {
-					toSend.push(subMsg.split('|').slice(1).join('|'));
-					data.shift();
-				}
-			}
-			this.sendFunc(toSend.join('\n'));
-		};
-		this.interval = setInterval(nextToSend.bind(this), Message_Sent_Delay);
-		nextToSend.call(this);
-	}
-
-	finalize() {
-		this.status = 'finalized';
-		if (typeof this.callback === "function") this.callback(this.err);
-		if (typeof this.destroyHandler === "function") this.destroyHandler(this);
-	}
-
-	/**
-	 * @param {function} callback
-	 */
-	then(callback) {
-		if (this.status !== 'sending') {
-			return callback(this.err);
-		} else {
-			this.callback = callback;
-		}
-	}
-
-	kill() {
-		if (this.interval) clearInterval(this.interval);
-		this.interval = null;
-		this.err = new Error("Send Manager was killed");
-		this.finalize();
-	}
-}
-
 exports.Bot = Bot;
 exports.BotStatus = BotStatus;
 exports.BotRoom = BotRoom;
-exports.SendManager = SendManager;

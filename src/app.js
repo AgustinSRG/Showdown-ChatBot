@@ -116,6 +116,8 @@ class ChatBotApp {
 				serverid: "showdown",
 				retrydelay: (10 * 1000),
 				maxlines: 3,
+				buflen: 6,
+				senddelay: 600,
 			};
 		}
 
@@ -215,8 +217,18 @@ class ChatBotApp {
 			ShowdownBot = require(Path.resolve(__dirname, 'showdown/showdown-sockjs.js')).Bot;
 		}
 
-		this.bot = new ShowdownBot(this.config.bot.server, this.config.bot.port, this.config.bot.serverid,
-			this.config.bot.loginserv, this.config.bot.maxlines, true, this.config.bot.retrydelay, this.config.bot.secure);
+		this.bot = new ShowdownBot(
+			this.config.bot.server,
+			this.config.bot.port,
+			this.config.bot.serverid,
+			this.config.bot.loginserv,
+			this.config.bot.maxlines,
+			true,
+			this.config.bot.retrydelay,
+			this.config.bot.secure,
+			this.config.bot.buflen || 6,
+			this.config.bot.senddelay || 200
+		);
 
 		/* Create the server */
 		this.server = new Server(this.confDir, this);
