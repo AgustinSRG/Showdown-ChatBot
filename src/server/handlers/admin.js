@@ -87,11 +87,6 @@ exports.setup = function (App) {
 				App.config.blockautodownload = !!context.post.blockautodownload;
 				App.config.autoremoveuserdata = !!context.post.rmuserdata;
 				App.config.mainhtml = (context.post.mainhtml || '').trim();
-				if (context.post.wslib === 'sockjs') {
-					App.config.websocketLibrary = 'sockjs';
-				} else {
-					App.config.websocketLibrary = 'websocket';
-				}
 				App.saveConfig();
 				App.bot.maxLinesSend = App.config.bot.maxlines;
 				App.bot.sendBufferMaxlength = App.config.bot.buflen;
@@ -112,8 +107,6 @@ exports.setup = function (App) {
 		htmlVars.bindaddress = (App.config.server.bindaddress || '');
 		htmlVars.appurl = (App.config.server.url || "");
 		htmlVars.apptitle = (App.config.apptitle || 'Showdown ChatBot');
-		htmlVars.sockjs_selected = (App.config.websocketLibrary !== 'websocket' ? 'selected="selected"' : '');
-		htmlVars.websocket_selected = (App.config.websocketLibrary === 'websocket' ? 'selected="selected"' : '');
 		htmlVars.loginserv = (App.config.bot.loginserv || 'play.pokemonshowdown.com');
 		htmlVars.maxlines = (App.config.bot.maxlines || '3');
 		htmlVars.buflen = (App.config.bot.buflen || '6');

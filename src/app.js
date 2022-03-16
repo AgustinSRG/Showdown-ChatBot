@@ -198,24 +198,13 @@ class ChatBotApp {
 		}
 
 		/* Create the bot */
-		let ShowdownBot = null;
-		if (this.config.websocketLibrary === 'websocket') {
-			try {
-				require('websocket');
-			} catch (e) {
-				console.log('Installing dependencies... (websocket)');
-				require('child_process').spawnSync('sh', ['-c', 'npm install websocket'], { stdio: 'inherit' });
-			}
-			ShowdownBot = require(Path.resolve(__dirname, 'showdown/showdown-ws.js')).Bot;
-		} else {
-			try {
-				require('sockjs-client');
-			} catch (e) {
-				console.log('Installing dependencies... (sockjs-client)');
-				require('child_process').spawnSync('sh', ['-c', 'npm install sockjs-client'], { stdio: 'inherit' });
-			}
-			ShowdownBot = require(Path.resolve(__dirname, 'showdown/showdown-sockjs.js')).Bot;
+		try {
+			require('sockjs-client');
+		} catch (e) {
+			console.log('Installing dependencies... (sockjs-client)');
+			require('child_process').spawnSync('sh', ['-c', 'npm install sockjs-client'], { stdio: 'inherit' });
 		}
+		const ShowdownBot = require(Path.resolve(__dirname, 'showdown/showdown-sockjs.js')).Bot;
 
 		this.bot = new ShowdownBot(
 			this.config.bot.server,
