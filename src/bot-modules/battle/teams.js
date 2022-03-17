@@ -55,7 +55,7 @@ exports.setup = function (App) {
 			if (line === '' || line === '---') {
 				curSet = null;
 			} else if (!curSet) {
-				curSet = {name: '', species: '', gender: '', item: '', ability: '', nature: ''};
+				curSet = { name: '', species: '', gender: '', item: '', ability: '', nature: '' };
 				team.push(curSet);
 				let atIndex = line.lastIndexOf(' @ ');
 				if (atIndex !== -1) {
@@ -89,6 +89,8 @@ exports.setup = function (App) {
 				curSet.ability = line;
 			} else if (line === 'Shiny: Yes') {
 				curSet.shiny = true;
+			} else if (line === 'Gigantamax: Yes') {
+				curSet.gigantamax = true;
 			} else if (line.substr(0, 7) === 'Level: ') {
 				line = line.substr(7);
 				curSet.level = parseInt(line);
@@ -101,7 +103,7 @@ exports.setup = function (App) {
 			} else if (line.substr(0, 5) === 'EVs: ') {
 				line = line.substr(5);
 				let evLines = line.split('/');
-				curSet.evs = {hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0};
+				curSet.evs = { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 };
 				for (let j = 0; j < evLines.length; j++) {
 					let evLine = evLines[j].trim();
 					let spaceIndex = evLine.indexOf(' ');
@@ -114,7 +116,7 @@ exports.setup = function (App) {
 			} else if (line.substr(0, 5) === 'IVs: ') {
 				line = line.substr(5);
 				let ivLines = line.split(' / ');
-				curSet.ivs = {hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31};
+				curSet.ivs = { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 };
 				for (let j = 0; j < ivLines.length; j++) {
 					let ivLine = ivLines[j];
 					let spaceIndex = ivLine.indexOf(' ');
@@ -154,13 +156,14 @@ exports.setup = function (App) {
 	};
 
 	/**
- 	* Transforms a JSON team to packed format
- 	* @param {Object} team - JSON team
- 	* @returns {String} - Packed team
- 	*/
+	  * Transforms a JSON team to packed format
+	  * @param {Object} team - JSON team
+	  * @returns {String} - Packed team
+	  */
 	TeamsTools.packTeam = function (team) {
 		let buf = '';
 		if (!team) return '';
+		let hasHP;
 		for (let i = 0; i < team.length; i++) {
 			let set = team[i];
 			if (buf) buf += ']';
@@ -198,14 +201,22 @@ exports.setup = function (App) {
 				buf += '|' + id;
 			}
 			// moves
-			buf += '|' + set.moves.map(Text.toId).join(',');
+			buf += '|';
+			if (set.moves) {
+				for (let j = 0; j < set.moves.length; j++) {
+					let moveid = Text.toId(set.moves[j]);
+					if (j && !moveid) continue;
+					buf += (j ? ',' : '') + moveid;
+					if (moveid.substr(0, 11) === 'hiddenpower' && moveid.length > 11) hasHP = true;
+				}
+			}
 			// nature
 			buf += '|' + set.nature;
 			// evs
 			let evs = '|';
 			if (set.evs) {
 				evs = '|' + (set.evs['hp'] || '') + ',' + (set.evs['atk'] || '') + ',' + (set.evs['def'] || '') + ',' +
-				(set.evs['spa'] || '') + ',' + (set.evs['spd'] || '') + ',' + (set.evs['spe'] || '');
+					(set.evs['spa'] || '') + ',' + (set.evs['spd'] || '') + ',' + (set.evs['spe'] || '');
 			}
 			if (evs === '|,,,,,') {
 				buf += '|';
@@ -246,6 +257,12 @@ exports.setup = function (App) {
 			} else {
 				buf += '|';
 			}
+
+			if (set.pokeball || (set.hpType && Text.toId(set.hpType) !== hasHP) || set.gigantamax) {
+				buf += ',' + (set.hpType || '');
+				buf += ',' + Text.toId(set.pokeball);
+				buf += ',' + (set.gigantamax ? 'G' : '');
+			}
 		}
 		return buf;
 	};
@@ -284,7 +301,7 @@ exports.setup = function (App) {
 			j = buf.indexOf('|', i);
 			let ability = buf.substring(i, j);
 			let template = TeamsTools.getTemplate(set.species);
-			set.ability = (template.abilities && ability in {'': 1, 0: 1, 1: 1, H: 1} ? template.abilities[ability || '0'] : ability);
+			set.ability = (template.abilities && ability in { '': 1, 0: 1, 1: 1, H: 1 } ? template.abilities[ability || '0'] : ability);
 			i = j + 1;
 
 			// moves
@@ -344,13 +361,19 @@ exports.setup = function (App) {
 
 			// happiness
 			j = buf.indexOf(']', i);
+			let misc;
 			if (j < 0) {
-				if (buf.substring(i)) {
-					set.happiness = Number(buf.substring(i));
-				}
-				break;
+				if (i < buf.length) misc = buf.substring(i).split(',', 4);
+			} else {
+				if (i !== j) misc = buf.substring(i, j).split(',', 4);
 			}
-			if (i !== j) set.happiness = Number(buf.substring(i, j));
+			if (misc) {
+				set.happiness = (misc[0] ? Number(misc[0]) : 255);
+				set.hpType = misc[1];
+				set.pokeball = misc[2];
+				set.gigantamax = !!misc[3];
+			}
+			if (j < 0) break;
 			i = j + 1;
 		}
 		return team;
@@ -406,6 +429,9 @@ exports.setup = function (App) {
 			}
 			if (curSet.shiny) {
 				text += 'Shiny: Yes\n';
+			}
+			if (curSet.gigantamax) {
+				text += 'Gigantamax: Yes\n';
 			}
 			if (typeof curSet.happiness === 'number' && curSet.happiness !== 255) {
 				text += 'Happiness: ' + curSet.happiness + "\n";
@@ -495,7 +521,7 @@ exports.setup = function (App) {
 		name = Text.toId(name || '');
 		try {
 			return (App.data.getPokedex()[name] || {});
-		} catch (e) {}
+		} catch (e) { }
 		return {};
 	};
 
@@ -508,7 +534,7 @@ exports.setup = function (App) {
 		name = Text.toId(name || '');
 		try {
 			return (App.data.getItems()[name] || {});
-		} catch (e) {}
+		} catch (e) { }
 		return {};
 	};
 
@@ -521,7 +547,7 @@ exports.setup = function (App) {
 		name = Text.toId(name || '');
 		try {
 			return (App.data.getAbilities()[name] || {});
-		} catch (e) {}
+		} catch (e) { }
 		return {};
 	};
 
@@ -534,7 +560,7 @@ exports.setup = function (App) {
 		name = Text.toId(name || '');
 		try {
 			return (App.data.getMoves()[name] || {});
-		} catch (e) {}
+		} catch (e) { }
 		return {};
 	};
 
