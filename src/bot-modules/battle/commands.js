@@ -70,17 +70,30 @@ module.exports = {
 			}
 		}
 		cmds.push('|/challenge ' + user + ", " + format);
+
+		mod.ChallManager.onAcceptedChallenge = function (battle) {
+			this.reply(this.mlt(13) + ": <<" + battle + ">>");
+		}.bind(this);
+
+		mod.ChallManager.onRejectedChallenge = function () {
+			this.reply(this.mlt(14) + " " + user + ".");
+		}.bind(this);
+
 		this.send(cmds);
 		App.logCommandAction(this);
+		this.reply(this.mlt(10) + " " + user + "...");
 	},
 
 	cancelchallenge: function (App) {
 		this.setLangFile(Lang_File);
 		if (!this.can('chall', this.room)) return this.replyAccessDenied('chall');
 		let mod = App.modules.battle.system;
+		mod.ChallManager.onAcceptedChallenge = null;
+		mod.ChallManager.onRejectedChallenge = null;
 		if (mod.ChallManager.challenges && mod.ChallManager.challenges.challengeTo) {
 			this.send('|/cancelchallenge ' + mod.ChallManager.challenges.challengeTo.to);
 			App.logCommandAction(this);
+			this.reply(this.mlt(11));
 		} else {
 			this.errorReply(this.mlt(9));
 		}
@@ -113,6 +126,7 @@ module.exports = {
 		cmds.push('|/search ' + format);
 		this.send(cmds);
 		App.logCommandAction(this);
+		this.reply(this.mlt(12));
 	},
 
 	evalbattle: function (App) {

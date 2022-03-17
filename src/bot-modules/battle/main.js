@@ -51,6 +51,10 @@ exports.setup = function (App) {
 		ChallManager.parsePM(Text.toId(by), msg);
 	});
 
+	App.bot.on('pmsent', (by, msg) => {
+		ChallManager.parsePMSent(Text.toId(by), msg);
+	});
+
 	App.bot.on('line', (room, line, spl, isIntro) => {
 		switch (spl[0]) {
 			case 'popup':

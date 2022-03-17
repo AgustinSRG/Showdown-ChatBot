@@ -43,10 +43,51 @@ exports.setup = function (App) {
 		return false;
 	}
 
+	ChallManager.onAcceptedChallenge = null;
+	ChallManager.onRejectedChallenge = null;
+
+	ChallManager.parsePMSent = function (to, message) {
+		if (message.indexOf("/challenge") === 0) {
+			const challData = message.substr("/challenge".length);
+			if (challData) {
+				const format = Text.toId(challData.split("|")[0]);
+
+				this.challenges.challengeTo = {
+					to: to,
+					format: format,
+				};
+			} else {
+				this.challenges.challengeTo = null;
+			}
+		}
+	};
+
 	ChallManager.parsePM = function (from, message) {
 		// Parse invites
 		let mod = App.modules.battle.system;
-		if (message.indexOf("/uhtml battleinvite") === 0) {
+		if (message.indexOf("/text") === 0) {
+			if ((/^.+\srejected\sthe\schallenge\.$/i).test(message)) {
+				if (this.onRejectedChallenge) {
+					try {
+						this.onRejectedChallenge();
+					} catch (ex) { }
+				}
+				this.onAcceptedChallenge = null;
+				this.onRejectedChallenge = null;
+			} else {
+				const parts = (/^\/text\s(.+)\saccepted\sthe\schallenge,\sstarting\s<<(.+)>>$/i).exec(message);
+
+				if (parts && parts[1] && parts[2]) {
+					if (this.onAcceptedChallenge) {
+						try {
+							this.onAcceptedChallenge(Text.toRoomid(parts[2]));
+						} catch (ex) { }
+					}
+					this.onAcceptedChallenge = null;
+					this.onRejectedChallenge = null;
+				}
+			}
+		} else if (message.indexOf("/uhtml battleinvite") === 0) {
 			let testEXP = (/\/acceptbattle\sbattle-[a-z0-9-]+/gi).exec(message);
 			let battleRoom = "";
 			if (testEXP) {
@@ -103,6 +144,13 @@ exports.setup = function (App) {
 				}
 				if (cmds.length > 0) {
 					App.bot.sendTo('', cmds);
+				}
+			} else {
+				if (this.challenges.challengesFrom && this.challenges.challengesFrom[from]) {
+					delete this.challenges.challengesFrom[from];
+				}
+				if (this.challenges.challengeTo && this.challenges.challengeTo.to === from) {
+					this.challenges.challengeTo = null;
 				}
 			}
 		}
@@ -162,6 +210,8 @@ exports.setup = function (App) {
 
 	ChallManager.clean = function () {
 		ChallManager.challenges = {};
+		ChallManager.onAcceptedChallenge = null;
+		ChallManager.onRejectedChallenge = null;
 	};
 
 	return ChallManager;
