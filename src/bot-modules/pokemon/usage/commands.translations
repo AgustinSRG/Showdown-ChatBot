@@ -6,6 +6,11 @@
 
 $error = An error ocurred, try again later
 
+$nochat = This command is only available for chat rooms
+$nobot = Bot requires rank of bot or higher to use this feature
+
+$nodetails = No details available for this Pokemon.
+
 $in = in
 $stats = Usage stats
 $data = Usage data
@@ -30,8 +35,14 @@ $items = Items
 $moves = Moves
 $spreads = Spreads
 $teammates = Teammates
+$source = Source
 
 %spanish
+
+$nochat = Este comando solo está disponible para las salas de chat
+$nobot = Necesito rango de bot o superior para poder usar esta funcionalidad
+
+$nodetails = No hay detalles disponibles para este Pokemon.
 
 $in = en
 $stats = Estadísticas de uso
@@ -51,9 +62,10 @@ $notfound = No se encontraron datos para
 $usagedata1 = #NAME de 
 $usagedata2 = 
 $pokeusage = Uso
-$pokeraw = Raw
+$pokeraw = Total de usos
 $abilities = Habilidades
 $items = Objetos
 $moves = Movimientos
 $spreads = Spreads
 $teammates = Compañeros
+$source = Fuente

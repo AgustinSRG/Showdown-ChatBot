@@ -20,6 +20,18 @@ const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
 /* Usage utils */
 
+function botCanHtml(room, App) {
+	let roomData = App.bot.rooms[room];
+	let botid = Text.toId(App.bot.getBotNick());
+	return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'bot'));
+}
+
+function toSpriteId(str) {
+	const id = ('' + str).replace(/[^a-zA-Z0-9-]+/g, '').toLowerCase();
+	const parts = id.split("-");
+	return parts[0] + (parts.length > 1 ? ("-" + parts.slice(1).join("")) : "");
+}
+
 function addLeftZero(num, nz) {
 	let str = num.toString();
 	while (str.length < nz) str = "0" + str;
@@ -87,7 +99,7 @@ function parseAliases(format, App) {
 	try {
 		let psAliases = App.data.getAliases();
 		if (psAliases[format]) format = Text.toId(psAliases[format]);
-	} catch (e) {}
+	} catch (e) { }
 	return Text.toFormatStandard(format);
 }
 
@@ -108,7 +120,7 @@ module.exports = {
 				return this.restrictReply(this.mlt('stats') + ": " + link, 'usage');
 			}
 			let poke = "garchomp", searchIndex = -1;
-			let tier = App.config.modules.pokemon.gtier || 'ou';
+			let tier = App.config.modules.pokemon.gtier || parseAliases('ou', App);
 			if (this.room && App.config.modules.pokemon.roomtier && App.config.modules.pokemon.roomtier[this.room]) {
 				tier = App.config.modules.pokemon.roomtier[this.room];
 			}
@@ -126,7 +138,7 @@ module.exports = {
 			if (args[1]) {
 				tier = parseAliases(args[1], App);
 			}
-			if (!poke || !tier) return this.errorReply(this.usage({desc: 'pokemon'}, {desc: 'tier', optional: true}));
+			if (!poke || !tier) return this.errorReply(this.usage({ desc: 'pokemon' }, { desc: 'tier', optional: true }));
 			if (this.usageRankExceptionFlag) {
 				ladderType = Rank_Exception;
 				Rank_Exceptions[tier] = true;
@@ -158,11 +170,11 @@ module.exports = {
 					} else {
 						return this.errorReply(this.mlt('tiererr1') + " \"" +
 							tierName(tier, App) + "\" " + this.mlt('tiererr3') + '. ' + this.mlt('pokeerr3') +
-								'. ' + this.mlt('pleasecheck') + ': ' + link);
+							'. ' + this.mlt('pleasecheck') + ': ' + link);
 					}
 				} else {
 					if (!App.data.cache.has(url)) {
-						App.data.cache.cache(url, data, 0, {'smogon-usage': 1});
+						App.data.cache.cache(url, data, 0, { 'smogon-usage': 1 });
 					}
 				}
 				let dataRes = {
@@ -233,18 +245,18 @@ module.exports = {
 			}
 			let args = this.args;
 			if (!this.arg || this.args.length < 2) {
-				return this.errorReply(this.usage({desc: 'pokemon'},
-					{desc: 'moves / items / abilities / spreads / teammates'}, {desc: 'tier', optional: true}));
+				return this.errorReply(this.usage({ desc: 'pokemon' },
+					{ desc: 'moves / items / abilities / spreads / teammates' }, { desc: 'tier', optional: true }));
 			}
 			let poke = "garchomp";
-			let tier = App.config.modules.pokemon.gtier || 'ou';
+			let tier = App.config.modules.pokemon.gtier || parseAliases('ou', App);
 			if (this.room && App.config.modules.pokemon.roomtier && App.config.modules.pokemon.roomtier[this.room]) {
 				tier = App.config.modules.pokemon.roomtier[this.room];
 			}
 			let dataType = Text.toId(args[1]);
-			if (!(dataType in {"moves": 1, "items": 1, "abilities": 1, "teammates": 1, "spreads": 1})) {
-				return this.errorReply(this.usage({desc: 'pokemon'},
-					{desc: 'moves / items / abilities / spreads / teammates'}, {desc: 'tier', optional: true}));
+			if (!(dataType in { "moves": 1, "items": 1, "abilities": 1, "teammates": 1, "spreads": 1 })) {
+				return this.errorReply(this.usage({ desc: 'pokemon' },
+					{ desc: 'moves / items / abilities / spreads / teammates' }, { desc: 'tier', optional: true }));
 			}
 			let ladderType = Default_Rank;
 			for (let i = 0; i < args.length; i++) args[i] = Text.toId(args[i]);
@@ -292,7 +304,7 @@ module.exports = {
 					}
 				} else {
 					if (!App.data.cache.has(url)) {
-						App.data.cache.cache(url, data, 0, {'smogon-usage': 1});
+						App.data.cache.cache(url, data, 0, { 'smogon-usage': 1 });
 					}
 				}
 				let pokes = data.split(' +----------------------------------------+ \n +----------------------------------------+ ');
@@ -313,23 +325,23 @@ module.exports = {
 				for (let i = 0; i < pokeData.length; i++) {
 					if (pokeData[i + 1] && pokeData[i].trim() === "+----------------------------------------+") {
 						switch (Text.toId(pokeData[i + 1])) {
-						case 'abilities':
-							if (dataType !== "abilities") continue;
-							break;
-						case 'items':
-							if (dataType !== "items") continue;
-							break;
-						case 'moves':
-							if (dataType !== "moves") continue;
-							break;
-						case 'spreads':
-							if (dataType !== "spreads") continue;
-							break;
-						case 'teammates':
-							if (dataType !== "teammates") continue;
-							break;
-						default:
-							continue;
+							case 'abilities':
+								if (dataType !== "abilities") continue;
+								break;
+							case 'items':
+								if (dataType !== "items") continue;
+								break;
+							case 'moves':
+								if (dataType !== "moves") continue;
+								break;
+							case 'spreads':
+								if (dataType !== "spreads") continue;
+								break;
+							case 'teammates':
+								if (dataType !== "teammates") continue;
+								break;
+							default:
+								continue;
 						}
 						resultName = this.mlt(dataType);
 						i = i + 2;
@@ -363,6 +375,267 @@ module.exports = {
 				}
 				this.restrictReply(spl.getLines(), 'usagedata');
 			}.bind(this), UsageFailureCache);
+		}.bind(this));
+	},
+
+	usagecard: function (App) {
+		this.setLangFile(Lang_File);
+
+		if (this.getRoomType(this.room) !== 'chat') {
+			return this.errorReply(this.mlt('nochat'));
+		}
+
+		if (!this.can('usagedata', this.room)) return this.replyAccessDenied('usagedata');
+
+		if (!botCanHtml(this.room, App)) {
+			return this.errorReply(this.mlt('nobot'));
+		}
+
+		getUsageLink(App, function (link) {
+			if (!link) {
+				return this.errorReply(this.mlt('error'));
+			}
+			if (!this.arg) {
+				return this.errorReply(this.usage({ desc: 'pokemon' }, { desc: 'tier', optional: true }));
+			}
+			let poke = "garchomp", searchIndex = -1;
+			let tier = App.config.modules.pokemon.gtier || parseAliases('ou', App);
+			if (this.room && App.config.modules.pokemon.roomtier && App.config.modules.pokemon.roomtier[this.room]) {
+				tier = App.config.modules.pokemon.roomtier[this.room];
+			}
+			let ladderType = Default_Rank;
+			let args = this.args;
+			for (let i = 0; i < args.length; i++) args[i] = Text.toId(args[i]);
+			poke = Text.toId(args[0]);
+			try {
+				let aliases = App.data.getAliases();
+				if (aliases[poke]) poke = Text.toId(aliases[poke]);
+			} catch (e) {
+				App.log("Could not fetch aliases. Cmd: " + this.cmd + " " + this.arg + " | Room: " + this.room + " | By: " + this.by);
+			}
+			if (!isNaN(parseInt(poke))) searchIndex = parseInt(poke);
+			if (args[1]) {
+				tier = parseAliases(args[1], App);
+			}
+			if (!poke || !tier) return this.errorReply(this.usage({ desc: 'pokemon' }, { desc: 'tier', optional: true }));
+			if (this.usageRankExceptionFlag) {
+				ladderType = Rank_Exception;
+				Rank_Exceptions[tier] = true;
+			} else if (Rank_Exceptions[tier]) {
+				ladderType = Rank_Exception;
+			}
+			let url = link + tier + "-" + ladderType + ".txt";
+			if (markDownload(url)) {
+				return this.errorReply(this.mlt('busy'));
+			}
+			if (!App.data.cache.has(url)) {
+				markDownload(url, true);
+			}
+			App.data.wget(url, function (data, err) {
+				markDownload(url, false);
+				if (err) {
+					return this.errorReply(this.mlt('err') + " " + url);
+				}
+				let lines = data.split("\n");
+				if (lines[0].indexOf("Total battles:") === -1) {
+					if (!App.data.cache.has(url)) {
+						if (!UsageFailureCache.has(url)) {
+							UsageFailureCache.cache(url, data);
+						}
+					}
+					if (!this.usageRankExceptionFlag) {
+						this.usageRankExceptionFlag = true;
+						return App.parser.exec(this);
+					} else {
+						return this.errorReply(this.mlt('tiererr1') + " \"" +
+							tierName(tier, App) + "\" " + this.mlt('tiererr3') + '. ' + this.mlt('pokeerr3') +
+							'. ' + this.mlt('pleasecheck') + ': ' + link);
+					}
+				} else {
+					if (!App.data.cache.has(url)) {
+						App.data.cache.cache(url, data, 0, { 'smogon-usage': 1 });
+					}
+				}
+				let dataRes = {
+					name: poke,
+					pos: -1,
+					usage: 0,
+					raw: 0,
+				};
+				let dataResAux = {
+					name: poke,
+					pos: -1,
+					usage: 0,
+					raw: 0,
+					ld: 10,
+				};
+				let maxLd = 3;
+				if (poke.length <= 1) {
+					maxLd = 0;
+				} else if (poke.length <= 4) {
+					maxLd = 1;
+				} else if (poke.length <= 6) {
+					maxLd = 2;
+				}
+				for (let i = 5; i < lines.length; i++) {
+					let line = lines[i].split("|");
+					if (line.length < 7) continue;
+					if (Text.toId(line[2]) === poke || searchIndex === parseInt(line[1].trim())) {
+						dataRes.name = line[2].trim();
+						dataRes.pos = parseInt(line[1].trim());
+						dataRes.usage = line[3].trim();
+						dataRes.raw = line[4].trim();
+						break;
+					} else if (maxLd) {
+						let ld = Text.levenshtein(poke, Text.toId(line[2]), maxLd);
+						if (ld <= maxLd && ld < dataResAux.ld) {
+							dataResAux.ld = ld;
+							dataResAux.name = line[2].trim();
+							dataResAux.pos = parseInt(line[1].trim());
+							dataResAux.usage = line[3].trim();
+							dataResAux.raw = line[4].trim();
+						}
+					}
+				}
+				if (!dataRes.pos || dataRes.pos < 1) {
+					if (!dataResAux.pos || dataResAux.pos < 1) {
+						return this.errorReply(this.mlt('pokeerr1') + " \"" + poke + "\" " +
+							this.mlt('pokeerr2') + " " + tierName(tier, App) + " " + this.mlt('pokeerr3'));
+					} else {
+						dataRes = dataResAux;
+					}
+				}
+
+				poke = Text.toId(dataRes.name);
+
+				// Basic usage data acquired, fech details for the pokemon
+
+				let urlDetails = link + "moveset/" + tier + "-" + ladderType + ".txt";
+				if (markDownload(urlDetails)) {
+					return this.errorReply(this.mlt('busy'));
+				}
+				if (!App.data.cache.has(urlDetails)) {
+					markDownload(urlDetails, true);
+				}
+				App.data.wget(urlDetails, function (data2, err2) {
+					markDownload(urlDetails, false);
+					if (err2) {
+						data2 = "";
+					}
+					let hasDetailedData = true;
+					if (data2.indexOf("+----------------------------------------+") === -1) {
+						if (!err2 && !App.data.cache.has(urlDetails)) {
+							if (!UsageFailureCache.has(urlDetails)) {
+								UsageFailureCache.cache(urlDetails, data2);
+							}
+						}
+						hasDetailedData = false;
+					} else {
+						if (!App.data.cache.has(urlDetails)) {
+							App.data.cache.cache(urlDetails, data2, 0, { 'smogon-usage': 1 });
+						}
+					}
+
+					let detailsHTML = '<p>' + Text.escapeHTML(this.mlt('nodetails')) + '</p>';
+
+					let pokeData = null, chosen = false;
+
+					if (hasDetailedData) {
+						let pokes = data2.split(' +----------------------------------------+ \n +----------------------------------------+ ');
+						for (let i = 0; i < pokes.length; i++) {
+							pokeData = pokes[i].split("\n");
+
+							if (!pokeData[1] || Text.toId(pokeData[1]) !== poke) continue;
+							chosen = true;
+							break;
+						}
+
+						if (chosen) {
+							const htmlData = {
+								"abilities": "",
+								"items": "",
+								"moves": "",
+								"spreads": "",
+								"teammates": "",
+							};
+
+							for (let i = 0; i < pokeData.length; i++) {
+								if (pokeData[i + 1] && pokeData[i].trim() === "+----------------------------------------+") {
+									let htmlKey = "";
+									switch (Text.toId(pokeData[i + 1])) {
+										case 'abilities':
+											htmlKey = 'abilities';
+											break;
+										case 'items':
+											htmlKey = 'items';
+											break;
+										case 'moves':
+											htmlKey = 'moves';
+											break;
+										case 'spreads':
+											htmlKey = 'spreads';
+											break;
+										case 'teammates':
+											htmlKey = 'teammates';
+											break;
+										default:
+											continue;
+									}
+
+									i = i + 2;
+									let auxRes, percent;
+									while (i < pokeData.length) {
+										if (pokeData[i].trim() === "+----------------------------------------+") {
+											i--;
+											break;
+										}
+										auxRes = pokeData[i].split("|")[1];
+										if (auxRes) {
+											auxRes = auxRes.trim().split(" ");
+											percent = auxRes.pop();
+											auxRes = auxRes.join(" ");
+
+											htmlData[htmlKey] += ("<li><b>" + Text.escapeHTML(auxRes) + "</b> (" + Text.escapeHTML(percent) + ")</li>");
+										}
+										i++;
+									}
+								}
+							}
+
+							detailsHTML = '';
+							for (let key of ['abilities', 'items', 'moves', 'spreads', 'teammates']) {
+								detailsHTML += '<details>' +
+									'<summary style="font-size: 14px"><strong>' + Text.escapeHTML(this.mlt(key)) + '</strong></summary>' +
+									'<ul>' + htmlData[key] + '</ul>' +
+									'</details>';
+							}
+						}
+					}
+
+					// Build html box
+
+					let html = '<table>' +
+						// First row
+						'<tr><td style="text-align:center; border-right: solid 1px black; padding: 12px;"><b>' + Text.escapeHTML(dataRes.name) + '</b></td>' +
+						'<td style="padding: 12px;"><b>#' +
+						Text.escapeHTML(dataRes.pos) + "</b> " + Text.escapeHTML(this.mlt('in')) +
+						" <b>" + Text.escapeHTML(tierName(tier, App)) + "</b>. " + Text.escapeHTML(this.mlt('pokeusage')) + ": " + Text.escapeHTML(dataRes.usage) + ", " +
+						Text.escapeHTML(this.mlt('pokeraw')) + ": " + Text.escapeHTML(dataRes.raw) + '</td></tr>' +
+						// Second row
+						'<tr>' +
+						// Image
+						'<td style="text-align:center; border-right: solid 1px black; padding: 12px;"><img src="https://play.pokemonshowdown.com/sprites/gen5/' + toSpriteId(dataRes.name) + '.png" height="96" width="96" alt="' + Text.escapeHTML(dataRes.name) + '"></td>' +
+						// Details
+						'<td style="padding: 12px;">' +
+						detailsHTML +
+						'<p><b>' + this.mlt('source') + ': </b><a href="' + Text.escapeHTML(link) + '">' + Text.escapeHTML(link) + '</a></p>' +
+						'</td>' +
+						'</tr>' +
+						'</table>';
+
+					return this.send("/addhtmlbox " + html, this.room);
+				}.bind(this), UsageFailureCache); // End fetch usage data
+			}.bind(this), UsageFailureCache); // End fetch usage
 		}.bind(this));
 	},
 };
