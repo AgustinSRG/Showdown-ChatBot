@@ -19,6 +19,7 @@
   "dependencies": {
     "busboy": "1.4.0",
     "cheerio": "1.0.0-rc.10",
+    "json5": "2.2.0",
     "probe-image-size": "7.2.3",
     "sockjs-client": "1.6.0",
     "websocket": "1.0.34"

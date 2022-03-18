@@ -15,12 +15,11 @@ const Temp_Size = 50;
 const Path = require('path');
 const Https = require('https');
 const Http = require('http');
-const Url = require('url');
 const FileSystem = require('fs');
 
+const JSON5 = require('json5');
 const WebCache = Tools('cache').WebCache;
 const TempManager = Tools('temp');
-const uncacheTree = Tools('uncachetree');
 const checkDir = Tools('checkdir');
 const EventManager = Tools('events');
 
@@ -55,6 +54,8 @@ const Showdown_Data = [
 	},
 ];
 
+const Data_Cache = new Map();
+
 /**
  * Web-Get
  * This function downloads a file and returns the data
@@ -62,12 +63,17 @@ const Showdown_Data = [
  *
  * @param {String} url - The requested url
  * @param {function(String, Error)} callback
+ * @param {boolean} strictError
  */
-function wget(url, callback) {
-	url = Url.parse(url);
+function wget(url, callback, strictError) {
+	url = new URL(url);
 	let mod = url.protocol === 'https:' ? Https : Http;
-	mod.get(url.href, response => {
+	mod.get(url.toString(), response => {
 		let data = '';
+		if (strictError && response.statusCode !== 200) {
+			callback(null, new Error("Server responded with status code " + response.statusCode));
+			return;
+		}
 		response.on('data', chunk => {
 			data += chunk;
 		});
@@ -125,7 +131,25 @@ class DataManager {
 	 * @returns {Object}
 	 */
 	get(file) {
-		return require(Path.resolve(this.path, file));
+		if (Data_Cache.has(file)) {
+			return Data_Cache.get(file);
+		}
+
+		let data;
+
+		if (file.endsWith(".js")) {
+			let fileData = FileSystem.readFileSync(Path.resolve(this.path, file)).toString();
+			let startIndex = fileData.indexOf("{");
+			fileData = fileData.substr(startIndex - 1).trim();
+			fileData = fileData.substr(0, fileData.length - 1);
+			data = JSON5.parse(fileData);
+		} else {
+			data = JSON.parse(FileSystem.readFileSync(Path.resolve(this.path, file)).toString());
+		}
+
+		Data_Cache.set(file, data);
+
+		return data;
 	}
 
 	/**
@@ -133,7 +157,7 @@ class DataManager {
 	 * @returns {Object}
 	 */
 	getPokedex() {
-		return this.get('pokedex.js').BattlePokedex;
+		return this.get('pokedex.js');
 	}
 
 	/**
@@ -141,7 +165,7 @@ class DataManager {
 	 * @returns {Object}
 	 */
 	getMoves() {
-		return this.get('moves.js').BattleMovedex;
+		return this.get('moves.js');
 	}
 
 	/**
@@ -149,7 +173,7 @@ class DataManager {
 	 * @returns {Object}
 	 */
 	getItems() {
-		return this.get('items.js').BattleItems;
+		return this.get('items.js');
 	}
 
 	/**
@@ -157,7 +181,7 @@ class DataManager {
 	 * @returns {Object}
 	 */
 	getAbilities() {
-		return this.get('abilities.js').BattleAbilities;
+		return this.get('abilities.js');
 	}
 
 	/**
@@ -165,7 +189,7 @@ class DataManager {
 	 * @returns {Object}
 	 */
 	getAliases() {
-		return this.get('aliases.js').BattleAliases;
+		return this.get('aliases.js');
 	}
 
 	/**
@@ -173,7 +197,7 @@ class DataManager {
 	 * @returns {Object}
 	 */
 	getFormatsData() {
-		return this.get('formats-data.js').BattleFormatsData;
+		return this.get('formats-data.js');
 	}
 
 	/**
@@ -181,7 +205,7 @@ class DataManager {
 	 * @returns {Object}
 	 */
 	getLearnsets() {
-		return this.get('learnsets.js').BattleLearnsets;
+		return this.get('learnsets.js');
 	}
 
 	/**
@@ -254,12 +278,12 @@ class DataManager {
 				if (err2) {
 					this.events.emit('msg', "Error (" + err2.code + ") " + err2.messaage);
 				} else {
-					try {uncacheTree(Path.resolve(this.path, Showdown_Data[this.cur].file));} catch (e) {}
+					Data_Cache.delete(Showdown_Data[this.cur].file);
 					this.events.emit('msg', "Updated data file " + Showdown_Data[this.cur].file + " from " + Showdown_Data[this.cur].url);
 				}
 				this.nextDownload();
 			}.bind(this));
-		}.bind(this));
+		}.bind(this), true);
 	}
 }
 
