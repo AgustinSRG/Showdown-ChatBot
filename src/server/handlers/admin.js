@@ -96,7 +96,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.uptime = Math.floor(process.uptime() * 1000);
 		htmlVars.memusage = (Math.floor(((process.memoryUsage().rss / 1024) / 1024) * 1000) / 1000) + ' MB';

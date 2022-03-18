@@ -22,7 +22,7 @@ class UserDataManager {
 		checkDir(this.path);
 
 		this.cache = new BufferCache(50);
-		this.writeBuffer = {};
+		this.writeBuffer = Object.create(null);
 		this.writeTimer = setInterval(this.write.bind(this), (60 * 1000));
 
 		this.altsdb = App.dam.getDataBase('alts.json');
@@ -98,14 +98,14 @@ class UserDataManager {
 			}
 		}
 		if (this.writeBuffer[id]) {
-			return this.applyBuffer(id, {name: id, lastSeen: {}});
+			return this.applyBuffer(id, {name: id, lastSeen: Object.create(null)});
 		} else {
 			return null;
 		}
 	}
 
 	applyBuffer(id, data) {
-		let newData = {};
+		let newData = Object.create(null);
 		for (let k in data) {
 			newData[k] = data[k];
 		}

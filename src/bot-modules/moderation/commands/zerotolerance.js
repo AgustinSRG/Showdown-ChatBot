@@ -35,7 +35,7 @@ module.exports = {
 			return this.errorReply(this.mlt(0));
 		}
 		if (!config.zeroTolerance[room]) {
-			config.zeroTolerance[room] = {};
+			config.zeroTolerance[room] = Object.create(null);
 		}
 		config.zeroTolerance[room][user] = level;
 		App.modules.moderation.system.db.write();

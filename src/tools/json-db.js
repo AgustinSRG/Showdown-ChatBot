@@ -15,7 +15,7 @@ class JSONDataBase {
 	 * @param {Path} file
 	 */
 	constructor(file) {
-		this.data = {};
+		this.data = Object.create(null);
 		this.file = file;
 		this.writePending = false;
 		this.writing = false;

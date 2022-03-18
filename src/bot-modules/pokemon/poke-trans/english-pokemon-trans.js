@@ -4,7 +4,7 @@
 
 'use strict';
 
-exports.translations = {};
+exports.translations = Object.create(null);
 
 /* Battle Abilities */
 

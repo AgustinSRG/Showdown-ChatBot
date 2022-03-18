@@ -38,7 +38,7 @@ class BotMod {
 				}
 			}
 		}
-		this.commands = {};
+		this.commands = Object.create(null);
 		if (config.commands && config.commands.length) {
 			for (let i = 0; i < config.commands.length; i++) {
 				let mc = require(Path.resolve(path, config.commands[i]));

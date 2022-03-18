@@ -33,7 +33,7 @@ module.exports = {
 					{desc: this.mlt('phrase')}));
 			}
 			if (user.length > 19) return this.errorReply(this.mlt('inv'));
-			if (!config.rooms[room]) config.rooms[room] = {};
+			if (!config.rooms[room]) config.rooms[room] = Object.create(null);
 			config.rooms[room][user] = phrase;
 			App.modules.joinphrases.system.db.write();
 			App.logCommandAction(this);

@@ -7,7 +7,7 @@
 const Path = require('path');
 
 exports.setup = function (App) {
-	const TriviaSystem = {};
+	const TriviaSystem = Object.create(null);
 
 	const db = TriviaSystem.db = App.dam.getDataBase('trivia.json');
 	const data = TriviaSystem.data = db.data;

@@ -106,7 +106,7 @@ function getAdjacentPlayers(battle) {
 }
 
 exports.setup = function (Data) {
-	const BattleModule = {};
+	const BattleModule = Object.create(null);
 	BattleModule.id = "free-for-all-simple";
 
 	BattleModule.gametypes = ["freeforall"];

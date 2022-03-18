@@ -39,34 +39,34 @@ class CommandParser {
 		/* Initial values */
 		this.app = app;
 		this.bot = app.bot;
-		this.commands = {};
+		this.commands = Object.create(null);
 		this.triggers = {
-			before: {},
-			after: {},
+			before: Object.create(null),
+			after: Object.create(null),
 		};
-		this.lastHelpCommand = {};
-		this.lastPrivateCommand = {};
-		this.lastReplyCommand = {};
+		this.lastHelpCommand = Object.create(null);
+		this.lastPrivateCommand = Object.create(null);
+		this.lastReplyCommand = Object.create(null);
 
 		/* Configuration DataBase */
 		this.db = app.dam.getDataBase('cmd-parser.json');
 		this.data = this.db.data;
-		if (!this.data.aliases) this.data.aliases = {}; /* Command Aliases */
-		if (!this.data.exceptions) this.data.exceptions = {}; /* Excepted users */
+		if (!this.data.aliases) this.data.aliases = Object.create(null); /* Command Aliases */
+		if (!this.data.exceptions) this.data.exceptions = Object.create(null); /* Excepted users */
 		if (!this.data.canExceptions) this.data.canExceptions = []; /* Permission exceptions */
-		if (!this.data.permissions) this.data.permissions = {}; /* Permission configuration */
-		if (!this.data.roompermissions) this.data.roompermissions = {}; /* Permission configuration in rooms */
-		if (!this.data.sleep) this.data.sleep = {}; /* Sleeping rooms */
-		if (!this.data.lockedUsers) this.data.lockedUsers = {}; /* Locked users */
-		if (!this.data.roomctrl) this.data.roomctrl = {}; /* Control rooms */
-		if (!this.data.roomaliases) this.data.roomaliases = {}; /* Rooms aliases */
+		if (!this.data.permissions) this.data.permissions = Object.create(null); /* Permission configuration */
+		if (!this.data.roompermissions) this.data.roompermissions = Object.create(null); /* Permission configuration in rooms */
+		if (!this.data.sleep) this.data.sleep = Object.create(null); /* Sleeping rooms */
+		if (!this.data.lockedUsers) this.data.lockedUsers = Object.create(null); /* Locked users */
+		if (!this.data.roomctrl) this.data.roomctrl = Object.create(null); /* Control rooms */
+		if (!this.data.roomaliases) this.data.roomaliases = Object.create(null); /* Rooms aliases */
 		if (!this.data.helpmsg) this.data.helpmsg = ""; /* Help Message */
 		if (!this.data.antispam) this.data.antispam = false; /* Anti-Spam System */
 		if (!this.data.antirepeat) this.data.antirepeat = false; /* Anti-Repeat System */
 		if (!this.data.pmTokens || !(this.data.pmTokens instanceof Array)) this.data.pmTokens = []; /* Command Aliases */
 
 		/* Dynamic Commands */
-		if (!this.data.dyncmds) this.data.dyncmds = {};
+		if (!this.data.dyncmds) this.data.dyncmds = Object.create(null);
 		if (Object.keys(this.data.dyncmds).length === 0) {
 			this.data.dyncmds['help'] = 'https://github.com/asanrom/Showdown-ChatBot/wiki/Commands-List';
 		}
@@ -884,7 +884,7 @@ class CommandContext {
 	 * @returns {Object} Parsed Arguments
 	 */
 	parseArguments() {
-		let parsedArgs = {};
+		let parsedArgs = Object.create(null);
 		for (let i = 0; i < this.args.length; i++) {
 			let spl = this.args[i].split('=');
 			let id = Text.toId(spl[0]);

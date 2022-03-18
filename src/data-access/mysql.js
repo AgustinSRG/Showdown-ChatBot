@@ -37,8 +37,8 @@ class DataAccessManager {
 		this.type = "MYSQL";
 		this.pool = MYSQL.createPool(options.MYSQL);
 		this.data = [];
-		this.running = {};
-		this.waiting = {};
+		this.running = Object.create(null);
+		this.waiting = Object.create(null);
 	}
 
 	init(callback) {
@@ -64,7 +64,7 @@ class DataAccessManager {
 	}
 
 	getFileContent(filename, locked_id) {
-		let files = {};
+		let files = Object.create(null);
 		for (let row of this.data) {
 			if (row.file === filename) {
 				if (!files[row.id]) {
@@ -153,7 +153,7 @@ class DataAccessManager {
 	}
 
 	getFiles(subpath) {
-		let files = {};
+		let files = Object.create(null);
 		for (let row of this.data) {
 			if (row.file.indexOf(subpath + '/') === 0) {
 				files[row.file] = true;

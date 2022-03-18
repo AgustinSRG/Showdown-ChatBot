@@ -54,7 +54,7 @@ exports.setup = function (App) {
 		constructor(room, maxPlayers, turnTime) {
 			this.room = room;
 
-			this.players = {};
+			this.players = Object.create(null);
 			this.turns = [];
 			this.turn = -1;
 			this.currPlayer = null;

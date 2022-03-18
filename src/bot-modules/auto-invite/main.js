@@ -19,7 +19,7 @@ exports.setup = function (App) {
 
 	class AutoInviteModule {
 		constructor() {
-			this.roomAuth = {};
+			this.roomAuth = Object.create(null);
 			this.roomAuthChanged = false;
 			this.timer = null;
 		}
@@ -40,7 +40,7 @@ exports.setup = function (App) {
 
 		parsePopup(popup) {
 			if (Text.toId(popup.substr(0, 4)) === 'room') {
-				let auth = {};
+				let auth = Object.create(null);
 				let _message = popup.replace("Moderators", ":");
 				_message = _message.replace("Drivers", ":");
 				_message = _message.replace("Voices", ":");

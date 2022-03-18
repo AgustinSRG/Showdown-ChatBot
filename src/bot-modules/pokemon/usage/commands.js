@@ -74,7 +74,7 @@ function getUsageLink(App, callback) {
 	}
 }
 
-const downloadingFlag = {};
+const downloadingFlag = Object.create(null);
 
 function markDownload(link, b) {
 	if (b === false) {
@@ -105,7 +105,7 @@ function parseAliases(format, App) {
 
 const Default_Rank = 1630;
 const Rank_Exception = 1695;
-const Rank_Exceptions = {};
+const Rank_Exceptions = Object.create(null);
 
 /* Commands */
 

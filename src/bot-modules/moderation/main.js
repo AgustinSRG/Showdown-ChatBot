@@ -17,15 +17,15 @@ exports.setup = function (App) {
 			}
 
 			if (!data.values) {
-				data.values = {};
+				data.values = Object.create(null);
 			}
 
 			if (!data.settings) {
-				data.settings = {};
+				data.settings = Object.create(null);
 			}
 
 			if (!data.roomSettings) {
-				data.roomSettings = {};
+				data.roomSettings = Object.create(null);
 			}
 
 			if (!data.modexception) {
@@ -36,19 +36,19 @@ exports.setup = function (App) {
 			}
 
 			if (!data.rulesLink) {
-				data.rulesLink = {};
+				data.rulesLink = Object.create(null);
 			}
 
 			if (!data.bannedWords) {
-				data.bannedWords = {};
+				data.bannedWords = Object.create(null);
 			}
 
 			if (!data.zeroTolerance) {
-				data.zeroTolerance = {};
+				data.zeroTolerance = Object.create(null);
 			}
 
 			if (!data.enableZeroTol) {
-				data.enableZeroTol = {};
+				data.enableZeroTol = Object.create(null);
 			}
 
 			if (!data.serversWhitelist) {

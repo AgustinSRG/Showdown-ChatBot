@@ -29,7 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener('DOMNodeInserted', function(e) {
-    console.log(e.target, ' was inserted');
     if (e.target.localName === "form") {
         var form = e.target;
         if ((form.method + "").toLowerCase() === "post") {

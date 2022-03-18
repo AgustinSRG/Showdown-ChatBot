@@ -210,7 +210,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
@@ -227,7 +227,7 @@ exports.setup = function (App) {
 			ok = "Downloading data. It will be realoaded in a few seconds. For more information watch security log";
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
@@ -248,7 +248,7 @@ exports.setup = function (App) {
 			ok = "Web Cache cleared sucessfully.";
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
@@ -269,7 +269,7 @@ exports.setup = function (App) {
 			ok = "Alts tree cleared sucessfully.";
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
@@ -300,7 +300,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.interv = App.config.connmonitor.checktime;
 		htmlVars.room = App.config.connmonitor.room;
@@ -394,7 +394,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 

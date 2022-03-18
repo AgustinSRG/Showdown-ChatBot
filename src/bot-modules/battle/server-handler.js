@@ -62,7 +62,7 @@ exports.setup = function (App) {
 				Config.maxTurns = maxTurns;
 				Config.ladderBattles = ladderBattles;
 				let joinTours = (context.post.jointours || "").split(',');
-				let aux = {};
+				let aux = Object.create(null);
 				for (let i = 0; i < joinTours.length; i++) {
 					let room = Text.toRoomid(joinTours[i]);
 					if (room) {
@@ -82,7 +82,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.maxbattles = Config.maxBattles;
 		htmlVars.maxladder = Config.ladderBattles;
@@ -104,7 +104,7 @@ exports.setup = function (App) {
 		let ok = null, error = null;
 
 		if (context.post.edit) {
-			let newData = {};
+			let newData = Object.create(null);
 			for (let f in App.bot.formats) {
 				let chosen = context.post[f];
 				if (chosen && chosen !== "default") {
@@ -329,13 +329,13 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.exportable = (context.post.exportable || "");
 		htmlVars.formats = getFormatsMenu(Text.toId(context.get.format));
 
 		let submenu = [];
-		let formats = {};
+		let formats = Object.create(null);
 		let selectedFormat = Text.toId(context.get.format);
 		submenu.push('<a class="submenu-option' + (!selectedFormat ? '-selected' : '') + '" href="./">All&nbsp;Teams</a>');
 		htmlVars.teams = '';

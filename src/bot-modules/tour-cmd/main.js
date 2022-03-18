@@ -31,8 +31,8 @@ exports.setup = function (App) {
 
 	class TourCommandModule {
 		constructor() {
-			this.tourData = {};
-			this.tournaments = {};
+			this.tourData = Object.create(null);
+			this.tournaments = Object.create(null);
 		}
 
 		newTour(room, details) {
@@ -108,7 +108,7 @@ exports.setup = function (App) {
 		if (isIntro) return;
 		if (spl[0] === 'error') return parseErrorMessage(room, spl);
 		if (spl[0] !== 'tournament') return;
-		if (!tourData[room]) tourData[room] = {};
+		if (!tourData[room]) tourData[room] = Object.create(null);
 		switch (spl[1]) {
 			case 'create':
 				if (!tournaments[room]) break;

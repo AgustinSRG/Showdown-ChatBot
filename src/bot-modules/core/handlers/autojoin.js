@@ -35,7 +35,7 @@ function setup(App) {
 			ok = "Bot Auto-Join details have been set sucessfully. Restart the bot to make them effective.";
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.rooms = (App.config.modules.core.rooms || []).join(', ');
 		htmlVars.privaterooms = (App.config.modules.core.privaterooms || []).join(', ');

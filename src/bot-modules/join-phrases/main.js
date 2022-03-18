@@ -7,11 +7,11 @@
 const Text = Tools('text');
 
 exports.setup = function (App) {
-	const JoinPhrasesMod = {};
+	const JoinPhrasesMod = Object.create(null);
 	JoinPhrasesMod.db = App.dam.getDataBase('join-phrases.json');
 	JoinPhrasesMod.config = JoinPhrasesMod.db.data;
 	if (!JoinPhrasesMod.config.rooms) {
-		JoinPhrasesMod.config.rooms = {};
+		JoinPhrasesMod.config.rooms = Object.create(null);
 	}
 
 	const config = JoinPhrasesMod.config;

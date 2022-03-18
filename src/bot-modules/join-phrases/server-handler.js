@@ -47,14 +47,14 @@ exports.setup = function (App) {
 				error = err.message;
 			}
 			if (!error) {
-				data[room] = {};
+				data[room] = Object.create(null);
 				App.modules.joinphrases.system.db.write();
 				App.logServerAction(context.user.id, "Add Join-phrases Room: " + room);
 				ok = 'Room <strong>' + room + '</strong> added to the join-phrases feature.';
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		let opts = [];
 		for (let room in App.modules.joinphrases.system.config.rooms) {
@@ -84,7 +84,7 @@ exports.setup = function (App) {
 			}
 			if (!error) {
 				if (!config.rooms[room]) {
-					config.rooms[room] = {};
+					config.rooms[room] = Object.create(null);
 				}
 				config.rooms[room][user] = phrase;
 				App.modules.joinphrases.system.db.write();
@@ -110,7 +110,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.room = room;
 		htmlVars.name = Text.escapeHTML(App.parser.getRoomTitle(room));

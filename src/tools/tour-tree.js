@@ -10,7 +10,7 @@
  * @returns {Map<String, Number>} Parsed results
  */
 function parseTourTree(tree) {
-	let auxobj = {};
+	let auxobj = Object.create(null);
 	let team = tree.team;
 	let state = tree.state;
 	let children = tree.children;

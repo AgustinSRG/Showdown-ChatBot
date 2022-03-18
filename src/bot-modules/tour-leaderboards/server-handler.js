@@ -89,7 +89,7 @@ exports.setup = function (App) {
 
 			if (!error) {
 				let now = new Date();
-				App.modules.tourleaderboards.system.data[room] = {};
+				App.modules.tourleaderboards.system.data[room] = Object.create(null);
 				Config[room].cleanPoint = now.toString();
 				App.db.write();
 				App.modules.tourleaderboards.system.db.write();
@@ -142,7 +142,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.rooms = '';
 		for (let room in Config) {

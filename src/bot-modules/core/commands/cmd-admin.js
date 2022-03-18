@@ -138,7 +138,7 @@ module.exports = {
 		if (App.parser.data.dyncmds[cmd]) {
 			return this.errorReply(this.mlt(0) + ' ' + Chat.italics(cmd) + ' ' + this.mlt(14));
 		}
-		App.parser.data.dyncmds[cmd] = {};
+		App.parser.data.dyncmds[cmd] = Object.create(null);
 		App.parser.saveData();
 		this.addToSecurityLog();
 		this.reply(this.mlt(0) + ' ' + Chat.italics(cmd) + ' ' + this.mlt(15));
@@ -280,7 +280,7 @@ module.exports = {
 					this.mlt(25) + ' ' + Chat.italics(rank));
 			}
 			if (!App.parser.data.roompermissions[room]) {
-				App.parser.data.roompermissions[room] = {};
+				App.parser.data.roompermissions[room] = Object.create(null);
 			}
 			App.parser.data.roompermissions[room][perm] = rank;
 			App.parser.saveData();

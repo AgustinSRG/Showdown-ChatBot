@@ -80,7 +80,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		let opts = [];
 		for (let room in App.modules.groupchats.system.config) {
@@ -155,7 +155,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.room = room;
 		htmlVars.name = Text.escapeHTML(config[room].name);

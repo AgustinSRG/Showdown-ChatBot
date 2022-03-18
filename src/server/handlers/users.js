@@ -103,7 +103,7 @@ exports.setup = function (App) {
 		if (parts.length && parts[0]) {
 			let user = Text.toId(parts[0]);
 			if (users[user]) {
-				let htmlVars = {};
+				let htmlVars = Object.create(null);
 				htmlVars.id = user;
 				htmlVars.name = users[user].name;
 				htmlVars.group = users[user].group;
@@ -123,7 +123,7 @@ exports.setup = function (App) {
 				context.endWithWebPage('<h1>User Not Found</h1><p>The user <b>' + user + '</b> was not found</p>', {title: 'User not found'});
 			}
 		} else {
-			let htmlVars = {};
+			let htmlVars = Object.create(null);
 			htmlVars.id = (context.post.adduser ? context.post.user : '');
 			htmlVars.name = (context.post.adduser ? context.post.username : '');
 			htmlVars.group = (context.post.adduser ? context.post.usergroup : '');

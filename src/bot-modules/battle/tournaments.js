@@ -9,9 +9,9 @@ const ACTION_INTERVAL = 2000;
 const Text = Tools('text');
 
 exports.setup = function (App) {
-	const TournamentsManager = {};
-	const tourData = TournamentsManager.tourData = {};
-	const lastAction = TournamentsManager.lastAction = {};
+	const TournamentsManager = Object.create(null);
+	const tourData = TournamentsManager.tourData = Object.create(null);
+	const lastAction = TournamentsManager.lastAction = Object.create(null);
 
 	const Config = App.config.modules.battle;
 
@@ -29,8 +29,8 @@ exports.setup = function (App) {
 	};
 
 	TournamentsManager.lastRejection = 0;
-	TournamentsManager.lastChallenges = {};
-	TournamentsManager.lastChallenged = {};
+	TournamentsManager.lastChallenges = Object.create(null);
+	TournamentsManager.lastChallenged = Object.create(null);
 	TournamentsManager.reportRejection = function () {
 		this.lastRejection = Date.now();
 	};
@@ -123,7 +123,7 @@ exports.setup = function (App) {
 
 	TournamentsManager.parse = function (room, message, isIntro, spl) {
 		if (spl[0] !== 'tournament') return;
-		if (!tourData[room]) tourData[room] = {};
+		if (!tourData[room]) tourData[room] = Object.create(null);
 		switch (spl[1]) {
 			case "leave":
 			case "disqualify":

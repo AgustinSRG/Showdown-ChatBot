@@ -120,7 +120,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.langchecks = '';
 		for (let lang in languages) {
@@ -153,7 +153,7 @@ exports.setup = function (App) {
 	}
 
 	function customHandler(context, html, parts) {
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 		let languages = App.multilang.getLanguages();
 		let langfiles = App.multilang.langfiles;
 		let ok = null, error = null;
@@ -170,8 +170,8 @@ exports.setup = function (App) {
 			}
 			if (!error) {
 				let dataFile = new TranslationFile(langfiles[selectedFile]);
-				if (!langdata[selectedLang]) langdata[selectedLang] = {};
-				langdata[selectedLang][selectedFile] = {};
+				if (!langdata[selectedLang]) langdata[selectedLang] = Object.create(null);
+				langdata[selectedLang][selectedFile] = Object.create(null);
 				let listKeys = dataFile.getKeys();
 				for (let key of listKeys) {
 					if (context.post['custom-' + key]) {
@@ -190,8 +190,8 @@ exports.setup = function (App) {
 				error = err.message;
 			}
 			if (!error) {
-				if (!langdata[selectedLang]) langdata[selectedLang] = {};
-				langdata[selectedLang][selectedFile] = {};
+				if (!langdata[selectedLang]) langdata[selectedLang] = Object.create(null);
+				langdata[selectedLang][selectedFile] = Object.create(null);
 				App.multilang.saveData();
 				App.logServerAction(context.user.id, "Edit Custom Language: " + selectedLang + ", File: " + selectedFile + ", (Set To default)");
 				ok = "Translations file was set to default.";
@@ -219,8 +219,8 @@ exports.setup = function (App) {
 			content += '<form method="post" action="">';
 			if (selectedLang in languages) {
 				let dataFile = new TranslationFile(langfiles[selectedFile]);
-				if (!langdata[selectedLang]) langdata[selectedLang] = {};
-				if (!langdata[selectedLang][selectedFile]) langdata[selectedLang][selectedFile] = {};
+				if (!langdata[selectedLang]) langdata[selectedLang] = Object.create(null);
+				if (!langdata[selectedLang][selectedFile]) langdata[selectedLang][selectedFile] = Object.create(null);
 				let dataFileMod = langdata[selectedLang][selectedFile];
 				let listKeys = dataFile.getKeys();
 				for (let key of listKeys) {
@@ -246,7 +246,7 @@ exports.setup = function (App) {
 	}
 
 	function customExportHandler(context, html, parts) {
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 		let languages = App.multilang.getLanguages();
 		let langdata = App.multilang.data.langdata;
 		let ok = null, error = null;
@@ -322,7 +322,7 @@ exports.setup = function (App) {
 
 	function importLanguage(str) {
 		let lines = str.split("\n");
-		let data = {};
+		let data = Object.create(null);
 
 		let currFile = null;
 		let aux, id;
@@ -331,7 +331,7 @@ exports.setup = function (App) {
 			switch (line.charAt(0)) {
 			case '@':
 				currFile = Text.toRoomid(line.substr(1));
-				if (!data[currFile]) data[currFile] = {};
+				if (!data[currFile]) data[currFile] = Object.create(null);
 				break;
 			case '$':
 				if (!currFile) continue;

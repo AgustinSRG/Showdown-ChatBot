@@ -22,12 +22,12 @@ exports.setup = function (App) {
 	}
 
 	if (!App.config.modules.battle.battlemods) {
-		App.config.modules.battle.battlemods = {};
+		App.config.modules.battle.battlemods = Object.create(null);
 	}
 
-	const BattleModule = {};
+	const BattleModule = Object.create(null);
 
-	BattleModule.challengeExceptions = {};
+	BattleModule.challengeExceptions = Object.create(null);
 
 	const BattleBot = BattleModule.BattleBot = require(Path.resolve(__dirname, 'battle-ai', 'index.js')).setup(App);
 	const TeamBuilder = BattleModule.TeamBuilder = require(Path.resolve(__dirname, 'teambuilder.js')).setup(App);

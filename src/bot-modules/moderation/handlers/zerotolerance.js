@@ -38,7 +38,7 @@ exports.setup = function (App) {
 				let normalTol = (context.post.normal || "").split(',');
 				let highTol = (context.post.high || "").split(',');
 				let maxTol = (context.post.max || "").split(',');
-				let zt = {};
+				let zt = Object.create(null);
 				for (let i = 0; i < minTol.length; i++) {
 					let user = Text.toId(minTol[i]);
 					if (user) {
@@ -92,14 +92,14 @@ exports.setup = function (App) {
 				error = err.message;
 			}
 			if (!error) {
-				data[room] = {};
+				data[room] = Object.create(null);
 				App.modules.moderation.system.db.write();
 				App.logServerAction(context.user.id, "Add Zero Tolerance Room: " + room);
 				ok = 'Room <strong>' + room + '</strong> added to the zero tolerance feature.';
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.rooms = '';
 		let data = App.modules.moderation.system.data.zeroTolerance;

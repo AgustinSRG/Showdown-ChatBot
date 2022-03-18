@@ -25,13 +25,13 @@ exports.setup = function (App) {
 			this.data = this.db.data;
 
 			if (!this.data.timers) {
-				this.data.timers = {};
+				this.data.timers = Object.create(null);
 			}
 
 			this.timers = this.data.timers;
 
 			if (!this.data.repeats) {
-				this.data.repeats = {};
+				this.data.repeats = Object.create(null);
 			}
 
 			this.repeats = this.data.repeats;

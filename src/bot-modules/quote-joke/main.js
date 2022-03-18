@@ -9,10 +9,10 @@ class QuoteMod {
 		this.db = App.dam.getDataBase('quote-joke.json');
 		this.data = this.db.data;
 		if (!this.data.jokes) {
-			this.data.jokes = {};
+			this.data.jokes = Object.create(null);
 		}
 		if (!this.data.quotes) {
-			this.data.quotes = {};
+			this.data.quotes = Object.create(null);
 		}
 		this.quotes = this.data.quotes;
 		this.jokes = this.data.jokes;

@@ -17,9 +17,9 @@ class AbuseMonitor {
 	 */
 	constructor(maxFlood, intervalFlood, expireTime) {
 		this.events = new EventsManager();
-		this.usage = {};
-		this.times = {};
-		this.locked = {};
+		this.usage = Object.create(null);
+		this.times = Object.create(null);
+		this.locked = Object.create(null);
 		this.maxFlood = maxFlood;
 		this.intervalFlood = intervalFlood;
 		this.expireTime = expireTime || 0;

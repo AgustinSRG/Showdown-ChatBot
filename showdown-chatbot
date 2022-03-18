@@ -32,7 +32,7 @@ console.log('Initializing...');
 
 /* Shell Options */
 
-let shellOpts = {};
+let shellOpts = Object.create(null);
 for (let i = 0; i < process.argv.length; i++) {
 	let tag = process.argv[i].trim();
 	if (tag.charAt(0) === '-') {
@@ -44,7 +44,7 @@ for (let i = 0; i < process.argv.length; i++) {
 	}
 }
 
-let env = {};
+let env = Object.create(null);
 for (let key in shellOpts) {
 	switch (key) {
 	case '-port':

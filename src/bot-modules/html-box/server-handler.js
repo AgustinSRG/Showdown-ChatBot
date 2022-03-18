@@ -102,7 +102,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.cmds = '';
 		let commands = Mod.data.commands;
@@ -161,7 +161,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.aliases = '';
 		for (let alias in Mod.data.aliases) {

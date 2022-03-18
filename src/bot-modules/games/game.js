@@ -9,7 +9,7 @@ class Game {
 		this.manager = manager;
 		this.room = room;
 		this.system = system;
-		this.commands = {};
+		this.commands = Object.create(null);
 	}
 
 	setCommands(commands) {

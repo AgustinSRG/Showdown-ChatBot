@@ -60,7 +60,7 @@ function botCanHtml(room, App) {
 const IMAGE_HEIGHT = 256; // px
 const MAX_CHAT_WIDTH = 400; // px
 
-const busy = {};
+const busy = Object.create(null);
 
 module.exports = {
 
@@ -180,7 +180,7 @@ module.exports = {
 		}
 
 		if (!busy[this.room]) {
-			busy[this.room] = {};
+			busy[this.room] = Object.create(null);
 		}
 
 		busy[this.room][url.href] = Date.now();

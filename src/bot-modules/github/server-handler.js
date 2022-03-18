@@ -57,7 +57,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.room = config.room;
 		htmlVars.port = config.port;

@@ -7,7 +7,7 @@
 const Path = require('path');
 
 exports.setup = function (App) {
-	const WordGamesSystem = {};
+	const WordGamesSystem = Object.create(null);
 
 	const db = WordGamesSystem.db = App.dam.getDataBase('word-games.json');
 	const data = WordGamesSystem.data = db.data;

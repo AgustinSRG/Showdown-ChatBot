@@ -19,8 +19,8 @@ class PlayersAuction {
 		if (!this.data.timer) this.data.timer = (30 * 1000);
 		if (!this.data.mincost) this.data.mincost = 4;
 		if (!this.data.minplayers) this.data.minplayers = 0;
-		if (!this.data.teams) this.data.teams = {};
-		if (!this.data.players) this.data.players = {};
+		if (!this.data.teams) this.data.teams = Object.create(null);
+		if (!this.data.players) this.data.players = Object.create(null);
 		if (!this.data.turn) this.data.turn = "";
 
 		this.status = "paused";

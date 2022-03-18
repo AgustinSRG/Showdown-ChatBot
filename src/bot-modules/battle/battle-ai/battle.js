@@ -38,7 +38,7 @@ exports.setup = function (App) {
 				p3: new Player("p3"),
 				p4: new Player("p4"),
 			};
-			this.users = {};
+			this.users = Object.create(null);
 
 			this.self = null;
 			this.foe = null;
@@ -60,7 +60,7 @@ exports.setup = function (App) {
 
 			this.waitingForRequestToMove = false;
 
-			this.conditions = {};
+			this.conditions = Object.create(null);
 
 			this.buffer = [];
 			this.lastSend = {
@@ -354,7 +354,7 @@ exports.setup = function (App) {
 			if (str.charAt(0) !== '|' || str.substr(0, 2) === '||') {
 				return;
 			} else {
-				let args = ['done'], kwargs = {};
+				let args = ['done'], kwargs = Object.create(null);
 				if (str !== '|') {
 					args = str.substr(1).split('|');
 				}

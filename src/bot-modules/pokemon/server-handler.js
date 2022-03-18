@@ -26,7 +26,7 @@ exports.setup = function (App) {
 
 		let Config = App.config.modules.pokemon;
 		if (!Config.roomtier) {
-			Config.roomtier = {};
+			Config.roomtier = Object.create(null);
 		}
 
 		let ok = null, error = null;
@@ -82,7 +82,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 		htmlVars.usage_link = Config.usagelink || "";
 		htmlVars.def_format = (Config.gtier || "");
 		htmlVars.rooms = '';

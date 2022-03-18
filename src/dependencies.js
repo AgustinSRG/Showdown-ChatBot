@@ -22,7 +22,7 @@ try {
 
 if (!Object.merge) {
 	Object.merge = function (object, source) {
-		if (!object) object = {};
+		if (!object) object = Object.create(null);
 		if (!source) return object;
 		for (let key in source) object[key] = source[key];
 		return object;
@@ -39,7 +39,7 @@ if (!Object.values) {
 
 Object.createFromKeys = function (keys, value) {
 	if (value === undefined) value = true;
-	let object = {};
+	let object = Object.create(null);
 	for (let key of keys) object[key] = value;
 	return object;
 };

@@ -100,7 +100,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.questions = '';
 		for (let id in mod.data) {

@@ -24,7 +24,7 @@ const Pokemon = Calc.Pokemon;
 const Conditions = Calc.Conditions;
 
 exports.setup = function (Data) {
-	const BattleModule = {};
+	const BattleModule = Object.create(null);
 	BattleModule.id = "ingame-nostatus";
 
 	BattleModule.gametypes = ["singles", "doubles", "triples"];

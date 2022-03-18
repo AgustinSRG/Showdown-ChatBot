@@ -43,7 +43,7 @@ function setup(App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.nick = Text.escapeHTML(App.config.modules.core.nick || '-');
 		htmlVars.pass = (App.config.modules.core.pass ? 'Yes' : 'No');

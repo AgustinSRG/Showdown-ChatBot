@@ -62,7 +62,7 @@ class JSONDataBase {
 	constructor(file, password, algo) {
 		this.algo = algo || "aes-256-ctr";
 		this.password = password;
-		this.data = {};
+		this.data = Object.create(null);
 		this.file = file;
 		this.writePending = false;
 		this.writing = false;

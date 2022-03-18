@@ -25,7 +25,7 @@ exports.setup = function (App) {
 
 		mergeTeams: function () {
 			if (this.teams) delete this.teams;
-			this.teams = {};
+			this.teams = Object.create(null);
 			for (let i in this.dynTeams) {
 				let team = this.dynTeams[i];
 				if (!this.teams[team.format]) this.teams[team.format] = [];

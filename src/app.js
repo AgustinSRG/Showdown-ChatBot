@@ -104,7 +104,7 @@ class ChatBotApp {
 
 		this.config = this.db.data;
 		if (!this.config.modules) {
-			this.config.modules = {};
+			this.config.modules = Object.create(null);
 		}
 
 		/* Bot default config */
@@ -135,12 +135,12 @@ class ChatBotApp {
 
 		/* Module load configuration */
 		if (!this.config.loadmodules) {
-			this.config.loadmodules = {};
+			this.config.loadmodules = Object.create(null);
 		}
 
 		/* Menu configuration */
 		if (!this.config.menuOrder) {
-			this.config.menuOrder = {};
+			this.config.menuOrder = Object.create(null);
 		}
 
 		if (env.port !== undefined) {
@@ -166,14 +166,14 @@ class ChatBotApp {
 
 		/* Languages */
 		if (!this.config.langfilter) {
-			this.config.langfilter = {};
+			this.config.langfilter = Object.create(null);
 		}
 		this.multilang = new LanguageManager(this.config.langfilter, this);
 		this.supportedLanguages = require(Path.resolve(__dirname, 'languages.json'));
 		if (!this.config.language) {
 			this.config.language = {
 				"default": "english",
-				rooms: {},
+				rooms: Object.create(null),
 			};
 		}
 
@@ -267,12 +267,12 @@ class ChatBotApp {
 		this.console = null;
 		this.logger = null;
 		this.logsDir = null;
-		this.modules = {};
+		this.modules = Object.create(null);
 
 		/* Add-ons */
 		this.addonsDir = 'add-ons';
 		this.dam.checkSubpath(this.addonsDir);
-		this.addons = {};
+		this.addons = Object.create(null);
 	}
 
 	/**
@@ -317,7 +317,7 @@ class ChatBotApp {
 								id: conf.id,
 								name: conf.name,
 								description: conf.description,
-								commands: {},
+								commands: Object.create(null),
 								system: null,
 								enabled: false,
 							};

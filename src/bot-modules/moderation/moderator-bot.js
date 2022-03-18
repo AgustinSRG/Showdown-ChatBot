@@ -16,9 +16,9 @@ const Lang_File = Path.resolve(__dirname, 'mod.translations');
 class ModeratorBot {
 	constructor(app, path) {
 		this.app = app;
-		this.chatLog = {};
-		this.chatData = {};
-		this.filters = {};
+		this.chatLog = Object.create(null);
+		this.chatData = Object.create(null);
+		this.filters = Object.create(null);
 
 		let dir = FileSystem.readdirSync(path);
 		for (let i = 0; i < dir.length; i++) {
@@ -166,7 +166,7 @@ class ModeratorBot {
 
 
 		/* User Data */
-		if (!this.chatData[room]) this.chatData[room] = {};
+		if (!this.chatData[room]) this.chatData[room] = Object.create(null);
 
 		if (!this.chatData[room][user]) {
 			this.chatData[room][user] = {times:[], lastMsgs: ['', '', ''], points:0, lastAction:0};

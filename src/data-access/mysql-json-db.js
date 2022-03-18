@@ -11,7 +11,7 @@ const EventsManager = Tools('events');
  */
 class JSONDataBase {
 	constructor(dam, file) {
-		this.data = {};
+		this.data = Object.create(null);
 		this.dam = dam;
 		this.file = file;
 		this.events = new EventsManager();
@@ -41,7 +41,7 @@ class JSONDataBase {
 				this.data = JSON.parse(this.dam.getFileContent(this.file, true));
 			}
 		} catch (err) {
-			this.data = {};
+			this.data = Object.create(null);
 		}
 		this.events.emit('load');
 	}

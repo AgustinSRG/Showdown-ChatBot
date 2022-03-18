@@ -99,7 +99,7 @@ function getAdjacentPlayers(battle) {
 }
 
 exports.setup = function (Data) {
-	const BattleModule = {};
+	const BattleModule = Object.create(null);
 	BattleModule.id = "multi-simple";
 
 	BattleModule.gametypes = ["multi"];

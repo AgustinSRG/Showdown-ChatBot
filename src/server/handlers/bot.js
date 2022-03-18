@@ -28,7 +28,7 @@ exports.setup = function (App) {
 		}
 
 		if (context.get.getbotstatus) {
-			let data = {};
+			let data = Object.create(null);
 			if (App.bot.status.connected) {
 				let ct = new Date(App.bot.conntime);
 				data.con = '<font color="green"><strong>CONNECTED</strong></font>';
@@ -105,7 +105,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		if (App.status !== 'stopped') {
 			htmlVars.stop_button = '<p><button onclick="showStopConfirm();">Stop Bot</button><span id="confirm-stop">&nbsp;</span></p>';

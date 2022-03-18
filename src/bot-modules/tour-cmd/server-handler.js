@@ -63,7 +63,7 @@ exports.setup = function (App) {
 				Config.scoutProtect = (scout === 'no');
 				Config.forcedTimer = (timer === 'yes');
 				Config.createMessage = msg;
-				let aux = {};
+				let aux = Object.create(null);
 				for (let i = 0; i < aliases.length; i++) {
 					let spl = aliases[i].split(',');
 					let id = Text.toId(spl[0]);
@@ -73,14 +73,14 @@ exports.setup = function (App) {
 					}
 				}
 				Config.aliases = aux;
-				Config.finalAnnouncement = {};
+				Config.finalAnnouncement = Object.create(null);
 				for (let i = 0; i < finals.length; i++) {
 					let roomid = Text.toRoomid(finals[i]);
 					if (roomid) {
 						Config.finalAnnouncement[roomid] = true;
 					}
 				}
-				Config.congratsWinner = {};
+				Config.congratsWinner = Object.create(null);
 				for (let i = 0; i < winnergrats.length; i++) {
 					let roomid = Text.toRoomid(winnergrats[i]);
 					if (roomid) {
@@ -93,7 +93,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.format = Config.format;
 		htmlVars.elimination = (Config.type === 'elimination' ? ' selected="selected"' : '');

@@ -10,7 +10,7 @@ const Text = Tools('text');
 const BAT_DATA_DIR = Path.resolve(__dirname, '..', 'data');
 
 exports.setup = function (App) {
-	const BattleDataManager = {};
+	const BattleDataManager = Object.create(null);
 
 	BattleDataManager.getEffect = function (effect, gen) {
 		if (!effect || typeof effect === 'string') {
@@ -24,7 +24,7 @@ exports.setup = function (App) {
 			}
 
 			let id = Text.toId(name);
-			effect = {};
+			effect = Object.create(null);
 
 			let pMove = BattleDataManager.getMove(id, gen);
 			let pAbility = BattleDataManager.getAbility(id, gen);
@@ -65,7 +65,7 @@ exports.setup = function (App) {
 	BattleDataManager.getPokemon = BattleDataManager.getTemplate = function (poke, gen) {
 		if (!gen || gen > 8 || gen < 1) gen = 8;
 		poke = Text.toId(poke || "");
-		let pokemon = {};
+		let pokemon = Object.create(null);
 		let temp;
 		try {
 			temp = App.data.getPokedex()[poke];
@@ -170,7 +170,7 @@ exports.setup = function (App) {
 		if (move.indexOf("hiddenpower") === 0) {
 			move = move.replace(/[0-9]/g, "");
 		}
-		let moveData = {};
+		let moveData = Object.create(null);
 		let temp;
 		try {
 			temp = App.data.getMoves()[move];
@@ -218,7 +218,7 @@ exports.setup = function (App) {
 	BattleDataManager.getItem = function (item, gen) {
 		if (!gen || gen > 8 || gen < 1) gen = 8;
 		item = Text.toId(item || "");
-		let itemData = {};
+		let itemData = Object.create(null);
 		let temp;
 		try {
 			temp = App.data.getItems()[item];
@@ -259,7 +259,7 @@ exports.setup = function (App) {
 	BattleDataManager.getAbility = function (ab, gen) {
 		if (!gen || gen > 8 || gen < 1) gen = 8;
 		ab = Text.toId(ab || "");
-		let ability = {};
+		let ability = Object.create(null);
 		let temp;
 		try {
 			temp = App.data.getAbilities()[ab];
@@ -305,7 +305,7 @@ exports.setup = function (App) {
 			this.id = this.template.id;
 			this.pp = Math.floor(this.template.pp * 1.60);
 			this.disabled = false;
-			this.helpers = {};
+			this.helpers = Object.create(null);
 		}
 
 		restorePP(pp) {
@@ -352,13 +352,13 @@ exports.setup = function (App) {
 			this.hp = 100;
 			this.fainted = false;
 			this.status = false;
-			this.volatiles = {};
-			this.boosts = {};
+			this.volatiles = Object.create(null);
+			this.boosts = Object.create(null);
 
 			this.passing = false;
 			this.prepared = null;
 
-			this.helpers = {};
+			this.helpers = Object.create(null);
 
 			for (let i in properties) {
 				if (typeof this[i] === "undefined" || typeof this[i] === "function") continue;
@@ -495,7 +495,7 @@ exports.setup = function (App) {
 			this.userid = Text.toId(name || "");
 			this.avatar = avatar || 0;
 			this.active = [];
-			this.side = {};
+			this.side = Object.create(null);
 			this.pokemon = [];
 			this.teamPv = [];
 		}

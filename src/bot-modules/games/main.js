@@ -12,8 +12,8 @@ const Lang_File = Path.resolve(__dirname, 'errors.translations');
 const Game = require(Path.resolve(__dirname, 'game.js'));
 
 exports.setup = function (App) {
-	const GamesModule = {};
-	const games = GamesModule.games = {};
+	const GamesModule = Object.create(null);
+	const games = GamesModule.games = Object.create(null);
 
 	function getLanguage(room) {
 		return App.config.language.rooms[room] || App.config.language['default'];
@@ -76,7 +76,7 @@ exports.setup = function (App) {
 		return false;
 	});
 
-	GamesModule.templates = {};
+	GamesModule.templates = Object.create(null);
 
 	let files = FileSystem.readdirSync(__dirname);
 	files.forEach(file => {

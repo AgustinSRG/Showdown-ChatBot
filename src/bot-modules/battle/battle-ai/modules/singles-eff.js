@@ -12,7 +12,7 @@ const Pokemon = Calc.Pokemon;
 const Conditions = Calc.Conditions;
 
 exports.setup = function (Data) {
-	const BattleModule = {};
+	const BattleModule = Object.create(null);
 	BattleModule.id = "singles-eff";
 
 	BattleModule.gametypes = ["singles"];

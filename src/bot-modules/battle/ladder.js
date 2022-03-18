@@ -18,7 +18,7 @@ exports.setup = function (App) {
 		return App.config.language.rooms[room] || App.config.language['default'];
 	}
 
-	const LadderManager = {};
+	const LadderManager = Object.create(null);
 
 	LadderManager.reportsRoom = false;
 

@@ -21,7 +21,7 @@ function setup(App) {
 		};
 	}
 
-	const CoreMod = {};
+	const CoreMod = Object.create(null);
 
 	let lastLogin = CoreMod.lastLogin = {nick: '', named: false};
 

@@ -15,8 +15,8 @@ class Translator {
 	 * @param {Path} file - Translations file
 	 */
 	constructor(file, loadFilter) {
-		if (!loadFilter) loadFilter = {};
-		this.data = {};
+		if (!loadFilter) loadFilter = Object.create(null);
+		this.data = Object.create(null);
 		this.id = null;
 		let str = FileSystem.readFileSync(file).toString();
 		let lines = str.split('\n');
@@ -36,7 +36,7 @@ class Translator {
 					currentLang = null;
 					continue;
 				}
-				if (!this.data[currentLang]) this.data[currentLang] = {};
+				if (!this.data[currentLang]) this.data[currentLang] = Object.create(null);
 				break;
 			case '$':
 				if (!currentLang) continue;
@@ -80,7 +80,7 @@ class Translator {
 	 * @returns {Array} Keys
 	 */
 	getKeys() {
-		let keys = {};
+		let keys = Object.create(null);
 		for (let l in this.data) {
 			for (let k in this.data[l]) {
 				keys[k] = true;

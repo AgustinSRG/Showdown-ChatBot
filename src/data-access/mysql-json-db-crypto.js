@@ -58,7 +58,7 @@ class JSONDataBase {
 		this.dam = dam;
 		this.algo = algo || "aes-256-ctr";
 		this.password = password;
-		this.data = {};
+		this.data = Object.create(null);
 		this.file = file;
 		this.events = new EventsManager();
 		this.load();
@@ -88,7 +88,7 @@ class JSONDataBase {
 				this.data = JSON.parse(decrypt(this.dam.getFileContent(this.file, true), this.algo, this.password));
 			}
 		} catch (err) {
-			this.data = {};
+			this.data = Object.create(null);
 		}
 		this.events.emit('load');
 	}

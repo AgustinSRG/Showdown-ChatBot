@@ -74,7 +74,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.quotes = '';
 		let quotes = App.modules.quote.system.quotes;
@@ -123,7 +123,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.jokes = '';
 		let jokes = App.modules.quote.system.jokes;

@@ -28,7 +28,7 @@ exports.setup = function (App) {
 		if (context.post.save) {
 			let maxold = parseInt(context.post.age);
 			if (!isNaN(maxold) && maxold >= 0) {
-				let rooms = {};
+				let rooms = Object.create(null);
 				let aux = (context.post.rooms || "").split(',');
 				for (let i = 0; i < aux.length; i++) {
 					let room = Text.toRoomid(aux[i]);
@@ -54,7 +54,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.rooms = Object.keys(App.config.modules.chatlogger.rooms).join(', ');
 		htmlVars.logpm = (App.config.modules.chatlogger.logpm ? ' checked="checked"' : '');

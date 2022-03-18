@@ -7,7 +7,7 @@
 const FileSystem = require('fs');
 const Path = require('path');
 
-let commands = {};
+let commands = Object.create(null);
 
 FileSystem.readdirSync(Path.resolve(__dirname, 'commands/')).forEach(file => {
 	if (/.*\.js/.test(file)) {

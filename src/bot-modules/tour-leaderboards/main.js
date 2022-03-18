@@ -29,7 +29,7 @@ function toDecimalFormat(num) {
 
 exports.setup = function (App) {
 	if (!App.config.modules.tourleaderboards) {
-		App.config.modules.tourleaderboards = {};
+		App.config.modules.tourleaderboards = Object.create(null);
 	}
 
 	checkDir(Path.resolve(App.dataDir, 'tour-tables/'));
@@ -38,14 +38,14 @@ exports.setup = function (App) {
 		constructor() {
 			this.db = App.dam.getDataBase('leaderloards.json');
 			this.data = this.db.data;
-			this.tourData = {};
-			this.isOfficial = {};
+			this.tourData = Object.create(null);
+			this.isOfficial = Object.create(null);
 		}
 
 		addUser(room, user, type, auxData) {
 			let ladder = this.data;
 			let userid = Text.toId(user);
-			if (!ladder[room]) ladder[room] = {};
+			if (!ladder[room]) ladder[room] = Object.create(null);
 			if (!ladder[room][userid]) ladder[room][userid] = [user, 0, 0, 0, 0, 0];
 			switch (type) {
 			case 'A':
@@ -197,7 +197,7 @@ exports.setup = function (App) {
 			if (config.onlyOfficial && !this.isOfficial[room]) return;
 			let results = getResults(data);
 			if (!results) return;
-			if (!this.data[room]) this.data[room] = {};
+			if (!this.data[room]) this.data[room] = Object.create(null);
 			for (let i = 0; i < results.players.length; i++) {
 				this.addUser(room, results.players[i], 'A');
 			}
@@ -238,10 +238,10 @@ exports.setup = function (App) {
 	function getResults(data) {
 		let generator = Text.toId(data.generator || "");
 		if (generator === "singleelimination") {
-			let res = {};
+			let res = Object.create(null);
 			let parsedTree = parseTourTree(data.bracketData.rootNode);
 			res.players = Object.keys(parsedTree);
-			res.general = {};
+			res.general = Object.create(null);
 			for (let i in parsedTree) {
 				res.general[Text.toId(i)] = parsedTree[i];
 			}
@@ -267,9 +267,9 @@ exports.setup = function (App) {
 			}
 			return res;
 		} else if (generator === "roundrobin") {
-			let res = {};
+			let res = Object.create(null);
 			res.players = data.bracketData.tableHeaders.cols;
-			res.general = {};
+			res.general = Object.create(null);
 			for (let i = 0; i < res.players.length; i++) {
 				res.general[Text.toId(res.players[i])] = data.bracketData.scores[i];
 			}
@@ -286,7 +286,7 @@ exports.setup = function (App) {
 	App.bot.on('line', (room, line, spl, isIntro) => {
 		if (spl[0] !== 'tournament') return;
 		if (isIntro) return;
-		if (!tourData[room]) tourData[room] = {};
+		if (!tourData[room]) tourData[room] = Object.create(null);
 		switch (spl[1]) {
 		case 'update':
 			try {

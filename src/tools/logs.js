@@ -147,7 +147,7 @@ class Logger {
 		let dir = FileSystem.readdirSync(this.path);
 		for (let i = 0; i < dir.length; i++) {
 			if (/^[a-zA-Z0-9]*_[0-9][0-9][0-9][0-9]_[0-9][0-9]_[0-9][0-9]\.log$/.test(dir[i])) {
-				let file = {};
+				let file = Object.create(null);
 				file.file = dir[i];
 				let splitFile = dir[i].split('.')[0].split("_");
 				file.date = getMonthString(splitFile[2]) + " " + splitFile[3] + ", " + splitFile[1];

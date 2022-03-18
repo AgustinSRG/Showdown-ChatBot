@@ -76,7 +76,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.tokens = App.config.parser.tokens.join(' ');
 		htmlVars.pmtokens = App.parser.data.pmTokens.join(' ');
@@ -138,7 +138,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.aliases = '';
 		for (let alias in App.parser.data.aliases) {
@@ -169,7 +169,7 @@ exports.setup = function (App) {
 				error = 'You must specify a room.';
 			} else {
 				if (!App.parser.data.roompermissions[room]) {
-					App.parser.data.roompermissions[room] = {};
+					App.parser.data.roompermissions[room] = Object.create(null);
 					App.parser.saveData();
 					App.logServerAction(context.user.id, "Add custom perrmission room: " + room);
 					ok = 'Room <strong>' + room + '</strong> added to the custom permission configuration list.';
@@ -201,7 +201,7 @@ exports.setup = function (App) {
 					data = App.parser.data.permissions;
 				} else {
 					if (!App.parser.data.roompermissions[room]) {
-						App.parser.data.roompermissions[room] = {};
+						App.parser.data.roompermissions[room] = Object.create(null);
 					}
 					data = App.parser.data.roompermissions[room];
 				}
@@ -238,7 +238,7 @@ exports.setup = function (App) {
 			ok = 'Permission exceptions configuration editted sucessfully.';
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.expusers = Object.keys(App.parser.data.exceptions).join(', ');
 		let exceptions = [];
@@ -296,7 +296,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.rooms = '';
 		for (let control in App.parser.data.roomctrl) {
@@ -345,7 +345,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.rooms = '';
 		for (let alias in App.parser.data.roomaliases) {
@@ -391,7 +391,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.locklist = '';
 		for (let locked in App.parser.monitor.locked) {

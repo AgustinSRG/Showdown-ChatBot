@@ -59,7 +59,7 @@ exports.setup = function (App) {
 				error = "You must specify at least one punishment";
 			}
 		} else if (context.post.editval) {
-			let values = {};
+			let values = Object.create(null);
 			for (let k in App.modules.moderation.system.modBot.filters) {
 				let pun = context.post[k];
 				if (pun && config.punishments.indexOf(pun) >= 0) {
@@ -72,7 +72,7 @@ exports.setup = function (App) {
 			ok = "Moderation values saved";
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 		htmlVars.punishments = config.punishments.join(', ');
 
 		htmlVars.rooms = '';
@@ -122,7 +122,7 @@ exports.setup = function (App) {
 			}
 
 			if (!error) {
-				config.roomSettings[room] = {};
+				config.roomSettings[room] = Object.create(null);
 				App.modules.moderation.system.db.write();
 				App.logServerAction(context.user.id, "Moderation Settings: Add Room: " + room);
 				ok = "Added room: " + room;
@@ -144,7 +144,7 @@ exports.setup = function (App) {
 			}
 		} else if (context.post.edit) {
 			let room = Text.toRoomid(context.post.room);
-			let settings = {};
+			let settings = Object.create(null);
 			for (let k in App.modules.moderation.system.modBot.filters) {
 				settings[k] = !!context.post[k];
 			}
@@ -158,7 +158,7 @@ exports.setup = function (App) {
 			ok = "Moderation settings saved";
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.global = getSettingsForm('');
 		htmlVars.rooms = '';
@@ -245,7 +245,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.dme = getRankSelect('rank', config.modexception.global);
 		htmlVars.rooms = '';
@@ -307,7 +307,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.rooms = '';
 		for (let room in config.rulesLink) {
@@ -344,7 +344,7 @@ exports.setup = function (App) {
 			ok = "Moderation configuration saved";
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.wservers = config.serversWhitelist.join(', ');
 

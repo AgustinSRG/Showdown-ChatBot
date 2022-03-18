@@ -47,7 +47,7 @@ function formatTime(h, m, s) {
 	return h + ":" + m + ":" + s;
 }
 
-const downloadingFlag = {};
+const downloadingFlag = Object.create(null);
 
 function markDownload(user, b) {
 	if (b === false) {

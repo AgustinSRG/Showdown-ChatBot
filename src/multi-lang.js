@@ -25,15 +25,15 @@ class MultiLanguageManager {
 	constructor(config, app) {
 		this.app = app;
 		this.config = config || {};
-		this.cache = {};
-		this.langfiles = {};
+		this.cache = Object.create(null);
+		this.langfiles = Object.create(null);
 		this.db = app.dam.getDataBase('custom-lang.json');
 		this.data = this.db.data;
 		if (!this.data.langdefs) {
-			this.data.langdefs = {};
+			this.data.langdefs = Object.create(null);
 		}
 		if (!this.data.langdata) {
-			this.data.langdata = {};
+			this.data.langdata = Object.create(null);
 		}
 	}
 
@@ -50,7 +50,7 @@ class MultiLanguageManager {
 	 * @returns {Object}
 	 */
 	getLanguages() {
-		let langs = {};
+		let langs = Object.create(null);
 		for (let l in this.app.supportedLanguages) {
 			langs[l] = this.app.supportedLanguages[l];
 		}

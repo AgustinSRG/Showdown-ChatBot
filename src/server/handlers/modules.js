@@ -46,7 +46,7 @@ exports.setup = function (App) {
 			App.logServerAction(context.user.id, 'Modules configuration was editted');
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.modules = '<table border="0">';
 		for (let id in App.modules) {
@@ -70,7 +70,7 @@ exports.setup = function (App) {
 	function menuHandler(context, html) {
 		let error = null, ok = null;
 		if (context.post.savechanges) {
-			let menuOrder = {};
+			let menuOrder = Object.create(null);
 			for (let opt in App.server.menu) {
 				let level = parseInt(context.post[opt]);
 				if (isNaN(level)) continue;
@@ -81,7 +81,7 @@ exports.setup = function (App) {
 			ok = "Control panel menu configuration saved sucessfully.";
 			App.logServerAction(context.user.id, 'Control panel menu configuration was editted');
 		}
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.opts = '<table border="0">';
 		for (let opt in App.server.menu) {

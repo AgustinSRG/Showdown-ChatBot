@@ -16,10 +16,10 @@ class Pokemon {
 		this.species = this.template.species;
 		this.gender = false;
 		this.item = null;
-		this.stats = {};
-		this.evs = {};
-		this.ivs = {};
-		this.dvs = {};
+		this.stats = Object.create(null);
+		this.evs = Object.create(null);
+		this.ivs = Object.create(null);
+		this.dvs = Object.create(null);
 		this.nature = null;
 		this.ability = null;
 		this.level = 100;
@@ -64,7 +64,7 @@ class Pokemon {
 	getStats(gen) {
 		if (!gen) gen = 8;
 		let stats = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
-		let res = {};
+		let res = Object.create(null);
 		for (let i = 0; i < stats.length; i++) {
 			if (this.stats[stats[i]]) {
 				res[stats[i]] = this.stats[stats[i]];
@@ -94,10 +94,10 @@ class Pokemon {
 class Conditions {
 	constructor(data) {
 		if (typeof data !== "object") throw new Error("Invalid conditions data");
-		this.volatiles = {};
-		this.boosts = {};
-		this.side = {};
-		this.inmediate = {};
+		this.volatiles = Object.create(null);
+		this.boosts = Object.create(null);
+		this.side = Object.create(null);
+		this.inmediate = Object.create(null);
 		for (let i in data) {
 			if (typeof this[i] === "undefined" || typeof this[i] === "function") continue;
 			this[i] = data[i];
@@ -192,9 +192,9 @@ exports.getHazardsDamage = function (poke, conditions, gen, inverse) {
 
 exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gconditions, gen) {
 	if (!gen) gen = 8;
-	if (!gconditions) gconditions = {};
-	if (!conditionsA) conditionsA = {};
-	if (!conditionsB) conditionsB = {};
+	if (!gconditions) gconditions = Object.create(null);
+	if (!conditionsA) conditionsA = Object.create(null);
+	if (!conditionsB) conditionsB = Object.create(null);
 
 	let offTypes = pokeA.template.types.slice();
 	if (conditionsA.volatiles["typechange"] && conditionsA.volatiles["typechange"].length) offTypes = conditionsA.volatiles["typechange"].slice();

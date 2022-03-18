@@ -23,7 +23,7 @@ exports.setup = function (App) {
 
 	class ChatLoggerModule {
 		constructor() {
-			this.loggers = {};
+			this.loggers = Object.create(null);
 			this.pmLogger = null;
 			this.groupchatsLogger = null;
 		}

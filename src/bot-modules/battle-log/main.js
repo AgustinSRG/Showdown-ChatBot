@@ -16,21 +16,21 @@ exports.setup = function (App) {
 		};
 	}
 
-	const BattleLogMod = {};
+	const BattleLogMod = Object.create(null);
 
 	BattleLogMod.db = App.dam.getDataBase('battle-log.json');
 	BattleLogMod.data = BattleLogMod.db.data;
 	BattleLogMod.path = Path.resolve(App.logsDir, "battle/");
 
 	if (!BattleLogMod.data.rooms) {
-		BattleLogMod.data.rooms = {};
+		BattleLogMod.data.rooms = Object.create(null);
 	}
 
 	BattleLogMod.saveData = function () {
 		this.db.write();
 	};
 
-	BattleLogMod.active = {};
+	BattleLogMod.active = Object.create(null);
 
 	BattleLogMod.getFiles = function () {
 		return Object.values(BattleLogMod.data.rooms).sort(function (a, b) {

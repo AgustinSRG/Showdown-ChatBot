@@ -97,7 +97,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.groups = '';
 		for (let group in mod.data) {

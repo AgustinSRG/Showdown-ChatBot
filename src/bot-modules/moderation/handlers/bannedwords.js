@@ -44,14 +44,14 @@ exports.setup = function (App) {
 				error = err.message;
 			}
 			if (!error) {
-				data[room] = {};
+				data[room] = Object.create(null);
 				App.modules.moderation.system.db.write();
 				App.logServerAction(context.user.id, "Add Banwords Room: " + room);
 				ok = 'Room <strong>' + room + '</strong> added to the banwords feature.';
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		let opts = [];
 		for (let room in App.modules.moderation.system.data.bannedWords) {
@@ -84,8 +84,8 @@ exports.setup = function (App) {
 			}
 
 			if (!error) {
-				if (!config.bannedWords[room]) config.bannedWords[room] = {};
-				config.bannedWords[room][word] = {};
+				if (!config.bannedWords[room]) config.bannedWords[room] = Object.create(null);
+				config.bannedWords[room][word] = Object.create(null);
 				config.bannedWords[room][word].strict = strict;
 				config.bannedWords[room][word].nonicks = nonicks;
 				switch (type) {
@@ -127,7 +127,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 		htmlVars.room = room;
 		htmlVars.name = Text.escapeHTML(App.parser.getRoomTitle(room));
 

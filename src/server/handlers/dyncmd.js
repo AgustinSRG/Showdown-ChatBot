@@ -70,7 +70,7 @@ exports.setup = function (App) {
 			}
 
 			if (!error) {
-				App.parser.data.dyncmds[cmd] = {};
+				App.parser.data.dyncmds[cmd] = Object.create(null);
 				App.parser.saveData();
 				App.logServerAction(context.user.id, 'Add dynamic command (Type: Index) cmd: ' + cmd);
 				ok = "The command <strong>" + cmd + "</strong> was added as an index command.";
@@ -175,7 +175,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 		htmlVars.fail_id = ((!addFail.cmd) ? addFail.id : '');
 		htmlVars.fail_text = ((!addFail.cmd) ? addFail.content : '');
 		htmlVars.fail_index_id = (addFail.index ? addFail.id : '');
@@ -217,7 +217,7 @@ exports.setup = function (App) {
 	/* Auxiliar Functions */
 	function getCommandTable(cmdid, addFail) {
 		let dynCmds = App.parser.data.dyncmds;
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 		htmlVars.cmdid = cmdid;
 		if (typeof dynCmds[cmdid] === 'string') {
 			htmlVars.text = dynCmds[cmdid];

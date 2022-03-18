@@ -9,7 +9,7 @@ const Text = Tools('text');
 function normalize_init() {
 	let str1 = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑÇç";
 	let str2 = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuuñcc";
-	let map = {};
+	let map = Object.create(null);
 	for (let i = 0; i < str1.length; i++) {
 		map[str1.charAt(i)] = str2.charAt(i);
 	}

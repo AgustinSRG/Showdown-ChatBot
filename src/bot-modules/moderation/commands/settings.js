@@ -28,7 +28,7 @@ module.exports = {
 		if (mod in modtypes) {
 			let config = App.modules.moderation.system.data;
 			if (!config.roomSettings[room]) {
-				config.roomSettings[room] = {};
+				config.roomSettings[room] = Object.create(null);
 			}
 			config.roomSettings[room][mod] = !!(set === 'on');
 			App.modules.moderation.system.db.write();

@@ -41,8 +41,8 @@ exports.setup = function (App) {
 			this.clue = '';
 
 			this.ngame = 0;
-			this.points = {};
-			this.names = {};
+			this.points = Object.create(null);
+			this.names = Object.create(null);
 			this.timer = null;
 
 			let data = App.modules.games.system.templates.trivia.data;

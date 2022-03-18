@@ -29,7 +29,7 @@ exports.setup = function (App) {
 		if (context.post.edit) {
 			let room = Text.toRoomid(context.post.room);
 			if (room) {
-				let blacklist = {};
+				let blacklist = Object.create(null);
 				let empty = true;
 				let data = (context.post.blacklist || "").trim().split(',');
 				for (let i = 0; i < data.length; i++) {
@@ -57,7 +57,7 @@ exports.setup = function (App) {
 			let room = Text.toRoomid(context.post.room);
 			if (room) {
 				if (!App.modules.blacklist.system.data[room]) {
-					App.modules.blacklist.system.data[room] = {};
+					App.modules.blacklist.system.data[room] = Object.create(null);
 					App.modules.blacklist.system.db.write();
 					App.logServerAction(context.user.id, "Added blacklist: " + room);
 					ok = "Added blacklist for room " + room;
@@ -69,7 +69,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.rooms = '';
 		let data = App.modules.blacklist.system.data;

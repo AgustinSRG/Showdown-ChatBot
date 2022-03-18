@@ -17,8 +17,8 @@ const Util = require('util');
  */
 exports.generate = function (body, loginData, menu, options) {
 	let buf = '';
-	if (!loginData) loginData = {};
-	if (!options) options = {};
+	if (!loginData) loginData = Object.create(null);
+	if (!options) options = Object.create(null);
 
 	buf += '<html>';
 	buf += '<head>';

@@ -18,7 +18,7 @@ exports.setup = function (App) {
 	const DB = App.dam.getDataBase('groupchats.json');
 
 	const Config = DB.data;
-	const Rooms = {};
+	const Rooms = Object.create(null);
 
 	const GroupChatsMod = {
 		timer: null,
@@ -69,7 +69,7 @@ exports.setup = function (App) {
 			let roomConf = Config[Rooms[room]];
 			if (!roomConf) return;
 
-			let authfrom = {};
+			let authfrom = Object.create(null);
 
 			if (roomConf.authfrom && App.bot.rooms[roomConf.authfrom]) {
 				authfrom = App.bot.rooms[roomConf.authfrom].users;

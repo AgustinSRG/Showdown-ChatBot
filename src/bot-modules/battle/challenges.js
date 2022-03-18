@@ -17,8 +17,8 @@ exports.setup = function (App) {
 		return App.config.language.rooms[room] || App.config.language['default'];
 	}
 
-	const ChallManager = {};
-	ChallManager.challenges = {};
+	const ChallManager = Object.create(null);
+	ChallManager.challenges = Object.create(null);
 
 	function canChallenge(i, nBattles) {
 		if (Config.maxBattles > nBattles) return true;
@@ -209,7 +209,7 @@ exports.setup = function (App) {
 	};
 
 	ChallManager.clean = function () {
-		ChallManager.challenges = {};
+		ChallManager.challenges = Object.create(null);
 		ChallManager.onAcceptedChallenge = null;
 		ChallManager.onRejectedChallenge = null;
 	};

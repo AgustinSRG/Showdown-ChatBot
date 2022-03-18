@@ -23,7 +23,7 @@ exports.setup = function (App) {
 		constructor(room, maxPlayers) {
 			this.room = room;
 
-			this.players = {};
+			this.players = Object.create(null);
 			this.maxPlayers = maxPlayers || 0;
 			this.playerWithBomb = '';
 

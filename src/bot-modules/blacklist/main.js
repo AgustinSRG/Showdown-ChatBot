@@ -29,7 +29,7 @@ exports.setup = function (App) {
 		blacklist(room, user) {
 			user = Text.toId(user);
 			if (!user) return false;
-			if (!this.data[room]) this.data[room] = {};
+			if (!this.data[room]) this.data[room] = Object.create(null);
 			if (this.data[room][user]) {
 				return false;
 			} else {

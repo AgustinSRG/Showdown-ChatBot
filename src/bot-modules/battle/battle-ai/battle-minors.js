@@ -419,7 +419,7 @@ exports.setup = function (App, BattleData) {
 			switch (ability.id) {
 				case 'neutralizinggas':
 					if (!this.conditions["neutralizinggas"]) {
-						this.conditions["neutralizinggas"] = {};
+						this.conditions["neutralizinggas"] = Object.create(null);
 					}
 					this.conditions["neutralizinggas"][ident.side + ident.slot] = 1;
 					break;

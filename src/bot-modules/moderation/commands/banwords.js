@@ -42,8 +42,8 @@ module.exports = {
 			return this.errorReply(this.mlt(1) + " \"" + word + "\" " + this.mlt(2) +
 				" " + Chat.italics(this.parser.getRoomTitle(room)));
 		}
-		if (!config.bannedWords[room]) config.bannedWords[room] = {};
-		config.bannedWords[room][word] = {};
+		if (!config.bannedWords[room]) config.bannedWords[room] = Object.create(null);
+		config.bannedWords[room][word] = Object.create(null);
 		config.bannedWords[room][word].strict = (strictMode === 'strict');
 		config.bannedWords[room][word].nonicks = (nicks === 'ignorenicks');
 		switch (type) {

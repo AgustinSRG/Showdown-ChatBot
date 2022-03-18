@@ -54,7 +54,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 		htmlVars.addons_list = '';
 
 		for (let file in App.addons) {
@@ -101,7 +101,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 		htmlVars.content = (context.post.content || '');
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
@@ -151,7 +151,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 		htmlVars.content = JSON.stringify(addonContent);
 		htmlVars.file = path;
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));

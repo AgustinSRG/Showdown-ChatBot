@@ -21,7 +21,6 @@
 const Text = Tools('text');
 const Events = Tools('events');
 const Util = require('util');
-const Url = require('url');
 const SockJS = require('sockjs-client');
 const Https = require('https');
 
@@ -55,7 +54,7 @@ class Bot {
 		this.sendBufferMaxlength = Math.max(1, parseInt(sendBufferMaxlength + "") || 6);
 		this.chatThrottleDelay = Math.max(0, parseInt(chatThrottleDelay + "") || 200);
 
-		this.loginOptions = {};
+		this.loginOptions = Object.create(null);
 		this.loginOptions.serverId = serverId;
 		this.loginOptions.loginServer = loginServer;
 		this.loginUrl = {
@@ -73,12 +72,12 @@ class Bot {
 		this.events = new Events();
 		this.events.setMaxListeners(50);
 
-		this.rooms = {};
-		this.formats = {};
+		this.rooms = Object.create(null);
+		this.formats = Object.create(null);
 
 		this.connectionRetryTimer = null;
 
-		this.errOptions = {};
+		this.errOptions = Object.create(null);
 		this.errOptions.retryDelay = connectionRetryDelay;
 
 		this.msgQueue = [];
@@ -144,7 +143,7 @@ class Bot {
 	 */
 	getLoginUrl() {
 		return Util.format("https://%s/~~%s/action.php",
-			this.loginUrl.loginServer, this.loginUrl.serverId);
+			encodeURIComponent(this.loginUrl.loginServer), encodeURIComponent(this.loginUrl.serverId));
 	}
 
 	/* Setters */
@@ -169,7 +168,7 @@ class Bot {
 			clearTimeout(this.loginRetryTimer);
 			this.loginRetryTimer = null;
 		}
-		this.rooms = {};
+		this.rooms = Object.create(null);
 		this.conntime = 0;
 		this.sendingQueue = [];
 		this.msgQueue = [];
@@ -285,7 +284,7 @@ class Bot {
 		}
 
 		let data = "";
-		let url = Url.parse(this.getLoginUrl());
+		let url = new URL(this.getLoginUrl());
 		let requestOptions = {
 			hostname: url.hostname,
 			port: url.port,
@@ -661,7 +660,7 @@ class Bot {
 			break;
 		case 'users':
 			if (!this.rooms[room]) break;
-			this.rooms[room].users = {};
+			this.rooms[room].users = Object.create(null);
 			let userArr = line.substr(7).split(",");
 			for (let k = 1; k < userArr.length; k++) {
 				this.rooms[room].userJoin(userArr[k]);
@@ -729,7 +728,7 @@ class Bot {
 	updateFormats(formats) {
 		let formatsArr = formats.split('|');
 		let commaIndex, formatData, code, name;
-		this.formats = {};
+		this.formats = Object.create(null);
 		for (let i = 0; i < formatsArr.length; i++) {
 			commaIndex = formatsArr[i].indexOf(',');
 			if (commaIndex === -1) {
@@ -831,8 +830,8 @@ class BotRoom {
 		this.id = id;
 		this.type = type || "chat";
 		this.title = "";
-		this.users = {};
-		this.localNames = {};
+		this.users = Object.create(null);
+		this.localNames = Object.create(null);
 	}
 
 	/**

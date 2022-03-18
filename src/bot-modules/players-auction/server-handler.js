@@ -69,7 +69,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		let opts = [];
 		for (let room in Mod.rooms) {
@@ -93,7 +93,7 @@ exports.setup = function (App) {
 		}
 
 		if (context.post.edit) {
-			let data = {};
+			let data = Object.create(null);
 			try {
 				data = JSON.parse(context.post.content);
 				check(typeof data === "object", 'Root must be object');
@@ -112,7 +112,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		let opts = [];
 		for (let k in Mod.rooms) {

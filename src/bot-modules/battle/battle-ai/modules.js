@@ -10,8 +10,8 @@ const Path = require('path');
 const Text = Tools('text');
 
 exports.setup = function (App, BattleData) {
-	const BattleModulesManager = {};
-	const modules = BattleModulesManager.modules = {};
+	const BattleModulesManager = Object.create(null);
+	const modules = BattleModulesManager.modules = Object.create(null);
 
 	modFiles.forEach(function (file) {
 		let mod;

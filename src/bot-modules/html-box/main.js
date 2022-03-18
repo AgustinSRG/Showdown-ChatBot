@@ -10,10 +10,10 @@ exports.setup = function (App) {
 			this.db = App.dam.getDataBase('html-cmd.json');
 			this.data = this.db.data;
 			if (!this.data.commands) {
-				this.data.commands = {};
+				this.data.commands = Object.create(null);
 			}
 			if (!this.data.aliases) {
-				this.data.aliases = {};
+				this.data.aliases = Object.create(null);
 			}
 		}
 	}

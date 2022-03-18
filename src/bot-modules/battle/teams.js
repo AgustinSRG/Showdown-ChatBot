@@ -37,7 +37,7 @@ const BattleStatNames = {
 };
 
 exports.setup = function (App) {
-	const TeamsTools = {};
+	const TeamsTools = Object.create(null);
 	TeamsTools.BattleStatIDs = BattleStatIDs;
 	TeamsTools.BattleStatNames = BattleStatNames;
 
@@ -140,7 +140,7 @@ exports.setup = function (App) {
 					let hptype = line.substr(14, line.length - 15);
 					line = 'Hidden Power ' + hptype;
 					if (!curSet.ivs) {
-						curSet.ivs = {};
+						curSet.ivs = Object.create(null);
 						for (let stat in BattleTypeChart[hptype].HPivs) {
 							curSet.ivs[stat] = BattleTypeChart[hptype].HPivs[stat];
 						}
@@ -183,7 +183,7 @@ exports.setup = function (App) {
 				template = null;
 			}
 			if (!template) {
-				template = {};
+				template = Object.create(null);
 			}
 			let abilities = template.abilities || {};
 			id = Text.toId(set.ability);
@@ -279,7 +279,7 @@ exports.setup = function (App) {
 		let i = 0, j = 0;
 
 		while (j >= 0) {
-			let set = {};
+			let set = Object.create(null);
 			team.push(set);
 
 			// name

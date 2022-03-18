@@ -4,7 +4,7 @@
 
 'use strict';
 
-exports.translations = {};
+exports.translations = Object.create(null);
 
 /* Battle Abilities */
 
@@ -2976,4 +2976,4 @@ exports.translations.pokemon = {
 	"venomiconepilogue": "Venomicon-Epilogue",
 };
 
-exports.translations.legacy = {};
+exports.translations.legacy = Object.create(null);

@@ -37,7 +37,7 @@ exports.setup = function (App) {
 				App.config.modules.autoinvite.public = publicRoom;
 				App.config.modules.autoinvite.rank = rank;
 				App.saveConfig();
-				App.modules.autoinvite.system.roomAuth = {};
+				App.modules.autoinvite.system.roomAuth = Object.create(null);
 				App.modules.autoinvite.system.roomAuthChanged = true;
 				App.logServerAction(context.user.id, "Edit autoinvite configuration");
 				ok = "Auto-Invite configuration saved";
@@ -46,7 +46,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 		htmlVars.room = (App.config.modules.autoinvite.room || "");
 		htmlVars.publicroom = (App.config.modules.autoinvite.public || "");
 		htmlVars.rank = getRankSelect('rank', App.config.modules.autoinvite.rank);

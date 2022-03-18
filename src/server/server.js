@@ -15,18 +15,17 @@ const Flood_Interval = 30 * 1000;
 const Lock_Max_Duration = 24 * 60 * 60 * 1000;
 const Token_Max_Duration = 24 * 60 * 60 * 1000;
 const Encrypt_Algo = "aes-256-ctr";
-const Max_Body_Request_Size = 5 * 1024 * 1024;
+const Max_Trusted_Body_Request_Size = 25 * 1024 * 1024;
+const Max_Untrusted_Body_Size = 2 * 1024;
 const Max_Login_Flood = 5;
 const Login_Flood_Interval = 15 * 1000;
 const Login_Lock_Max_Duration = 1 * 60 * 60 * 1000;
 
 const Path = require('path');
-const Url = require('url');
 const Http = require('http');
 const Https = require('https');
 const WebSocketServer = require('websocket').server;
 const FileSystem = require('fs');
-const QueryString = require('querystring');
 const Crypto = require('crypto');
 const Stream = require('stream');
 const Busboy = require('busboy');
@@ -77,6 +76,18 @@ function decrypt(text, algorithm, password) {
 		data += decipher.final('utf8');
 		return data;
 	}
+}
+
+/**
+ * Turns search params into object
+ * @param {URLSearchParams} params parsed params
+ */
+function searchParamsToObject(params) {
+	const res = Object.create(null);
+	for (let key of params.keys()) {
+		res[key] = params.get(key) + "";
+	}
+	return res;
 }
 
 /**
@@ -135,7 +146,7 @@ class Server {
 
 		/* Https */
 		this.https = null;
-		this.httpsOptions = {};
+		this.httpsOptions = Object.create(null);
 		if (config.https) {
 			let sslkey = Path.resolve(app.appDir, config.sslkey);
 			let sslcert = Path.resolve(app.appDir, config.sslcert);
@@ -264,9 +275,9 @@ class Server {
 		}
 
 		/* Other initial values */
-		this.tokens = {};
-		this.menu = {};
-		this.handlers = {};
+		this.tokens = Object.create(null);
+		this.menu = Object.create(null);
+		this.handlers = Object.create(null);
 	}
 
 	/**
@@ -328,7 +339,7 @@ class Server {
 	 * @returns {Array<Object>}
 	 */
 	getMenu(context, selected) {
-		let menu = {};
+		let menu = Object.create(null);
 		for (let i in this.menu) {
 			if (!context || !this.menu[i].permission || (context.user && context.user.can(this.menu[i].permission))) {
 				let level = this.menu[i].level || 0;
@@ -395,11 +406,30 @@ class Server {
 	}
 
 	/**
+	 * Checks trusted connection for limits
+	 * @param {RequestContext} context
+	 */
+	checkTrusted(context) {
+		let token = context.cookies['usertoken'];
+		this.sweepTokens();
+		if (token && this.tokens[token]) {
+			let user = this.tokens[token].user;
+			if (this.users[user]) {
+				user = new User(this.users[user]);
+				context.trusted = user.can("root");
+			} else {
+				context.trusted = false;
+			}
+		} else {
+			context.trusted = false;
+		}
+	}
+
+	/**
 	 * Generates the login data for the context
 	 * @param {RequestContext} context
 	 */
-	applyLogin(context) {
-		//console.log(JSON.stringify(context.request.headers));
+	 applyLogin(context) {
 		let token = ((context.request.method + "").toUpperCase() === "GET") ? context.cookies['usertoken'] : (context.request.headers["x-csrf-token"] || context.post["x-csrf-token"]);
 		let user = context.post.user;
 		let pass = context.post.password;
@@ -486,7 +516,7 @@ class Server {
 			return "#";
 		}
 		try {
-			let url = new Url.URL(path, this.app.config.server.url);
+			let url = new URL(path, this.app.config.server.url);
 			return url.toString();
 		} catch (ex) {
 			this.app.reportCrash(ex);
@@ -499,7 +529,7 @@ class Server {
 			return "#";
 		}
 		try {
-			let url = new Url.URL("/", this.app.config.server.url);
+			let url = new URL("/", this.app.config.server.url);
 			return "http://" + url.hostname + "-" + (url.port || (url.protocol === "https:" ? 443 : 80)) + ".psim.us" + (path || "/");
 		} catch (ex) {
 			this.app.reportCrash(ex);
@@ -522,6 +552,7 @@ class Server {
 			this.monitor.count(ip);
 		}
 		let context = new RequestContext(this, request, response, ip);
+		this.checkTrusted(context);
 		context.resolveVars(function () {
 			if (!this.applyLogin(context)) return;
 			try {
@@ -538,10 +569,10 @@ class Server {
 	 * @param {RequestContext} context
 	 */
 	serve(context) {
-		if (context.url.path in { '/favicon.ico': 1, 'favicon.ico': 1 }) {
+		if (context.url.pathname in { '/favicon.ico': 1, 'favicon.ico': 1 }) {
 			/* Favicon.ico */
 			context.endWithStaticFile(Path.resolve(__dirname, '../../favicon.ico'));
-		} else if (context.url.path.startsWith("/showdown/info?") || context.url.path.startsWith("/info?")) {
+		} else if (context.url.pathname.startsWith("/showdown/info?") || context.url.pathname.startsWith("/info?")) {
 			context.headers["Access-Control-Allow-Origin"] = context.request.headers['Origin'] || context.request.headers['origin'] || "*";
 			context.headers["Access-Control-Allow-Credentials"] = "true";
 			context.endWithJSON({
@@ -550,7 +581,7 @@ class Server {
 				origins: ["*:*"],
 				websocket: true,
 			});
-		} else if (!context.url.path || context.url.path === '/') {
+		} else if (!context.url.pathname || context.url.pathname === '/') {
 			/* Main page */
 			context.setMenu(this.getMenu(context));
 			if (this.app.config.mainhtml) {
@@ -566,7 +597,7 @@ class Server {
 			}
 		} else {
 			/* Handlers */
-			let urlParts = context.url.path.split('/');
+			let urlParts = context.url.pathname.split('/');
 			if (!urlParts[0] && urlParts.length > 1) {
 				urlParts.shift();
 			}
@@ -617,11 +648,13 @@ class Server {
  * @returns {Object} parsed cookies
  */
 function parseCookies(request) {
-	let list = {}, rc = request.headers.cookie;
+	let list = Object.create(null), rc = request.headers.cookie;
 	if (rc) {
 		rc.split(';').forEach(function (cookie) {
 			let parts = cookie.split('=');
-			list[parts.shift().trim()] = decodeURI(parts.join('='));
+			try {
+				list[parts.shift().trim()] = decodeURI(parts.join('='));
+			} catch (ex) { }
 		});
 	}
 	return list;
@@ -670,39 +703,53 @@ class RequestContext {
 		this.request = request;
 		this.response = response;
 		this.user = null;
-		this.url = Url.parse(request.url);
+		this.trusted = false;
+		try {
+			this.url = new URL(request.url, server.app.config.server.url || "http://localhost:8080");
+		} catch (ex) {
+			try {
+				this.url = new URL(request.url, "http://localhost:8080");
+			} catch (ex2) {
+				this.url = new URL("http://localhost:8080");
+			}
+		}
 		this.menu = [];
 		this.ip = (ip || request.connection.remoteAddress);
 		this.headers = { 'X-XSS-Protection': 0 };
 		this.invalidLogin = false;
-		this.get = {};
-		this.post = {};
-		this.cookies = {};
-	}
-
-	/**
-	 * Resolves COOKIES, POST and GET vars
-	 * @param {function} callback - called when all vars are resolved
-	 */
-	resolveVars(callback) {
+		this.get = Object.create(null);
+		this.post = Object.create(null);
 		this.cookies = parseCookies(this.request);
 		/* Transform COOKIES to string */
 		for (let key in this.cookies) {
 			if (typeof this.cookies[key] !== 'string') {
-				this.cookies[key] = JSON.stringify(this.cookies[key]);
+				this.cookies[key] = this.cookies[key] + "";
 			}
 		}
-		this.get = QueryString.parse(this.url.query);
+	}
+
+	/**
+	 * Resolves POST, GET vars and FILES
+	 * @param {function} callback - called when all vars are resolved
+	 */
+	resolveVars(callback) {
+		try {
+			this.get = searchParamsToObject(this.url.searchParams);
+		} catch (ex) {
+			this.server.app.debug("Error: " + ex.message);
+			this.get = Object.create(null);
+		}
 		/* Transform GET to string */
 		for (let key in this.get) {
 			if (typeof this.get[key] !== 'string') {
 				this.get[key] = JSON.stringify(this.get[key]);
 			}
 		}
+		const bodyMaxSize = this.trusted ? Max_Trusted_Body_Request_Size : Max_Untrusted_Body_Size;
 		if (this.request.method === 'POST') {
 			let body = '';
 			this.request.on('data', function (data) {
-				if ((body.length + data.length) > Max_Body_Request_Size) {
+				if ((body.length + data.length) > bodyMaxSize) {
 					this.request.connection.destroy();
 					return;
 				}
@@ -714,8 +761,9 @@ class RequestContext {
 					busboy = new Busboy({ headers: this.request.headers });
 				} catch (err) { }
 				if (busboy) {
-					let files = this.files = {};
-					let post = this.post = {};
+					let stream = new Stream.PassThrough();
+					let files = this.files = Object.create(null);
+					let post = this.post = Object.create(null);
 					busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
 						files[fieldname] = {
 							name: filename,
@@ -733,19 +781,21 @@ class RequestContext {
 					busboy.on('finish', function () {
 						if (typeof callback === "function") return callback();
 					});
-					let stream = new Stream.PassThrough();
+					busboy.on('error', function () {
+						stream.unpipe(busboy);
+						if (typeof callback === "function") return callback();
+					});
 					stream.write(body);
 					stream.pipe(busboy);
 					stream.end();
 				} else {
-					this.post = QueryString.parse(body);
-					this.files = {};
-					/* Transform POST to string */
-					for (let key in this.post) {
-						if (typeof this.post[key] !== 'string') {
-							this.post[key] = JSON.stringify(this.post[key]);
-						}
+					try {
+						this.post = searchParamsToObject(new URLSearchParams(body));
+					} catch (ex) {
+						this.server.app.debug("Error: " + ex.message);
+						this.post = Object.create(null);
 					}
+					this.files = Object.create(null);
 					if (typeof callback === "function") return callback();
 				}
 			}.bind(this));
@@ -821,7 +871,7 @@ class RequestContext {
 	 * @param {Number|String} code - Response code (200 by default)
 	 */
 	endWithWebPage(body, options, code) {
-		let loginData = {};
+		let loginData = Object.create(null);
 		if (this.user) {
 			loginData.name = this.user.name;
 			loginData.group = this.user.group;

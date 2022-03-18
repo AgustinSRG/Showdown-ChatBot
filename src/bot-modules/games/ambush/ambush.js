@@ -19,7 +19,7 @@ exports.setup = function (App) {
 	class Ambush {
 		constructor(room, maxPlayers) {
 			this.room = room;
-			this.players = {};
+			this.players = Object.create(null);
 			this.status = 'init';
 			this.maxPlayers = maxPlayers || 0;
 			this.lang = getLanguage(this.room);

@@ -12,9 +12,9 @@ exports.setup = function (App) {
 		return App.config.language.rooms[room] || App.config.language['default'];
 	}
 
-	const PlayersAuctionMod = {};
+	const PlayersAuctionMod = Object.create(null);
 
-	PlayersAuctionMod.rooms = {};
+	PlayersAuctionMod.rooms = Object.create(null);
 
 	PlayersAuctionMod.db = App.dam.getDataBase('players-auction.json');
 	PlayersAuctionMod.data = PlayersAuctionMod.db.data;
@@ -33,7 +33,7 @@ exports.setup = function (App) {
 
 	PlayersAuctionMod.linkAuctionData = function (room) {
 		if (!this.data[room]) {
-			this.data[room] = {};
+			this.data[room] = Object.create(null);
 		}
 
 		return this.data[room];

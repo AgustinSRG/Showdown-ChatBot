@@ -39,7 +39,7 @@ exports.setup = function (App) {
 			ok = "Repeat canceled.";
 		}
 
-		let htmlVars = {};
+		let htmlVars = Object.create(null);
 
 		htmlVars.timers = "";
 

@@ -7,7 +7,7 @@
 
 'use strict';
 
-const Config = {};
+const Config = Object.create(null);
 module.exports = Config;
 
 /* Static admin account */
@@ -25,7 +25,7 @@ Config.Data_Mode = "RAW";
 
 /* MYSQL */
 
-Config.MYSQL = {};
+Config.MYSQL = Object.create(null);
 
 Config.MYSQL.host = "";
 

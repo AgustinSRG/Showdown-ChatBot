@@ -19,7 +19,7 @@ exports.setup = function (App) {
 
 	class GitHubModule {
 		constructor() {
-			this.updates = {};
+			this.updates = Object.create(null);
 			this.running = false;
 			this.webhook = null;
 		}
@@ -96,7 +96,7 @@ exports.setup = function (App) {
 			let requestNumber = result.pull_request.number;
 			let url = result.pull_request.html_url;
 			let action = result.action;
-			if (!updates[repo]) updates[repo] = {};
+			if (!updates[repo]) updates[repo] = Object.create(null);
 			if (action === 'synchronize') {
 				action = 'updated';
 			}

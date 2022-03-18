@@ -5,12 +5,12 @@
 'use strict';
 
 exports.setup = function (App) {
-	const PokeRandomManager = {};
+	const PokeRandomManager = Object.create(null);
 
 	let Pokedex, Movedex, Itemdex, Abilitydex, Natures;
-	let FormatData = {};
+	let FormatData = Object.create(null);
 
-	Pokedex = Movedex = Itemdex = Abilitydex = {};
+	Pokedex = Movedex = Itemdex = Abilitydex = Object.create(null);
 
 	Natures = PokeRandomManager.Natures = ['Adamant', 'Bashful', 'Bold', 'Brave', 'Calm', 'Careful', 'Docile',
 							 'Gentle', 'Hardy', 'Hasty', 'Impish', 'Jolly', 'Lax', 'Lonely', 'Mild',

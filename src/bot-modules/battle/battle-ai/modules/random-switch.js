@@ -5,7 +5,7 @@
 'use strict';
 
 exports.setup = function () {
-	const BattleModule = {};
+	const BattleModule = Object.create(null);
 	BattleModule.id = "randomsw";
 
 	function getDecisionValue(des) {
