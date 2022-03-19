@@ -128,6 +128,15 @@ function getLadderELO(ladder, ex) {
 /* Commands */
 
 module.exports = {
+	usagelink: function (App) {
+		this.setLangFile(Lang_File);
+		getUsageLink(App, function (link) {
+			if (!link) {
+				return this.errorReply(this.mlt('error'));
+			}
+			this.restrictReply(this.mlt('stats') + ": " + link, 'usage');
+		}.bind(this));
+	},
 	usage: function (App) {
 		this.setLangFile(Lang_File);
 		getUsageLink(App, function (link) {
@@ -135,7 +144,7 @@ module.exports = {
 				return this.errorReply(this.mlt('error'));
 			}
 			if (!this.arg) {
-				return this.restrictReply(this.mlt('stats') + ": " + link, 'usage');
+				return this.errorReply(this.usage({ desc: 'pokemon' }, { desc: 'tier', optional: true }, { desc: 'ladder (top|high|mid|low)', optional: true }));
 			}
 			let poke = "garchomp", searchIndex = -1;
 			let tier = App.config.modules.pokemon.gtier || parseAliases('ou', App);
