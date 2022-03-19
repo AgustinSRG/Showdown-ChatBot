@@ -14,6 +14,7 @@
 const Path = require('path');
 const Text = Tools('text');
 const Chat = Tools('chat');
+const LineSplitter = Tools('line-splitter');
 
 const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
@@ -79,7 +80,22 @@ module.exports = {
 		for (let i = 0; i < 5 && i < top.length; i++) {
 			topResults.push(Chat.italics("#" + (i + 1)) + " " + Chat.bold(top[i][0]) + " (" + toDecimalFormat(top[i][6]) + ")");
 		}
-		this.restrictReply(Chat.bold(this.parser.getRoomTitle(room)) + " | " + topResults.join(", "), "toursrank");
+
+		let spl = new LineSplitter(App.config.bot.maxMessageLength);
+
+		spl.add(Chat.bold(this.parser.getRoomTitle(room)) + " | " + topResults.join(", ") + " | ");
+
+		let server = App.config.server.url;
+
+		if (server) {
+			if (server.charAt(server.length - 1) === '/') {
+				spl.add(App.config.server.url + 'tourtable/' + room + '/get');
+			} else {
+				spl.add(App.config.server.url + '/tourtable/' + room + '/get');
+			}
+		}
+
+		this.restrictReply(spl.getLines(), "toursrank");
 	},
 
 	toursrankconfig: function (App) {
