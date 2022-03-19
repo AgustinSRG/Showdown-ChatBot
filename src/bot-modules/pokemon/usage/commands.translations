@@ -22,8 +22,6 @@ $err = Could not get usage data from
 $busy = Downloading the usage data. Try again in a few seconds
 $pokeerr1 = Pokemon
 $pokeerr2 = not available in
-$pokeerr3 = (Usage Stats)
-$pokeerr4 = (Usage Data)
 $pleasecheck = You can check the list here
 $notfound = Data not found for
 $usagedata1 = 
@@ -36,6 +34,12 @@ $moves = Moves
 $spreads = Spreads
 $teammates = Teammates
 $source = Source
+$badladder = Invalid ladder type. Available types
+
+$low = Low ladder
+$mid = Mid ladder
+$high = High ladder
+$top = Top ladder
 
 %spanish
 
@@ -55,8 +59,6 @@ $err = No se pudieron descargar datos desde
 $busy = Descargando los datos. Intenta este comando de nuevo en unos minutos
 $pokeerr1 = Pokemon
 $pokeerr2 = no disponible en
-$pokeerr3 =  (Estadísticas de uso)
-$pokeerr4 =  (Datos de uso)
 $pleasecheck = Puedes comprobar la lista aquí
 $notfound = No se encontraron datos para
 $usagedata1 = #NAME de 
@@ -69,3 +71,9 @@ $moves = Movimientos
 $spreads = Naturalezas y EVs
 $teammates = Compañeros
 $source = Fuente
+$badladder = Tipo de ladder incorrecto. Tipos válidos
+
+$low = Baja ladder
+$mid = Media ladder
+$high = Alta ladder
+$top = Top ladder

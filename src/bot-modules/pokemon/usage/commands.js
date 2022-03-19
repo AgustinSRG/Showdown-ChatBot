@@ -103,9 +103,27 @@ function parseAliases(format, App) {
 	return Text.toFormatStandard(format);
 }
 
-const Default_Rank = 1630;
-const Rank_Exception = 1695;
+const Low_Ladder_ELO = 0;
+const Mid_Ladder_ELO = 1500;
+const High_Ladder_ELO = 1630;
+const High_Ladder_ELO_EX = 1695;
+const Top_Ladder_ELO = 1760;
+const Top_Ladder_ELO_EX = 1825;
+
 const Rank_Exceptions = Object.create(null);
+
+function getLadderELO(ladder, ex) {
+	switch (ladder) {
+		case "top":
+			return (ex ? Top_Ladder_ELO_EX : Top_Ladder_ELO);
+		case "high":
+			return (ex ? High_Ladder_ELO_EX : High_Ladder_ELO);
+		case "mid":
+			return Mid_Ladder_ELO;
+		default:
+			return Low_Ladder_ELO;
+	}
+}
 
 /* Commands */
 
@@ -121,10 +139,11 @@ module.exports = {
 			}
 			let poke = "garchomp", searchIndex = -1;
 			let tier = App.config.modules.pokemon.gtier || parseAliases('ou', App);
+			let ladder = 'high';
 			if (this.room && App.config.modules.pokemon.roomtier && App.config.modules.pokemon.roomtier[this.room]) {
 				tier = App.config.modules.pokemon.roomtier[this.room];
 			}
-			let ladderType = Default_Rank;
+			let ladderType = 0;
 			let args = this.args;
 			for (let i = 0; i < args.length; i++) args[i] = Text.toId(args[i]);
 			poke = Text.toId(args[0]);
@@ -138,12 +157,17 @@ module.exports = {
 			if (args[1]) {
 				tier = parseAliases(args[1], App);
 			}
-			if (!poke || !tier) return this.errorReply(this.usage({ desc: 'pokemon' }, { desc: 'tier', optional: true }));
-			if (this.usageRankExceptionFlag) {
-				ladderType = Rank_Exception;
-				Rank_Exceptions[tier] = true;
-			} else if (Rank_Exceptions[tier]) {
-				ladderType = Rank_Exception;
+			if (args[2]) {
+				ladder = Text.toId(args[2]);
+				if (['top', 'high', 'mid', 'low'].indexOf(ladder) === -1) {
+					return this.errorReply(this.mlt('badladder') + ": " + "top, high, mid, low");
+				}
+			}
+			if (!poke || !tier) return this.errorReply(this.usage({ desc: 'pokemon' }, { desc: 'tier', optional: true }, { desc: 'ladder (top|high|mid|low)', optional: true }));
+			if (this.usageRankExceptionFlag || Rank_Exceptions[tier]) {
+				ladderType = getLadderELO(ladder, true);
+			} else {
+				ladderType = getLadderELO(ladder, false);
 			}
 			let url = link + tier + "-" + ladderType + ".txt";
 			if (markDownload(url)) {
@@ -169,10 +193,13 @@ module.exports = {
 						return App.parser.exec(this);
 					} else {
 						return this.errorReply(this.mlt('tiererr1') + " \"" +
-							tierName(tier, App) + "\" " + this.mlt('tiererr3') + '. ' + this.mlt('pokeerr3') +
+							tierName(tier, App) + "\" " + this.mlt('tiererr3') + '. ' +
 							'. ' + this.mlt('pleasecheck') + ': ' + link);
 					}
 				} else {
+					if (this.usageRankExceptionFlag) {
+						Rank_Exceptions[tier] = true;
+					}
 					if (!App.data.cache.has(url)) {
 						App.data.cache.cache(url, data, 0, { 'smogon-usage': 1 });
 					}
@@ -221,17 +248,17 @@ module.exports = {
 				if (!dataRes.pos || dataRes.pos < 1) {
 					if (!dataResAux.pos || dataResAux.pos < 1) {
 						return this.errorReply(this.mlt('pokeerr1') + " \"" + poke + "\" " +
-							this.mlt('pokeerr2') + " " + tierName(tier, App) + " " + this.mlt('pokeerr3'));
+							this.mlt('pokeerr2') + " " + tierName(tier, App) + " (" + this.mlt(ladder) + ", __>" + ladderType + " ELO__)");
 					} else {
 						return this.restrictReply(this.mlt('pokeerr1') + " \"" + poke + "\" " +
-							this.mlt('pokeerr2') + " " + tierName(tier, App) + " " + this.mlt('pokeerr3') +
+							this.mlt('pokeerr2') + " " + tierName(tier, App) +
 							' | ' + Chat.bold(dataResAux.name) + ", #" + dataResAux.pos + " " + this.mlt('in') +
-							" " + Chat.bold(tierName(tier, App)) + ". " + this.mlt('pokeusage') + ": " + dataResAux.usage + ", " +
+							" " + Chat.bold(tierName(tier, App)) + " (" + this.mlt(ladder) + ", __>" + ladderType + " ELO__). " + this.mlt('pokeusage') + ": " + dataResAux.usage + ", " +
 							this.mlt('pokeraw') + ": " + dataResAux.raw, 'usage');
 					}
 				}
 				this.restrictReply(Chat.bold(dataRes.name) + ", #" + dataRes.pos + " " + this.mlt('in') +
-					" " + Chat.bold(tierName(tier, App)) + ". " + this.mlt('pokeusage') + ": " + dataRes.usage + ", " +
+					" " + Chat.bold(tierName(tier, App)) + " (" + this.mlt(ladder) + ", __>" + ladderType + " ELO__). " + this.mlt('pokeusage') + ": " + dataRes.usage + ", " +
 					this.mlt('pokeraw') + ": " + dataRes.raw, 'usage');
 			}.bind(this), UsageFailureCache);
 		}.bind(this));
@@ -246,19 +273,20 @@ module.exports = {
 			let args = this.args;
 			if (!this.arg || this.args.length < 2) {
 				return this.errorReply(this.usage({ desc: 'pokemon' },
-					{ desc: 'moves / items / abilities / spreads / teammates' }, { desc: 'tier', optional: true }));
+					{ desc: 'moves|items|abilities|spreads|teammates' }, { desc: 'tier', optional: true }, { desc: 'ladder (top|high|mid|low)', optional: true }));
 			}
 			let poke = "garchomp";
 			let tier = App.config.modules.pokemon.gtier || parseAliases('ou', App);
+			let ladder = 'high';
 			if (this.room && App.config.modules.pokemon.roomtier && App.config.modules.pokemon.roomtier[this.room]) {
 				tier = App.config.modules.pokemon.roomtier[this.room];
 			}
 			let dataType = Text.toId(args[1]);
 			if (!(dataType in { "moves": 1, "items": 1, "abilities": 1, "teammates": 1, "spreads": 1 })) {
 				return this.errorReply(this.usage({ desc: 'pokemon' },
-					{ desc: 'moves / items / abilities / spreads / teammates' }, { desc: 'tier', optional: true }));
+					{ desc: 'moves|items|abilities|spreads|teammates' }, { desc: 'tier', optional: true }, { desc: 'ladder (top|high|mid|low)', optional: true }));
 			}
-			let ladderType = Default_Rank;
+			let ladderType = 0;
 			for (let i = 0; i < args.length; i++) args[i] = Text.toId(args[i]);
 			poke = Text.toId(args[0]);
 			try {
@@ -270,11 +298,16 @@ module.exports = {
 			if (args[2]) {
 				tier = parseAliases(args[2], App);
 			}
-			if (this.usageRankExceptionFlag) {
-				ladderType = Rank_Exception;
-				Rank_Exceptions[tier] = true;
-			} else if (Rank_Exceptions[tier]) {
-				ladderType = Rank_Exception;
+			if (args[3]) {
+				ladder = Text.toId(args[2]);
+				if (['top', 'high', 'mid', 'low'].indexOf(ladder) === -1) {
+					return this.errorReply(this.mlt('badladder') + ": " + "top, high, mid, low");
+				}
+			}
+			if (this.usageRankExceptionFlag || Rank_Exceptions[tier]) {
+				ladderType = getLadderELO(ladder, true);
+			} else {
+				ladderType = getLadderELO(ladder, false);
 			}
 			let url = link + "moveset/" + tier + "-" + ladderType + ".txt";
 			if (markDownload(url)) {
@@ -299,10 +332,13 @@ module.exports = {
 						return App.parser.exec(this);
 					} else {
 						return this.errorReply(this.mlt('tiererr1') + " \"" +
-							tierName(tier, App) + "\" " + this.mlt('tiererr3') + '. ' + this.mlt('pokeerr4') +
+							tierName(tier, App) + "\" " + this.mlt('tiererr3') + '. ' +
 							'. ' + this.mlt('pleasecheck') + ': ' + link);
 					}
 				} else {
+					if (this.usageRankExceptionFlag) {
+						Rank_Exceptions[tier] = true;
+					}
 					if (!App.data.cache.has(url)) {
 						App.data.cache.cache(url, data, 0, { 'smogon-usage': 1 });
 					}
@@ -317,7 +353,7 @@ module.exports = {
 				}
 				if (!chosen) {
 					return this.errorReply(this.mlt('pokeerr1') + " \"" + poke + "\" " +
-						this.mlt('pokeerr2') + " " + tierName(tier, App) + " " + this.mlt('pokeerr4'));
+						this.mlt('pokeerr2') + " " + tierName(tier, App) + " (" + this.mlt(ladder) + ", __>" + ladderType + " ELO__)");
 				}
 				let result = [];
 				let resultName = "";
@@ -364,12 +400,12 @@ module.exports = {
 					return this.errorReply(this.mlt('notfound') + " " +
 						this.mlt('usagedata1').replace("#NAME", resultName) + pokeName +
 						this.mlt('usagedata2').replace("#NAME", resultName) + " " +
-						this.mlt('in') + " " + tierName(tier, App));
+						this.mlt('in') + " " + tierName(tier, App) + " (" + this.mlt(ladder) + ", __>" + ladderType + " ELO__)");
 				}
 				let spl = new LineSplitter(App.config.bot.maxMessageLength);
 				spl.add(Chat.bold((this.mlt('usagedata1').replace("#NAME", resultName) + ' ' + pokeName +
 					this.mlt('usagedata2').replace("#NAME", resultName) + " " +
-					this.mlt('in') + " " + tierName(tier, App)).trim()) + ":");
+					this.mlt('in') + " " + tierName(tier, App)).trim()) + " (" + this.mlt(ladder) + ", __>" + ladderType + " ELO__):");
 				for (let i = 0; i < result.length; i++) {
 					spl.add(" " + result[i] + (i < (result.length - 1) ? ',' : ''));
 				}
@@ -396,14 +432,15 @@ module.exports = {
 				return this.errorReply(this.mlt('error'));
 			}
 			if (!this.arg) {
-				return this.errorReply(this.usage({ desc: 'pokemon' }, { desc: 'tier', optional: true }));
+				return this.errorReply(this.usage({ desc: 'pokemon' }, { desc: 'tier', optional: true }, { desc: 'ladder (top|high|mid|low)', optional: true }));
 			}
 			let poke = "garchomp", searchIndex = -1;
 			let tier = App.config.modules.pokemon.gtier || parseAliases('ou', App);
+			let ladder = 'high';
 			if (this.room && App.config.modules.pokemon.roomtier && App.config.modules.pokemon.roomtier[this.room]) {
 				tier = App.config.modules.pokemon.roomtier[this.room];
 			}
-			let ladderType = Default_Rank;
+			let ladderType = 0;
 			let args = this.args;
 			for (let i = 0; i < args.length; i++) args[i] = Text.toId(args[i]);
 			poke = Text.toId(args[0]);
@@ -417,12 +454,17 @@ module.exports = {
 			if (args[1]) {
 				tier = parseAliases(args[1], App);
 			}
+			if (args[2]) {
+				ladder = Text.toId(args[2]);
+				if (['top', 'high', 'mid', 'low'].indexOf(ladder) === -1) {
+					return this.errorReply(this.mlt('badladder') + ": " + "top, high, mid, low");
+				}
+			}
 			if (!poke || !tier) return this.errorReply(this.usage({ desc: 'pokemon' }, { desc: 'tier', optional: true }));
-			if (this.usageRankExceptionFlag) {
-				ladderType = Rank_Exception;
-				Rank_Exceptions[tier] = true;
-			} else if (Rank_Exceptions[tier]) {
-				ladderType = Rank_Exception;
+			if (this.usageRankExceptionFlag || Rank_Exceptions[tier]) {
+				ladderType = getLadderELO(ladder, true);
+			} else {
+				ladderType = getLadderELO(ladder, false);
 			}
 			let url = link + tier + "-" + ladderType + ".txt";
 			if (markDownload(url)) {
@@ -448,10 +490,13 @@ module.exports = {
 						return App.parser.exec(this);
 					} else {
 						return this.errorReply(this.mlt('tiererr1') + " \"" +
-							tierName(tier, App) + "\" " + this.mlt('tiererr3') + '. ' + this.mlt('pokeerr3') +
+							tierName(tier, App) + "\" " + this.mlt('tiererr3') + '. ' +
 							'. ' + this.mlt('pleasecheck') + ': ' + link);
 					}
 				} else {
+					if (this.usageRankExceptionFlag) {
+						Rank_Exceptions[tier] = true;
+					}
 					if (!App.data.cache.has(url)) {
 						App.data.cache.cache(url, data, 0, { 'smogon-usage': 1 });
 					}
@@ -500,7 +545,7 @@ module.exports = {
 				if (!dataRes.pos || dataRes.pos < 1) {
 					if (!dataResAux.pos || dataResAux.pos < 1) {
 						return this.errorReply(this.mlt('pokeerr1') + " \"" + poke + "\" " +
-							this.mlt('pokeerr2') + " " + tierName(tier, App) + " " + this.mlt('pokeerr3'));
+							this.mlt('pokeerr2') + " " + tierName(tier, App) + " " + " (" + this.mlt(ladder) + ", __>" + ladderType + " ELO__)");
 					} else {
 						dataRes = dataResAux;
 					}
@@ -618,8 +663,10 @@ module.exports = {
 						// First row
 						'<tr><td style="text-align:center; border-right: solid 1px black; padding: 12px;"><b>' + Text.escapeHTML(dataRes.name) + '</b></td>' +
 						'<td style="padding: 12px;"><b>#' +
-						Text.escapeHTML(dataRes.pos) + "</b> " + Text.escapeHTML(this.mlt('in')) +
-						" <b>" + Text.escapeHTML(tierName(tier, App)) + "</b>. " + Text.escapeHTML(this.mlt('pokeusage')) + ": " + Text.escapeHTML(dataRes.usage) + ", " +
+						Text.escapeHTML(dataRes.pos + "") + "</b> " + Text.escapeHTML(this.mlt('in')) +
+						" <b>" + Text.escapeHTML(tierName(tier, App)) + "</b>. " +
+						"(" + Text.escapeHTML(this.mlt(ladder)) + ", <i>&gt;" + Text.escapeHTML(ladderType + "") + " ELO</i>) | " +
+						Text.escapeHTML(this.mlt('pokeusage')) + ": " + Text.escapeHTML(dataRes.usage) + ", " +
 						Text.escapeHTML(this.mlt('pokeraw')) + ": " + Text.escapeHTML(dataRes.raw) + '</td></tr>' +
 						// Second row
 						'<tr>' +
