@@ -154,6 +154,7 @@ module.exports = {
 			this.restrictReply(this.mlt('stats') + ": " + link, 'usage');
 		}.bind(this));
 	},
+
 	usage: function (App) {
 		this.setLangFile(Lang_File);
 		getUsageLink(App, function (link) {
@@ -219,7 +220,7 @@ module.exports = {
 						return App.parser.exec(this);
 					} else {
 						return this.errorReply(this.mlt('tiererr1') + " \"" +
-							tierName(tier, App) + "\" " + this.mlt('tiererr3') + '. ' +
+							tierName(tier, App) + "\" " + this.mlt('tiererr3') +
 							'. ' + this.mlt('pleasecheck') + ': ' + link);
 					}
 				} else {
@@ -294,6 +295,97 @@ module.exports = {
 		}.bind(this));
 	},
 
+	usagetop: function (App) {
+		this.setLangFile(Lang_File);
+		getUsageLink(App, function (link) {
+			if (!link) {
+				return this.errorReply(this.mlt('error'));
+			}
+			if (!this.arg) {
+				return this.errorReply(this.usage({ desc: 'tier' }, { desc: 'ladder (top|high|mid|low)', optional: true }));
+			}
+			let tier = App.config.modules.pokemon.gtier || parseAliases('ou', App);
+			let ladder = 'high';
+			if (this.room && App.config.modules.pokemon.roomtier && App.config.modules.pokemon.roomtier[this.room]) {
+				tier = App.config.modules.pokemon.roomtier[this.room];
+			}
+			let ladderType = 0;
+			let args = this.args;
+			for (let i = 0; i < args.length; i++) args[i] = Text.toId(args[i]);
+			if (args[0]) {
+				tier = parseAliases(args[0], App);
+			}
+			if (args[1]) {
+				ladder = Text.toId(args[1]);
+				if (['top', 'high', 'mid', 'low'].indexOf(ladder) === -1) {
+					return this.errorReply(this.mlt('badladder') + ": " + "top, high, mid, low");
+				}
+			}
+			if (!tier) return this.errorReply(this.usage({ desc: 'tier' }, { desc: 'ladder (top|high|mid|low)', optional: true }));
+			if (this.usageRankExceptionFlag || Rank_Exceptions[tier]) {
+				ladderType = getLadderELO(ladder, true);
+			} else {
+				ladderType = getLadderELO(ladder, false);
+			}
+			let url = link + tier + "-" + ladderType + ".txt";
+			if (markDownload(url)) {
+				return this.errorReply(this.mlt('busy'));
+			}
+			if (!App.data.cache.has(url)) {
+				markDownload(url, true);
+			}
+			App.data.wget(url, function (data, err) {
+				markDownload(url, false);
+				if (err) {
+					return this.errorReply(this.mlt('err') + " " + url);
+				}
+				let lines = data.split("\n");
+				if (lines[0].indexOf("Total battles:") === -1) {
+					if (!App.data.cache.has(url)) {
+						if (!UsageFailureCache.has(url)) {
+							UsageFailureCache.cache(url, data);
+						}
+					}
+					if (!this.usageRankExceptionFlag) {
+						this.usageRankExceptionFlag = true;
+						return App.parser.exec(this);
+					} else {
+						return this.errorReply(this.mlt('tiererr1') + " \"" +
+							tierName(tier, App) + "\" " + this.mlt('tiererr3') +
+							'. ' + this.mlt('pleasecheck') + ': ' + link);
+					}
+				} else {
+					if (this.usageRankExceptionFlag) {
+						Rank_Exceptions[tier] = true;
+					}
+					if (!App.data.cache.has(url)) {
+						App.data.cache.cache(url, data, 0, { 'smogon-usage': 1 });
+					}
+				}
+				const topPokes = [];
+				for (let i = 5; i < lines.length && i < 10; i++) {
+					let line = lines[i].split("|");
+					if (line.length < 7) continue;
+
+					let pos = parseInt(line[1].trim());
+					let name = line[2].trim();
+					let usage = line[3].trim();
+
+					topPokes.push(Chat.italics("#" + pos) + " " + Chat.bold(name) + " (" + usage + ")");
+				}
+
+				let spl = new LineSplitter(App.config.bot.maxMessageLength);
+				spl.add(
+					this.mlt('topuse') + " " + this.mlt('in') +
+					" " + Chat.bold(tierName(tier, App)) + " (" + this.mlt(ladder) + ", __>" + ladderType + " ELO__): " +
+					topPokes.join(", ") + " | "
+				);
+				spl.add(url);
+				this.restrictReply(spl.getLines(), 'usagedata');
+			}.bind(this), UsageFailureCache);
+		}.bind(this));
+	},
+
 	usagedata: function (App) {
 		this.setLangFile(Lang_File);
 		getUsageLink(App, function (link) {
@@ -362,7 +454,7 @@ module.exports = {
 						return App.parser.exec(this);
 					} else {
 						return this.errorReply(this.mlt('tiererr1') + " \"" +
-							tierName(tier, App) + "\" " + this.mlt('tiererr3') + '. ' +
+							tierName(tier, App) + "\" " + this.mlt('tiererr3') +
 							'. ' + this.mlt('pleasecheck') + ': ' + link);
 					}
 				} else {
@@ -520,7 +612,7 @@ module.exports = {
 						return App.parser.exec(this);
 					} else {
 						return this.errorReply(this.mlt('tiererr1') + " \"" +
-							tierName(tier, App) + "\" " + this.mlt('tiererr3') + '. ' +
+							tierName(tier, App) + "\" " + this.mlt('tiererr3') +
 							'. ' + this.mlt('pleasecheck') + ': ' + link);
 					}
 				} else {

@@ -46,6 +46,8 @@ $of = of
 $teams = teams
 $allteams = Almost in every team
 
+$topuse = Most used Pokemon
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
@@ -87,3 +89,5 @@ $aprox = Aproximadamente en
 $of = de cada
 $teams = equipos
 $allteams = Prácticamente en todos los equipos
+
+$topuse = Pokemon más frecuentes
