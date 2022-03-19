@@ -13,6 +13,7 @@ $subcmd = sub-command
 $text = text
 $rank = rank
 $message = message
+$format = format
 
 %spanish
 
@@ -23,3 +24,4 @@ $subcmd = sub-comando
 $text = texto
 $rank = rango
 $message = mensaje
+$format = formato

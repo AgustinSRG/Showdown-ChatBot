@@ -18,6 +18,10 @@ $notstarted = Error: the tournament did not start, probably because I do not hav
 $param = Parameter
 $paramhelp = not found, valid parameters are
 
+$autostart = Auto start time (mins)
+$autodq = Autodq (mins)
+$maxusers = Max users
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
@@ -33,3 +37,7 @@ $e7 = El tipo de torneo no es válido. Usa alguno de estos: elimination, roundro
 $notstarted = Error: El torneo no ha empezado, probablemente por un cambio en los permisos o en los comandos
 $param = Parámetro
 $paramhelp = no encontrado, Los parámetros correctos son
+
+$autostart = Tiempo de inicio (mins)
+$autodq = Autodq (mins)
+$maxusers = Usuarios máximos

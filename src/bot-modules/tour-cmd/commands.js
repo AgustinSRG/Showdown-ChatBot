@@ -35,6 +35,15 @@ module.exports = {
 	tour: function (App) {
 		this.setLangFile(Lang_File);
 		if (!this.can('tour', this.room)) return this.replyAccessDenied('tour');
+		if (!this.arg) {
+			return this.errorReply(this.usage(
+				{ desc: this.usageTrans('format') },
+				{ desc: 'elimination|rr', optional: true },
+				{ desc: this.mlt('autostart'), optional: true },
+				{ desc: this.mlt('autodq'), optional: true },
+				{ desc: this.mlt('maxusers'), optional: true }
+			));
+		}
 		const Mod = App.modules.tourcmd.system;
 		const Config = App.config.modules.tourcmd;
 		if (this.getRoomType(this.room) !== 'chat') {
@@ -80,6 +89,15 @@ module.exports = {
 							break;
 						case 1:
 							params.type = args[i];
+							break;
+						case 2:
+							params.timeToStart = args[i];
+							break;
+						case 3:
+							params.autodq = args[i];
+							break;
+						case 4:
+							params.maxUsers = args[i];
 							break;
 					}
 				} else {
