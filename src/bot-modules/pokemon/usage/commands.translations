@@ -41,6 +41,11 @@ $mid = Mid ladder
 $high = High ladder
 $top = Top ladder
 
+$aprox = Around
+$of = of
+$teams = teams
+$allteams = Almost in every team
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
@@ -77,3 +82,8 @@ $low = Baja ladder
 $mid = Media ladder
 $high = Alta ladder
 $top = Top ladder
+
+$aprox = Aproximadamente en
+$of = de cada
+$teams = equipos
+$allteams = Prácticamente en todos los equipos

@@ -103,6 +103,23 @@ function parseAliases(format, App) {
 	return Text.toFormatStandard(format);
 }
 
+function getFractionAproximation(usage) {
+	usage = (usage + "").replace("%", "").trim();
+	let usageNum = Number(usage);
+
+	if (isNaN(usageNum) || !isFinite(usageNum) || usageNum <= 0) {
+		return 0;
+	}
+
+	let inversed = Math.round(1 / (usageNum / 100));
+
+	if (isNaN(inversed) || !isFinite(inversed) || inversed <= 0) {
+		return 0;
+	}
+
+	return inversed;
+}
+
 const Low_Ladder_ELO = 0;
 const Mid_Ladder_ELO = 1500;
 const High_Ladder_ELO = 1630;
@@ -218,6 +235,7 @@ module.exports = {
 					pos: -1,
 					usage: 0,
 					raw: 0,
+					fraction: 0,
 				};
 				let dataResAux = {
 					name: poke,
@@ -225,6 +243,7 @@ module.exports = {
 					usage: 0,
 					raw: 0,
 					ld: 10,
+					fraction: 0,
 				};
 				let maxLd = 3;
 				if (poke.length <= 1) {
@@ -242,6 +261,7 @@ module.exports = {
 						dataRes.pos = parseInt(line[1].trim());
 						dataRes.usage = line[3].trim();
 						dataRes.raw = line[4].trim();
+						dataRes.fraction = getFractionAproximation(dataRes.usage);
 						break;
 					} else if (maxLd) {
 						let ld = Text.levenshtein(poke, Text.toId(line[2]), maxLd);
@@ -251,6 +271,7 @@ module.exports = {
 							dataResAux.pos = parseInt(line[1].trim());
 							dataResAux.usage = line[3].trim();
 							dataResAux.raw = line[4].trim();
+							dataResAux.fraction = getFractionAproximation(dataResAux.usage);
 						}
 					}
 				}
@@ -262,13 +283,13 @@ module.exports = {
 						return this.restrictReply(this.mlt('pokeerr1') + " \"" + poke + "\" " +
 							this.mlt('pokeerr2') + " " + tierName(tier, App) +
 							' | ' + Chat.bold(dataResAux.name) + ", #" + dataResAux.pos + " " + this.mlt('in') +
-							" " + Chat.bold(tierName(tier, App)) + " (" + this.mlt(ladder) + ", __>" + ladderType + " ELO__). " + this.mlt('pokeusage') + ": " + dataResAux.usage + ", " +
-							this.mlt('pokeraw') + ": " + dataResAux.raw, 'usage');
+							" " + Chat.bold(tierName(tier, App)) + " (" + this.mlt(ladder) + ", __>" + ladderType + " ELO__). " + this.mlt('pokeusage') + ": " + Chat.bold(dataResAux.usage) + "" +
+							(dataResAux.fraction ? (dataResAux.fraction > 1 ? (" (" + this.mlt("aprox") + " 1 " + this.mlt("of") + " " + dataResAux.fraction + " " + this.mlt("teams") + ")") : (" (" + this.mlt("allteams") + ")")) : ""), 'usage');
 					}
 				}
 				this.restrictReply(Chat.bold(dataRes.name) + ", #" + dataRes.pos + " " + this.mlt('in') +
-					" " + Chat.bold(tierName(tier, App)) + " (" + this.mlt(ladder) + ", __>" + ladderType + " ELO__). " + this.mlt('pokeusage') + ": " + dataRes.usage + ", " +
-					this.mlt('pokeraw') + ": " + dataRes.raw, 'usage');
+					" " + Chat.bold(tierName(tier, App)) + " (" + this.mlt(ladder) + ", __>" + ladderType + " ELO__). " + this.mlt('pokeusage') + ": " + Chat.bold(dataRes.usage) + "" +
+					(dataRes.fraction ? (dataRes.fraction > 1 ? (" (" + this.mlt("aprox") + " 1 " + this.mlt("of") + " " + dataRes.fraction + " " + this.mlt("teams") + ")") : (" (" + this.mlt("allteams") + ")")) : ""), 'usage');
 			}.bind(this), UsageFailureCache);
 		}.bind(this));
 	},
@@ -515,6 +536,7 @@ module.exports = {
 					pos: -1,
 					usage: 0,
 					raw: 0,
+					fraction: 0,
 				};
 				let dataResAux = {
 					name: poke,
@@ -522,6 +544,7 @@ module.exports = {
 					usage: 0,
 					raw: 0,
 					ld: 10,
+					fraction: 0,
 				};
 				let maxLd = 3;
 				if (poke.length <= 1) {
@@ -539,6 +562,7 @@ module.exports = {
 						dataRes.pos = parseInt(line[1].trim());
 						dataRes.usage = line[3].trim();
 						dataRes.raw = line[4].trim();
+						dataRes.fraction = getFractionAproximation(dataRes.usage);
 						break;
 					} else if (maxLd) {
 						let ld = Text.levenshtein(poke, Text.toId(line[2]), maxLd);
@@ -548,6 +572,7 @@ module.exports = {
 							dataResAux.pos = parseInt(line[1].trim());
 							dataResAux.usage = line[3].trim();
 							dataResAux.raw = line[4].trim();
+							dataResAux.fraction = getFractionAproximation(dataResAux.usage);
 						}
 					}
 				}
@@ -675,8 +700,9 @@ module.exports = {
 						Text.escapeHTML(dataRes.pos + "") + "</b> " + Text.escapeHTML(this.mlt('in')) +
 						" <b>" + Text.escapeHTML(tierName(tier, App)) + "</b>. " +
 						"(" + Text.escapeHTML(this.mlt(ladder)) + ", <i>&gt;" + Text.escapeHTML(ladderType + "") + " ELO</i>) | " +
-						Text.escapeHTML(this.mlt('pokeusage')) + ": " + Text.escapeHTML(dataRes.usage) + ", " +
-						Text.escapeHTML(this.mlt('pokeraw')) + ": " + Text.escapeHTML(dataRes.raw) + '</td></tr>' +
+						Text.escapeHTML(this.mlt('pokeusage')) + ": <b>" + Text.escapeHTML(dataRes.usage) + "</b>" +
+						(dataRes.fraction ? (dataRes.fraction > 1 ? (" (" + Text.escapeHTML(this.mlt("aprox")) + " 1 " + Text.escapeHTML(this.mlt("of")) + " " + Text.escapeHTML(dataRes.fraction + "") + " " + Text.escapeHTML(this.mlt("teams")) + ")") : (" (" + Text.escapeHTML(this.mlt("allteams")) + ")")) : "") +
+						'</td></tr>' +
 						// Second row
 						'<tr>' +
 						// Image
