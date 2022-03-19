@@ -572,7 +572,7 @@ class Server {
 		if (context.url.pathname in { '/favicon.ico': 1, 'favicon.ico': 1 }) {
 			/* Favicon.ico */
 			context.endWithStaticFile(Path.resolve(__dirname, '../../favicon.ico'));
-		} else if (context.url.pathname.startsWith("/showdown/info?") || context.url.pathname.startsWith("/info?")) {
+		} else if (context.url.pathname === "/showdown/info" || context.url.pathname === "/info") {
 			context.headers["Access-Control-Allow-Origin"] = context.request.headers['Origin'] || context.request.headers['origin'] || "*";
 			context.headers["Access-Control-Allow-Credentials"] = "true";
 			context.endWithJSON({
@@ -597,7 +597,7 @@ class Server {
 			}
 		} else {
 			/* Handlers */
-			let urlParts = context.url.pathname.split('/');
+			let urlParts = (context.url.pathname + context.url.search).split('/');
 			if (!urlParts[0] && urlParts.length > 1) {
 				urlParts.shift();
 			}
