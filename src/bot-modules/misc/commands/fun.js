@@ -225,7 +225,13 @@ module.exports = {
 		let formats = Object.keys(App.bot.formats);
 		let chosen = formats[Math.floor(Math.random() * formats.length)];
 		if (chosen) {
-			this.restrictReply(Text.stripCommands(App.bot.formats[chosen].name), 'random');
+			let roomData = App.bot.rooms[this.room];
+			let botid = Text.toId(App.bot.getBotNick());
+			if (this.can('randpoke') && roomData && roomData.users[botid] && this.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'voice')) {
+				this.send('!tier ' + App.bot.formats[chosen].name, this.room);
+			} else {
+				this.restrictReply(Text.stripCommands(App.bot.formats[chosen].name), 'random');
+			}
 		}
 	},
 };
