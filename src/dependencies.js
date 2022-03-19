@@ -15,7 +15,7 @@ try {
 	require('busboy');
 } catch (e) {
 	console.log('Installing dependencies...');
-	require('child_process').spawnSync('sh', ['-c', 'npm install --production'], {stdio: 'inherit'});
+	require('child_process').spawnSync('sh', ['-c', 'npm ci'], {stdio: 'inherit'});
 }
 
 /* Object extensions */

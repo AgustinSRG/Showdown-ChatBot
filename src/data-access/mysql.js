@@ -8,13 +8,6 @@
 const Table_Name = "SHOWDOWN_CHATBOT_CONFIG";
 const Table_Create_Sentence = "CREATE TABLE " + Table_Name + " (file varchar(64), id int, block int, data varchar(1024));";
 
-try {
-	require('mysql');
-} catch (err) {
-	console.log('Installing dependencies... (mysql)');
-	require('child_process').spawnSync('sh', ['-c', 'npm install mysql'], {stdio: 'inherit'});
-}
-
 const MYSQL = require('mysql');
 const Path = require('path');
 const DataBase = require(Path.resolve(__dirname, 'mysql-json-db.js'));

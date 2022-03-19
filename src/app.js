@@ -198,12 +198,6 @@ class ChatBotApp {
 		}
 
 		/* Create the bot */
-		try {
-			require('sockjs-client');
-		} catch (e) {
-			console.log('Installing dependencies... (sockjs-client)');
-			require('child_process').spawnSync('sh', ['-c', 'npm install sockjs-client'], { stdio: 'inherit' });
-		}
 		const ShowdownBot = require(Path.resolve(__dirname, 'showdown/showdown-sockjs.js')).Bot;
 
 		this.bot = new ShowdownBot(
