@@ -65,7 +65,11 @@ exports.setup = function (App) {
 	ChallManager.parsePM = function (from, message) {
 		// Parse invites
 		let mod = App.modules.battle.system;
-		if (message.indexOf("/text") === 0) {
+		if (message.indexOf("/text") === 0 || message.indexOf("/nonotify") === 0 || message.indexOf("/log") === 0) {
+			message = message.replace(/&[a-z0-9]+;/gi, '');
+			message = message.replace(/<a[^>]*>/i, "<<");
+			message = message.replace("</a>", ">>");
+
 			if ((/^.+\srejected\sthe\schallenge\.$/i).test(message)) {
 				if (this.onRejectedChallenge) {
 					try {
@@ -74,8 +78,20 @@ exports.setup = function (App) {
 				}
 				this.onAcceptedChallenge = null;
 				this.onRejectedChallenge = null;
-			} else {
-				const parts = (/^\/text\s(.+)\saccepted\sthe\schallenge,\sstarting\s<<(.+)>>$/i).exec(message);
+			} else if ((/^\/[a-z]+\s(.+)\saccepted\sthe\schallenge,\sstarting\s<<(.+)>>$/i).test(message)) {
+				const parts = (/^\/[a-z]+\s(.+)\saccepted\sthe\schallenge,\sstarting\s<<(.+)>>$/i).exec(message);
+
+				if (parts && parts[1] && parts[2]) {
+					if (this.onAcceptedChallenge) {
+						try {
+							this.onAcceptedChallenge(Text.toRoomid(parts[2]));
+						} catch (ex) { }
+					}
+					this.onAcceptedChallenge = null;
+					this.onRejectedChallenge = null;
+				}
+			} else if ((/^\/[a-z]+\s(.+)\saccepted\sthe\schallenge,\sstarting\s<<(.+)>>$/i).test(message)) {
+				const parts = (/^\/[a-z]+\s(.+)\saccepted\sthe\schallenge,\sstarting\s<<(.+)>>$/i).exec(message);
 
 				if (parts && parts[1] && parts[2]) {
 					if (this.onAcceptedChallenge) {
@@ -123,11 +139,13 @@ exports.setup = function (App) {
 				if (canChallenge(from, nBattles)) {
 					if (!(format in App.bot.formats) || !App.bot.formats[format].chall) {
 						cmds.push('/reject ' + from);
+						App.bot.sendTo('', cmds);
 						return;
 					}
 					if (App.bot.formats[format].team && !mod.TeamBuilder.hasTeam(format)) {
 						cmds.push('/reject ' + from);
 						cmds.push('/pm ' + from + "," + App.multilang.mlt(Lang_File, getLanguage("default"), 2) + ' ' + Chat.italics(App.bot.formats[format].name));
+						App.bot.sendTo('', cmds);
 						return;
 					}
 
