@@ -393,10 +393,7 @@ class Bot {
 	}
 
 	addToMsgQueue(msg) {
-		let lines = msg.split("\n");
-		for (let line of lines) {
-			this.msgQueue.push(line);
-		}
+		this.msgQueue.push(msg);
 		this.processMessageQueue();
 	}
 
