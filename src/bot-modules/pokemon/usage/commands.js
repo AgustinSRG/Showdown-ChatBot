@@ -129,6 +129,31 @@ const Top_Ladder_RD_EX = 1825;
 
 const Rank_Exceptions = Object.create(null);
 
+const Valid_ladder_Types = ['top', 'high', 'mid', 'low'];
+
+function getLadderType(ladderName) {
+	switch (ladderName) {
+		case "top":
+		case "topladder":
+		case "laddertop":
+			return "top";
+		case "high":
+		case "highladder":
+		case "ladderhigh":
+			return "high";
+		case "mid":
+		case "midladder":
+		case "laddermid":
+			return "mid";
+		case "low":
+		case "lowladder":
+		case "ladderlow":
+			return "low";
+		default:
+			return "invalid";
+	}
+}
+
 function getLadderRD(ladder, ex) {
 	switch (ladder) {
 		case "top":
@@ -185,8 +210,8 @@ module.exports = {
 				tier = parseAliases(args[1], App);
 			}
 			if (args[2]) {
-				ladder = Text.toId(args[2]);
-				if (['top', 'high', 'mid', 'low'].indexOf(ladder) === -1) {
+				ladder = getLadderType(args[2]);
+				if (Valid_ladder_Types.indexOf(ladder) === -1) {
 					return this.errorReply(this.mlt('badladder') + ": " + "top, high, mid, low");
 				}
 			}
@@ -316,8 +341,8 @@ module.exports = {
 				tier = parseAliases(args[0], App);
 			}
 			if (args[1]) {
-				ladder = Text.toId(args[1]);
-				if (['top', 'high', 'mid', 'low'].indexOf(ladder) === -1) {
+				ladder = getLadderType(args[1]);
+				if (Valid_ladder_Types.indexOf(ladder) === -1) {
 					return this.errorReply(this.mlt('badladder') + ": " + "top, high, mid, low");
 				}
 			}
@@ -381,7 +406,7 @@ module.exports = {
 					topPokes.join(", ") + " | "
 				);
 				spl.add(url);
-				this.restrictReply(spl.getLines(), 'usagedata');
+				this.restrictReply(spl.getLines(), 'usage');
 			}.bind(this), UsageFailureCache);
 		}.bind(this));
 	},
@@ -432,8 +457,8 @@ module.exports = {
 				tier = parseAliases(args[1], App);
 			}
 			if (args[2]) {
-				ladder = Text.toId(args[2]);
-				if (['top', 'high', 'mid', 'low'].indexOf(ladder) === -1) {
+				ladder = getLadderType(args[2]);
+				if (Valid_ladder_Types.indexOf(ladder) === -1) {
 					return this.errorReply(this.mlt('badladder') + ": " + "top, high, mid, low");
 				}
 			}
