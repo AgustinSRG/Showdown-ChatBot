@@ -151,7 +151,7 @@ module.exports = {
 			if (!link) {
 				return this.errorReply(this.mlt('error'));
 			}
-			this.restrictReply(this.mlt('stats') + ": " + link, 'usage');
+			this.restrictReply(this.mlt('stats') + ": " + link + " | FAQ: https://www.smogon.com/forums/threads/official-smogon-university-usage-statistics-discussion-thread-mk-3.3591776/post-7171782", 'usage');
 		}.bind(this));
 	},
 
@@ -386,157 +386,8 @@ module.exports = {
 		}.bind(this));
 	},
 
+	usagecard: "usagedata",
 	usagedata: function (App) {
-		this.setLangFile(Lang_File);
-		getUsageLink(App, function (link) {
-			if (!link) {
-				return this.errorReply(this.mlt('error'));
-			}
-			let args = this.args;
-			if (!this.arg || this.args.length < 2) {
-				return this.errorReply(this.usage({ desc: 'pokemon' },
-					{ desc: 'moves|items|abilities|spreads|teammates' }, { desc: 'tier', optional: true }, { desc: 'ladder (top|high|mid|low)', optional: true }));
-			}
-			let poke = "garchomp";
-			let tier = App.config.modules.pokemon.gtier || parseAliases('ou', App);
-			let ladder = 'high';
-			if (this.room && App.config.modules.pokemon.roomtier && App.config.modules.pokemon.roomtier[this.room]) {
-				tier = App.config.modules.pokemon.roomtier[this.room];
-			}
-			let dataType = Text.toId(args[1]);
-			if (!(dataType in { "moves": 1, "items": 1, "abilities": 1, "teammates": 1, "spreads": 1 })) {
-				return this.errorReply(this.usage({ desc: 'pokemon' },
-					{ desc: 'moves|items|abilities|spreads|teammates' }, { desc: 'tier', optional: true }, { desc: 'ladder (top|high|mid|low)', optional: true }));
-			}
-			let ladderType = 0;
-			for (let i = 0; i < args.length; i++) args[i] = Text.toId(args[i]);
-			poke = Text.toId(args[0]);
-			try {
-				let aliases = App.data.getAliases();
-				if (aliases[poke]) poke = Text.toId(aliases[poke]);
-			} catch (e) {
-				App.log("Could not fetch aliases. Cmd: " + this.cmd + " " + this.arg + " | Room: " + this.room + " | By: " + this.by);
-			}
-			if (args[2]) {
-				tier = parseAliases(args[2], App);
-			}
-			if (args[3]) {
-				ladder = Text.toId(args[2]);
-				if (['top', 'high', 'mid', 'low'].indexOf(ladder) === -1) {
-					return this.errorReply(this.mlt('badladder') + ": " + "top, high, mid, low");
-				}
-			}
-			if (this.usageRankExceptionFlag || Rank_Exceptions[tier]) {
-				ladderType = getLadderRD(ladder, true);
-			} else {
-				ladderType = getLadderRD(ladder, false);
-			}
-			let url = link + "moveset/" + tier + "-" + ladderType + ".txt";
-			if (markDownload(url)) {
-				return this.errorReply(this.mlt('busy'));
-			}
-			if (!App.data.cache.has(url)) {
-				markDownload(url, true);
-			}
-			App.data.wget(url, function (data, err) {
-				markDownload(url, false);
-				if (err) {
-					return this.errorReply(this.mlt('err') + " " + url);
-				}
-				if (data.indexOf("+----------------------------------------+") === -1) {
-					if (!App.data.cache.has(url)) {
-						if (!UsageFailureCache.has(url)) {
-							UsageFailureCache.cache(url, data);
-						}
-					}
-					if (!this.usageRankExceptionFlag) {
-						this.usageRankExceptionFlag = true;
-						return App.parser.exec(this);
-					} else {
-						return this.errorReply(this.mlt('tiererr1') + " \"" +
-							tierName(tier, App) + "\" " + this.mlt('tiererr3') +
-							'. ' + this.mlt('pleasecheck') + ': ' + link);
-					}
-				} else {
-					if (this.usageRankExceptionFlag) {
-						Rank_Exceptions[tier] = true;
-					}
-					if (!App.data.cache.has(url)) {
-						App.data.cache.cache(url, data, 0, { 'smogon-usage': 1 });
-					}
-				}
-				let pokes = data.split(' +----------------------------------------+ \n +----------------------------------------+ ');
-				let pokeData = null, chosen = false;
-				for (let i = 0; i < pokes.length; i++) {
-					pokeData = pokes[i].split("\n");
-					if (!pokeData[1] || Text.toId(pokeData[1]) !== poke) continue;
-					chosen = true;
-					break;
-				}
-				if (!chosen) {
-					return this.errorReply(this.mlt('pokeerr1') + " \"" + poke + "\" " +
-						this.mlt('pokeerr2') + " " + tierName(tier, App) + " (" + this.mlt(ladder) + ", __" + ladderType + " RD__)");
-				}
-				let result = [];
-				let resultName = "";
-				let pokeName = (pokeData[1].split("|")[1] || "").trim();
-				for (let i = 0; i < pokeData.length; i++) {
-					if (pokeData[i + 1] && pokeData[i].trim() === "+----------------------------------------+") {
-						switch (Text.toId(pokeData[i + 1])) {
-							case 'abilities':
-								if (dataType !== "abilities") continue;
-								break;
-							case 'items':
-								if (dataType !== "items") continue;
-								break;
-							case 'moves':
-								if (dataType !== "moves") continue;
-								break;
-							case 'spreads':
-								if (dataType !== "spreads") continue;
-								break;
-							case 'teammates':
-								if (dataType !== "teammates") continue;
-								break;
-							default:
-								continue;
-						}
-						resultName = this.mlt(dataType);
-						i = i + 2;
-						let auxRes, percent;
-						while (i < pokeData.length) {
-							if (pokeData[i].trim() === "+----------------------------------------+") break;
-							auxRes = pokeData[i].split("|")[1];
-							if (auxRes) {
-								auxRes = auxRes.trim().split(" ");
-								percent = auxRes.pop();
-								auxRes = auxRes.join(" ");
-								result.push(auxRes + " (" + percent + ")");
-							}
-							i++;
-						}
-						break;
-					}
-				}
-				if (!result.length) {
-					return this.errorReply(this.mlt('notfound') + " " +
-						this.mlt('usagedata1').replace("#NAME", resultName) + pokeName +
-						this.mlt('usagedata2').replace("#NAME", resultName) + " " +
-						this.mlt('in') + " " + tierName(tier, App) + " (" + this.mlt(ladder) + ", __" + ladderType + " RD__)");
-				}
-				let spl = new LineSplitter(App.config.bot.maxMessageLength);
-				spl.add(Chat.bold((this.mlt('usagedata1').replace("#NAME", resultName) + ' ' + pokeName +
-					this.mlt('usagedata2').replace("#NAME", resultName) + " " +
-					this.mlt('in') + " " + tierName(tier, App)).trim()) + " (" + this.mlt(ladder) + ", __" + ladderType + " RD__):");
-				for (let i = 0; i < result.length; i++) {
-					spl.add(" " + result[i] + (i < (result.length - 1) ? ',' : ''));
-				}
-				this.restrictReply(spl.getLines(), 'usagedata');
-			}.bind(this), UsageFailureCache);
-		}.bind(this));
-	},
-
-	usagecard: function (App) {
 		this.setLangFile(Lang_File);
 
 		let canHTML = true;
