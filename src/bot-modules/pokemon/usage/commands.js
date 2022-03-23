@@ -212,7 +212,7 @@ module.exports = {
 			if (args[2]) {
 				ladder = getLadderType(args[2]);
 				if (Valid_ladder_Types.indexOf(ladder) === -1) {
-					return this.errorReply(this.mlt('badladder') + ": " + "top, high, mid, low");
+					return this.errorReply(this.usage({ desc: 'pokemon' }, { desc: 'tier', optional: true }, { desc: 'ladder (top|high|mid|low)', optional: true }));
 				}
 			}
 			if (!poke || !tier) return this.errorReply(this.usage({ desc: 'pokemon' }, { desc: 'tier', optional: true }, { desc: 'ladder (top|high|mid|low)', optional: true }));
@@ -343,7 +343,7 @@ module.exports = {
 			if (args[1]) {
 				ladder = getLadderType(args[1]);
 				if (Valid_ladder_Types.indexOf(ladder) === -1) {
-					return this.errorReply(this.mlt('badladder') + ": " + "top, high, mid, low");
+					return this.errorReply(this.usage({ desc: 'tier' }, { desc: 'ladder (top|high|mid|low)', optional: true }));
 				}
 			}
 			if (!tier) return this.errorReply(this.usage({ desc: 'tier' }, { desc: 'ladder (top|high|mid|low)', optional: true }));
@@ -459,7 +459,7 @@ module.exports = {
 			if (args[2]) {
 				ladder = getLadderType(args[2]);
 				if (Valid_ladder_Types.indexOf(ladder) === -1) {
-					return this.errorReply(this.mlt('badladder') + ": " + "top, high, mid, low");
+					return this.errorReply(this.usage({ desc: 'pokemon' }, { desc: 'tier', optional: true }, { desc: 'ladder (top|high|mid|low)', optional: true }));
 				}
 			}
 			if (!poke || !tier) return this.errorReply(this.usage({ desc: 'pokemon' }, { desc: 'tier', optional: true }));
