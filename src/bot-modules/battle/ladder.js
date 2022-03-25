@@ -25,7 +25,7 @@ exports.setup = function (App) {
 	LadderManager.reportBattle = function (room) {
 		if (!LadderManager.reportsRoom) return;
 		if (LadderManager.reportsRoom.charAt(0) === ',') {
-			App.bot.pm(LadderManager.reportsRoom, App.multilang.mlt(Lang_File, getLanguage(room), 0) + ": <<" + room + ">>");
+			App.bot.pm(Text.toId(LadderManager.reportsRoom), App.multilang.mlt(Lang_File, getLanguage(room), 0) + ": <<" + room + ">>");
 		} else {
 			App.bot.sendTo(LadderManager.reportsRoom, App.multilang.mlt(Lang_File, getLanguage(room), 0) + ": <<" + room + ">>");
 		}
