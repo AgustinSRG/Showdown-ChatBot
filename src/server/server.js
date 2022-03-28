@@ -37,6 +37,20 @@ const Text = Tools('text');
 const PageMaker = require(Path.resolve(__dirname, 'html-maker.js'));
 
 /**
+ * Time-safe string compare
+ * @param {string} a
+ * @param {string} b
+ * @returns True if the strings are equal
+ */
+function secureCompare(a, b) {
+	try {
+		return Crypto.timingSafeEqual(Buffer.from(a, 'utf8'), Buffer.from(b, 'utf8'));
+	} catch (ex) {
+		return false;
+	}
+}
+
+/**
  * Encrypts a text
  * @param {String} text
  * @param {String} algorithm
@@ -406,14 +420,29 @@ class Server {
 	}
 
 	/**
+	 * Fetches a token object
+	 * @param {string} token
+	 * @returns The token object
+	 */
+	getToken(token) {
+		for (let t of Object.keys(this.tokens)) {
+			if (secureCompare(t, token)) {
+				return this.tokens[t];
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Checks trusted connection for limits
 	 * @param {RequestContext} context
 	 */
 	checkTrusted(context) {
 		let token = context.cookies['usertoken'];
 		this.sweepTokens();
-		if (token && this.tokens[token]) {
-			let user = this.tokens[token].user;
+		let existingToken = this.getToken(token);
+		if (existingToken) {
+			let user = existingToken.user;
 			if (this.users[user]) {
 				user = new User(this.users[user]);
 				context.trusted = user.can("root");
@@ -429,18 +458,19 @@ class Server {
 	 * Generates the login data for the context
 	 * @param {RequestContext} context
 	 */
-	 applyLogin(context) {
+	applyLogin(context) {
 		let token = ((context.request.method + "").toUpperCase() === "GET") ? context.cookies['usertoken'] : (context.request.headers["x-csrf-token"] || context.post["x-csrf-token"]);
 		let user = context.post.user;
 		let pass = context.post.password;
 		this.sweepTokens();
-		if (token && this.tokens[token]) {
+		let existingToken = this.getToken(token);
+		if (existingToken) {
 			if (context.post.logout) {
-				this.app.log('[LOGOUT] Userid: ' + this.tokens[token].user + ' | IP: ' + context.ip);
+				this.app.log('[LOGOUT] Userid: ' + existingToken.user + ' | IP: ' + context.ip);
 				delete this.tokens[token];
 				context.setCookie('usertoken=;');
 			} else {
-				user = this.tokens[token].user;
+				user = existingToken.user;
 				if (this.users[user]) {
 					user = new User(this.users[user]);
 					context.setUser(user);
@@ -475,7 +505,10 @@ class Server {
 	 */
 	checkPassword(pass, str) {
 		if (typeof pass === "object") {
-			return (decrypt(pass.hash, pass.encrypted || Encrypt_Algo, str) === this.privatekey);
+			return secureCompare(
+				decrypt(pass.hash, pass.encrypted || Encrypt_Algo, str),
+				this.privatekey
+			);
 		} else if (typeof pass === "string") {
 			return (str === pass);
 		} else {
