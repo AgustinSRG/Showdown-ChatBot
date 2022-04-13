@@ -63,9 +63,6 @@ exports.setup = function (App) {
 					TourManager.reportRejection();
 				}
 				break;
-			case 'updatechallenges':
-				ChallManager.parse(room, line, isIntro, spl);
-				break;
 			case 'tournament':
 				TourManager.parse(room, line, isIntro, spl);
 				break;

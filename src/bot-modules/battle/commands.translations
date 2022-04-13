@@ -26,6 +26,8 @@ $14 = The challenge was rejected by
 
 $busy = I can't accept the challenge because I'm already playing #BN battles right now. Try again later or use the ``.chall`` command if you have permission to use it.
 
+$customrules = I can't accept the challenge because you specified custom rules for a format that requires a team
+
 $format = format
 $team = team
 
@@ -52,6 +54,8 @@ $13 = Reto aceptado
 $14 = El reto fue rechazado por
 
 $busy = No puedo aceptar el reto porque ya estoy jugando #BN batallas en este momento. Prueba en otro momento o usa el comando ``.chall`` si posees permisos para usarlo.
+
+$customrules = No puedo aceptar el reto porque has especificado reglas personalizadas y el formato requiere de un equipo
 
 $format = formato
 $team = equipo

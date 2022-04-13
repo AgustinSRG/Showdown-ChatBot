@@ -22,7 +22,7 @@ function parseAliases(format, App) {
 	try {
 		let psAliases = App.data.getAliases();
 		if (psAliases[format]) format = Text.toId(psAliases[format]);
-	} catch (e) {}
+	} catch (e) { }
 	if (App.bot.formats[format]) return format;
 	return Text.toFormatStandard(format);
 }
@@ -37,16 +37,20 @@ module.exports = {
 		if (user === "me") {
 			user = this.byIdent.id;
 		}
-		let format = parseAliases(this.args[1], App);
-		let teamId = Text.toId(this.args[2]);
+		const formatString = this.args.slice(1).join(",");
+		const format = parseAliases(formatString.split("@@@")[0], App);
+		const customRules = (formatString.split("@@@")[1] || "").split(",").map(function (a) {
+			return Text.toId(a);
+		}).filter(function (a) {
+			return !!a;
+		});
 		if (!user || !format) {
-			return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: this.mlt('format')},
-				{desc: this.mlt('team'), optional: true}));
+			return this.errorReply(this.usage({ desc: this.usageTrans('user') }, { desc: this.mlt('format') }));
 		}
 		if (!App.bot.formats[format] || !App.bot.formats[format].chall) {
 			return this.errorReply(this.mlt(0) + ' ' + Chat.italics(format) + ' ' + this.mlt(1));
 		}
-		if (!teamId && App.bot.formats[format].team && !mod.TeamBuilder.hasTeam(format)) {
+		if (App.bot.formats[format].team && !mod.TeamBuilder.hasTeam(format)) {
 			return this.errorReply(this.mlt(2) + ' ' + Chat.italics(format));
 		}
 		if (mod.ChallManager.challenges && mod.ChallManager.challenges.challengeTo) {
@@ -54,22 +58,13 @@ module.exports = {
 				'. ' + this.mlt(7) + ' ' + Chat.code(this.token + 'cancelchallenge') + ' ' + this.mlt(8));
 		}
 		let cmds = [];
-		if (teamId) {
-			let team = mod.TeamBuilder.dynTeams[teamId];
-			if (team) {
-				cmds.push('|/utm ' + team.packed);
-			} else {
-				return this.errorReply(this.mlt(3) + " " + Chat.italics(teamId) + " " + this.mlt(4));
-			}
+		let team = mod.TeamBuilder.getTeam(format);
+		if (team) {
+			cmds.push('|/utm ' + team);
 		} else {
-			let team = mod.TeamBuilder.getTeam(format);
-			if (team) {
-				cmds.push('|/utm ' + team);
-			} else {
-				cmds.push('|/utm null');
-			}
+			cmds.push('|/utm null');
 		}
-		cmds.push('|/challenge ' + user + ", " + format);
+		cmds.push('|/challenge ' + user + ", " + format + (customRules.length > 0 ? ("@@@" + customRules.join(",")) : ""));
 
 		mod.ChallManager.onAcceptedChallenge = function (battle) {
 			this.reply(this.mlt(13) + ": <<" + battle + ">>");
@@ -104,7 +99,7 @@ module.exports = {
 		if (!this.can('searchbattle', this.room)) return this.replyAccessDenied('searchbattle');
 		let mod = App.modules.battle.system;
 		let format = parseAliases(this.arg, App);
-		if (!format) return this.errorReply(this.usage({desc: 'format'}));
+		if (!format) return this.errorReply(this.usage({ desc: 'format' }));
 		if (!App.bot.formats[format] || !App.bot.formats[format].ladder) {
 			return this.errorReply(this.mlt(0) + ' ' + Chat.italics(format) + ' ' + this.mlt(5));
 		}
@@ -134,7 +129,7 @@ module.exports = {
 		if (!App.config.debug) return;
 		if (App.env.staticmode) return;
 		if (!this.isExcepted()) return;
-		if (!this.arg) return this.errorReply(this.usage({desc: 'script'}));
+		if (!this.arg) return this.errorReply(this.usage({ desc: 'script' }));
 		if (App.modules.battle.system.BattleBot.battles[this.room]) {
 			try {
 				let result = App.modules.battle.system.BattleBot.battles[this.room].evalBattle(this.arg);
