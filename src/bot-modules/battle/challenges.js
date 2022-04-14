@@ -43,6 +43,12 @@ exports.setup = function (App) {
 		return false;
 	}
 
+	function canUseCustomRules(i) {
+		let ident = Text.parseUserIdent(" " + Text.toId(i));
+		if (App.parser.can(ident, 'chall')) return true;
+		return false;
+	}
+
 	ChallManager.onAcceptedChallenge = null;
 	ChallManager.onRejectedChallenge = null;
 
@@ -118,7 +124,7 @@ exports.setup = function (App) {
 						App.bot.sendTo('', cmds);
 						return;
 					}
-					if (hasCustomRules && App.bot.formats[format].team) {
+					if (hasCustomRules && App.bot.formats[format].team && !canUseCustomRules(from)) {
 						cmds.push('/reject ' + from);
 						cmds.push('/pm ' + from + "," + App.multilang.mlt(Lang_File, getLanguage("default"), "customrules") + ': ' + Chat.italics(App.bot.formats[format].name));
 						App.bot.sendTo('', cmds);
