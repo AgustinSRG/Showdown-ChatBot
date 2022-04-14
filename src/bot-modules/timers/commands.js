@@ -72,18 +72,6 @@ module.exports = {
 			return this.errorReply(this.mlt('nochat'));
 		}
 
-		if (Text.toId(this.arg) === "stop") {
-			this.cmd = "clearrepeat";
-			this.parser.exec(this);
-			return;
-		}
-
-		if (Text.toId(this.arg) === "now") {
-			this.cmd = "repeatnow";
-			this.parser.exec(this);
-			return;
-		}
-
 		let minutes = parseFloat(this.args[0]) || 0;
 		let commaIndex = this.arg.indexOf(",");
 		if (commaIndex === -1) {
@@ -103,37 +91,62 @@ module.exports = {
 		if (time > 24 * 60 * 60 * 1000) {
 			return this.errorReply(this.mlt(9));
 		}
+		if (Mod.countRepeats(this.room) >= 10) {
+			return this.errorReply(this.mlt(13));
+		}
+		if (Mod.hasRepeat(this.room, text)) {
+			return this.errorReply(this.mlt(15));
+		}
 		if (!Mod.createRepeat(this.room, text, time)) {
 			this.errorReply(this.mlt(3));
 		}
 	},
 
-	"stoprepeat": "clearrepeat",
 	clearrepeat: function (App) {
 		this.setLangFile(Lang_File);
 		if (!this.can('repeat', this.room)) return this.replyAccessDenied('repeat');
+
+		if (!this.arg) {
+			return this.errorReply(this.usage({ desc: this.mlt(10) }));
+		}
+
 		if (this.getRoomType(this.room) !== 'chat') {
 			return this.errorReply(this.mlt('nochat'));
 		}
+
 		const Mod = App.modules.timers.system;
-		if (!Mod.cancelRepeat(this.room)) {
-			this.errorReply(this.mlt(12));
+		if (!Mod.cancelRepeat(this.room, this.arg)) {
+			this.errorReply(this.mlt(16));
 		} else {
 			this.reply(this.mlt(11));
 		}
 	},
 
-	repeatnow: function (App) {
+	clearallrepeats: function (App) {
 		this.setLangFile(Lang_File);
 		if (!this.can('repeat', this.room)) return this.replyAccessDenied('repeat');
 		if (this.getRoomType(this.room) !== 'chat') {
 			return this.errorReply(this.mlt('nochat'));
 		}
 		const Mod = App.modules.timers.system;
-		if (Mod.repeats[this.room]) {
-			Mod.sendRepeat(Mod.repeats[this.room]);
-		} else {
-			this.errorReply(this.mlt(12));
+
+		Mod.clearRepeats(this.room);
+
+		this.reply(this.mlt(14));
+	},
+
+	showrepeats: function (App) {
+		this.setLangFile(Lang_File);
+		if (!this.can('repeat', this.room)) return this.replyAccessDenied('repeat');
+		if (this.getRoomType(this.room) !== 'chat') {
+			return this.errorReply(this.mlt('nochat'));
 		}
+		const Mod = App.modules.timers.system;
+
+		if (Mod.countRepeats(this.room) === 0) {
+			return this.errorReply(this.mlt(12));
+		}
+
+		this.reply("!code " + this.mlt(17) + "\n\n" + Mod.getRepeats(this.room).join("\n"));
 	},
 };

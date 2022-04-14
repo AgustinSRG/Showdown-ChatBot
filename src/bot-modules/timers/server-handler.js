@@ -34,7 +34,8 @@ exports.setup = function (App) {
 			ok = "Timer cleared.";
 		} else if (context.post.clearrepeat) {
 			let room = Text.toRoomid(context.post.room);
-			Mod.cancelRepeat(room);
+			let ri = parseInt(context.post.ri);
+			Mod.cancelRepeatIndex(room, ri);
 			App.logServerAction(context.user.id, "Cancel repeat: " + room);
 			ok = "Repeat canceled.";
 		}
@@ -53,10 +54,19 @@ exports.setup = function (App) {
 		htmlVars.repeats = "";
 
 		for (let repeat of Object.values(Mod.repeats)) {
-			htmlVars.repeats += '<tr><td class="bold">' + Text.escapeHTML(repeat.room) + '</td><td><form action="" method="post" style="margin-block-end: 0;">' +
-				'<input name="room" type="hidden" value="' + Text.escapeHTML(repeat.room) + '" />' +
-				'<input type="submit" name="clearrepeat" value="Cancel repeat" />' +
-				'</form></td></tr>';
+			if (repeat.active) {
+				let i = 0;
+				for (let activeRepeat of repeat.active) {
+					htmlVars.repeats += '<tr><td class="bold">' + Text.escapeHTML(repeat.room) + '</td><td>' +
+						Text.escapeHTML(activeRepeat.text) +
+						'</td><td><form action="" method="post" style="margin-block-end: 0;">' +
+						'<input name="room" type="hidden" value="' + Text.escapeHTML(repeat.room) + '" />' +
+						'<input name="ri" type="hidden" value="' + i + '" />' +
+						'<input type="submit" name="clearrepeat" value="Cancel repeat" />' +
+						'</form></td></tr>';
+					i++;
+				}
+			}
 		}
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));

@@ -30,11 +30,11 @@ exports.setup = function (App) {
 
 			this.timers = this.data.timers;
 
-			if (!this.data.repeats) {
-				this.data.repeats = Object.create(null);
+			if (!this.data.repeat) {
+				this.data.repeat = Object.create(null);
 			}
 
-			this.repeats = this.data.repeats;
+			this.repeats = this.data.repeat;
 		}
 
 		save() {
@@ -106,38 +106,121 @@ exports.setup = function (App) {
 
 		checkRepeats() {
 			for (let repeat of Object.values(this.repeats)) {
-				if (Date.now() >= repeat.next) {
-					this.sendRepeat(repeat);
-					repeat.next = Date.now() + repeat.interval;
-					this.save();
+				if (repeat.active) {
+					for (let activeRepeat of repeat.active) {
+						if (Date.now() >= activeRepeat.next) {
+							this.sendRepeat(repeat.room, activeRepeat.text);
+							activeRepeat.next = Date.now() + activeRepeat.interval;
+							this.save();
+						}
+					}
 				}
 			}
 		}
 
 		createRepeat(room, text, interval) {
-			this.repeats[room] = {
-				room: room,
+			if (!this.repeats[room] || !this.repeats[room].active) {
+				this.repeats[room] = {
+					room: room,
+					active: [],
+				};
+			}
+			this.repeats[room].active.push({
 				text: text,
 				interval: interval,
 				next: Date.now() + interval,
-			};
-			this.sendRepeat(this.repeats[room]);
+			});
+			this.sendRepeat(room, text);
 			this.save();
 			return true;
 		}
 
-		sendRepeat(repeat) {
-			let roomData = App.parser.bot.rooms[repeat.room];
-			let botid = Text.toId(App.parser.bot.getBotNick());
-			if (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({group: roomData.users[botid]}, 'driver')) {
-				// Can announce
-				App.bot.sendTo(repeat.room, "/announce " + repeat.text);
+		countRepeats(room) {
+			if (!this.repeats[room]) return 0;
+			if (!this.repeats[room].active) return 0;
+			return this.repeats[room].active.length;
+		}
+
+		getRepeatTime(timeInterval, room) {
+			let dates = [];
+			let diff = timeInterval;
+			if (diff % 1000 > 0) {
+				diff = Math.floor(diff / 1000) + 1;
 			} else {
-				App.bot.sendTo(repeat.room, Text.stripCommands(repeat.text));
+				diff = Math.floor(diff / 1000);
+			}
+			let seconds = diff % 60;
+			let minutes = Math.floor(diff / 60);
+			if (minutes > 0) {
+				dates.push(minutes + ' ' + (minutes === 1 ? trans(room, 'minute') : trans(room, 'minutes')));
+			}
+			if (seconds > 0) {
+				dates.push(seconds + ' ' + (seconds === 1 ? trans(room, 'second') : trans(room, 'seconds')));
+			}
+			return dates.join(', ');
+		}
+
+		getRepeats(room) {
+			if (!this.repeats[room]) return [];
+			if (!this.repeats[room].active) return [];
+			const res = [];
+			for (let activeRepeat of this.repeats[room].active) {
+				res.push("- [" + this.getRepeatTime(activeRepeat.interval, room) + "] " + activeRepeat.text);
+			}
+			return res;
+		}
+
+		sendRepeat(room, text) {
+			let repeatText = text + "";
+			if (repeatText.startsWith("/wall ") || repeatText.startsWith("/announce ")) {
+				repeatText = repeatText.split(" ").slice(1).join(" ");
+
+				if (repeatText) {
+					App.bot.sendTo(room, "/announce " + repeatText);
+				}
+			} else if (repeatText.startsWith("!daily ") || repeatText.startsWith("!show ") || repeatText.startsWith("!rfaq ") || repeatText.startsWith("!events ") || repeatText.startsWith("/addhtmlbox ")) {
+				App.bot.sendTo(room, repeatText);
+			} else {
+				App.bot.sendTo(room, Text.stripCommands(repeatText));
 			}
 		}
 
-		cancelRepeat(room) {
+		hasRepeat(room, text) {
+			if (!this.repeats[room]) return false;
+			return (this.repeats[room].active.filter(function (activeRepeat) {
+				return activeRepeat.text === text;
+			}).length > 0);
+		}
+
+		cancelRepeat(room, text) {
+			if (!this.repeats[room]) return false;
+			const hasMessage = this.repeats[room].active.filter(function (activeRepeat) {
+				return activeRepeat.text === text;
+			}).length > 0;
+
+			if (!hasMessage) {
+				return false;
+			}
+
+			if (this.repeats[room].active) {
+				this.repeats[room].active = this.repeats[room].active.filter(function (activeRepeat) {
+					return activeRepeat.text !== text;
+				});
+			}
+			this.save();
+			return true;
+		}
+
+		cancelRepeatIndex(room, i) {
+			if (!this.repeats[room]) return false;
+			if (this.repeats[room].active) {
+				this.repeats[room].active.splice(i, 1);
+			}
+			this.save();
+			return true;
+		}
+
+		clearRepeats(room) {
 			if (!this.repeats[room]) return false;
 			delete this.repeats[room];
 			this.save();
