@@ -23,7 +23,6 @@
   },
   "langfiles": [
     "./commands/fun.translations",
-    "./commands/links.translations",
     "./commands/randomanswer.translations",
     "./commands/regdate.translations"
   ],
