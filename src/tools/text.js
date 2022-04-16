@@ -193,10 +193,18 @@ exports.randomNumber = function (length) {
  */
 exports.parseUserIdent = function (ident) {
 	ident = '' + ident;
+	let away = false;
+
+	if (ident.endsWith("@!")) {
+		away = true;
+		ident = ident.substr(0, ident.length - 2);
+	}
+
 	return {
 		ident: ident,
 		id: exports.toId(ident),
 		group: ident.charAt(0),
 		name: ident.substr(1),
+		away: away,
 	};
 };

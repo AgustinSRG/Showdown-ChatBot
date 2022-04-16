@@ -621,7 +621,7 @@ class Bot {
 			this.status.onRename(splittedLine[1], !!parseInt(splittedLine[2]));
 			this.status.avatar = splittedLine[3];
 			this.events.emit('updateuser', this.status.nick,
-				this.status.named, this.status.avatar);
+				this.status.named, this.status.avatar, this.status.away);
 			break;
 		case 'queryresponse':
 			this.events.emit('queryresponse', line.substr(15));
@@ -779,6 +779,7 @@ class BotStatus {
 		this.named = false;
 		this.challstr = null;
 		this.avatar = 0;
+		this.away = false;
 	}
 
 	onConnection() {
@@ -802,6 +803,7 @@ class BotStatus {
 		this.userid = null;
 		this.named = false;
 		this.challstr = null;
+		this.away = false;
 	}
 
 	/**
@@ -809,7 +811,14 @@ class BotStatus {
 	 * @param {Boolean} named
 	 */
 	onRename(nick, named) {
-		this.nick = nick;
+		if (nick && nick.endsWith("@!")) {
+			this.nick = nick.substr(0, nick.length - 2);
+			this.away = true;
+		} else {
+			this.nick = nick;
+			this.away = false;
+		}
+
 		this.userid = Text.toId(nick);
 		this.named = named;
 	}
@@ -829,6 +838,7 @@ class BotRoom {
 		this.title = "";
 		this.users = Object.create(null);
 		this.localNames = Object.create(null);
+		this.awayMap = Object.create(null);
 	}
 
 	/**
@@ -845,6 +855,7 @@ class BotRoom {
 		let ident = Text.parseUserIdent(userIdent);
 		this.users[ident.id] = ident.group;
 		this.localNames[ident.id] = ident.name;
+		this.awayMap[ident.id] = ident.away;
 	}
 
 	/**
@@ -853,6 +864,7 @@ class BotRoom {
 	userLeave(user) {
 		delete this.users[Text.toId(user)];
 		delete this.localNames[Text.toId(user)];
+		delete this.awayMap[Text.toId(user)];
 	}
 
 	/**
