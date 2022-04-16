@@ -35,7 +35,7 @@ class Tournament {
 		if (this.autodq) {
 			cmds.push('/tournament autodq ' + this.autodq);
 		}
-		if (this.scoutProtect) {
+		if (this.scoutProtect && this.app.bot.formats[this.format] && this.app.bot.formats[this.format].team) {
 			cmds.push('/tournament setscouting disallow');
 		}
 		if (this.forcedTimer) {
