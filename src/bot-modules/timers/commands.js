@@ -7,13 +7,72 @@
 
 'use strict';
 
-const Min_Timer = 5000;
-const Max_Timer = 2 * 60 * 60 * 1000;
+const Min_Timer = 5 * 1000;
+const Max_Timer = 48 * 60 * 60 * 1000;
+
+const Min_Repeat = 30 * 1000;
+const Max_Repeat = 48 * 60 * 60 * 1000;
 
 const Path = require('path');
 const Text = Tools('text');
 
 const Lang_File = Path.resolve(__dirname, 'commands.translations');
+
+function parseMinutes(str) {
+	str = (str + "").toLowerCase().replace(/[^a-z0-9\.]+/gi, "");
+	let b = "";
+	let r = 0;
+	let state = 0;
+	for (let i = 0; i < str.length; i++) {
+		let c = str.charAt(i);
+		switch (state) {
+			case 0:
+				{
+					if ((/[0-9\.]/i).test(c)) {
+						// Number
+						b += c;
+					} else {
+						let n = parseFloat(b);
+						if (isNaN(n) || !isFinite(n) || n < 0) {
+							n = 0;
+						}
+						b = "";
+						state = 1;
+						switch (c) {
+							case "d":
+								r += (n * 60 * 24);
+								break;
+							case "h":
+								r += (n * 60);
+								break;
+							case "s":
+								r += (n / 60);
+								break;
+							default:
+								r += n;
+						}
+					}
+				}
+				break;
+			case 1:
+				if ((/[0-9\.]/i).test(c)) {
+					b += c;
+					state = 0;
+				}
+				break;
+		}
+	}
+
+	if (b) {
+		let n = parseFloat(b);
+		if (isNaN(n) || !isFinite(n) || n < 0) {
+			n = 0;
+		}
+		r += n;
+	}
+
+	return r;
+}
 
 module.exports = {
 	timer: 'starttimer',
@@ -32,10 +91,10 @@ module.exports = {
 		if (this.getRoomType(this.room) !== 'chat') {
 			return this.errorReply(this.mlt('nochat'));
 		}
-		let minutes = parseFloat(this.args[0]) || 0;
+		let minutes = parseMinutes(this.args[0]) || 0;
 		let seconds = parseInt(this.args[1]) || 0;
 		let time = (minutes * 60) + seconds;
-		time = time * 1000;
+		time = Math.floor(time * 1000);
 		if (isNaN(time) || time <= 0) {
 			return this.errorReply(this.usage({ desc: this.mlt(6) }, { desc: this.mlt(7) }));
 		}
@@ -72,23 +131,23 @@ module.exports = {
 			return this.errorReply(this.mlt('nochat'));
 		}
 
-		let minutes = parseFloat(this.args[0]) || 0;
+		let minutes = parseMinutes(this.args[0]) || 0;
 		let commaIndex = this.arg.indexOf(",");
 		if (commaIndex === -1) {
-			return this.errorReply(this.usage({ desc: this.mlt(6) }, { desc: this.mlt(10) }));
+			return this.errorReply(this.usage({ desc: this.mlt("time") }, { desc: this.mlt(10) }));
 		}
 		let text = this.arg.substr(commaIndex + 1).trim();
 		if (!text) {
-			return this.errorReply(this.usage({ desc: this.mlt(6) }, { desc: this.mlt(10) }));
+			return this.errorReply(this.usage({ desc: this.mlt("time") }, { desc: this.mlt(10) }));
 		}
 		let time = Math.floor(minutes * 60 * 1000);
 		if (isNaN(time) || time <= 0) {
-			return this.errorReply(this.usage({ desc: this.mlt(6) }, { desc: this.mlt(10) }));
+			return this.errorReply(this.usage({ desc: this.mlt("time") }, { desc: this.mlt(10) }));
 		}
-		if (time < 30 * 1000) {
+		if (time < Min_Repeat) {
 			return this.errorReply(this.mlt(8));
 		}
-		if (time > 24 * 60 * 60 * 1000) {
+		if (time > Max_Repeat) {
 			return this.errorReply(this.mlt(9));
 		}
 		if (Mod.countRepeats(this.room) >= 10) {
@@ -99,6 +158,8 @@ module.exports = {
 		}
 		if (!Mod.createRepeat(this.room, text, time)) {
 			this.errorReply(this.mlt(3));
+		} else {
+			this.pmReply(this.mlt(18) + " " + Mod.getRepeatTime(time, this.room));
 		}
 	},
 
@@ -122,6 +183,7 @@ module.exports = {
 		}
 	},
 
+	clearrepeats: "clearallrepeats",
 	clearallrepeats: function (App) {
 		this.setLangFile(Lang_File);
 		if (!this.can('repeat', this.room)) return this.replyAccessDenied('repeat');
@@ -135,18 +197,35 @@ module.exports = {
 		this.reply(this.mlt(14));
 	},
 
+	seerepeats: "showrepeats",
 	showrepeats: function (App) {
 		this.setLangFile(Lang_File);
-		if (!this.can('repeat', this.room)) return this.replyAccessDenied('repeat');
-		if (this.getRoomType(this.room) !== 'chat') {
-			return this.errorReply(this.mlt('nochat'));
+		if (this.getRoomType(this.room) !== 'chat' && !this.arg) {
+			return this.errorReply(this.usage({ desc: this.usageTrans('room') }));
 		}
-		const Mod = App.modules.timers.system;
 
-		if (Mod.countRepeats(this.room) === 0) {
+		const room = Text.toRoomid(this.arg) || this.room;
+
+		if (!App.bot.rooms[room]) {
 			return this.errorReply(this.mlt(12));
 		}
 
-		this.reply("!code " + this.mlt(17) + "\n\n" + Mod.getRepeats(this.room).join("\n"));
+		if (!App.bot.rooms[room].users[this.byIdent.id]) {
+			return this.replyAccessDenied('repeat');
+		}
+
+		const group = App.bot.rooms[room].users[this.byIdent.id];
+
+		if (!App.parser.can({ group: group, id: this.byIdent.id }, "repeat", room)) {
+			return this.replyAccessDenied('repeat');
+		}
+
+		const Mod = App.modules.timers.system;
+
+		if (Mod.countRepeats(room) === 0) {
+			return this.errorReply(this.mlt(12));
+		}
+
+		this.reply("!code " + this.mlt(17) + ":\n\n" + Mod.getRepeats(room).join("\n"));
 	},
 };

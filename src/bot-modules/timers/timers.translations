@@ -8,6 +8,8 @@ $second = second
 $seconds = seconds
 $minute = minute
 $minutes = minutes
+$hour = hour
+$hours = hours
 
 $0 = 
 $1 = left!
@@ -25,3 +27,5 @@ $0 = Quedan
 $1 = 
 $2 = ¡El tiempo ha terminado!
 $3 = Queda
+$hour = hora
+$hours = horas

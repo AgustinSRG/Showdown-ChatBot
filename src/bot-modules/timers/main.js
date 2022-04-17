@@ -74,6 +74,11 @@ exports.setup = function (App) {
 			}
 			let seconds = diff % 60;
 			let minutes = Math.floor(diff / 60);
+			let hours = Math.floor(minutes / 60);
+			minutes = minutes % 60;
+			if (hours > 0) {
+				dates.push(hours + ' ' + (hours === 1 ? trans(timer.room, 'hour') : trans(timer.room, 'hours')));
+			}
 			if (minutes > 0) {
 				dates.push(minutes + ' ' + (minutes === 1 ? trans(timer.room, 'minute') : trans(timer.room, 'minutes')));
 			}
@@ -151,6 +156,11 @@ exports.setup = function (App) {
 			}
 			let seconds = diff % 60;
 			let minutes = Math.floor(diff / 60);
+			let hours = Math.floor(minutes / 60);
+			minutes = minutes % 60;
+			if (hours > 0) {
+				dates.push(hours + ' ' + (hours === 1 ? trans(room, 'hour') : trans(room, 'hours')));
+			}
 			if (minutes > 0) {
 				dates.push(minutes + ' ' + (minutes === 1 ? trans(room, 'minute') : trans(room, 'minutes')));
 			}

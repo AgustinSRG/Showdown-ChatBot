@@ -6,6 +6,8 @@
 
 $nochat = This command is only available for chat rooms
 
+$time = time (eg: 1h 30m)
+
 $1 = Time must be higher that 5 seconds
 $2 = Time cannot be higher than 2 hours
 $3 = There is already a timer in this room
@@ -29,12 +31,16 @@ $16 = That text was not being repeated
 
 $17 = List of active repeats for this room
 
+$18 = The message will be repeated once each
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
 
+$time = tiempo (ejemplo: 1h 30m)
+
 $1 = El tiempo no puede ser inferior a 5 segundos
-$2 = El tiempo no puede ser superior a 2 horas
+$2 = El tiempo no puede ser superior a 48 horas
 $3 = Ya hay un timer en esta sala
 $4 = No había ningún timer activo en esta sala
 $5 = El timer se ha detenido
@@ -42,7 +48,7 @@ $6 = minutos
 $7 = segundos
 
 $8 = El tiempo para repetir no puede ser inferior a 30 segundos
-$9 = El tiempo para repetir no puede ser superior a 24 horas
+$9 = El tiempo para repetir no puede ser superior a 48 horas
 $10 = Texto a repetir
 $11 = El mensaje a repetir ha sido borrado
 $12 = No hay ningún mensaje a repetir para esta sala
@@ -54,3 +60,5 @@ $14 = Se han borrado todos los mensajes a repetir en esta sala
 $15 = Ese mensaje ya se está repitiendo en esta sala
 $16 = Ese mensaje no se está repitiendo en esta sala
 $17 = Mensajes que se están repitiendo en esta sala
+
+$18 = El mensaje se repetirá una vez cada
