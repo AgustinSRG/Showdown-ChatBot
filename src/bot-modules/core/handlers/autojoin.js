@@ -23,6 +23,9 @@ function setup(App) {
 
 		let ok = null, error = null;
 		if (context.post.edit) {
+			let oldAvatar = App.config.modules.core.avatar || "";
+			let oldStatus = App.config.modules.core.status || "";
+
 			let rooms = (context.post.rooms || "").split(',').map(Text.toRoomid).filter(room => room);
 			let privaterooms = (context.post.privaterooms || "").split(',').map(Text.toRoomid).filter(room => room);
 			App.config.modules.core.rooms = rooms;
@@ -34,12 +37,27 @@ function setup(App) {
 			App.db.write();
 			App.logServerAction(context.user.id, 'Edit Bot Autojoin details (Core Module)');
 			ok = "Bot Auto-Join details have been set sucessfully. Restart the bot to make them effective.";
+
+			let cmds = [];
+
+			if (oldAvatar !== App.config.modules.core.avatar) {
+				cmds.push('|/avatar ' + App.config.modules.core.avatar);
+			}
+
+			if (oldStatus !== App.config.modules.core.status) {
+				cmds.push('|/status ' + App.config.modules.core.status);
+			}
+
+			if (cmds.length) {
+				App.bot.send(cmds);
+			}
 		}
 
 		let htmlVars = Object.create(null);
 
 		htmlVars.rooms = (App.config.modules.core.rooms || []).join(', ');
 		htmlVars.privaterooms = (App.config.modules.core.privaterooms || []).join(', ');
+
 		htmlVars.avatar = (App.config.modules.core.avatar || '');
 		htmlVars.status = (App.config.modules.core.status || '');
 
@@ -49,7 +67,7 @@ function setup(App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Rooms and avatar - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), { title: "Rooms and avatar - Showdown ChatBot" });
 	});
 }
 
