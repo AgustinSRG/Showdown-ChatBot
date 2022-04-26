@@ -14,6 +14,7 @@ function setup(App) {
 			nick: '',
 			pass: '',
 			avatar: '',
+			status: '',
 			rooms: [],
 			privaterooms: [],
 			joinall: false,
@@ -69,6 +70,9 @@ function setup(App) {
 		}
 		if (App.config.modules.core.avatar) {
 			cmds.push('|/avatar ' + App.config.modules.core.avatar);
+		}
+		if (App.config.modules.core.status) {
+			cmds.push('|/status ' + App.config.modules.core.status);
 		}
 		if (cmds.length) {
 			App.bot.send(cmds);

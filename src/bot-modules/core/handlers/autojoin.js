@@ -28,6 +28,7 @@ function setup(App) {
 			App.config.modules.core.rooms = rooms;
 			App.config.modules.core.privaterooms = privaterooms;
 			App.config.modules.core.avatar = context.post.avatar || '';
+			App.config.modules.core.status = context.post.status || '';
 			App.config.modules.core.joinofficial = !!context.post.joinofficial;
 			App.config.modules.core.joinall = !!context.post.joinall;
 			App.db.write();
@@ -40,6 +41,7 @@ function setup(App) {
 		htmlVars.rooms = (App.config.modules.core.rooms || []).join(', ');
 		htmlVars.privaterooms = (App.config.modules.core.privaterooms || []).join(', ');
 		htmlVars.avatar = (App.config.modules.core.avatar || '');
+		htmlVars.status = (App.config.modules.core.status || '');
 
 		htmlVars.joinofficial = App.config.modules.core.joinofficial ? 'checked="checked"' : '';
 		htmlVars.joinall = App.config.modules.core.joinall ? 'checked="checked"' : '';
