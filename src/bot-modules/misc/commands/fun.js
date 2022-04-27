@@ -222,13 +222,63 @@ module.exports = {
 
 	randformat: "randomformat",
 	randomformat: function (App) {
-		let formats = Object.keys(App.bot.formats);
+		this.setLangFile(Lang_File);
+		let filters = this.args.map(function (f) {
+			return Text.toId(f);
+		}).filter(function (f) {
+			return !!f;
+		});
+		let formats = Object.keys(App.bot.formats).filter(function (f) {
+			for (let filter of filters) {
+				if (f.indexOf(filter) === -1) {
+					return false;
+				}
+			}
+			return true;
+		});
+		if (formats.length === 0) {
+			return this.errorReply(this.mlt("noformats"));
+		}
 		let chosen = formats[Math.floor(Math.random() * formats.length)];
 		if (chosen) {
 			let roomData = App.bot.rooms[this.room];
 			let botid = Text.toId(App.bot.getBotNick());
 			if (this.can('randpoke') && roomData && roomData.users[botid] && this.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'voice')) {
-				this.send('!tier ' + App.bot.formats[chosen].name, this.room);
+				this.reply('!tier ' + App.bot.formats[chosen].name);
+			} else {
+				this.restrictReply(Text.stripCommands(App.bot.formats[chosen].name), 'random');
+			}
+		}
+	},
+
+	randrand: "randomrandomformat",
+	randomrandomformat: function (App) {
+		this.setLangFile(Lang_File);
+		let filters = this.args.map(function (f) {
+			return Text.toId(f);
+		}).filter(function (f) {
+			return !!f;
+		});
+		let formats = Object.keys(App.bot.formats).filter(function (f) {
+			if (App.bot.formats[f].team) {
+				return false;
+			}
+			for (let filter of filters) {
+				if (f.indexOf(filter) === -1) {
+					return false;
+				}
+			}
+			return true;
+		});
+		if (formats.length === 0) {
+			return this.errorReply(this.mlt("noformats"));
+		}
+		let chosen = formats[Math.floor(Math.random() * formats.length)];
+		if (chosen) {
+			let roomData = App.bot.rooms[this.room];
+			let botid = Text.toId(App.bot.getBotNick());
+			if (this.can('randpoke') && roomData && roomData.users[botid] && this.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'voice')) {
+				this.reply('!tier ' + App.bot.formats[chosen].name);
 			} else {
 				this.restrictReply(Text.stripCommands(App.bot.formats[chosen].name), 'random');
 			}

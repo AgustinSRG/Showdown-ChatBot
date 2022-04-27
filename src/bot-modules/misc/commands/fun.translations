@@ -6,8 +6,10 @@
 
 $pick = Pick
 $error = An error ocurred, try again later
+$noformats = No formats found
 
 %spanish
 
 $pick = Elección
 $error = Se ha produido un error, inténtalo de nuevo más tarde
+$noformats = No se han encontrado formatos
