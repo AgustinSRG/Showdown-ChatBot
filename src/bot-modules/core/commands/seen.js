@@ -95,7 +95,7 @@ module.exports = {
 			this.pmReply(this.mlt('inv'));
 		} else {
 			let userData = App.userdata.getLastSeen(targetUser);
-			let name = userData ? userData.name : targetUser;
+			let name = userData ? (userData.name || targetUser) : targetUser;
 			let alts = App.userdata.getAlts(targetUser);
 			if (alts.length > Max_Alts_No_Full) {
 				let fullLink = "";
