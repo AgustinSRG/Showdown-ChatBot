@@ -1,8 +1,8 @@
 ﻿<html>
 <head>
-<link rel="stylesheet" href="/static/logs.css" />
+<link rel="stylesheet" href="/static/logs.css?v2" />
 <script type="text/javascript" src="/static/jquery-3.0.0.min.js"></script>
-<script type="text/javascript" src="/static/HtmlSanitizer.min.js"></script>
+<script type="text/javascript" src="/static/HtmlSanitizer.min.js?v4"></script>
 <script type="text/javascript" src="/static/showdown-utils.js"></script>
 <title>#TITLE#</title>
 </head>
@@ -30,12 +30,20 @@
 		name = name.substr(1);
 		if (message.substr(0, 5) === '/raw ') {
 			addLine(HtmlSanitizer.SanitizeHtml(message.substr(5)));
+		} else if (message.substr(0, 10) === '/nonotify ') {
+			addLine(HtmlSanitizer.SanitizeHtml(message.substr(10)));
+		} else if (message.substr(0, 10) === '/challenge') {
+			return; // Ignore
 		} else if (message.substr(0, 6) === '/html ') {
 			addLine(HtmlSanitizer.SanitizeHtml(message.substr(6)));
+		} else if (message.substr(0, 7) === '/uhtml ') {
+			addLine(HtmlSanitizer.SanitizeHtml(message.substr(7).split(",").slice(1).join(",")));
 		} else if (message.substr(0, 4) === '/me ') {
 			addLine((roomMark ? ('<span class="timestamp">' + escapeHTML(roomMark) + '</span> ') : '') + '<span class="timestamp">' + escapeHTML(msgTime) + '</span>&nbsp;' + '<strong style="' + hashColor(toId(name)) + '">•</strong> <span class="username">' + escapeHTML(group + name) + '</span> ' + (pm ? ('<span class="pm">(Private to ' + escapeHTML(pm) + ') </span>') : '') + '<i>' + parseMessage(escapeHTML(message.substr(3).trim())) + '</i>');
 		} else if (message.substr(0, 5) === '/log ') {
 			addLine((roomMark ? ('<span class="timestamp">' + escapeHTML(roomMark) + '</span> ') : '') + '<span class="timestamp">' + escapeHTML(msgTime) + '</span>&nbsp;' + escapeHTML(message.substr(5)));
+		} else if (message.substr(0, 6) === '/text ') {
+			addLine((roomMark ? ('<span class="timestamp">' + escapeHTML(roomMark) + '</span> ') : '') + '<span class="timestamp">' + escapeHTML(msgTime) + '</span>&nbsp;' + escapeHTML(message.substr(6)));
 		} else {
 			addLine((roomMark ? ('<span class="timestamp">' + escapeHTML(roomMark) + '</span> ') : '') + '<span class="timestamp">' + escapeHTML(msgTime) + '</span>&nbsp;<span class="group">' + escapeHTML(group) + '</span><span class="username"><strong style="' + hashColor(toId(name)) + '">' + escapeHTML(name) + '</strong></span>' + (pm ? (' <span class="pm">(Private to ' + escapeHTML(pm) + ')</span>') : '') + ': <span' + (message.substr(0, 7) === '/error ' ? ' style="color: red;""' : "") + '>' + parseMessage(escapeHTML(message)) + '</span>');
 		}
@@ -130,6 +138,7 @@
 				case 'formats':
 				case 'queryresponse':
 				case 'challstr':
+				case 'hidelines':
 					break;
 				case 'init':
 					addLine('<hr /><div align="center"><h3>Restart Point</h3></div><hr />');
