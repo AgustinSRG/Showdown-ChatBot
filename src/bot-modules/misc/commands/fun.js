@@ -244,7 +244,7 @@ module.exports = {
 			let roomData = App.bot.rooms[this.room];
 			let botid = Text.toId(App.bot.getBotNick());
 			if (this.can('randpoke') && roomData && roomData.users[botid] && this.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'voice')) {
-				this.reply('!tier ' + App.bot.formats[chosen].name);
+				this.send('!tier ' + App.bot.formats[chosen].name, this.room);
 			} else {
 				this.restrictReply(Text.stripCommands(App.bot.formats[chosen].name), 'random');
 			}
@@ -278,7 +278,7 @@ module.exports = {
 			let roomData = App.bot.rooms[this.room];
 			let botid = Text.toId(App.bot.getBotNick());
 			if (this.can('randpoke') && roomData && roomData.users[botid] && this.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'voice')) {
-				this.reply('!tier ' + App.bot.formats[chosen].name);
+				this.send('!tier ' + App.bot.formats[chosen].name, this.room);
 			} else {
 				this.restrictReply(Text.stripCommands(App.bot.formats[chosen].name), 'random');
 			}
