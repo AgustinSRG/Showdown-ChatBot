@@ -1,0 +1,50 @@
+﻿# Translations file
+
+@ htmlbox-cmd
+
+%english
+
+$nochat = This command is only available for chat rooms
+
+$opt = Option text
+$alias = alias
+$for = for
+
+$0 = Randomized command called
+$1 = not found
+$2 = There are not commands to show
+$3 = Randomized Commands
+$4 = The specified option already existed for the command
+$5 = Option added to the command
+$6 = The specified option was not part of the command
+$7 = Option removed from the command
+$8 = Removed command
+$9 = Available options for the command
+$10 = Alias set
+$11 = Alias not found
+$12 = Alias was removed
+$13 = There are not randomized commands
+
+%spanish
+
+$nochat = Este comando solo está disponible para las salas de chat
+
+$opt = Texto de la opción
+$alias = alias
+$for = para
+
+$0 = El comando aleatorio con nombre
+$1 = no existe
+$2 = No hay comandos que mostrar
+$3 = Comandos aleatorios
+$4 = La opción especificada ya existía en las opciones del comando
+$5 = Opción añadida en el comando
+$6 = La opción especificada no se encuentra en las opciones del comando
+$7 = Opción eliminada del comando
+$8 = Comando eliminado
+$9 = Opciones disponibles para el comando
+$10 = Alias establecido
+$11 = No existe el alias
+$12 = Alias eliminado
+$13 = No se ha encontrado ningún comando aleatorio
+

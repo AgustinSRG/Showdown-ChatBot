@@ -73,8 +73,8 @@ class CommandParser {
 
 		/* Permissions */
 		this.modPermissions = {
-			wall: {group: 'driver'},
-			info: {group: 'voice'},
+			wall: { group: 'driver' },
+			info: { group: 'voice' },
 		};
 
 		/* Abuse Monitor */
@@ -121,21 +121,24 @@ class CommandParser {
 		for (let command in this.commands) {
 			let ld = Text.levenshtein(command, cmd, maxLd);
 			if (ld <= maxLd) {
-				results.push({cmd: command, ld: ld});
+				results.push({ cmd: command, ld: ld });
 			}
 		}
 
 		for (let command in this.data.dyncmds) {
 			let ld = Text.levenshtein(command, cmd, maxLd);
 			if (ld <= maxLd) {
-				results.push({cmd: command, ld: ld});
+				results.push({ cmd: command, ld: ld });
 			}
 		}
 
 		for (let command in this.data.aliases) {
-			let ld = Text.levenshtein(command, cmd, maxLd);
-			if (ld <= maxLd) {
-				results.push({cmd: command, ld: ld});
+			let aliasRef = this.data.aliases[command];
+			if (this.commandExists(aliasRef)) {
+				let ld = Text.levenshtein(command, cmd, maxLd);
+				if (ld <= maxLd) {
+					results.push({ cmd: command, ld: ld });
+				}
 			}
 		}
 
@@ -159,14 +162,14 @@ class CommandParser {
 	addCommands(cmds) {
 		for (let k in cmds) {
 			switch (typeof cmds[k]) {
-			case 'function':
-				this.commands[k] = new Command(k, cmds[k]);
-				break;
-			case 'string':
-				if (!this.data.aliases[k]) {
-					this.data.aliases[k] = cmds[k];
-				}
-				break;
+				case 'function':
+					this.commands[k] = new Command(k, cmds[k]);
+					break;
+				case 'string':
+					if (!this.data.aliases[k]) {
+						this.data.aliases[k] = cmds[k];
+					}
+					break;
 			}
 		}
 	}
@@ -178,16 +181,16 @@ class CommandParser {
 	removeCommands(cmds) {
 		for (let k in cmds) {
 			switch (typeof cmds[k]) {
-			case 'function':
-				if (this.commands[k] && this.commands[k].func === cmds[k]) {
-					delete this.commands[k];
-				}
-				break;
-			case 'string':
-				if (this.data.aliases[k] && this.data.aliases[k] === cmds[k]) {
-					delete this.data.aliases[k];
-				}
-				break;
+				case 'function':
+					if (this.commands[k] && this.commands[k].func === cmds[k]) {
+						delete this.commands[k];
+					}
+					break;
+				case 'string':
+					if (this.data.aliases[k] && this.data.aliases[k] === cmds[k]) {
+						delete this.data.aliases[k];
+					}
+					break;
 			}
 		}
 	}
@@ -391,7 +394,7 @@ class CommandParser {
 		}
 
 		if (!token) {
-			if (!room && this.data.helpmsg && !(msg.charAt(0) in {"/": 1, "!": 1})) {
+			if (!room && this.data.helpmsg && !(msg.charAt(0) in { "/": 1, "!": 1 })) {
 				this.sendHelpMsg(Text.toId(by), by); /* Help Message */
 			}
 			return;
@@ -610,36 +613,36 @@ class DynamicCommand {
 
 	execNext(conf, context) {
 		switch (typeof conf) {
-		case "string":
-			context.restrictReply(Text.stripCommands(conf), 'info');
-			break;
-		case "object":
-			let spaceIndex = context.arg.indexOf(" ");
-			let arg;
-			if (spaceIndex === -1) {
-				arg = Text.toCmdid(context.arg);
-			} else {
-				arg = Text.toCmdid(context.arg.substr(0, spaceIndex));
-				context.arg = context.arg.substr(spaceIndex + 1);
-			}
-			let cmd = context.cmd;
-			context.cmd += " " + arg;
-			if (conf[arg]) {
-				this.execNext(conf[arg], context);
-			} else if (Object.keys(conf).length > 1) {
-				let spl = new LineSplitter(context.parser.app.config.bot.maxMessageLength);
-				spl.add((arg ? (context.parser.app.multilang.mlt(Lang_File, context.lang, 4) + ". ") : "") +
-					context.parser.app.multilang.mlt(Lang_File, context.lang, 5) + " " + Chat.bold(cmd) + ":");
-				let subCmds = Object.keys(conf);
-				for (let i = 0; i < subCmds.length; i++) {
-					spl.add(" " + subCmds[i] + (i < (subCmds.length - 1) ? ',' : ''));
+			case "string":
+				context.restrictReply(Text.stripCommands(conf), 'info');
+				break;
+			case "object":
+				let spaceIndex = context.arg.indexOf(" ");
+				let arg;
+				if (spaceIndex === -1) {
+					arg = Text.toCmdid(context.arg);
+				} else {
+					arg = Text.toCmdid(context.arg.substr(0, spaceIndex));
+					context.arg = context.arg.substr(spaceIndex + 1);
 				}
-				context.errorReply(spl.getLines());
-			} else if (Object.keys(conf).length === 1) {
-				arg = Object.keys(conf)[0];
-				this.execNext(conf[arg], context);
-			}
-			break;
+				let cmd = context.cmd;
+				context.cmd += " " + arg;
+				if (conf[arg]) {
+					this.execNext(conf[arg], context);
+				} else if (Object.keys(conf).length > 1) {
+					let spl = new LineSplitter(context.parser.app.config.bot.maxMessageLength);
+					spl.add((arg ? (context.parser.app.multilang.mlt(Lang_File, context.lang, 4) + ". ") : "") +
+						context.parser.app.multilang.mlt(Lang_File, context.lang, 5) + " " + Chat.bold(cmd) + ":");
+					let subCmds = Object.keys(conf);
+					for (let i = 0; i < subCmds.length; i++) {
+						spl.add(" " + subCmds[i] + (i < (subCmds.length - 1) ? ',' : ''));
+					}
+					context.errorReply(spl.getLines());
+				} else if (Object.keys(conf).length === 1) {
+					arg = Object.keys(conf)[0];
+					this.execNext(conf[arg], context);
+				}
+				break;
 		}
 	}
 }
@@ -730,6 +733,18 @@ class CommandContext {
 	}
 
 	/**
+	 * Command reply method (no /wall)
+	 * @param {Array<String>|String} msg
+	 */
+	replyCommand(msg) {
+		if (this.isPM) {
+			return this.sendPM(this.byIdent.id, msg);
+		} else {
+			return this.send(msg, this.room);
+		}
+	}
+
+	/**
 	 * Replies with /announce
 	 * @param {Array<String>|String} msg
 	 */
@@ -738,7 +753,7 @@ class CommandContext {
 		let botid = Text.toId(this.parser.bot.getBotNick());
 		if (this.isPM) {
 			return this.sendPM(this.byIdent.id, msg);
-		} else if (roomData && roomData.users[botid] && this.parser.equalOrHigherGroup({group: roomData.users[botid]}, 'driver')) {
+		} else if (roomData && roomData.users[botid] && this.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'driver')) {
 			if (msg instanceof Array) {
 				for (let i = 0; i < msg.length; i++) {
 					msg[i] = "/announce " + msg[i];
@@ -798,7 +813,7 @@ class CommandContext {
 	 * @param {String} perm - Permission required to use the command
 	 */
 	replyAccessDenied(perm) {
-		return this.pmReply(this.parser.app.multilang.mlt(Lang_File, this.lang, 0, {perm: Chat.italics(perm)}));
+		return this.pmReply(this.parser.app.multilang.mlt(Lang_File, this.lang, 0, { perm: Chat.italics(perm) }));
 	}
 
 	/**
@@ -877,7 +892,7 @@ class CommandContext {
 	 * @returns {String} Original Room
 	 */
 	parseRoomAliases(room) {
-		 return (this.parser.data.roomaliases[room] || room);
+		return (this.parser.data.roomaliases[room] || room);
 	}
 
 	/**
@@ -925,7 +940,7 @@ class CommandContext {
 	 */
 	mlt(key, vars) {
 		if (!this.langFile) {
-			if (!this.langData)	return "(no langfile)";
+			if (!this.langData) return "(no langfile)";
 			return this.parser.app.multilang.mltData(this.langData, this.lang, key, vars);
 		}
 		return this.parser.app.multilang.mlt(this.langFile, this.lang, key, vars);

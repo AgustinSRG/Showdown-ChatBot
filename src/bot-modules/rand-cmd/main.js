@@ -1,13 +1,13 @@
 /**
- * Bot Module: HtmlBox Commands
+ * Bot Module: Random Commands
  */
 
 'use strict';
 
 exports.setup = function (App) {
-	class HtmlBoxModule {
+	class RandomCommandsModule {
 		constructor() {
-			this.db = App.dam.getDataBase('html-cmd.json');
+			this.db = App.dam.getDataBase('rand-cmds.json');
 			this.data = this.db.data;
 			if (!this.data.commands) {
 				this.data.commands = Object.create(null);
@@ -18,8 +18,8 @@ exports.setup = function (App) {
 		}
 	}
 
-	App.parser.addTrigger('htmlbox', 'after', context => {
-		const Mod = App.modules.htmlbox.system;
+	App.parser.addTrigger('randomcmds', 'after', context => {
+		const Mod = App.modules.randcmd.system;
 		let cmd = context.cmd;
 		let content = null;
 		if (Mod.data.commands[cmd]) {
@@ -29,12 +29,12 @@ exports.setup = function (App) {
 		}
 		if (content) {
 			context.arg = context.cmd;
-			context.cmd = 'htmlcmd';
+			context.cmd = 'randcmd';
 			App.parser.exec(context);
 			App.parser.monitor.count(context.byIdent.id);
 			return true;
 		}
 	});
 
-	return new HtmlBoxModule();
+	return new RandomCommandsModule();
 };

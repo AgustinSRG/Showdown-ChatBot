@@ -1,0 +1,23 @@
+{
+  "id": "randcmd",
+  "name": "Randomized Commands",
+  "main": "main.js",
+  "commands": [
+    "commands.js"
+  ],
+  "permissions": {
+    "randcmd": {
+      "group": "mod"
+    },
+    "randadmin": {
+      "excepted": true
+    }
+  },
+  "handlers": [
+    "server-handler.js"
+  ],
+  "langfiles": [
+    "./commands.translations"
+  ],
+  "description": "Special randomized commands"
+}

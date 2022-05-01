@@ -1,0 +1,16 @@
+<script type="text/javascript">
+	function removeCmd(cmd) {
+		var elem = document.getElementById('confirm-' + cmd);
+		if (elem) {
+			elem.innerHTML = '<form style="display:inline;" id="confirm-delete-form" method="post" action=""><input type="hidden" name="cmd" value="' + cmd + '" />Are you sure?&nbsp;<input type="submit" name="delcmd" value="Delete random command" /></form>';
+		}
+		return false;
+	}
+</script>
+${CMDS}
+<form method="post" action="">
+	<p><strong>Command</strong>:&nbsp;<input name="cmd" type="text" size="40" value="${CMD}" /></p>
+	<p><textarea name="content" cols="150" rows="4" placeholder="command options (each line, one option)">${CONTENT}</textarea></p>
+	<p><input type="submit" name="add" value="Add random Command" /></p>
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

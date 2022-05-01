@@ -226,6 +226,6 @@ module.exports = {
 			return this.errorReply(this.mlt(12));
 		}
 
-		this.reply("!code " + this.mlt(17) + ":\n\n" + Mod.getRepeats(room).join("\n"));
+		this.replyCommand("!code " + this.mlt(17) + ":\n\n" + Mod.getRepeats(room).join("\n"));
 	},
 };
