@@ -44,6 +44,7 @@ class CommandParser {
 			before: Object.create(null),
 			after: Object.create(null),
 		};
+		this.commandKeysProviders = Object.create(null);
 		this.lastHelpCommand = Object.create(null);
 		this.lastPrivateCommand = Object.create(null);
 		this.lastReplyCommand = Object.create(null);
@@ -118,23 +119,34 @@ class CommandParser {
 			maxLd = 2;
 		}
 
-		for (let command in this.commands) {
+		for (let command of Object.keys(this.commands)) {
 			let ld = Text.levenshtein(command, cmd, maxLd);
 			if (ld <= maxLd) {
 				results.push({ cmd: command, ld: ld });
 			}
 		}
 
-		for (let command in this.data.dyncmds) {
+		for (let command of Object.keys(this.data.dyncmds)) {
 			let ld = Text.levenshtein(command, cmd, maxLd);
 			if (ld <= maxLd) {
 				results.push({ cmd: command, ld: ld });
 			}
 		}
 
-		for (let command in this.data.aliases) {
+		for (let command of Object.keys(this.data.aliases)) {
 			let aliasRef = this.data.aliases[command];
 			if (this.commandExists(aliasRef)) {
+				let ld = Text.levenshtein(command, cmd, maxLd);
+				if (ld <= maxLd) {
+					results.push({ cmd: command, ld: ld });
+				}
+			}
+		}
+
+		for (let providerKey of Object.keys(this.commandKeysProviders)) {
+			const provider = this.commandKeysProviders[providerKey];
+			const providerCommands = provider();
+			for (let command of providerCommands) {
 				let ld = Text.levenshtein(command, cmd, maxLd);
 				if (ld <= maxLd) {
 					results.push({ cmd: command, ld: ld });
@@ -232,6 +244,15 @@ class CommandParser {
 		if (this.triggers[mode]) {
 			this.triggers[mode][id] = func;
 		}
+	}
+
+	/**
+	 * Adds a command keys provider
+	 * @param {String} id - Provider ID
+	 * @param {function()} func - Function that returns a list of command keys
+	 */
+	addCommandKeysProvider(id, func) {
+		this.commandKeysProviders[id] = func;
 	}
 
 	/**

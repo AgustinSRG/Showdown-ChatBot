@@ -36,5 +36,14 @@ exports.setup = function (App) {
 		}
 	});
 
+	App.parser.addCommandKeysProvider('htmlbox', () => {
+		const Mod = App.modules.htmlbox.system;
+		let cmds = Object.keys(Mod.data.commands);
+		let aliases = Object.keys(Mod.data.aliases).filter(function (a) {
+			return !!Mod.data.commands[Mod.data.aliases[a]];
+		});
+		return cmds.concat(aliases);
+	});
+
 	return new HtmlBoxModule();
 };
