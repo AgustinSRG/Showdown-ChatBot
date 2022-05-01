@@ -8,6 +8,8 @@ const Path = require('path');
 const Text = Tools('text');
 const RoomManager = require(Path.resolve(__dirname, 'rooms.js'));
 
+const REABROADCAST_ERROR_MSG = "You can't broadcast this because it was just broadcasted. If this was intentional, use ";
+
 function setup(App) {
 	if (!App.config.modules.core) {
 		App.config.modules.core = {
@@ -186,9 +188,16 @@ function setup(App) {
 		}
 	});
 
-	App.bot.on('line', (room, msg) => {
+	App.bot.on('line', (room, line, spl, isIntro) => {
+		if (!isIntro && spl[0] === "error") {
+			const errorMsg = spl.slice(1).join("|");
+			if (errorMsg.indexOf(REABROADCAST_ERROR_MSG) === 0) {
+				const reBroadcastCommand = errorMsg.substr(REABROADCAST_ERROR_MSG.length).trim();
+				App.bot.sendTo(room, reBroadcastCommand);
+			}
+		}
 		if (App.config.debug) {
-			App.logToConsole('LINE: ' + msg);
+			App.logToConsole('LINE: ' + line);
 		}
 	});
 
