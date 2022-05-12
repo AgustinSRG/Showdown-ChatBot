@@ -45,7 +45,9 @@ exports.setup = function (App) {
 		htmlVars.timers = "";
 
 		for (let timer of Object.values(Mod.timers)) {
-			htmlVars.timers += '<tr><td class="bold">' + Text.escapeHTML(timer.room) + '</td><td><form action="" method="post" style="margin-block-end: 0;">' +
+			htmlVars.timers += '<tr><td class="bold">' + Text.escapeHTML(timer.room) +
+				'</td><td>' + Text.escapeHTML(Mod.getDiff(timer)) +
+				'</td><td><form action="" method="post" style="margin-block-end: 0;">' +
 				'<input name="room" type="hidden" value="' + Text.escapeHTML(timer.room) + '" />' +
 				'<input type="submit" name="cleartimer" value="Clear timer" />' +
 				'</form></td></tr>';
@@ -58,6 +60,7 @@ exports.setup = function (App) {
 				let i = 0;
 				for (let activeRepeat of repeat.active) {
 					htmlVars.repeats += '<tr><td class="bold">' + Text.escapeHTML(repeat.room) + '</td><td>' +
+						Text.escapeHTML(Mod.getRepeatTime(activeRepeat.interval, repeat.room)) + '</td><td>' +
 						Text.escapeHTML(activeRepeat.text) +
 						'</td><td><form action="" method="post" style="margin-block-end: 0;">' +
 						'<input name="room" type="hidden" value="' + Text.escapeHTML(repeat.room) + '" />' +
