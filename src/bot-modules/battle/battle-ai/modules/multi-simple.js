@@ -222,6 +222,49 @@ exports.setup = function (Data) {
 
 	/* Move Decisions */
 
+	function moveIsRedirectedImmune(battle, move, pokeA, conditionsA) {
+		let targets = getTargets(battle);
+
+		for (let i = 0; i < targets.length; i++) {
+			if (!targets[i] || !targets[i].pokemon) continue;
+			if (targets[i].pokemon.fainted) continue;
+
+			let conditionsB = new Conditions({
+				side: targets[i].player.side,
+				volatiles: targets[i].pokemon.volatiles,
+				boosts: targets[i].pokemon.boosts,
+			});
+			let pokeB = new Pokemon(targets[i].pokemon.template, {
+				level: targets[i].pokemon.level,
+				gender: targets[i].pokemon.gender,
+				shiny: targets[i].pokemon.shiny,
+				evs: { hp: 192, def: 124, spd: 124 },
+			});
+			pokeB.hp = targets[i].pokemon.hp;
+			pokeB.status = targets[i].pokemon.status;
+			if (targets[i].pokemon.item === "&unknown") {
+				pokeB.item = null;
+			} else {
+				pokeB.item = targets[i].pokemon.item;
+			}
+			if (!targets[i].pokemon.supressedAbility && !battle.conditions["neutralizinggas"]) {
+				if (targets[i].pokemon.ability === "&unknown") {
+					pokeB.ability = pokeB.template.abilities ? Data.getAbility(pokeB.template.abilities[0]) : null;
+				} else {
+					pokeB.ability = targets[i].pokemon.ability;
+				}
+			}
+
+			let dmg = Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, battle.conditions, battle.gen);
+
+			if (dmg.isRedirected) {
+				return true; // Move gets redirected
+			}
+		}
+
+		return false;
+	}
+
 	function evaluateMoveDecision(battle, desEnv, des, act) {
 		let final = 0;
 		let p = battle.request.side.pokemon[act];
@@ -269,6 +312,10 @@ exports.setup = function (Data) {
 		let targets = [];
 		if (typeof des.target === "number") {
 			targets = [getSpecificTarget(battle, des.target)];
+
+			if (moveIsRedirectedImmune(battle, move, pokeA, conditionsA)) {
+				return 0; // Move gets redirected (lightning rod or storm drain), so it does nothing
+			}
 		} else {
 			targets = getTargets(battle);
 		}

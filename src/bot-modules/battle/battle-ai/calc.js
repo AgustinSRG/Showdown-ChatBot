@@ -106,10 +106,11 @@ class Conditions {
 }
 
 class Damage {
-	constructor(hp, rolls, hasSturdy) {
+	constructor(hp, rolls, hasSturdy, isRedirected) {
 		this.rolls = rolls || [];
 		this.hp = hp || 0;
 		this.percents = [];
+		this.isRedirected = !!isRedirected;
 		for (let i = 0; i < this.rolls.length; i++) {
 			if (hp === 0) {
 				this.percents.push(100);
@@ -204,6 +205,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 
 	let atk, def, bp, atkStat, defStat;
 	let cat, defcat;
+	let isRedirected = false;
 
 	let targetHP = statsB.hp;
 
@@ -222,7 +224,8 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			atk = move.useSourceDefensiveAsOffensive ? statsA.def : statsA.atk;
 			atkStat = "atk";
 		} else {
-			return new Damage(targetHP);
+			atk = 0;
+			atkStat = "spa";
 		}
 		cat = defcat = move.category;
 		if (move.defensiveCategory) defcat = move.defensiveCategory;
@@ -373,8 +376,13 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 
 	if (gen >= 3 && pokeB.ability && !gconditions["neutralizinggas"] && !move.ignoreAbility && (!pokeA.ability || !(pokeA.ability.id in { "moldbreaker": 1, "turboblaze": 1, "teravolt": 1 }))) {
 		switch (pokeB.ability.id) {
-			case "dryskin":
 			case "stormdrain":
+				if (moveType === "Water") {
+					inmune = true;
+					isRedirected = true;
+				}
+				break;
+			case "dryskin":
 			case "waterabsorb":
 				if (moveType === "Water") inmune = true;
 				break;
@@ -385,6 +393,11 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 				if (moveType === "Ground" && !noLevitation) inmune = true;
 				break;
 			case "lightningrod":
+				if (moveType === "Electric") {
+					inmune = true;
+					isRedirected = true;
+				}
+				break;
 			case "motordrive":
 			case "voltabsorb":
 				if (moveType === "Electric") inmune = true;
@@ -424,7 +437,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		if (gconditions.weather === "primordialsea" && move.type === "Fire") inmune = true;
 	}
 
-	if (inmune || typesMux === 0) return new Damage(targetHP);
+	if (inmune || typesMux === 0) return new Damage(targetHP, null, false, isRedirected);
 
 	/******************************
 	* Base power

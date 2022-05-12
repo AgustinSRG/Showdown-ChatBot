@@ -339,6 +339,31 @@ exports.setup = function (Data) {
 		return false;
 	}
 
+	function moveIsRedirectedImmune(battle, move, pokeA, conditionsA) {
+		let targets = getTargets(battle);
+
+		for (let i = 0; i < targets.length; i++) {
+			if (!targets[i] || !targets[i].pokemon) continue;
+			if (targets[i].pokemon.fainted) continue;
+
+			let pokeB = suposeActiveFoe(battle, targets[i]);
+
+			let conditionsB = new Conditions({
+				side: targets[i].player.side,
+				volatiles: targets[i].pokemon.volatiles,
+				boosts: targets[i].pokemon.boosts,
+			});
+
+			let dmg = Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, battle.conditions, battle.gen);
+
+			if (dmg.isRedirected) {
+				return true; // Move gets redirected
+			}
+		}
+
+		return false;
+	}
+
 	let getViableSupportMoves = BattleModule.getViableSupportMoves = function (battle, decisions) {
 		let res = {
 			viable: [],
@@ -413,6 +438,11 @@ exports.setup = function (Data) {
 			let targets = [];
 			if (typeof des.target === "number") {
 				targets = [getSpecificTarget(battle, des.target)];
+
+				if (moveIsRedirectedImmune(battle, move, pokeA, conditionsA)) {
+					res.unviable.push(decisions[i]);
+					continue;
+				}
 			} else {
 				targets = getTargets(battle);
 			}
@@ -912,6 +942,11 @@ exports.setup = function (Data) {
 			let targets = [];
 			if (typeof des.target === "number") {
 				targets = [getSpecificTarget(battle, des.target)];
+
+				if (moveIsRedirectedImmune(battle, move, pokeA, conditionsA)) {
+					res.unviable.push(decisions[i]);
+					continue;
+				}
 			} else {
 				targets = getTargets(battle);
 			}

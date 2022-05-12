@@ -155,6 +155,49 @@ exports.setup = function (Data) {
 
 	/* Move Decisions */
 
+	function moveIsRedirectedImmune(battle, move, pokeA, conditionsA) {
+		let targets = battle.foe.active;
+
+		for (let i = 0; i < targets.length; i++) {
+			if (!targets[i]) continue;
+			if (targets[i].fainted) continue;
+
+			let conditionsB = new Conditions({
+				side: battle.foe.side,
+				volatiles: targets[i].volatiles,
+				boosts: targets[i].boosts,
+			});
+			let pokeB = new Pokemon(targets[i].template, {
+				level: targets[i].level,
+				gender: targets[i].gender,
+				shiny: targets[i].shiny,
+				evs: { hp: 192, def: 124, spd: 124 },
+			});
+			pokeB.hp = targets[i].hp;
+			pokeB.status = targets[i].status;
+			if (targets[i].item === "&unknown") {
+				pokeB.item = null;
+			} else {
+				pokeB.item = targets[i].item;
+			}
+			if (!targets[i].supressedAbility && !battle.conditions["neutralizinggas"]) {
+				if (targets[i].ability === "&unknown") {
+					pokeB.ability = pokeB.template.abilities ? Data.getAbility(pokeB.template.abilities[0]) : null;
+				} else {
+					pokeB.ability = targets[i].ability;
+				}
+			}
+
+			let dmg = Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, battle.conditions, battle.gen);
+
+			if (dmg.isRedirected) {
+				return true; // Move gets redirected
+			}
+		}
+
+		return false;
+	}
+
 	function evaluateMoveDecision(battle, desEnv, des, act) {
 		let final = 0;
 		let p = battle.request.side.pokemon[act];
@@ -202,6 +245,10 @@ exports.setup = function (Data) {
 		let targets = [];
 		if (typeof des.target === "number") {
 			targets = [battle.foe.active[des.target]];
+
+			if (moveIsRedirectedImmune(battle, move, pokeA, conditionsA)) {
+				return 0; // Move gets redirected (lightning rod or storm drain), so it does nothing
+			}
 		} else {
 			targets = battle.foe.active;
 		}
