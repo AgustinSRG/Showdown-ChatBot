@@ -108,13 +108,6 @@ exports.setup = function (App) {
 			for (let f in App.bot.formats) {
 				let chosen = context.post[f];
 				if (chosen && chosen !== "default") {
-					try {
-						check(chosen in {"random": 1, "randommove": 1, "randomsw": 1, "ingame-nostatus": 1, "singles-eff": 1, "randommovenodyna": 1},
-							"Invalid algorithm: " + chosen);
-					} catch (err) {
-						error = err.message;
-						break;
-					}
 					newData[f] = chosen;
 				}
 			}
@@ -405,6 +398,7 @@ exports.setup = function (App) {
 			"ingame-nostatus": "Go for the highest damage / No swithes (Standard)",
 			"singles-eff": "Improvement with status moves and switches (only for singles)",
 			"free-for-all-simple": "Free-for-all (Go for the highest damage)",
+			"free-for-all-complex": "Free-for-all (Pseudorandom)",
 			"multi-simple": "Multiples (Go for the highest damage)",
 		};
 		let tags = [];
