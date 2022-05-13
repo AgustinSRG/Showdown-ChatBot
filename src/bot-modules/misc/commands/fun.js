@@ -229,6 +229,9 @@ module.exports = {
 			return !!f;
 		});
 		let formats = Object.keys(App.bot.formats).filter(function (f) {
+			if (App.bot.formats[f].disableTournaments) {
+				return false;
+			}
 			for (let filter of filters) {
 				if (f.indexOf(filter) === -1) {
 					return false;
@@ -260,7 +263,7 @@ module.exports = {
 			return !!f;
 		});
 		let formats = Object.keys(App.bot.formats).filter(function (f) {
-			if (App.bot.formats[f].team) {
+			if (App.bot.formats[f].team || App.bot.formats[f].disableTournaments) {
 				return false;
 			}
 			for (let filter of filters) {
