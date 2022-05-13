@@ -19,13 +19,17 @@ const Chat = Tools('chat');
 
 const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
+function botCanHtml(room, App) {
+	let roomData = App.bot.rooms[room];
+	let botid = Text.toId(App.bot.getBotNick());
+	return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({group: roomData.users[botid]}, 'bot'));
+}
+
 module.exports = {
 	randcmd: function (App) {
 		this.setLangFile(Lang_File);
-		if (this.getRoomType(this.room) !== 'chat') {
-			return this.errorReply(this.mlt('nochat'));
-		}
-		if (!this.can('randcmd', this.room)) return this.replyAccessDenied('randcmd');
+		let canCommands = this.can('randcmd', this.room) && this.getRoomType(this.room) === 'chat' && botCanHtml(this.room, App);
+
 		const Mod = App.modules.randcmd.system;
 		let spl = this.arg.split(' ');
 		let cmd = Text.toCmdid(spl[0]);
@@ -40,11 +44,27 @@ module.exports = {
 			const options = content.split("\n").map(function (a) {
 				return a.trim();
 			}).filter(function (a) {
+				if (!canCommands && (a.startsWith("!") || a.startsWith("/"))) {
+					return false;
+				}
 				return !!a;
 			});
+
+			if (options.length === 0) {
+				if (!this.can('randcmd', this.room)) {
+					return this.replyAccessDenied('randcmd');
+				}
+				if (this.getRoomType(this.room) !== 'chat') {
+					return this.errorReply(this.mlt('nochat'));
+				}
+				return this.errorReply(this.mlt('nobot'));
+			}
+
 			let replyText = options[Math.floor(Math.random() * options.length)];
 
-			if (replyText.startsWith("/wall ") || replyText.startsWith("/announce ")) {
+			if (!canCommands) {
+				this.restrictReply(Text.stripCommands(replyText), 'quote');
+			} else if (replyText.startsWith("/wall ") || replyText.startsWith("/announce ")) {
 				replyText = replyText.split(" ").slice(1).join(" ");
 
 				if (replyText) {

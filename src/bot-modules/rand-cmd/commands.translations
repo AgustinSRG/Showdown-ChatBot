@@ -5,6 +5,7 @@
 %english
 
 $nochat = This command is only available for chat rooms
+$nobot = Bot requires rank of bot or higher to use this feature
 
 $opt = Option text
 $alias = alias
@@ -28,6 +29,7 @@ $13 = There are not randomized commands
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
+$nobot = Necesito rango de bot o superior para poder usar esta funcionalidad
 
 $opt = Texto de la opción
 $alias = alias
