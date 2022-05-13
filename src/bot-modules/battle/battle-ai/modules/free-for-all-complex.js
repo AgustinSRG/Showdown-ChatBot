@@ -924,7 +924,7 @@ exports.setup = function (Data) {
 			if (a.canMegaEvo || p.canMegaEvo) {
 				// Mega evolve by default
 				if (!des.mega) {
-					res.unviable.push(decisions[i]);
+					res.immune.push(decisions[i]);
 					continue;
 				}
 			}
@@ -932,7 +932,7 @@ exports.setup = function (Data) {
 			if (a.canUltraBurst) {
 				// Ultra burst always
 				if (!des.ultra) {
-					res.unviable.push(decisions[i]);
+					res.immune.push(decisions[i]);
 					continue;
 				}
 			}
@@ -944,7 +944,7 @@ exports.setup = function (Data) {
 				targets = [getSpecificTarget(battle, des.target)];
 
 				if (moveIsRedirectedImmune(battle, move, pokeA, conditionsA)) {
-					res.unviable.push(decisions[i]);
+					res.immune.push(decisions[i]);
 					continue;
 				}
 			} else {
