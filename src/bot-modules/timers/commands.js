@@ -204,7 +204,7 @@ module.exports = {
 			return this.errorReply(this.usage({ desc: this.usageTrans('room') }));
 		}
 
-		const room = Text.toRoomid(this.arg) || this.room;
+		const room = this.parseRoomAliases(Text.toRoomid(this.arg)) || this.room;
 
 		if (!App.bot.rooms[room]) {
 			return this.errorReply(this.mlt(12));
