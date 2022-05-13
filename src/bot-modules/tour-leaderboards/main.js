@@ -162,7 +162,7 @@ exports.setup = function (App) {
 				'<td><div align="center"><h3><strong>Tours Played </strong></h3></div></td>' +
 				'<td><div align="center"><h3><strong>Ratio </strong></h3></div></td></tr>';
 
-			for (let i = 0; i < top.length && 1 < 1000; i++) {
+			for (let i = 0; i < top.length && i < 1000; i++) {
 				html += '<tr>';
 				html += '<td><div align="center">' + (i + 1) + '</div></td>';
 				html += '<td><div align="center">' + top[i][0] + '</div></td>';
