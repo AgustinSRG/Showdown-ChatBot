@@ -93,6 +93,7 @@ exports.setup = function (App) {
 				Config[room].cleanPoint = now.toString();
 				App.db.write();
 				App.modules.tourleaderboards.system.db.write();
+				App.modules.tourleaderboards.system.generateTable(room);
 				App.logServerAction(context.user.id, "Leaderboards: Clear Room: " + room);
 				ok = "Leaderboards data cleared for room " + room;
 			}
@@ -109,6 +110,43 @@ exports.setup = function (App) {
 				App.modules.tourleaderboards.system.generateTable(room);
 				App.logServerAction(context.user.id, "Leaderboards: Generate Table: " + room);
 				ok = "Leaderboards table generated for room " + room;
+			}
+		} else if (context.post.restoredata) {
+			let room = Text.toRoomid(context.post.room);
+			let restoredData;
+			try {
+				check(room, "You must specify a room");
+				check(Config[room], "Room not found");
+
+				restoredData = JSON.parse(context.post.dtrestored + "");
+
+				check(typeof restoredData === "object" && !!restoredData, "Invalid data provided");
+			} catch (err) {
+				error = err.message;
+			}
+
+			if (!error) {
+				if (!App.modules.tourleaderboards.system.data[room]) {
+					App.modules.tourleaderboards.system.data[room] = Object.create(null);
+				}
+
+				for (let uid of Object.keys(restoredData)) {
+					let userData = restoredData[uid];
+					if (!userData || !Array.isArray(userData)) continue;
+					uid = Text.toId(uid);
+					App.modules.tourleaderboards.system.data[room][uid] = [
+						userData[0] + "",
+						parseInt(userData[1]) || 0,
+						parseInt(userData[2]) || 0,
+						parseInt(userData[3]) || 0,
+						parseInt(userData[4]) || 0,
+						parseInt(userData[5]) || 0,
+					];
+				}
+				App.modules.tourleaderboards.system.db.write();
+				App.modules.tourleaderboards.system.generateTable(room);
+				App.logServerAction(context.user.id, "Leaderboards: Restore data: " + room);
+				ok = "Leaderboards data restored for room " + room;
 			}
 		} else if (context.post.edit) {
 			let room = Text.toRoomid(context.post.room);

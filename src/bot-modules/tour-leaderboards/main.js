@@ -4,8 +4,6 @@
 
 'use strict';
 
-const Top_Table_Length = 100;
-
 const Path = require('path');
 const FileSystem = require('fs');
 const Text = Tools('text');
@@ -48,24 +46,24 @@ exports.setup = function (App) {
 			if (!ladder[room]) ladder[room] = Object.create(null);
 			if (!ladder[room][userid]) ladder[room][userid] = [user, 0, 0, 0, 0, 0];
 			switch (type) {
-			case 'A':
-				ladder[room][userid][0] = user; //update user name
-				ladder[room][userid][5]++;
-				break;
-			case 'W':
-				ladder[room][userid][1]++;
-				break;
-			case 'F':
-				ladder[room][userid][2]++;
-				break;
-			case 'S':
-				ladder[room][userid][3]++;
-				break;
-			case 'B':
-				let val = parseInt(auxData);
-				if (!val) return;
-				ladder[room][userid][4] += val;
-				break;
+				case 'A':
+					ladder[room][userid][0] = user; //update user name
+					ladder[room][userid][5]++;
+					break;
+				case 'W':
+					ladder[room][userid][1]++;
+					break;
+				case 'F':
+					ladder[room][userid][2]++;
+					break;
+				case 'S':
+					ladder[room][userid][3]++;
+					break;
+				case 'B':
+					let val = parseInt(auxData);
+					if (!val) return;
+					ladder[room][userid][4] += val;
+					break;
 			}
 		}
 
@@ -84,7 +82,7 @@ exports.setup = function (App) {
 			let rank = 0;
 			for (let u in ladder[room]) {
 				rank = (points.winner * ladder[room][u][1]) + (points.finalist * ladder[room][u][2]) +
-				(points.semifinalist * ladder[room][u][3]) + (points.battle * ladder[room][u][4]);
+					(points.semifinalist * ladder[room][u][3]) + (points.battle * ladder[room][u][4]);
 				if (config.useratio) {
 					rank = rank * (ladder[room][u][4] / ladder[room][u][5]);
 				}
@@ -132,7 +130,7 @@ exports.setup = function (App) {
 			res.tours = ladder[room][userid][5];
 			res.ratio = ladder[room][userid][4] / ladder[room][userid][5];
 			res.points = (points.winner * res.wins) + (res.finals * points.finalist) +
-			(res.semis * points.semifinalist) + (res.battles * points.battle);
+				(res.semis * points.semifinalist) + (res.battles * points.battle);
 			if (config.useratio) {
 				res.points = res.points * (ladder[room][userid][4] / ladder[room][userid][5]);
 			}
@@ -148,23 +146,23 @@ exports.setup = function (App) {
 			let html = '';
 			html += '<html>';
 			html += '<head><title>Leaderboards of ' + Text.escapeHTML(App.parser.getRoomTitle(room)) + '</title>' +
-			'<style>td {padding:5px;}</style></head>';
+				'<style>td {padding:5px;}</style></head>';
 			html += '<body>';
 			html += '<div align="center" style="padding:5px;">';
 			html += '<h1>Tours Leaderboards</h1>';
 			html += '<h2>Room: ' + Text.escapeHTML(App.parser.getRoomTitle(room)) + '</h2>';
 			html += '<table width="100%" border="1">';
 			html += '<tr><td><div align="center"><h3><strong>#</strong></h3></div></td>' +
-			'<td><div align="center"><h3><strong>Name</strong></h3></div></td>' +
-			'<td><div align="center"><h3><strong>Points</strong></h3></div></td>' +
-			'<td><div align="center"><h3><strong>Winner </strong></h3></div></td>' +
-			'<td><div align="center"><h3><strong>Finalist</strong></h3></div></td>' +
-			'<td><div align="center"><h3><strong>Semi-Finalist</strong></h3></div></td>' +
-			'<td><div align="center"><h3><strong>Battles Won </strong></h3></div></td>' +
-			'<td><div align="center"><h3><strong>Tours Played </strong></h3></div></td>' +
-			'<td><div align="center"><h3><strong>Ratio </strong></h3></div></td></tr>';
+				'<td><div align="center"><h3><strong>Name</strong></h3></div></td>' +
+				'<td><div align="center"><h3><strong>Points</strong></h3></div></td>' +
+				'<td><div align="center"><h3><strong>Winner </strong></h3></div></td>' +
+				'<td><div align="center"><h3><strong>Finalist</strong></h3></div></td>' +
+				'<td><div align="center"><h3><strong>Semi-Finalist</strong></h3></div></td>' +
+				'<td><div align="center"><h3><strong>Battles Won </strong></h3></div></td>' +
+				'<td><div align="center"><h3><strong>Tours Played </strong></h3></div></td>' +
+				'<td><div align="center"><h3><strong>Ratio </strong></h3></div></td></tr>';
 
-			for (let i = 0; i < top.length && i < Top_Table_Length; i++) {
+			for (let i = 0; i < top.length; i++) {
 				html += '<tr>';
 				html += '<td><div align="center">' + (i + 1) + '</div></td>';
 				html += '<td><div align="center">' + top[i][0] + '</div></td>';
@@ -288,33 +286,33 @@ exports.setup = function (App) {
 		if (isIntro) return;
 		if (!tourData[room]) tourData[room] = Object.create(null);
 		switch (spl[1]) {
-		case 'update':
-			try {
-				let data = JSON.parse(spl[2]);
-				for (let i in data) {
-					tourData[room][i] = data[i];
+			case 'update':
+				try {
+					let data = JSON.parse(spl[2]);
+					for (let i in data) {
+						tourData[room][i] = data[i];
+					}
+				} catch (e) {
+					App.log("INVALID TOUR DATA: " + spl[2]);
 				}
-			} catch (e) {
-				App.log("INVALID TOUR DATA: " + spl[2]);
-			}
-			break;
-		case 'end':
-			try {
-				let data = JSON.parse(spl[2]);
-				for (let i in data) {
-					tourData[room][i] = data[i];
+				break;
+			case 'end':
+				try {
+					let data = JSON.parse(spl[2]);
+					for (let i in data) {
+						tourData[room][i] = data[i];
+					}
+				} catch (e) {
+					App.log("INVALID TOUR DATA: " + spl[2]);
 				}
-			} catch (e) {
-				App.log("INVALID TOUR DATA: " + spl[2]);
-			}
-			TourLeaderBoardsMod.parseTourResults(room, tourData[room]);
-			delete tourData[room];
-			delete isOfficial[room];
-			break;
-		case 'forceend':
-			delete tourData[room];
-			delete isOfficial[room];
-			break;
+				TourLeaderBoardsMod.parseTourResults(room, tourData[room]);
+				delete tourData[room];
+				delete isOfficial[room];
+				break;
+			case 'forceend':
+				delete tourData[room];
+				delete isOfficial[room];
+				break;
 		}
 	});
 

@@ -9,8 +9,15 @@
     "server-handler.js"
   ],
   "permissions": {
-	"tourofficial": {"group": "mod"},
-	"toursrank": {"group": "driver"}
+    "tourofficial": {
+      "group": "mod"
+    },
+    "toursrank": {
+      "group": "driver"
+    },
+    "tourldbconfig": {
+      "excepted": true
+    }
   },
   "langfiles": [
     "./commands.translations"

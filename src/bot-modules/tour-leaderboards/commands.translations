@@ -18,6 +18,7 @@ $7 = Total
 $8 = tours played
 $9 = battles won
 $ratio = Ratio
+$user = User
 
 $10 = Leaderboards for room
 $11 = are empty
@@ -39,6 +40,17 @@ $22 = per won battle
 $23 = Only official tours are rated
 $24 = The battle/tour ratio is used in order to calculate the score
 
+$25 = Tournament leaderboard
+
+$26 = Tours played
+$27 = Battles won
+
+$28 = Last reset
+$29 = Full table
+
+$30 = Sucessfully reset leaderboards data for room
+$31 = Data backup
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
@@ -55,6 +67,7 @@ $7 = Total
 $8 = torneos jugados
 $9 = batallas ganadas
 $ratio = Ratio
+$user = Usuario
 
 $10 = Las clasificaciones de torneos para la sala
 $11 = están vacías
@@ -75,3 +88,15 @@ $21 = para los semi-finalistas
 $22 = por batalla ganada
 $23 = Solo cuentan los torneos oficiales
 $24 = El ratio batallas/torneo es usado para calcular los puntos
+
+$25 = Puntuaciones en torneos
+
+$26 = Torneos jugados
+$27 = Batallas ganadas
+
+$28 = Último reinicio
+
+$29 = Tabla completa
+
+$30 = Las tablas de puntuaciones se han reiniciado para la sala
+$31 = Copia de seguridad
