@@ -449,6 +449,17 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		case "frustration":
 			bp = Math.floor(((255 - pokeA.happiness) * 10) / 25) || 1;
 			break;
+		case "powertrip":
+		case "storedpower":
+			{
+				bp = 20;
+				for (let stat of Object.keys(conditionsA.boosts)) {
+					if (conditionsA.boosts[stat] > 0) {
+						bp += 20 * conditionsA.boosts[stat];
+					}
+				}
+			}
+			break;
 		case "return":
 			bp = Math.floor((pokeA.happiness * 10) / 25) || 1;
 			break;

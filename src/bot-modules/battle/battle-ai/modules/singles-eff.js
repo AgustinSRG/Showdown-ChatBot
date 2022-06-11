@@ -47,7 +47,7 @@ exports.setup = function (Data) {
 		} else {
 			pokeB.item = target.item;
 		}
-		if (!target.supressedAbility && !battle.conditions["neutralizinggas"]) {
+		if (!target.supressedAbility) {
 			if (target.ability === "&unknown") {
 				pokeB.ability = pokeB.template.abilities ? Data.getAbility(pokeB.template.abilities[0]) : null;
 			} else {

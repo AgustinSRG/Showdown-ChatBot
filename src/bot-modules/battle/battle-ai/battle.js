@@ -12,9 +12,9 @@ const Path = require('path');
 const Util = require('util');
 const Text = Tools('text');
 
-exports.setup = function (App) {
+exports.setup = function (App, CustomModules) {
 	const BattleData = require(Path.resolve(__dirname, "battle-data.js")).setup(App);
-	const Modules = require(Path.resolve(__dirname, "modules.js")).setup(App, BattleData);
+	const Modules = require(Path.resolve(__dirname, "modules.js")).setup(App, BattleData, CustomModules);
 	const DecisionMaker = require(Path.resolve(__dirname, "decision.js"));
 	const Calc = require(Path.resolve(__dirname, "calc.js"));
 
@@ -329,6 +329,16 @@ exports.setup = function (App) {
 						this.lock = false;
 						this.sendDecision(decision);
 						return;
+					} else if (mod.fallback) {
+						mod = Modules.find(mod.fallback);
+						if (mod) {
+							decision = mod.decide(this, decisions);
+							if (decision instanceof Array) {
+								this.lock = false;
+								this.sendDecision(decision);
+								return;
+							}
+						}
 					}
 				}
 			} catch (ex) {

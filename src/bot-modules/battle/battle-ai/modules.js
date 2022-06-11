@@ -9,7 +9,7 @@ const modFiles = ['singles-eff.js', 'ingame-nostatus.js', 'free-for-all-simple.j
 const Path = require('path');
 const Text = Tools('text');
 
-exports.setup = function (App, BattleData) {
+exports.setup = function (App, BattleData, CustomModules) {
 	const BattleModulesManager = Object.create(null);
 	const modules = BattleModulesManager.modules = Object.create(null);
 
@@ -24,12 +24,40 @@ exports.setup = function (App, BattleData) {
 		}
 	});
 
+	BattleModulesManager.find = function (modid) {
+		if (modules[modid]) {
+			return modules[modid];
+		} else {
+			return null;
+		}
+	};
+
 	BattleModulesManager.choose = function (battle) {
 		if (!battle.tier) return null;
 
-		/* Configured Modules */
-
 		let tier = Text.toId(battle.tier);
+
+		/* Custom modules */
+
+		for (let module of Object.values(CustomModules)) {
+			if (!module.module) {
+				try {
+					module.module = module.setupFunc(BattleData);
+				} catch (e) {
+					App.reportCrash(e);
+					continue;
+				}
+			}
+
+			const modid = module.module.id;
+
+			if (module.formats.indexOf(tier) >= 0) {
+				battle.debug("Battle module [" + battle.id + "] - Using " + modid + " (Custom - Add-On)");
+				return module.module;
+			}
+		}
+
+		/* Configured Modules */
 
 		if (App.config.modules.battle.battlemods[tier]) {
 			let modid = App.config.modules.battle.battlemods[tier];

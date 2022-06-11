@@ -8,7 +8,9 @@ const Text = Tools('text');
 const Path = require('path');
 
 exports.setup = function (App) {
-	const Battle = require(Path.resolve(__dirname, 'battle.js')).setup(App);
+	const CustomModules = Object.create(null);
+
+	const Battle = require(Path.resolve(__dirname, 'battle.js')).setup(App, CustomModules);
 
 	App.bot.on("line", (room, line, spl, isIntro) => {
 		if (spl[0] === "updatesearch" && !App.config.modules.battle.ignoreAbandonedbattles) {
@@ -28,6 +30,7 @@ exports.setup = function (App) {
 		battles: {},
 		battlesCount: 0,
 		interval: null,
+		customModules: CustomModules,
 
 		init: function () {
 			for (let room in this.battles) {
@@ -87,6 +90,18 @@ exports.setup = function (App) {
 					this.battles[newID].title = spl[3] || "";
 				}
 			}
+		},
+
+		addCustomModule: function (id, formats, setupFunc) {
+			this.customModules[id] = {
+				formats: formats,
+				setupFunc: setupFunc,
+				module: null,
+			};
+		},
+
+		removeCustomModule: function (id) {
+			delete this.customModules[id];
 		},
 
 		destroy: function () {
