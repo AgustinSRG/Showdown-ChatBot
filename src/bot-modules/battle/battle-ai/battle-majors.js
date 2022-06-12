@@ -349,6 +349,7 @@ exports.setup = function (App, BattleData) {
 			}
 			poke.helpers.lastMove = move.id;
 			poke.helpers.lastMoveTurn = this.turn;
+			poke.helpers.lastMoveTarget = poke2 || (this.foe && this.foe.active[0]);
 		},
 
 		cant: function (args, kwargs, isIntro) {

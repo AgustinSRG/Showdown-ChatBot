@@ -550,6 +550,7 @@ exports.setup = function (App, CustomModules) {
 			pokeA.status = condition.status;
 			pokeA.hp = condition.hp;
 			pokeA.stats = p.stats;
+			pokeA.helpers = Object.create(null);
 			if (forceMega && (p.canMegaEvo || (this.request.active && this.request.active[sideId] && this.request.active[sideId].canMegaEvo))) {
 				if (pokeA.item.megaStone) {
 					pokeA.template = BattleData.getPokemon(pokeA.item.megaStone, this.gen);

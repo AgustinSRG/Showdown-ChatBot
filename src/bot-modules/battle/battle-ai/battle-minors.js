@@ -268,6 +268,20 @@ exports.setup = function (App, BattleData) {
 					}
 					break;
 			}
+			if (poke.helpers.lastMove) {
+				if (poke.helpers.lastMoveTarget) {
+					const target = poke.helpers.lastMoveTarget;
+
+					switch (poke.helpers.lastMove) {
+						case "skillswap":
+							target.helpers.hasAbilityCannotBeSwapped = true;
+							break;
+						case "entrainment":
+							target.helpers.hasAbilityCannotBeEntrainment = true;
+							break;
+					}
+				}
+			}
 		},
 
 		"-prepare": function (args, kwargs) {
