@@ -476,7 +476,7 @@ exports.setup = function (App) {
 				}
 				if (defaultIvs && !hpType) {
 					for (let stat in BattleStatNames) {
-						if (curSet.ivs[stat] !== 31 && typeof curSet.ivs[stat] !== undefined) {
+						if (curSet.ivs[stat] !== 31 && typeof curSet.ivs[stat] !== "undefined") {
 							defaultIvs = false;
 							break;
 						}
