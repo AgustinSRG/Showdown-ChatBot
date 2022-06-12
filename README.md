@@ -49,7 +49,7 @@ You also can download [the last release](https://github.com/asanrom/Showdown-Cha
 
 Use `cd` to reach the directory of the bot and run the following command to install dependencies:
 ```
-npm ci
+npm install
 ```
 
 To start the bot, use the following command:
