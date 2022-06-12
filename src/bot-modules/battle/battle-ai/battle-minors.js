@@ -279,6 +279,11 @@ exports.setup = function (App, BattleData) {
 						case "entrainment":
 							target.helpers.hasAbilityCannotBeEntrainment = true;
 							break;
+						case "gastroacid":
+						case "simplebeam":
+						case "worryseed":
+							target.helpers.hasAbilityCannotBeDisabled = true;
+							break;
 					}
 				}
 			}
