@@ -4,10 +4,17 @@
 
 'use strict';
 
-const ModuleFromString = require("module-from-string");
+const Path = require('path');
+const FileSystem = require('fs');
+const uncacheTree = Tools('uncachetree');
 
 function run(App, script) {
-	return ModuleFromString.importFromStringSync(script, { globals: global });
+	let path = Path.resolve(App.dataDir, 'tmp-require.js');
+	try {
+		uncacheTree(path);
+	} catch (e) {}
+	FileSystem.writeFileSync(path, script);
+	return require(path);
 }
 
 exports.run = run;
