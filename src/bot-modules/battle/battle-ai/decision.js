@@ -597,7 +597,7 @@ exports.getDecisions = function (battle) {
 					if (!z) continue;
 					if (!active.moves[j]) continue;
 					let zData = maxMoves[j];
-					if (active.moves[j].pp === 0) continue; // No more moves
+					if (active.moves[j].disabled || active.moves[j].pp === 0) continue; // No more moves
 					let mega = false;
 					let ultra = false;
 					if (active.canMegaEvo || (req.side.pokemon[i] && req.side.pokemon[i].canMegaEvo)) mega = true;
