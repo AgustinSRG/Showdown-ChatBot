@@ -57,6 +57,7 @@ exports.setup = function (App) {
 				};
 			} catch (ex) {
 				App.reportCrash(ex);
+				delete BattleLogMod.data.rooms[a.id]; // This battle is not available
 				return a;
 			}
 		}).filter(function (a) {
