@@ -211,7 +211,6 @@ class Bot {
 				this.socket.close();
 				this.socket = null;
 			}
-			this.events.emit('disconnect');
 		}.bind(this);
 		this.socket.onopen = function () {
 			this.connecting = false;
