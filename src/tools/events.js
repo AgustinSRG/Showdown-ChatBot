@@ -4,14 +4,8 @@
 
 'use strict';
 
-const util = require('util');
+let EventEmitter = require('events');
 
-let EventEmitter = require('events').EventEmitter;
-
-function MyEmitter() {
-	EventEmitter.call(this);
-}
-
-util.inherits(MyEmitter, EventEmitter);
+class MyEmitter extends EventEmitter {}
 
 module.exports = MyEmitter;
