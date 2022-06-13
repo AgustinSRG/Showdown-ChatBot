@@ -791,8 +791,10 @@ class RequestContext {
 			this.request.on('end', function () {
 				let busboy = null;
 				try {
-					busboy = new Busboy({ headers: this.request.headers });
-				} catch (err) { }
+					busboy = Busboy({ headers: this.request.headers });
+				} catch (ex) {
+					this.server.app.debug("Error: " + ex.message);
+				}
 				if (busboy) {
 					let stream = new Stream.PassThrough();
 					let files = this.files = Object.create(null);
