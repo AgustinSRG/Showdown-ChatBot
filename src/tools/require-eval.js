@@ -4,17 +4,15 @@
 
 'use strict';
 
-const Path = require('path');
-const FileSystem = require('fs');
-const uncacheTree = Tools('uncachetree');
+function requireFromString(src, filename) {
+	const Module = module.constructor;
+	const m = new Module();
+	m._compile(src, filename);
+	return m.exports;
+}
 
-function run(App, script) {
-	let path = Path.resolve(App.dataDir, 'tmp-require.js');
-	try {
-		uncacheTree(path);
-	} catch (e) {}
-	FileSystem.writeFileSync(path, script);
-	return require(path);
+function run(file, script) {
+	return requireFromString(script, file);
 }
 
 exports.run = run;

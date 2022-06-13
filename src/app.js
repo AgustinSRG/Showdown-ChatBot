@@ -375,7 +375,7 @@ class ChatBotApp {
 	 */
 	installAddon(file) {
 		try {
-			this.addons[file] = RequireEval.run(this, this.dam.getFileContent(file));
+			this.addons[file] = RequireEval.run(file, this.dam.getFileContent(file));
 			if (typeof this.addons[file].setup === "function") {
 				let addon = this.addons[file].setup(this);
 				if (addon) {
