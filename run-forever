@@ -10,6 +10,6 @@ let status = 0;
 
 do {
 	console.log('Running "node showdown-chatbot"...');
-	status = ChildProcess.spawnSync('node', ['showdown-chatbot'], {stdio: 'inherit'}).status;
+	status = ChildProcess.spawnSync('node', ['showdown-chatbot'].concat(process.argv.slice(2)), {stdio: 'inherit'}).status;
 	console.log('Process exited with code ' + status);
 } while (status === 0);
