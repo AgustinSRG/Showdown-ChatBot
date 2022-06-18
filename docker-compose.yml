@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+
+  bot:
+    image: asanrom/showdown-chatbot
+    ports:
+      - '8080:8080'
+      - '443:443'
+    volumes:
+      - ./config:/bot/config
+      - ./data:/bot/data
+      - ./logs:/bot/logs
+      - ./instances:/bot/instances
+    command: -p 8080 -b 0.0.0.0

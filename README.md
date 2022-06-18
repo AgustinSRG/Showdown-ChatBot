@@ -61,6 +61,36 @@ Configure your bot using the control panel. You can use the [Basic Configuration
 
 If you want to stop your bot, use `Ctrl + C` or kill the process by other way.
 
+Docker image
+------------
+
+You can find the docker image for this project available in Docker Hub: [https://hub.docker.com/r/asanrom/showdown-chatbot](https://hub.docker.com/r/asanrom/showdown-chatbot)
+
+To pull it type:
+
+```
+docker pull asanrom/showdown-chatbot
+```
+
+Example compose file:
+
+```yml
+version: '3.9'
+
+services:
+
+  bot:
+    image: asanrom/showdown-chatbot
+    ports:
+      - '8080:8080'
+      - '443:443'
+    volumes:
+      - ./config:/bot/config
+      - ./data:/bot/data
+      - ./logs:/bot/logs
+      - ./instances:/bot/instances
+    command: -p 8080 -b 0.0.0.0
+```
 
 Useful Documentation
 ------------
