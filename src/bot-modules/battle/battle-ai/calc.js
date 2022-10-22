@@ -340,6 +340,9 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			case "torrent":
 				if (moveType === "Water" && pokeA.hp <= (100 / 3)) atk = Math.floor(atk * 1.5);
 				break;
+			case "transistor":
+				if (moveType === "Electric") atk = Math.floor(atk * 1.5);
+				break;
 		}
 	}
 
