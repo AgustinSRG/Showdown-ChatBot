@@ -148,7 +148,7 @@ module.exports = {
 					return this.reply(this.mlt('e31') + ' "' + format + '" ' + this.mlt('e33') +
 						(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
 				}
-				if (!App.bot.formats[format].chall || App.bot.formats[format].disableTournaments) {
+				if (App.bot.formats[format].disableTournaments) {
 					return this.reply(this.mlt('e31') + ' ' + Chat.italics(App.bot.formats[format].name) +
 						' ' + this.mlt('e32'));
 				}
