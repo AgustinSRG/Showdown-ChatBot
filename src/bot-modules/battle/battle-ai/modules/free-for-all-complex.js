@@ -11,6 +11,9 @@ const TypeChart = require(Path.resolve(__dirname, '..', 'typechart.js'));
 const Pokemon = Calc.Pokemon;
 const Conditions = Calc.Conditions;
 
+const SkillSwapFails = new Set(["Wonder Guard", "Multitype", "Illusion", "Stance Change", "Schooling", "Comatose", "Shields Down", "Disguise", "RKS System", "Battle Bond", "Power Construct", "Ice Face", "Gulp Missile", "Neutralizing Gas"].map(a => Text.toId(a)));
+const EntrainmentFails = new Set(["Truant", "Multitype", "Stance Change", "Schooling", "Comatose", "Shields Down", "Disguise", "RKS System", "Battle Bond", "Ice Face", "Gulp Missile"].map(a => Text.toId(a)));
+
 function getFoePlayers(battle) {
 	let res = [];
 	let self = battle.self.id;
@@ -625,7 +628,7 @@ exports.setup = function (Data) {
 					continue;
 				case "disable":
 				case "encore":
-					if (!conditionsB.volatiles[move.volatileStatus] && foeActivePokemon.helpers.sw && foeActivePokemon.helpers.lastMove && foeActivePokemon.helpers.sw && battle.turn - foeActivePokemon.helpers.sw > 1 && foeActivePokemon.helpers.lastMoveTurn > foeActivePokemon.helpers.sw) {
+					if (!conditionsB.volatiles[move.volatileStatus] && foeActivePokemon.helpers.sw && foeActivePokemon.helpers.lastMove && foeActivePokemon.helpers.lastMove !== "struggle" && foeActivePokemon.helpers.sw && battle.turn - foeActivePokemon.helpers.sw > 1 && foeActivePokemon.helpers.lastMoveTurn > foeActivePokemon.helpers.sw) {
 						res.viable.push(decisions[i]);
 					} else {
 						res.unviable.push(decisions[i]);
@@ -690,7 +693,14 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "entrainment":
-					if (pokeA.ability && pokeB.ability && pokeA.ability.id !== pokeB.ability.id) {
+					if (pokeA.ability && pokeB.ability && pokeA.ability.id !== pokeB.ability.id && !EntrainmentFails.has(pokeB.ability.id)) {
+						res.viable.push(decisions[i]);
+					} else {
+						res.unviable.push(decisions[i]);
+					}
+					continue;
+				case "skillswap":
+					if (pokeA.ability && pokeB.ability && pokeA.ability.id !== pokeB.ability.id && !SkillSwapFails.has(pokeB.ability.id)) {
 						res.viable.push(decisions[i]);
 					} else {
 						res.unviable.push(decisions[i]);
