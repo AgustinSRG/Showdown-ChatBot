@@ -284,6 +284,10 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			if (pokeA.item && pokeA.item.onPlate) moveType = pokeA.item.onPlate;
 			else moveType = "Normal";
 			break;
+		case "multiattack":
+			if (pokeA.item && pokeA.item.onMemory) moveType = pokeA.item.onMemory;
+			else moveType = "Normal";
+			break;
 		case "weatherball":
 			if (gconditions.weather === "primordialsea" || gconditions.weather === "raindance") moveType = "Water";
 			else if (gconditions.weather === "desolateland" || gconditions.weather === "sunnyday") moveType = "Fire";
