@@ -56,7 +56,9 @@ exports.setup = function (App) {
 				break;
 			}
 			if (!chosen.gen && chosen.num >= 1) {
-				if (chosen.num >= 810 || ['Gmax', 'Galar', 'Galar-Zen'].includes(chosen.forme + "")) {
+				if (chosen.num >= 906 || ['Paldea'].includes(chosen.forme + "")) {
+					chosen.gen = 9;
+				} else if (chosen.num >= 810 || ['Gmax', 'Galar', 'Galar-Zen'].includes(chosen.forme + "")) {
 					chosen.gen = 8;
 				} else if (chosen.num >= 722 || (chosen.forme + "").startsWith('Alola') || (chosen.forme + "") === 'Starter') {
 					chosen.gen = 7;
