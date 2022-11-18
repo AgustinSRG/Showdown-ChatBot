@@ -22,13 +22,20 @@ const Lang_File = Path.resolve(__dirname, 'commands.translations');
 function botCanHtml(room, App) {
 	let roomData = App.bot.rooms[room];
 	let botid = Text.toId(App.bot.getBotNick());
-	return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({group: roomData.users[botid]}, 'bot'));
+	return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'bot'));
+}
+
+function botCanUseBasicCommands(room, App) {
+	let roomData = App.bot.rooms[room];
+	let botid = Text.toId(App.bot.getBotNick());
+	return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'driver'));
 }
 
 module.exports = {
 	randcmd: function (App) {
 		this.setLangFile(Lang_File);
 		let canCommands = this.can('randcmd', this.room) && this.getRoomType(this.room) === 'chat' && botCanHtml(this.room, App);
+		let canBasicCommands = this.can('randcmd', this.room) && this.getRoomType(this.room) === 'chat' && botCanUseBasicCommands(this.room, App);
 
 		const Mod = App.modules.randcmd.system;
 		let spl = this.arg.split(' ');
@@ -44,7 +51,10 @@ module.exports = {
 			const options = content.split("\n").map(function (a) {
 				return a.trim();
 			}).filter(function (a) {
-				if (!canCommands && (a.startsWith("!") || a.startsWith("/"))) {
+				if (!canCommands && a.startsWith("/addhtmlbox")) {
+					return false;
+				}
+				if (!canBasicCommands && (a.startsWith("!") || a.startsWith("/"))) {
 					return false;
 				}
 				return !!a;
@@ -60,9 +70,36 @@ module.exports = {
 				return this.errorReply(this.mlt('nobot'));
 			}
 
-			let replyText = options[Math.floor(Math.random() * options.length)];
+			let replyText = ((options[Math.floor(Math.random() * options.length)] || "") + "").trim();
 
-			if (!canCommands) {
+			const COMMAND_EXCEPTIONS = [
+				"/addhtmlbox",
+			];
+
+			let hasExemptedCommand = false;
+
+			for (let cmd of COMMAND_EXCEPTIONS) {
+				if (replyText.startsWith(cmd + " ")) {
+					hasExemptedCommand = true;
+					break;
+				}
+			}
+
+			if (App.parser.data.infocmds) {
+				const extraCommands = (App.parser.data.infocmds + "").split(",");
+				for (let cmd of extraCommands) {
+					const cmdTrim = cmd.trim();
+					if (!cmdTrim) {
+						continue;
+					}
+					if (replyText.startsWith(cmdTrim + " ")) {
+						hasExemptedCommand = true;
+						break;
+					}
+				}
+			}
+
+			if (!canBasicCommands) {
 				this.restrictReply(Text.stripCommands(replyText), 'quote');
 			} else if (replyText.startsWith("/wall ") || replyText.startsWith("/announce ")) {
 				replyText = replyText.split(" ").slice(1).join(" ");
@@ -70,7 +107,7 @@ module.exports = {
 				if (replyText) {
 					this.replyCommand("/announce " + replyText);
 				}
-			} else if (replyText.startsWith("!daily ") || replyText.startsWith("!show ") || replyText.startsWith("!rfaq ") || replyText.startsWith("!events ") || replyText.startsWith("/addhtmlbox ")) {
+			} else if (hasExemptedCommand || replyText.startsWith("!")) {
 				this.replyCommand(replyText);
 			} else {
 				this.reply(Text.stripCommands(replyText));

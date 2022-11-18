@@ -64,6 +64,7 @@ exports.setup = function (App) {
 					App.config.parser[group] = context.post[group];
 				}
 				App.parser.data.helpmsg = context.post.helpmsg;
+				App.parser.data.infocmds = context.post.infocmds;
 				App.parser.data.antispam = !!context.post.antispam;
 				App.parser.data.antirepeat = !!context.post.antirepeat;
 				App.parser.data.pmTokens = (context.post.pmtokens || "").split(' ').map(Text.toCmdTokenid).filter(id => id);
@@ -88,6 +89,7 @@ exports.setup = function (App) {
 		htmlVars.owner = App.config.parser.owner;
 		htmlVars.admin = App.config.parser.admin;
 		htmlVars.helpmsg = App.parser.data.helpmsg;
+		htmlVars.infocmds = App.parser.data.infocmds || "";
 		htmlVars.sleep = Object.keys(App.parser.data.sleep).join(', ');
 		htmlVars.locklist = Object.keys(App.parser.data.lockedUsers).join(', ');
 		htmlVars.antispam = (App.parser.data.antispam ? ' checked="checked"' : '');
