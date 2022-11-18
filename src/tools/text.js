@@ -55,7 +55,7 @@ exports.toFormatStandard = function (str) {
 	if ((/^gen[0-9]+.*/i).test(str)) {
 		return str;
 	} else {
-		return "gen8" + str;
+		return "gen9" + str;
 	}
 };
 

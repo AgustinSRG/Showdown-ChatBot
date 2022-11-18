@@ -96,10 +96,18 @@ function parseAliases(format, App) {
 	if (!format) return '';
 	format = Text.toId(format);
 	if (App.bot.formats[format]) return format;
+	let lastGen = 9;
+	if (App.config.modules.pokemon.usagelink === "https://www.smogon.com/stats/2022-10/") {
+		lastGen = 8; // Not yet, TODO: Remove this when Smogon uploads November stats
+	}
+	for (let gen = lastGen; gen > 0; gen--) {
+		if (App.bot.formats["gen" + gen + format]) return "gen" + gen + format;
+	}
 	try {
 		let psAliases = App.data.getAliases();
 		if (psAliases[format]) format = Text.toId(psAliases[format]);
 	} catch (e) { }
+	if (App.bot.formats[format]) return format;
 	return Text.toFormatStandard(format);
 }
 

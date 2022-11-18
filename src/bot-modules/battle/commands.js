@@ -19,6 +19,9 @@ function parseAliases(format, App) {
 	if (!format) return '';
 	format = Text.toId(format);
 	if (App.bot.formats[format]) return format;
+	for (let gen = 9; gen > 0; gen--) {
+		if (App.bot.formats["gen" + gen + format]) return "gen" + gen + format;
+	}
 	try {
 		let psAliases = App.data.getAliases();
 		if (psAliases[format]) format = Text.toId(psAliases[format]);

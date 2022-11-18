@@ -18,6 +18,9 @@ function parseAliases(format, App) {
 	const Config = App.config.modules.tourcmd;
 	format = Text.toId(format);
 	if (App.bot.formats[format]) return format;
+	for (let gen = 9; gen > 0; gen--) {
+		if (App.bot.formats["gen" + gen + format]) return "gen" + gen + format;
+	}
 	try {
 		let aliases = App.data.getAliases();
 		if (aliases[format]) format = Text.toId(aliases[format]);
