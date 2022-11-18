@@ -100,6 +100,12 @@ exports.setup = function (App) {
 			} else if (line.substr(0, 9) === 'Ability: ') {
 				line = line.substr(9);
 				curSet.ability = line;
+			} else if (line.substr(0, 15) === 'Dynamax Level: ') {
+				line = line.substr(15);
+				curSet.dynamaxLevel = +line;
+			} else if (line.substr(0, 11) === 'Tera Type: ') {
+				line = line.substr(11);
+				curSet.teraType = line;
 			} else if (line.substr(0, 5) === 'EVs: ') {
 				line = line.substr(5);
 				let evLines = line.split('/');
@@ -258,10 +264,12 @@ exports.setup = function (App) {
 				buf += '|';
 			}
 
-			if (set.pokeball || (set.hpType && Text.toId(set.hpType) !== hasHP) || set.gigantamax) {
+			if (set.pokeball || (set.hpType && Text.toId(set.hpType) !== hasHP) || set.gigantamax || (set.dynamaxLevel !== undefined && set.dynamaxLevel !== 10) || set.teraType) {
 				buf += ',' + (set.hpType || '');
 				buf += ',' + Text.toId(set.pokeball);
 				buf += ',' + (set.gigantamax ? 'G' : '');
+				buf += ',' + (set.dynamaxLevel !== undefined && set.dynamaxLevel !== 10 ? set.dynamaxLevel : '');
+				buf += ',' + (set.teraType || '');
 			}
 		}
 		return buf;
@@ -363,15 +371,17 @@ exports.setup = function (App) {
 			j = buf.indexOf(']', i);
 			let misc;
 			if (j < 0) {
-				if (i < buf.length) misc = buf.substring(i).split(',', 4);
+				if (i < buf.length) misc = buf.substring(i).split(',', 6);
 			} else {
-				if (i !== j) misc = buf.substring(i, j).split(',', 4);
+				if (i !== j) misc = buf.substring(i, j).split(',', 6);
 			}
 			if (misc) {
 				set.happiness = (misc[0] ? Number(misc[0]) : 255);
 				set.hpType = misc[1];
 				set.pokeball = misc[2];
 				set.gigantamax = !!misc[3];
+				set.dynamaxLevel = (misc[4] ? Number(misc[4]) : 10);
+				set.teraType = misc[5];
 			}
 			if (j < 0) break;
 			i = j + 1;
@@ -432,6 +442,12 @@ exports.setup = function (App) {
 			}
 			if (curSet.gigantamax) {
 				text += 'Gigantamax: Yes\n';
+			}
+			if (typeof curSet.dynamaxLevel === 'number' && curSet.dynamaxLevel !== 10 && !isNaN(curSet.dynamaxLevel)) {
+				text += 'Dynamax Level: ' + curSet.dynamaxLevel + "  \n";
+			}
+			if (curSet.teraType) {
+				text += 'Tera Type: ' + curSet.teraType + '\n';
 			}
 			if (typeof curSet.happiness === 'number' && curSet.happiness !== 255) {
 				text += 'Happiness: ' + curSet.happiness + "\n";
