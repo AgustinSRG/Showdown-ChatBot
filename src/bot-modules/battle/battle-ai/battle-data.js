@@ -63,7 +63,7 @@ exports.setup = function (App) {
 	};
 
 	BattleDataManager.getPokemon = BattleDataManager.getTemplate = function (poke, gen) {
-		if (!gen || gen > 8 || gen < 1) gen = 8;
+		if (!gen || gen > 9 || gen < 1) gen = 9;
 		poke = Text.toId(poke || "");
 		let pokemon = Object.create(null);
 		let temp;
@@ -165,7 +165,7 @@ exports.setup = function (App) {
 	};
 
 	BattleDataManager.getMove = function (move, gen) {
-		if (!gen || gen > 8 || gen < 1) gen = 8;
+		if (!gen || gen > 9 || gen < 1) gen = 9;
 		move = Text.toId(move || "");
 		if (move.indexOf("hiddenpower") === 0) {
 			move = move.replace(/[0-9]/g, "");
@@ -216,7 +216,7 @@ exports.setup = function (App) {
 	};
 
 	BattleDataManager.getItem = function (item, gen) {
-		if (!gen || gen > 8 || gen < 1) gen = 8;
+		if (!gen || gen > 9 || gen < 1) gen = 9;
 		item = Text.toId(item || "");
 		let itemData = Object.create(null);
 		let temp;
@@ -257,7 +257,7 @@ exports.setup = function (App) {
 	};
 
 	BattleDataManager.getAbility = function (ab, gen) {
-		if (!gen || gen > 8 || gen < 1) gen = 8;
+		if (!gen || gen > 9 || gen < 1) gen = 9;
 		ab = Text.toId(ab || "");
 		let ability = Object.create(null);
 		let temp;
@@ -345,6 +345,8 @@ exports.setup = function (App) {
 			this.abilityStack = [];
 
 			this.moves = [];
+
+			this.tera = "";
 
 			this.active = false;
 			this.slot = -1;
@@ -528,7 +530,7 @@ exports.setup = function (App) {
 	BattleDataManager.Player = Player;
 
 	BattleDataManager.getFormatsData = function (gen) {
-		if (!gen || gen > 8 || gen < 1) gen = 8;
+		if (!gen || gen > 9 || gen < 1) gen = 9;
 		try {
 			return require(Path.resolve(BAT_DATA_DIR, "gen" + gen, "formats-data.js")).BattleFormatsData;
 		} catch (e) {
