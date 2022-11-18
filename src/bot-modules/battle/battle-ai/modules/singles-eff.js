@@ -253,7 +253,7 @@ exports.setup = function (Data) {
 				continue;
 			}
 
-			let defensiveAbilityIgnored = !(battle.gen >= 3 && pokeB.ability && !move.ignoreAbility && (!pokeA.ability || !(pokeA.ability.id in { "moldbreaker": 1, "turboblaze": 1, "teravolt": 1 })));
+			let defensiveAbilityIgnored = !(battle.gen >= 3 && pokeB.ability && !move.ignoreAbility && (!pokeA.ability || !(pokeA.ability.id in { "moldbreaker": 1, "turboblaze": 1, "teravolt": 1, "myceliummight": 1 })));
 
 			if (move.category === "Status") {
 				res.total++;
@@ -270,6 +270,10 @@ exports.setup = function (Data) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
+				}
+				if (!battle.conditions["neutralizinggas"] && pokeB.ability && pokeB.ability.id === "goodasgold" && move.target !== "self" && move.target !== "allySide" && move.target !== "foeSide" && move.target !== "allyTeam") {
+					res.unviable.push(decisions[i]);
+					continue;
 				}
 			} else {
 				if (Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, battle.conditions, battle.gen).getMax() === 0) {
@@ -350,6 +354,7 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "defog":
+				case "tidyup":
 					if (battle.gen < 6) {
 						// Defog does not work before gen 6
 						res.unviable.push(decisions[i]);
@@ -490,6 +495,13 @@ exports.setup = function (Data) {
 						res.unviable.push(decisions[i]);
 					}
 					continue;
+				case "doodle":
+					if (pokeA.ability && pokeB.ability && pokeA.ability.id !== pokeB.ability.id) {
+						res.viable.push(decisions[i]);
+					} else {
+						res.unviable.push(decisions[i]);
+					}
+					continue;
 				case "skillswap":
 					if (pokeA.ability && pokeB.ability && pokeA.ability.id !== pokeB.ability.id && !SkillSwapFails.has(pokeB.ability.id)) {
 						res.viable.push(decisions[i]);
@@ -537,7 +549,7 @@ exports.setup = function (Data) {
 				else res.unviable.push(decisions[i]);
 				continue;
 			}
-			let singleTurnMoves = { "protect": 1, "detect": 1, "endure": 1, "kingsshield": 1, "quickguard": 1, "spikyshield": 1, "wideguard": 1, "maxguard": 1, "obstruct": 1 };
+			let singleTurnMoves = { "protect": 1, "detect": 1, "endure": 1, "kingsshield": 1, "quickguard": 1, "spikyshield": 1, "silktrap": 1, "wideguard": 1, "maxguard": 1, "obstruct": 1 };
 			if (move.id in singleTurnMoves) {
 				if (battle.self.active[0].helpers.lastMove in singleTurnMoves) res.unviable.push(decisions[i]);
 				else res.viable.push(decisions[i]);
@@ -571,6 +583,10 @@ exports.setup = function (Data) {
 			}
 			if (move.status) {
 				if (pokeB.status || (pokeB.isGrounded() && battle.conditions['mistyterrain'])) {
+					res.unviable.push(decisions[i]);
+					continue;
+				}
+				if (pokeB.ability && (pokeB.ability.id in { 'purifyingsalt': 1, 'comatose': 1 })) {
 					res.unviable.push(decisions[i]);
 					continue;
 				}

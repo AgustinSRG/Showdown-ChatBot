@@ -235,6 +235,12 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			atk = 0;
 			atkStat = "spa";
 		}
+		if (move.id in { 'photongeyser': 1, 'lightthatburnsthesky': 1, 'terablast': 1 }) {
+			if (statsA.atk > statsA.spa) {
+				atk = statsA.atk;
+				atkStat = "atk";
+			}
+		}
 		cat = defcat = move.category;
 		if (move.defensiveCategory) defcat = move.defensiveCategory;
 		if (defcat === "Special") {
@@ -269,6 +275,18 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		if (gen < 3 || !pokeA.ability || pokeA.ability.id !== "guts") atk = Math.floor(atk * 0.5);
 	}
 
+	if (defStat === "spd" && pokeA.ability && pokeA.ability.id === "beadsofruin") {
+		def = Math.floor(def * 0.75);
+	}
+
+	if (conditionsA.volatiles['quarkdrive' + atkStat] || conditionsA.volatiles['protosynthesis' + atkStat]) {
+		atk = Math.floor(atk * 1.5);
+	}
+
+	if (conditionsB.volatiles['quarkdrive' + defStat] || conditionsB.volatiles['protosynthesis' + defStat]) {
+		def = Math.floor(def * 1.5);
+	}
+
 	/******************************
 	* Inmunity (0 damage)
 	* Types (effectiveness)
@@ -296,6 +314,10 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			if (pokeA.item && pokeA.item.onMemory) moveType = pokeA.item.onMemory;
 			else moveType = "Normal";
 			break;
+		case "terablast":
+			if (pokeA.tera) moveType = pokeA.tera;
+			else moveType = "Normal";
+			break;
 		case "weatherball":
 			if (gconditions.weather === "primordialsea" || gconditions.weather === "raindance") moveType = "Water";
 			else if (gconditions.weather === "desolateland" || gconditions.weather === "sunnyday") moveType = "Fire";
@@ -316,6 +338,11 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			case "liquidvoice":
 				if (move.flags && move.flags.sound) {
 					moveType = "Water";
+				}
+				break;
+			case "sharpness":
+				if (move.flags && move.flags.slicing) {
+					atk = Math.floor(atk * 1.5);
 				}
 				break;
 			case "aerilate":
@@ -354,6 +381,9 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 				break;
 			case "transistor":
 				if (moveType === "Electric") atk = Math.floor(atk * 1.5);
+				break;
+			case "rockypayload":
+				if (moveType === "Rock") atk = Math.floor(atk * 1.5);
 				break;
 		}
 	}
@@ -401,7 +431,11 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			case "waterabsorb":
 				if (moveType === "Water") inmune = true;
 				break;
+			case "eartheater":
+				if (moveType === "Ground") inmune = true;
+				break;
 			case "flashfire":
+			case "wellbakedbody":
 				if (moveType === "Fire") inmune = true;
 				break;
 			case "levitate":
@@ -423,6 +457,9 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			case "thickfat":
 				if (moveType === "Ice" || moveType === "Fire") atk = Math.floor(atk * 0.5);
 				break;
+			case "purifyingsalt":
+				if (moveType === "Ghost") atk = Math.floor(atk * 0.5);
+				break;
 			case "wonderguard":
 				if (typesMux < 2) typesMux = 0;
 				break;
@@ -431,6 +468,10 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 				break;
 			case "soundproof":
 				if (move.flags && move.flags['sound']) typesMux = 0;
+				break;
+			case "windpower":
+			case "windrider":
+				if (move.flags && move.flags['wind']) typesMux = 0;
 				break;
 		}
 	}
@@ -747,6 +788,10 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 
 	if (gen >= 4 && defTypes.indexOf("Rock") >= 0 && gconditions.weather === "sandstorm") {
 		if (defStat === "spd") def = Math.floor(def * 1.5);
+	}
+
+	if (defTypes.indexOf("Ice") >= 0 && gconditions.weather === "snow") {
+		if (defStat === "def") def = Math.floor(def * 1.5);
 	}
 
 	/* Boosting */
