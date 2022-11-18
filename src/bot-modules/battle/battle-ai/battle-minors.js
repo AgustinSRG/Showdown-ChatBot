@@ -655,5 +655,10 @@ exports.setup = function (App, BattleData) {
 				App.log("Request was: " + JSON.stringify(this.request));
 			}
 		},
+
+		"-terastallize": function (args, kwargs) {
+			let poke = this.getActive(args[1]);
+			poke.tera = args[2] || "";
+		},
 	};
 };

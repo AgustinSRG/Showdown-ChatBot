@@ -45,6 +45,7 @@ exports.setup = function (Data) {
 		});
 		pokeB.hp = target.hp;
 		pokeB.status = target.status;
+		pokeB.tera = target.tera;
 		if (target.item === "&unknown") {
 			pokeB.item = null;
 		} else {
@@ -199,6 +200,7 @@ exports.setup = function (Data) {
 		};
 		let sideId = 0; // Active, singles
 		let pokeA = battle.getCalcRequestPokemon(sideId, true);
+		let originalTera = pokeA.tera;
 		let pokeB = suposeActiveFoe(battle);
 		let conditionsB = new Conditions({
 			side: battle.foe.side,
@@ -222,6 +224,15 @@ exports.setup = function (Data) {
 		for (let i = 0; i < decisions.length; i++) {
 			let des = decisions[i][0];
 			if (des.type !== "move") continue; // not a move
+
+			if (des.terastallize && battle.request.active && battle.request.active[sideId] && battle.request.active[sideId].canTerastallize) {
+				pokeA.tera = battle.request.active[sideId].canTerastallize;
+				pokeA.typechange = [pokeA.tera];
+			} else {
+				pokeA.tera = originalTera;
+				pokeA.typechange = null;
+			}
+
 			if (battle.request.active[0].canMegaEvo || battle.request.side.pokemon[0].canMegaEvo) {
 				if (!des.mega) continue; // Mega evolve by default
 			}
@@ -331,6 +342,7 @@ exports.setup = function (Data) {
 					else res.unviable.push(decisions[i]);
 					continue;
 				case "rapidspin":
+				case "mortalspin":
 					if (selfCanSwitch(battle) && countHazards(conditionsA.side, true) > 0) {
 						res.viable.push(decisions[i]);
 					} else {
@@ -388,6 +400,14 @@ exports.setup = function (Data) {
 					continue;
 				case "bellydrum":
 					if (pokeA.hp >= 60 && conditionsA.boosts.atk && conditionsA.boosts.atk < 3) res.viable.push(decisions[i]);
+					else res.unviable.push(decisions[i]);
+					continue;
+				case "filletaway":
+					if (pokeA.hp >= 60 && conditionsA.boosts.atk && conditionsA.boosts.atk < 2) res.viable.push(decisions[i]);
+					else res.unviable.push(decisions[i]);
+					continue;
+				case "shedtail":
+					if (pokeA.hp >= 60) res.viable.push(decisions[i]);
 					else res.unviable.push(decisions[i]);
 					continue;
 				case "geomancy":
@@ -672,6 +692,7 @@ exports.setup = function (Data) {
 		};
 		let sideId = 0; // Active, singles
 		let pokeA = battle.getCalcRequestPokemon(sideId, true);
+		let originalTera = pokeA.tera;
 		let pokeB = suposeActiveFoe(battle);
 		let conditionsB = new Conditions({
 			side: battle.foe.side,
@@ -687,6 +708,15 @@ exports.setup = function (Data) {
 		for (let i = 0; i < decisions.length; i++) {
 			let des = decisions[i][0];
 			if (des.type !== "move") continue; // not a move
+
+			if (des.terastallize && battle.request.active && battle.request.active[sideId] && battle.request.active[sideId].canTerastallize) {
+				pokeA.tera = battle.request.active[sideId].canTerastallize;
+				pokeA.typechange = [pokeA.tera];
+			} else {
+				pokeA.tera = originalTera;
+				pokeA.typechange = null;
+			}
+
 			if (battle.request.active[0].canMegaEvo || battle.request.side.pokemon[0].canMegaEvo) {
 				if (!des.mega) continue; // Mega evolve by default
 			}
@@ -723,7 +753,7 @@ exports.setup = function (Data) {
 			}
 			let pc = dmg * 100 / hp;
 			let pcMin = dmgMin * 100 / hp;
-			battle.debug("Move: " + move.name + " | Damage = " + dmg + " | Percent: " + pc);
+			battle.debug("Move: " + move.name + (des.terastallize ? " (TERA)" : "") + " | Damage = " + dmg + " | Percent: " + pc);
 			if (move.id === "fakeout") {
 				if (battle.self.active[0].helpers.sw === battle.turn || battle.self.active[0].helpers.sw === battle.turn - 1) {
 					if (TypeChart.getMultipleEff("Normal", pokeB.template.types, battle.gen, true, !!battle.conditions["inversebattle"]) >= 1) {

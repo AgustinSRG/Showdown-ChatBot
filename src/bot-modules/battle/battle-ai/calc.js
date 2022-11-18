@@ -27,6 +27,8 @@ class Pokemon {
 		this.happiness = 255;
 		this.status = false;
 		this.hp = 100;
+		this.tera = "";
+		this.typechange = null;
 		for (let i in properties) {
 			if (typeof this[i] === "undefined" || typeof this[i] === "function") continue;
 			if (i === "template") continue;
@@ -62,7 +64,7 @@ class Pokemon {
 	}
 
 	getStats(gen) {
-		if (!gen) gen = 8;
+		if (!gen) gen = 9;
 		let stats = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
 		let res = Object.create(null);
 		for (let i = 0; i < stats.length; i++) {
@@ -192,14 +194,20 @@ exports.getHazardsDamage = function (poke, conditions, gen, inverse) {
 */
 
 exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gconditions, gen) {
-	if (!gen) gen = 8;
+	if (!gen) gen = 9;
 	if (!gconditions) gconditions = Object.create(null);
 	if (!conditionsA) conditionsA = Object.create(null);
 	if (!conditionsB) conditionsB = Object.create(null);
 
+	let originalTypes = pokeA.template.types.slice();
 	let offTypes = pokeA.template.types.slice();
 	if (conditionsA.volatiles["typechange"] && conditionsA.volatiles["typechange"].length) offTypes = conditionsA.volatiles["typechange"].slice();
 	if (conditionsA.volatiles["typeadd"]) offTypes.push(conditionsA.volatiles["typeadd"]);
+	if (pokeA.typechange && pokeA.typechange.length) {
+		offTypes = pokeA.typechange.slice();
+	} else if (pokeA.tera && (!conditionsA.volatiles["typechange"] || !conditionsA.volatiles["typechange"].length)) {
+		offTypes = [pokeA.tera];
+	}
 
 	let statsA = pokeA.getStats(gen), statsB = pokeB.getStats(gen);
 
@@ -715,6 +723,16 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	if (offTypes.indexOf(moveType) >= 0 || (gen >= 3 && pokeA.ability && pokeA.ability.id in { "protean": 1, "libero": 1 })) {
 		if (gen >= 3 && pokeA.ability && pokeA.ability.id === "adaptability") modifier *= 2;
 		else modifier *= 1.5;
+	}
+
+	/* Tera */
+	if (pokeA.tera) {
+		if (originalTypes.indexOf(moveType) >= 0 && offTypes.indexOf(moveType) === -1) {
+			modifier *= 1.5; // Preserve the original stabs
+		}
+		if (moveType === pokeA.tera && originalTypes.indexOf(moveType) >= 0) {
+			modifier *= (4 / 3);
+		}
 	}
 
 	/* Weather */

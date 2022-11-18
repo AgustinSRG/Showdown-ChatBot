@@ -145,6 +145,7 @@ exports.setup = function (Data) {
 			});
 			pokeB.hp = target.hp;
 			pokeB.status = target.status;
+			pokeB.tera = target.tera;
 			if (target.item === "&unknown") {
 				pokeB.item = null;
 			} else {
@@ -189,6 +190,7 @@ exports.setup = function (Data) {
 		});
 		pokeB.hp = target.hp;
 		pokeB.status = target.status;
+		pokeB.tera = target.tera;
 		if (target.item === "&unknown") {
 			pokeB.item = null;
 		} else {
@@ -376,6 +378,7 @@ exports.setup = function (Data) {
 		};
 		let sideId = 0; // Active, singles
 		let pokeA = battle.getCalcRequestPokemon(sideId, true);
+		let originalTera = pokeA.tera;
 
 		let conditionsA = new Conditions({
 			side: battle.self.side,
@@ -394,6 +397,14 @@ exports.setup = function (Data) {
 			let des = validDes.des;
 			let act = validDes.act;
 			if (des.type !== "move") continue; // not a move
+
+			if (des.terastallize && battle.request.active && battle.request.active[sideId] && battle.request.active[sideId].canTerastallize) {
+				pokeA.tera = battle.request.active[sideId].canTerastallize;
+				pokeA.typechange = [pokeA.tera];
+			} else {
+				pokeA.tera = originalTera;
+				pokeA.typechange = null;
+			}
 
 			let p = battle.request.side.pokemon[act];
 			let a = battle.request.active[act];
@@ -560,6 +571,7 @@ exports.setup = function (Data) {
 					else res.unviable.push(decisions[i]);
 					continue;
 				case "rapidspin":
+				case "mortalspin":
 					if (selfCanSwitch(battle) && countHazards(conditionsA.side, true) > 0) {
 						res.viable.push(decisions[i]);
 					} else {
@@ -617,6 +629,14 @@ exports.setup = function (Data) {
 					continue;
 				case "bellydrum":
 					if (pokeA.hp >= 60 && conditionsA.boosts.atk && conditionsA.boosts.atk < 3) res.viable.push(decisions[i]);
+					else res.unviable.push(decisions[i]);
+					continue;
+				case "filletaway":
+					if (pokeA.hp >= 60 && conditionsA.boosts.atk && conditionsA.boosts.atk < 2) res.viable.push(decisions[i]);
+					else res.unviable.push(decisions[i]);
+					continue;
+				case "shedtail":
+					if (pokeA.hp >= 60) res.viable.push(decisions[i]);
 					else res.unviable.push(decisions[i]);
 					continue;
 				case "geomancy":
@@ -901,6 +921,7 @@ exports.setup = function (Data) {
 		};
 		let sideId = 0; // Active, singles
 		let pokeA = battle.getCalcRequestPokemon(sideId, true);
+		let originalTera = pokeA.tera;
 		let conditionsA = new Conditions({
 			side: battle.self.side,
 			volatiles: findAnyNotNull(battle.self.active).volatiles,
@@ -913,6 +934,14 @@ exports.setup = function (Data) {
 			let des = validDes.des;
 			let act = validDes.act;
 			if (des.type !== "move") continue; // not a move
+
+			if (des.terastallize && battle.request.active && battle.request.active[sideId] && battle.request.active[sideId].canTerastallize) {
+				pokeA.tera = battle.request.active[sideId].canTerastallize;
+				pokeA.typechange = [pokeA.tera];
+			} else {
+				pokeA.tera = originalTera;
+				pokeA.typechange = null;
+			}
 
 			let p = battle.request.side.pokemon[act];
 			let a = battle.request.active[act];

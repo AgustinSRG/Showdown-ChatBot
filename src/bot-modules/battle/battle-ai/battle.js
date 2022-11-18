@@ -44,7 +44,7 @@ exports.setup = function (App, CustomModules) {
 			this.foe = null;
 
 			this.gametype = "singles";
-			this.gen = 8;
+			this.gen = 9;
 			this.tier = "ou";
 			this.rules = [];
 			this.variations = [];
@@ -132,6 +132,7 @@ exports.setup = function (App, CustomModules) {
 						if (decision[i].mega) str += " mega";
 						if (decision[i].zmove) str += " zmove";
 						if (decision[i].ultra) str += " ultra";
+						if (decision[i].terastallize) str += " terastallize";
 						if (decision[i].dynamax && decision[i].dynamax !== "still") str += " dynamax";
 						if (decision[i].target !== null) {
 							if (decision[i].target >= 0) str += " " + (decision[i].target + 1);
@@ -539,13 +540,14 @@ exports.setup = function (App, CustomModules) {
 			};
 		}
 
-		getCalcRequestPokemon(sideId, forceMega) {
+		getCalcRequestPokemon(sideId, forceMega, forceTera) {
 			let p = this.request.side.pokemon[sideId];
 			let details = this.parseDetails(p.details);
 			let condition = this.parseStatus(p.condition);
 			let pokeA = new Calc.Pokemon(BattleData.getPokemon(details.species, this.gen),
 				{ level: details.level, shiny: details.shiny, gender: details.gender });
 			pokeA.item = BattleData.getItem(p.item, this.gen);
+			pokeA.tera = p.tera;
 			pokeA.ability = p.ability ? BattleData.getAbility(p.ability, this.gen) : BattleData.getAbility(p.baseAbility, this.gen);
 			pokeA.status = condition.status;
 			pokeA.hp = condition.hp;
@@ -557,6 +559,10 @@ exports.setup = function (App, CustomModules) {
 					pokeA.species = pokeA.template.species;
 					pokeA.ability = BattleData.getAbility(pokeA.template.abilities[0]);
 				}
+			}
+			if (forceTera && this.request.active && this.request.active[sideId] && this.request.active[sideId].canTerastallize) {
+				pokeA.tera = this.request.active[sideId].canTerastallize;
+				pokeA.typechange = [pokeA.tera];
 			}
 			return pokeA;
 		}

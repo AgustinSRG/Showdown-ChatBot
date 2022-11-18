@@ -189,6 +189,7 @@ exports.setup = function (Data) {
 				});
 				pokeB.hp = targets[j].pokemon.hp;
 				pokeB.status = targets[j].pokemon.status;
+				pokeB.tera = targets[j].pokemon.tera;
 				if (targets[j].pokemon.item === "&unknown") {
 					pokeB.item = null;
 				} else {
@@ -242,6 +243,7 @@ exports.setup = function (Data) {
 			});
 			pokeB.hp = targets[i].pokemon.hp;
 			pokeB.status = targets[i].pokemon.status;
+			pokeB.tera = targets[i].pokemon.tera;
 			if (targets[i].pokemon.item === "&unknown") {
 				pokeB.item = null;
 			} else {
@@ -301,7 +303,7 @@ exports.setup = function (Data) {
 			}
 		}
 
-		let pokeA = battle.getCalcRequestPokemon(act, true);
+		let pokeA = battle.getCalcRequestPokemon(act, true, !!des.terastallize);
 		if (Text.toId(battle.tier || "").indexOf("challengecup") >= 0) pokeA.happiness = 100; // Random
 		let conditionsA = new Conditions({
 			side: battle.self.side,
@@ -346,6 +348,7 @@ exports.setup = function (Data) {
 			});
 			pokeB.hp = targets[i].pokemon.hp;
 			pokeB.status = targets[i].pokemon.status;
+			pokeB.tera = targets[i].pokemon.tera;
 			if (targets[i].pokemon.item === "&unknown") {
 				pokeB.item = null;
 			} else {
