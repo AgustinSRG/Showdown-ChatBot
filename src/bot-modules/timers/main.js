@@ -188,7 +188,7 @@ exports.setup = function (App) {
 				if (repeatText) {
 					App.bot.sendTo(room, "/announce " + repeatText);
 				}
-			} else if (repeatText.startsWith("!daily ") || repeatText.startsWith("!show ") || repeatText.startsWith("!rfaq ") || repeatText.startsWith("!events ") || repeatText.startsWith("/addhtmlbox ")) {
+			} else if (repeatText.startsWith("!") || repeatText.startsWith("/addhtmlbox ")) {
 				App.bot.sendTo(room, repeatText);
 			} else {
 				App.bot.sendTo(room, Text.stripCommands(repeatText));
