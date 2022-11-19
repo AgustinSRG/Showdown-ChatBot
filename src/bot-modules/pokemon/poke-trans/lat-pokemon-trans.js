@@ -12,7 +12,7 @@ exports.translations.abilities = {
 	"adaptability": "Adaptable", // SAME
 	"aftermath": "Resquicio", // SAME
 	"aerilate": "Piel Celeste", // SAME
-	"airlock": "Bucle Aire", // SAME
+	"airlock": "Esclusa de aire", // SAME
 	"analytic": "Cálculo Final", // SAME
 	"angerpoint": "Irascible", // SAME
 	"anticipation": "Anticipación", // SAME
@@ -78,7 +78,7 @@ exports.translations.abilities = {
 	"immunity": "Inmunidad", // SAME
 	"imposter": "Impostor", // SAME
 	"infiltrator": "Allanamiento", // SAME
-	"innerfocus": "Foco Interno", // SAME
+	"innerfocus": "Fuerza mental", // SAME
 	"insomnia": "Insomnio", // SAME
 	"intimidate": "Intimidación", // LATINO
 	"ironbarbs": "Punta Acero", // SAME
@@ -91,7 +91,7 @@ exports.translations.abilities = {
 	"lightmetal": "Metal Liviano", // SAME
 	"lightningrod": "Caña de luz", // LATINO
 	"limber": "Flexibilidad", // SAME
-	"liquidooze": "Lodo Líquido", // SAME
+	"liquidooze": "Viscosecreción", // SAME
 	"magicbounce": "Espejomágico", // SAME
 	"magicguard": "Muro Mágico", // SAME
 	"magician": "Prestidigitador", // SAME
@@ -184,8 +184,8 @@ exports.translations.abilities = {
 	"torrent": "Torrente", // LATINO
 	"toxicboost": "Ímpetu Tóxico", // SAME
 	"toughclaws": "Garra Dura", // SAME
-	"trace": "Rastro", // SAME
-	"truant": "Ausente", // SAME
+	"trace": "Calco", // SAME
+	"truant": "Pereza", // SAME
 	"turboblaze": "Turbollama", // SAME
 	"unaware": "Ignorante", // SAME
 	"unburden": "Liviano", // SAME
@@ -281,6 +281,37 @@ exports.translations.abilities = {
 	"dragonsmaw": "Mandíbula dragón", // SAME
 	"grimneigh": "Relincho negro", // SAME
 	"transistor": "Transistor", // SAME
+	"angershell": "Coraza ira",
+	"armortail": "Cola armadura",
+	"beadsofruin": "Abalorio debacle",
+	"commander": "Comandar",
+	"costar": "Unísono",
+	"cudchew": "Rumia",
+	"eartheater": "Geofagia",
+	"electromorphosis": "Dinamo",
+	"goodasgold": "Cuerpo áureo",
+	"guarddog": "Perro guardián",
+	"hadronengine": "Motor hadrónico",
+	"lingeringaroma": "Olor Persistente",
+	"myceliummight": "Poder fúngico",
+	"opportunist": "Oportunista",
+	"orichalcumpulse": "Latido oricalco",
+	"protosynthesis": "Paleosíntesis",
+	"purifyingsalt": "Sal Purificadora",
+	"quarkdrive": "Carga cuark",
+	"rockypayload": "Transportarrocas",
+	"seedsower": "Disemillar",
+	"sharpness": "Cortante",
+	"supremeoverlord": "General supremo",
+	"swordofruin": "Espada debacle",
+	"tabletsofruin": "Tablilla debacle",
+	"thermalexchange": "Termoconversión",
+	"toxicdebris": "Capa tóxica",
+	"vesselofruin": "Caldero debacle",
+	"wellbakedbody": "Cuerpo horneado",
+	"windpower": "Energía eólica",
+	"windrider": "Surcavientos",
+	"zerotohero": "Cambio heroico",
 };
 
 /* Battle Items */
@@ -341,7 +372,7 @@ exports.translations.items = {
 	"coverfossil": "Cubierta fósil", // LATINO
 	"custapberry": "Baya Chiri", // SAME
 	"damprock": "Roca Lluvia", // SAME
-	"darkgem": "Gema Siniestra", // SAME
+	"darkgem": "Gema Siniestro", // SAME
 	"deepseascale": "Escama de Mar Profundo", // LATINO
 	"deepseatooth": "Diente de Mar Profundo", // LATINO
 	"destinyknot": "Lazo Destino", // SAME
@@ -359,7 +390,7 @@ exports.translations.items = {
 	"earthplate": "Tabla Terrax", // SAME
 	"ejectbutton": "Botón Escape", // SAME
 	"electirizer": "Electrizador", // SAME
-	"electricgem": "Gema Eléctrica", // SAME
+	"electricgem": "Gema Eléctrico", // SAME
 	"energypowder": "Polvoenergía", // SAME
 	"enigmaberry": "Baya Enigma", // SAME
 	"eviolite": "Mineral Evol", // SAME
@@ -373,9 +404,9 @@ exports.translations.items = {
 	"flameorb": "Llamasfera", // SAME
 	"flameplate": "Tabla Llama", // SAME
 	"floatstone": "Piedra Pómez", // SAME
-	"flyinggem": "Gema Voladora", // SAME
-	"focusband": "Cinta Focus", // SAME
-	"focussash": "Banda Focus", // SAME
+	"flyinggem": "Gema Volador", // SAME
+	"focusband": "Cinta aguante", // SAME
+	"focussash": "Banda aguante", // SAME
 	"friendball": "Bola Amigo", // LATINO
 	"fullincense": "Incienso Lento", // SAME
 	"galladite": "Galladita", // SAME
@@ -488,7 +519,7 @@ exports.translations.items = {
 	"pomegberry": "Baya Grana", // SAME
 	"powerherb": "Hierba Única", // SAME
 	"premierball": "Honor Ball", // SAME
-	"psychicgem": "Gema Psíquica", // SAME
+	"psychicgem": "Gema Psíquico", // SAME
 	"qualotberry": "Baya Ispero", // SAME
 	"quickball": "Veloz Ball", // SAME
 	"quickclaw": "Garra Rápida", // SAME
@@ -800,8 +831,17 @@ exports.translations.items = {
 	"waterstone": "Piedra agua", // LATINO
 	"whippeddream": "Dulce de nata", // SAME
 	"galaricacuff": "Brazal galanuez", // SAME
-	"galaricawreath": "",
-	"vilevial": "",
+	"galaricawreath": "Corona galanuez",
+	"vilevial": "Frasco Vil",
+	"abilityshield": "",
+	"auspiciousarmor": "Armadura auspiciosa",
+	"boosterenergy": "Energía Potenciadora",
+	"clearamulet": "",
+	"covertcloak": "Capa furtiva",
+	"loadeddice": "Dado trucado",
+	"maliciousarmor": "Armadura maldita",
+	"mirrorherb": "Hierba copia",
+	"punchingglove": "",
 };
 
 /* Battle Moves */
@@ -895,7 +935,7 @@ exports.translations.moves = {
 	"copycat": "Copión", // LATINO
 	"cosmicpower": "Masa Cósmica", // SAME
 	"cottonguard": "Guardia algodón", // LATINO
-	"cottonspore": "Espora algodón2", // LATINO
+	"cottonspore": "Espora algodón", // LATINO
 	"counter": "Contraataque", // LATINO
 	"covet": "Antojo", // SAME
 	"crabhammer": "Golpe martillo", // LATINO
@@ -916,7 +956,7 @@ exports.translations.moves = {
 	"destinybond": "Lazo del destino", // LATINO
 	"detect": "Detección", // LATINO
 	"diamondstorm": "Tormenta de diamantes", // LATINO
-	"dig": "Excavación2", // LATINO
+	"dig": "Excavación", // LATINO
 	"disable": "Desarmar", // LATINO
 	"disarmingvoice": "Voz encantadora", // LATINO
 	"discharge": "Descarga", // LATINO
@@ -988,7 +1028,7 @@ exports.translations.moves = {
 	"flamewheel": "Rueda de fuego", // LATINO
 	"flamethrower": "Lanzallamas", // LATINO
 	"flareblitz": "Erupción", // LATINO
-	"flash": "Destello2", // LATINO
+	"flash": "Destello", // LATINO
 	"flashcannon": "Cañón destello", // LATINO
 	"flatter": "Halago", // LATINO
 	"fling": "Tiro", // LATINO
@@ -1033,7 +1073,7 @@ exports.translations.moves = {
 	"guardswap": "Cambia Defensa", // SAME
 	"guillotine": "Guillotina", // LATINO
 	"gunkshot": "Lanza mugre", // LATINO
-	"gust": "Ráfaga de aire2", // LATINO
+	"gust": "Ráfaga de aire", // LATINO
 	"gyroball": "Giro bola", // LATINO
 	"hail": "Granizo", // LATINO
 	"hammerarm": "Brazo martillo", // LATINO
@@ -1094,7 +1134,7 @@ exports.translations.moves = {
 	"iceburn": "Llama Gélida", // SAME
 	"icefang": "Colmillo de hielo", // LATINO
 	"icepunch": "Puño de hielo", // LATINO
-	"iceshard": "Canto helado", // LATINO
+	"iceshard": "Esquirla helada", // LATINO
 	"iciclecrash": "Carámbano", // LATINO
 	"iciclespear": "Carámbano", // LATINO
 	"icywind": "Viento helado", // LATINO
@@ -1169,7 +1209,7 @@ exports.translations.moves = {
 	"moonblast": "Fuerza lunar", // LATINO
 	"moonlight": "Luz Lunar", // SAME
 	"morningsun": "Sol matutino", // LATINO
-	"mudslap": "Golpe de lodo2", // LATINO
+	"mudslap": "Golpe de lodo", // LATINO
 	"mudbomb": "Bomba de fango", // LATINO
 	"mudshot": "Disparo de lodo", // LATINO
 	"mudsport": "Chapoteo de lodo", // LATINO
@@ -1224,8 +1264,8 @@ exports.translations.moves = {
 	"precipiceblades": "Filo del Abismo", // SAME
 	"present": "Obsequio", // LATINO
 	"protect": "Protección", // LATINO
-	"psybeam": "Psicorrayo2", // LATINO
-	"psychup": "Más Psique", // SAME
+	"psybeam": "Psicorrayo", // LATINO
+	"psychup": "Autosugestión", // SAME
 	"psychic": "Fuerza psíquica", // LATINO
 	"psychoboost": "Psicoimpulso", // LATINO
 	"psychocut": "Corte psíquico", // LATINO
@@ -1300,7 +1340,7 @@ exports.translations.moves = {
 	"shellsmash": "Rompecoraza", // LATINO
 	"shiftgear": "Cambio de Marcha", // SAME
 	"shockwave": "Onda de choque", // LATINO
-	"signalbeam": "Doble rayo", // LATINO
+	"signalbeam": "Rayo Señal", // LATINO
 	"silverwind": "Viento de plata", // LATINO
 	"simplebeam": "Onda Simple", // SAME
 	"sing": "Canto", // LATINO
@@ -1321,13 +1361,13 @@ exports.translations.moves = {
 	"smackdown": "Antiaéreo", // LATINO
 	"smellingsalts": "Estímulo", // SAME
 	"smog": "Humo", // LATINO
-	"smokescreen": "Pantalla de humo2", // LATINO
+	"smokescreen": "Pantalla de humo", // LATINO
 	"snarl": "Gruñido", // LATINO
 	"snatch": "Robo", // SAME
 	"snore": "Ronquido", // SAME
 	"spikyshield": "Barrera espinosa", // LATINO
-	"soak": "Anegar", // SAME
-	"softboiled": "Amortiguador", // LATINO
+	"soak": "Empapar", // SAME
+	"softboiled": "Ovocuración", // LATINO
 	"solarbeam": "Rayo solar", // LATINO
 	"sonicboom": "Explosión sónica", // LATINO
 	"spacialrend": "Corte espacial", // LATINO
@@ -1366,9 +1406,9 @@ exports.translations.moves = {
 	"swallow": "Tragar", // LATINO
 	"sweetkiss": "Dulce beso", // LATINO
 	"sweetscent": "Dulce aroma", // LATINO
-	"swift": "Velocidad2", // LATINO
+	"swift": "Velocidad", // LATINO
 	"switcheroo": "Trapicheo", // SAME
-	"swordsdance": "Baile de espadas2", // LATINO
+	"swordsdance": "Baile de espadas", // LATINO
 	"synchronoise": "Sincrorruido", // SAME
 	"synthesis": "Síntesis", // LATINO
 	"tackle": "Tacleada", // LATINO
@@ -1414,7 +1454,7 @@ exports.translations.moves = {
 	"venoshock": "Carga tóxica", // LATINO
 	"vicegrip": "Fuerza de garra", // LATINO
 	"vinewhip": "Látigo cepa", // LATINO
-	"vitalthrow": "Tiro vital", // LATINO
+	"vitalthrow": "Llave vital", // LATINO
 	"voltswitch": "Cambiavoltaje", // LATINO
 	"volttackle": "Tacleada de voltios", // LATINO
 	"wakeupslap": "Espabila", // SAME
@@ -1428,10 +1468,10 @@ exports.translations.moves = {
 	"weatherball": "Bola climática", // LATINO
 	"whirlpool": "Remolino3", // LATINO
 	"whirlwind": "Torbellino", // LATINO
-	"wideguard": "Vastaguardia", // SAME
+	"wideguard": "Vasta Guardia", // SAME
 	"wildcharge": "Carga salvaje", // LATINO
 	"willowisp": "Fuego fatuo", // LATINO
-	"wingattack": "Ataque de ala2", // LATINO
+	"wingattack": "Ataque de ala", // LATINO
 	"wish": "Deseo", // SAME
 	"withdraw": "Refugio", // LATINO
 	"wonderroom": "Zona Extraña", // SAME
@@ -1668,6 +1708,78 @@ exports.translations.moves = {
 	"glaciallance": "Lanza glacial", // SAME
 	"thundercage": "Electrojaula", // SAME
 	"thunderouskick": "Patada relámpago", // SAME
+	"aquacutter": "Tajo acuático",
+	"aquastep": "Danza acuática",
+	"armorcannon": "Cañón armadura",
+	"axekick": "Patada hacha",
+	"barbbarrage": "Mil púas tóxicas",
+	"bitterblade": "Espada lamento",
+	"bittermalice": "Rencor reprimido",
+	"blazingtorque": "Pirochoque",
+	"bleakwindstorm": "Vendaval gélido",
+	"ceaselessedge": "Tajo metralla",
+	"chillingwater": "Agua Fría",
+	"chillyreception": "Fría Acogida",
+	"chloroblast": "Clorofiláser",
+	"collisioncourse": "Nitrochoque",
+	"combattorque": "Pugnachoque",
+	"comeuppance": "Resarcimiento",
+	"direclaw": "Garra nociva",
+	"doodle": "Decalcomanía",
+	"doubleshock": "Electropalmas",
+	"electrodrift": "Electroderrape",
+	"esperwing": "Ala aural",
+	"filletaway": "Deslome",
+	"flowertrick": "Truco floral",
+	"gigatonhammer": "Martillo Colosal",
+	"glaiverush": "Asalto Espadón",
+	"headlongrush": "Arremetida",
+	"hyperdrill": "Hipertaladro",
+	"icespinner": "Pirueta Helada",
+	"infernalparade": "Marcha Espectral",
+	"jetpunch": "Puño Jet",
+	"kowtowcleave": "Genufendiente",
+	"lastrespects": "Homenaje Póstumo",
+	"luminacrash": "Fotocolisión",
+	"lunarblessing": "Plegaria Lunar",
+	"magicaltorque": "Feerichoque",
+	"makeitrain": "Fiebre Dorada",
+	"mortalspin": "Giro Mortífero",
+	"mountaingale": "Viento Carámbano",
+	"mysticalpower": "Poder Místico",
+	"noxioustorque": "Ponzochoque",
+	"orderup": "Oído Cocina",
+	"populationbomb": "Proliferación",
+	"pounce": "Brinco",
+	"powershift": "Cambiapoder",
+	"psyshieldbash": "Asalto Barrera",
+	"ragefist": "Puño furia",
+	"ragingbull": "Furia Taurina",
+	"ragingfury": "Erupción de Ira",
+	"revivalblessing": "Plegaria Vital",
+	"ruination": "Calamidad",
+	"saltcure": "Salazón",
+	"sandsearstorm": "Simún de Arena",
+	"shedtail": "Autotomía",
+	"shelter": "Retracción",
+	"silktrap": "Telatrampa",
+	"snowscape": "Paisaje nevado",
+	"spicyextract": "Extracto Picante",
+	"spinout": "Quemarrueda",
+	"springtidestorm": "Ciclón Primavera",
+	"stoneaxe": "Hachazo Pétreo",
+	"takeheart": "Bálsamo Osado",
+	"terablast": "Teraexplosión",
+	"tidyup": "Limpieza General",
+	"torchsong": "Canto ardiente",
+	"trailblaze": "Abrecaminos",
+	"triplearrows": "Triple Flecha",
+	"tripledive": "Triple Inmersión",
+	"twinbeam": "Láser doble",
+	"victorydance": "Danza Triunfal",
+	"wavecrash": "Envite Acuático",
+	"wickedtorque": "Ominochoque",
+	"wildboltstorm": "Electormenta",
 };
 
 /* Natures */
@@ -2974,6 +3086,122 @@ exports.translations.pokemon = {
 	"protowatt": "Protowatt",
 	"venomicon": "Venomicon",
 	"venomiconepilogue": "Venomicon-Epilogue",
+	"taurospaldea": "Tauros (Forma Paldea)",
+	"taurospaldeafire": "Tauros de Fuego",
+	"taurospaldeawater": "Tauros de Agua",
+	"wooperpaldea": "Wooper-Paldea",
+	"sprigatito": "Sprigatito",
+	"floragato": "Floragato",
+	"meowscarada": "Meowscarada",
+	"fuecoco": "Fuecoco",
+	"crocalor": "Crocalor",
+	"skeledirge": "Skeledirge",
+	"quaxly": "Quaxly",
+	"quaxwell": "Quaxwell",
+	"quaquaval": "Quaquaval",
+	"lechonk": "Lechonk",
+	"oinkologne": "Oinkologne",
+	"oinkolognef": "Oinkologne (Hembra)",
+	"dudunsparce": "Dudunsparce",
+	"dudunsparcethreesegment": "Dudunsparce (Tres Segmentos)",
+	"tarountula": "Tarountula",
+	"spidops": "Spidops",
+	"nymble": "Nymble",
+	"lokix": "Lokix",
+	"rellor": "Rellor",
+	"rabsca": "Rabsca",
+	"greavard": "Greavard",
+	"houndstone": "Houndstone",
+	"flittle": "Flittle",
+	"espathra": "Espathra",
+	"farigiraf": "Farigiraf",
+	"wiglett": "Wiglett",
+	"wugtrio": "Wugtrio",
+	"dondozo": "Dondozo",
+	"veluza": "Veluza",
+	"finizen": "Finizen",
+	"palafin": "Palafin",
+	"palafinhero": "Palafin (Forma heroica)",
+	"smoliv": "Smoliv",
+	"dolliv": "Dolliv",
+	"arboliva": "Arboliva",
+	"capsakid": "Capsakid",
+	"scovillain": "Scovillain",
+	"tadbulb": "Tadbulb",
+	"bellibolt": "Bellibolt",
+	"varoom": "Varoom",
+	"revavroom": "Revavroom",
+	"orthworm": "Orthworm",
+	"tandemaus": "Tandemaus",
+	"maushold": "Maushold",
+	"mausholdfour": "Maushold (Familia de cuatro)",
+	"cetoddle": "Cetoddle",
+	"cetitan": "Cetitan",
+	"frigibax": "Frigibax",
+	"arctibax": "Arctibax",
+	"baxcalibur": "Baxcalibur",
+	"tatsugiri": "Tatsugiri",
+	"cyclizar": "Cyclizar",
+	"pawmi": "Pawmi",
+	"pawmo": "Pawmo",
+	"pawmot": "Pawmot",
+	"wattrel": "Wattrel",
+	"kilowattrel": "Kilowattrel",
+	"bombirdier": "Bombirdier",
+	"squawkabilly": "Squawkabilly",
+	"squawkabillyblue": "Squawkabilly (Azul)",
+	"squawkabillyyellow": "Squawkabilly (Amarillo)",
+	"squawkabillywhite": "Squawkabilly (Blanco)",
+	"flamigo": "Flamigo",
+	"klawf": "Klawf",
+	"nacli": "Nacli",
+	"naclstack": "Naclstack",
+	"garganacl": "Garganacl",
+	"glimmet": "Glimmet",
+	"glimmora": "Glimmora",
+	"shroodle": "Shroodle",
+	"grafaiai": "Grafaiai",
+	"fidough": "Fidough",
+	"dachsbun": "Dachsbun",
+	"maschiff": "Maschiff",
+	"mabosstiff": "Mabosstiff",
+	"bramblin": "Bramblin",
+	"brambleghast": "Brambleghast",
+	"gimmighoul": "Gimmighoul",
+	"gimmighoulroaming": "Gimmighoul (Forma andante)",
+	"gholdengo": "Gholdengo",
+	"greattusk": "Colmilargo",
+	"brutebonnet": "Furioseta",
+	"sandyshocks": "Pelarena",
+	"screamtail": "Colagrito",
+	"fluttermane": "Melenaleteo",
+	"slitherwing": "Reptalada",
+	"roaringmoon": "Bramaluna",
+	"irontreads": "Ferrodada",
+	"ironmoth": "Ferropolilla",
+	"ironhands": "Ferropalmas",
+	"ironjugulis": "Ferrocuello",
+	"ironthorns": "Ferropúas",
+	"ironbundle": "Ferrosaco",
+	"ironvaliant": "Ferropaladín",
+	"tinglu": "Ting-Lu",
+	"chienpao": "Chien-Pao",
+	"wochien": "Wo-Chien",
+	"chiyu": "Chi-Yu",
+	"koraidon": "Koraidon",
+	"miraidon": "Miraidon",
+	"tinkatink": "Tinkatink",
+	"tinkatuff": "Tinkatuff",
+	"tinkaton": "Tinkaton",
+	"charcadet": "Charcadet",
+	"armarouge": "Armarouge",
+	"ceruledge": "Ceruledge",
+	"toedscool": "Toedscool",
+	"toedscruel": "Toedscruel",
+	"kingambit": "Kingambit",
+	"clodsire": "Clodsire",
+	"annihilape": "Annihilape",
+	"saharaja": "Saharaja",
 };
 
 exports.translations.legacy = Object.create(null);
