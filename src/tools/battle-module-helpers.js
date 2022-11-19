@@ -98,6 +98,12 @@ exports.CustomBattleModule = function (App, id, config, setup) {
                                 }
                             }
 
+                            if (rule.terastallize !== undefined) {
+                                if (rule.terastallize !== decision.terastallize) {
+                                    break;
+                                }
+                            }
+
                             if (rule.target !== undefined) {
                                 if (rule.target !== decision.target) {
                                     break;
