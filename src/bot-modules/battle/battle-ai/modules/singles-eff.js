@@ -475,6 +475,10 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "simplebeam":
+					if (pokeB.item && pokeB.item.id === "abilityshield") {
+						res.unviable.push(decisions[i]);
+						continue;
+					}
 					if (!pokeB.ability || pokeB.ability.id !== "simple") {
 						res.viable.push(decisions[i]);
 					} else {
@@ -482,6 +486,10 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "worryseed":
+					if (pokeB.item && pokeB.item.id === "abilityshield") {
+						res.unviable.push(decisions[i]);
+						continue;
+					}
 					if (!pokeB.ability || pokeB.ability.id !== "insomnia") {
 						res.viable.push(decisions[i]);
 					} else {
@@ -489,6 +497,10 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "entrainment":
+					if (pokeB.item && pokeB.item.id === "abilityshield") {
+						res.unviable.push(decisions[i]);
+						continue;
+					}
 					if (pokeA.ability && pokeB.ability && pokeA.ability.id !== pokeB.ability.id && !EntrainmentFails.has(pokeB.ability.id)) {
 						res.viable.push(decisions[i]);
 					} else {
@@ -503,6 +515,10 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "skillswap":
+					if (pokeB.item && pokeB.item.id === "abilityshield") {
+						res.unviable.push(decisions[i]);
+						continue;
+					}
 					if (pokeA.ability && pokeB.ability && pokeA.ability.id !== pokeB.ability.id && !SkillSwapFails.has(pokeB.ability.id)) {
 						res.viable.push(decisions[i]);
 					} else {
@@ -648,6 +664,23 @@ exports.setup = function (Data) {
 					res.unviable.push(decisions[i]);
 				}
 				continue;
+			} else if (move.boosts) {
+				let sumBoost = 0;
+				let usefulBoosts = 0;
+				for (let b in move.boosts) {
+					sumBoost += move.boosts[b];
+					if (move.boosts[b] > 0 || !conditionsB.boosts[b] || conditionsB.boosts[b] > -6) {
+						usefulBoosts++;
+					}
+				}
+
+				if (usefulBoosts < 0) {
+					res.unviable.push(decisions[i]);
+					continue;
+				} else if (sumBoost < 0 && ((pokeB.item && pokeB.item.id === "clearamulet") || (pokeB.ability && pokeB.ability.id === "clearbody"))) {
+					res.unviable.push(decisions[i]);
+					continue;
+				}
 			}
 			if (move.id in { "supersonic": 1, "swagger": 1, "sweetkiss": 1, "confuseray": 1, "teeterdance": 1, "flatter": 1, "embargo": 1, "taunt": 1, "telekinesis": 1, "torment": 1, "healblock": 1 }) {
 				if (move.volatileStatus === "confusion") {
