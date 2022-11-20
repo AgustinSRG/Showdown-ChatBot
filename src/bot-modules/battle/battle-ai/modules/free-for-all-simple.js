@@ -315,6 +315,7 @@ exports.setup = function (Data) {
 			side: battle.self.side,
 			volatiles: findAnyNotNull(battle.self.active).volatiles,
 			boosts: findAnyNotNull(battle.self.active).boosts,
+			inmediate: { beatup_bp: battle.getBeatupBasePower(), last_respects_bp: battle.getLastRespectsBasePower() }
 		});
 
 		let targets = [];

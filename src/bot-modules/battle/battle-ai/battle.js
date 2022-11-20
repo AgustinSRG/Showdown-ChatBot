@@ -75,6 +75,10 @@ exports.setup = function (App, CustomModules) {
 				rqid: -1,
 				bp: 5,
 			};
+			this.lastRespectsCache = {
+				rqid: -1,
+				bp: 50,
+			};
 		}
 
 		send(data) {
@@ -586,6 +590,23 @@ exports.setup = function (App, CustomModules) {
 			}
 			this.buCache.bp = res;
 			this.buCache.rqid = this.rqid;
+			return res;
+		}
+
+		getLastRespectsBasePower() {
+			if (this.lastRespectsCache.rqid === this.rqid) {
+				return this.lastRespectsCache.bp;
+			}
+			let res = 50;
+			if (this.request && this.request.side && this.request.side.pokemon) {
+				for (let poke of this.request.side.pokemon) {
+					if (poke.condition === "0 fnt") {
+						res += 50;
+					}
+				}
+			}
+			this.lastRespectsCache.bp = res;
+			this.lastRespectsCache.rqid = this.rqid;
 			return res;
 		}
 

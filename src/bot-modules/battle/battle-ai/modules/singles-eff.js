@@ -105,7 +105,7 @@ exports.setup = function (Data) {
 				side: battle.self.side,
 				volatiles: battle.self.active[0].volatiles,
 				boosts: battle.self.active[0].boosts,
-				inmediate: { beatup_bp: battle.getBeatupBasePower() }
+				inmediate: { beatup_bp: battle.getBeatupBasePower(), last_respects_bp: battle.getLastRespectsBasePower() }
 			});
 		} else {
 			conditionsA = new Conditions({
@@ -211,7 +211,7 @@ exports.setup = function (Data) {
 			side: battle.self.side,
 			volatiles: battle.self.active[0].volatiles,
 			boosts: battle.self.active[0].boosts,
-			inmediate: { beatup_bp: battle.getBeatupBasePower() },
+			inmediate: { beatup_bp: battle.getBeatupBasePower(), last_respects_bp: battle.getLastRespectsBasePower() },
 		});
 
 		let offTypes = pokeA.template.types.slice();
@@ -752,7 +752,7 @@ exports.setup = function (Data) {
 			side: battle.self.side,
 			volatiles: battle.self.active[0].volatiles,
 			boosts: battle.self.active[0].boosts,
-			inmediate: { beatup_bp: battle.getBeatupBasePower() }
+			inmediate: { beatup_bp: battle.getBeatupBasePower(), last_respects_bp: battle.getLastRespectsBasePower() }
 		});
 		for (let i = 0; i < decisions.length; i++) {
 			let des = decisions[i][0];
@@ -886,7 +886,7 @@ exports.setup = function (Data) {
 			side: battle.self.side,
 			volatiles: battle.self.active[0].volatiles,
 			boosts: battle.self.active[0].boosts,
-			inmediate: { beatup_bp: battle.getBeatupBasePower() }
+			inmediate: { beatup_bp: battle.getBeatupBasePower(), last_respects_bp: battle.getLastRespectsBasePower() }
 		});
 		if (bestSW) {
 			if (conditionsA.volatiles["perish1"] && bestSW) return bestSW; // Perish Song

@@ -242,6 +242,7 @@ exports.setup = function (Data) {
 			side: battle.self.side,
 			volatiles: battle.self.active[act].volatiles,
 			boosts: battle.self.active[act].boosts,
+			inmediate: { beatup_bp: battle.getBeatupBasePower(), last_respects_bp: battle.getLastRespectsBasePower() }
 		});
 
 		let targets = [];

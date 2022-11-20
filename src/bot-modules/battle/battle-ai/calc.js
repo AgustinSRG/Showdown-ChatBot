@@ -582,6 +582,13 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 				bp = 5;
 			}
 			break;
+		case "lastrespects":
+			if (conditionsA.inmediate["last_respects_bp"]) {
+				bp = conditionsA.inmediate["last_respects_bp"];
+			} else {
+				bp = 50;
+			}
+			break;
 		case "snore":
 			if (pokeA.status !== 'slp') bp = 0;
 			break;
