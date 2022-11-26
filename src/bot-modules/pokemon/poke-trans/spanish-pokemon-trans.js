@@ -833,15 +833,15 @@ exports.translations.items = {
 	"galaricacuff": "Brazal galanuez",
 	"galaricawreath": "Corona galanuez",
 	"vilevial": "Frasco Vil",
-	"abilityshield": "",
+	"abilityshield": "Escudo Habilidad",
 	"auspiciousarmor": "Armadura auspiciosa",
 	"boosterenergy": "Energía Potenciadora",
-	"clearamulet": "",
+	"clearamulet": "Amuleto Puro",
 	"covertcloak": "Capa furtiva",
 	"loadeddice": "Dado trucado",
 	"maliciousarmor": "Armadura maldita",
 	"mirrorherb": "Hierba copia",
-	"punchingglove": "",
+	"punchingglove": "Guante de Boxeo",
 };
 
 /* Battle Moves */
