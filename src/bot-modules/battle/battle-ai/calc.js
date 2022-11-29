@@ -275,16 +275,24 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		if (gen < 3 || !pokeA.ability || pokeA.ability.id !== "guts") atk = Math.floor(atk * 0.5);
 	}
 
-	if (defStat === "spd" && pokeA.ability && pokeA.ability.id === "beadsofruin") {
+	if (atkStat === "atk" && pokeB.ability && pokeB.ability.id === "tabletsofruin") {
+		atk = Math.floor(atk * 0.75);
+	} else if (atkStat === "spa" && pokeB.ability && pokeB.ability.id === "vesselofruin") {
+		atk = Math.floor(atk * 0.75);
+	}
+
+	if (defStat === "def" && pokeA.ability && pokeA.ability.id === "swordofruin") {
+		def = Math.floor(def * 0.75);
+	} else if (defStat === "spd" && pokeA.ability && pokeA.ability.id === "beadsofruin") {
 		def = Math.floor(def * 0.75);
 	}
 
 	if (conditionsA.volatiles['quarkdrive' + atkStat] || conditionsA.volatiles['protosynthesis' + atkStat]) {
-		atk = Math.floor(atk * 1.5);
+		atk = Math.floor(atk * 1.3);
 	}
 
 	if (conditionsB.volatiles['quarkdrive' + defStat] || conditionsB.volatiles['protosynthesis' + defStat]) {
-		def = Math.floor(def * 1.5);
+		def = Math.floor(def * 1.3);
 	}
 
 	/******************************
