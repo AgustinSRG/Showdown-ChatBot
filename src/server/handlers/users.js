@@ -124,9 +124,9 @@ exports.setup = function (App) {
 			}
 		} else {
 			let htmlVars = Object.create(null);
-			htmlVars.id = (context.post.adduser ? context.post.user : '');
-			htmlVars.name = (context.post.adduser ? context.post.username : '');
-			htmlVars.group = (context.post.adduser ? context.post.usergroup : '');
+			htmlVars.id = Text.escapeHTML(context.post.adduser ? context.post.user : '');
+			htmlVars.name = Text.escapeHTML(context.post.adduser ? context.post.username : '');
+			htmlVars.group = Text.escapeHTML(context.post.adduser ? context.post.usergroup : '');
 			htmlVars.users_list = '';
 			for (let u in users) {
 				let target = users[u];

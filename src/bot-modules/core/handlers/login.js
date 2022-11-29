@@ -47,7 +47,7 @@ function setup(App) {
 
 		htmlVars.nick = Text.escapeHTML(App.config.modules.core.nick || '-');
 		htmlVars.pass = (App.config.modules.core.pass ? 'Yes' : 'No');
-		htmlVars.nick_fail = (context.post.nick || '');
+		htmlVars.nick_fail = Text.escapeHTML(context.post.nick || '');
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));

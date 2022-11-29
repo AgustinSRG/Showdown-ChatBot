@@ -103,12 +103,12 @@ exports.setup = function (App) {
 		for (let cmd in commands) {
 			htmlVars.cmds += cmdTemplate.make({
 				cmd: cmd,
-				content: commands[cmd],
+				content: Text.escapeHTML(commands[cmd]),
 			});
 		}
 
-		htmlVars.cmd = (adderror ? (context.post.cmd || '') : '');
-		htmlVars.content = (adderror ? (context.post.content || '') : '');
+		htmlVars.cmd = Text.escapeHTML(adderror ? (context.post.cmd || '') : '');
+		htmlVars.content = Text.escapeHTML(adderror ? (context.post.content || '') : '');
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));

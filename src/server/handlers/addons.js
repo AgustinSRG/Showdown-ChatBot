@@ -102,7 +102,7 @@ exports.setup = function (App) {
 		}
 
 		let htmlVars = Object.create(null);
-		htmlVars.content = (context.post.content || '');
+		htmlVars.content = Text.escapeHTML(context.post.content || '');
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 

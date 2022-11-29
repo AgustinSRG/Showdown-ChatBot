@@ -324,7 +324,7 @@ exports.setup = function (App) {
 
 		let htmlVars = Object.create(null);
 
-		htmlVars.exportable = (context.post.exportable || "");
+		htmlVars.exportable = Text.escapeHTML(context.post.exportable || "");
 		htmlVars.formats = getFormatsMenu(Text.toId(context.get.format));
 
 		let submenu = [];
