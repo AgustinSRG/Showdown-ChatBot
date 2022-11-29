@@ -1,0 +1,48 @@
+﻿# Translations file
+
+@ htmlbox-cmd
+
+%english
+
+$nochat = This command is only available for chat rooms
+$nobot = Bot requires rank of bot or higher to use this feature
+$noloop = Command loops are disabled
+
+$opt = Option text
+$alias = alias
+$for = for
+
+$0 = Shortcut command called
+$1 = not found
+$2 = Shortcut command
+$3 = There are no shortcut commands yet
+$4 = Shortcut commands list
+$5 = A shortcut can only contain 5 commands max
+$6 = Shortcut command created
+$7 = Shortcut command removed
+$10 = Alias set
+$11 = Alias not found
+$12 = Alias was removed
+
+
+%spanish
+
+$nochat = Este comando solo está disponible para las salas de chat
+$nobot = Necesito rango de bot o superior para poder usar esta funcionalidad
+$noloop = No es posible ejecutar bucles de comandos
+
+$opt = Texto de la opción
+$alias = alias
+$for = para
+
+$0 = El comando de atajo con nombre
+$1 = no existe
+$2 = Comando de atajo
+$3 = No hay ningún comando de atajo configurado
+$4 = Lista de comandos de atajo
+$5 = Un comando de atajo solo puede contener un máximo de 5 comandos
+$6 = Comando de atajo creado
+$7 = Comando de atajo eliminado
+$8 = Alias establecido
+$9 = No existe el alias
+$10 = Alias eliminado

@@ -374,17 +374,17 @@ class CommandParser {
 	 * @param {String} room - Room ID, null if Private message
 	 * @param {String} by - User name
 	 */
-	parse(msg, room, by) {
+	parse(msg, room, by, isShortcut) {
 		if (!room && msg.substr(0, 8) === '/invite ') {
-			return this.parse((this.app.config.parser.tokens[0] || '') + 'joinroom ' + msg.substr(8), room, by);
+			return this.parse((this.app.config.parser.tokens[0] || '') + 'joinroom ' + msg.substr(8), room, by, isShortcut);
 		}
 		if (msg.substr(0, 6) === '/html ') {
-			return this.parse(msg.substr(6), room, by);
+			return this.parse(msg.substr(6), room, by, isShortcut);
 		}
 		let userid = Text.toId(by);
 		if (room && this.data.sleep[room]) return; /* Sleeping room */
 		if (!this.data.exceptions[userid] && (this.monitor.isLocked(userid) || this.data.lockedUsers[userid])) return; /* User locked */
-		if (!this.data.exceptions[userid] && this.checkAntiSpamSystem(userid, room)) return;
+		if (!isShortcut && !this.data.exceptions[userid] && this.checkAntiSpamSystem(userid, room)) return;
 
 		/* Target Room */
 		let tarRoom = room;
@@ -437,6 +437,8 @@ class CommandParser {
 
 		/* Create Command Context */
 		let context = new CommandContext(this, room, by, token, cmd, arg, tarRoom, false, msg);
+
+		context.isShortcut = !!isShortcut;
 
 		/* Exec Command */
 
@@ -695,6 +697,7 @@ class CommandContext {
 		this.args = this.arg.split(',');
 		this.wall = !!replyWithWall;
 		this.originalMessage = originalMessage;
+		this.isShortcut = false;
 
 		/* Room type */
 		if (room === null) {

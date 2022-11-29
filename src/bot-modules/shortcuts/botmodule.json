@@ -1,0 +1,23 @@
+{
+  "id": "shortcuts",
+  "name": "Command Shortcuts",
+  "main": "main.js",
+  "commands": [
+    "commands.js"
+  ],
+  "permissions": {
+    "shortcut": {
+      "group": "mod"
+    },
+    "shortcutadmin": {
+      "excepted": true
+    }
+  },
+  "handlers": [
+    "server-handler.js"
+  ],
+  "langfiles": [
+    "./commands.translations"
+  ],
+  "description": "Command Shortcuts"
+}
