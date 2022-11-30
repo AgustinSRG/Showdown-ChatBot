@@ -209,7 +209,7 @@ exports.setup = function (App, BattleData) {
 			let spl = args[1].split(": ");
 			let p = spl[0].substr(0, 2);
 			let slot = this.parseSlot(spl[0].substr(2, 1));
-			let name = (spl[1] || "").split();
+			let name = (spl[1] || "");
 			let details = this.parseDetails(args[2]);
 			let health = this.parseStatus(args[3]);
 			/* Get the pokemon or create a new one */

@@ -348,6 +348,8 @@ exports.setup = function (App) {
 
 			this.tera = "";
 
+			this.timesHit = 0;
+
 			this.active = false;
 			this.slot = -1;
 

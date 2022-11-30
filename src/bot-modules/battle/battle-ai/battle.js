@@ -546,12 +546,29 @@ exports.setup = function (App, CustomModules) {
 
 		getCalcRequestPokemon(sideId, forceMega, forceTera) {
 			let p = this.request.side.pokemon[sideId];
+			let identName = p.ident.split(": ")[1] || "";
 			let details = this.parseDetails(p.details);
 			let condition = this.parseStatus(p.condition);
+
+			let pokeActive = this.self.active ? this.self.active[sideId] : null;
+
+			if (!pokeActive) {
+				for (let i = 0; i < this.self.pokemon.length; i++) {
+					if (this.self.pokemon[i].name === identName) {
+						pokeActive = this.self.pokemon[i];
+					}
+				}
+			}
+
 			let pokeA = new Calc.Pokemon(BattleData.getPokemon(details.species, this.gen),
 				{ level: details.level, shiny: details.shiny, gender: details.gender });
 			pokeA.item = BattleData.getItem(p.item, this.gen);
-			pokeA.tera = p.tera;
+
+			if (pokeActive) {
+				pokeA.tera = pokeActive.tera;
+				pokeA.timesHit = pokeActive.timesHit;
+			}
+
 			pokeA.ability = p.ability ? BattleData.getAbility(p.ability, this.gen) : BattleData.getAbility(p.baseAbility, this.gen);
 			pokeA.status = condition.status;
 			pokeA.hp = condition.hp;

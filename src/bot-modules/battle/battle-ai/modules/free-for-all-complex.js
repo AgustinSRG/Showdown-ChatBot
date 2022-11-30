@@ -146,6 +146,7 @@ exports.setup = function (Data) {
 			pokeB.hp = target.hp;
 			pokeB.status = target.status;
 			pokeB.tera = target.tera;
+			pokeB.timesHit = target.timesHit;
 			if (target.item === "&unknown") {
 				pokeB.item = null;
 			} else {
@@ -191,6 +192,7 @@ exports.setup = function (Data) {
 		pokeB.hp = target.hp;
 		pokeB.status = target.status;
 		pokeB.tera = target.tera;
+		pokeB.timesHit = target.timesHit;
 		if (target.item === "&unknown") {
 			pokeB.item = null;
 		} else {

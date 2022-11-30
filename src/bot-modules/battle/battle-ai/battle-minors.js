@@ -54,6 +54,8 @@ exports.setup = function (App, BattleData) {
 						}
 						break;
 				}
+			} else {
+				poke.timesHit++;
 			}
 		},
 

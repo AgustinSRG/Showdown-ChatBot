@@ -197,6 +197,7 @@ exports.setup = function (Data) {
 				pokeB.hp = targets[j].pokemon.hp;
 				pokeB.status = targets[j].pokemon.status;
 				pokeB.tera = targets[j].pokemon.tera;
+				pokeB.timesHit = targets[j].pokemon.timesHit;
 				if (targets[j].pokemon.item === "&unknown") {
 					pokeB.item = null;
 				} else {
@@ -251,6 +252,7 @@ exports.setup = function (Data) {
 			pokeB.hp = targets[i].pokemon.hp;
 			pokeB.status = targets[i].pokemon.status;
 			pokeB.tera = targets[i].pokemon.tera;
+			pokeB.timesHit = targets[i].pokemon.timesHit;
 			if (targets[i].pokemon.item === "&unknown") {
 				pokeB.item = null;
 			} else {
@@ -356,6 +358,7 @@ exports.setup = function (Data) {
 			pokeB.hp = targets[i].pokemon.hp;
 			pokeB.status = targets[i].pokemon.status;
 			pokeB.tera = targets[i].pokemon.tera;
+			pokeB.timesHit = targets[i].pokemon.timesHit;
 			if (targets[i].pokemon.item === "&unknown") {
 				pokeB.item = null;
 			} else {

@@ -28,6 +28,7 @@ class Pokemon {
 		this.status = false;
 		this.hp = 100;
 		this.tera = "";
+		this.timesHit = 0;
 		this.typechange = null;
 		for (let i in properties) {
 			if (typeof this[i] === "undefined" || typeof this[i] === "function") continue;
@@ -602,6 +603,10 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			break;
 		case "dreameater":
 			if (pokeB.status !== 'slp') bp = 0;
+			break;
+		case "ragefist":
+			bp = Math.min(300, 50 + (50 * (pokeA.timesHit || 0)));
+			console.log("Base power: " + bp);
 			break;
 	}
 

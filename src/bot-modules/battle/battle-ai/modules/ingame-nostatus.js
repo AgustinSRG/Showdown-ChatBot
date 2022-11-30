@@ -123,6 +123,7 @@ exports.setup = function (Data) {
 				pokeB.hp = targets[j].hp;
 				pokeB.status = targets[j].status;
 				pokeB.tera = targets[j].tera;
+				pokeB.timesHit = targets[j].timesHit;
 				if (targets[j].item === "&unknown") {
 					pokeB.item = null;
 				} else {
@@ -177,6 +178,7 @@ exports.setup = function (Data) {
 			pokeB.hp = targets[i].hp;
 			pokeB.status = targets[i].status;
 			pokeB.tera = targets[i].tera;
+			pokeB.timesHit = targets[i].timesHit;
 			if (targets[i].item === "&unknown") {
 				pokeB.item = null;
 			} else {
@@ -283,6 +285,7 @@ exports.setup = function (Data) {
 			pokeB.hp = targets[i].hp;
 			pokeB.status = targets[i].status;
 			pokeB.tera = targets[i].tera;
+			pokeB.timesHit = targets[i].timesHit;
 			if (targets[i].item === "&unknown") {
 				pokeB.item = null;
 			} else {
