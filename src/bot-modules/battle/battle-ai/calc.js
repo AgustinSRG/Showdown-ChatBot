@@ -407,6 +407,11 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	let defTypes = pokeB.template.types.slice();
 	if (conditionsB.volatiles["typechange"] && conditionsB.volatiles["typechange"].length) defTypes = conditionsB.volatiles["typechange"].slice();
 	if (conditionsB.volatiles["typeadd"]) defTypes.push(conditionsB.volatiles["typeadd"]);
+	if (pokeB.typechange && pokeB.typechange.length) {
+		defTypes = pokeB.typechange.slice();
+	} else if (pokeB.tera && (!conditionsB.volatiles["typechange"] || !conditionsB.volatiles["typechange"].length)) {
+		defTypes = [pokeB.tera];
+	}
 	//debug(defTypes);
 	for (let t = 0; t < defTypes.length; t++) {
 		eff = typechart.getEffectiveness(moveType, defTypes[t], gen);

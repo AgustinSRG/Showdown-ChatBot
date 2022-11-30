@@ -117,13 +117,35 @@ exports.setup = function (Data) {
 		}
 
 		/* Calculate t - types mux */
+		let offTypes = pokeA.template.types.slice();
+
+		if (conditionsA.volatiles["typechange"] && conditionsA.volatiles["typechange"].length) offTypes = conditionsA.volatiles["typechange"].slice();
+		if (conditionsA.volatiles["typeadd"]) offTypes.push(conditionsA.volatiles["typeadd"]);
+
+		if (pokeA.typechange && pokeA.typechange.length) {
+			offTypes = pokeA.typechange.slice();
+		} else if (pokeA.tera && (!conditionsA.volatiles["typechange"] || !conditionsA.volatiles["typechange"].length)) {
+			offTypes = [pokeA.tera];
+		}
+
+		let defTypes = pokeB.template.types.slice();
+
+		if (conditionsB.volatiles["typechange"] && conditionsB.volatiles["typechange"].length) defTypes = conditionsB.volatiles["typechange"].slice();
+		if (conditionsB.volatiles["typeadd"]) defTypes.push(conditionsB.volatiles["typeadd"]);
+
+		if (pokeB.typechange && pokeB.typechange.length) {
+			defTypes = pokeB.typechange.slice();
+		} else if (pokeB.tera && (!conditionsB.volatiles["typechange"] || !conditionsB.volatiles["typechange"].length)) {
+			defTypes = [pokeB.tera];
+		}
+
 		let inverse = !!battle.conditions["inversebattle"];
 		let mux, tmux;
 		for (let i = 0; i < 2; i++) {
-			if (pokeB.template.types[i]) {
+			if (defTypes[i]) {
 				mux = 1;
-				for (let j = 0; j < pokeA.template.types.length; j++) {
-					tmux = TypeChart.getEffectiveness(pokeB.template.types[i], pokeA.template.types[j], battle.gen);
+				for (let j = 0; j < offTypes.length; j++) {
+					tmux = TypeChart.getEffectiveness(defTypes[i], offTypes[j], battle.gen);
 					if (inverse) {
 						if (tmux === 0) tmux = 2;
 						else tmux = 1 / tmux;
