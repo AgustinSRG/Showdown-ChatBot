@@ -273,6 +273,10 @@ exports.setup = function (App, BattleData) {
 					const target = poke.helpers.lastMoveTarget;
 
 					switch (poke.helpers.lastMove) {
+						case "trick":
+						case "switcheroo":
+							target.helpers.hasItemCannotBeChanged = true;
+							break;
 						case "skillswap":
 							target.helpers.hasAbilityCannotBeSwapped = true;
 							break;

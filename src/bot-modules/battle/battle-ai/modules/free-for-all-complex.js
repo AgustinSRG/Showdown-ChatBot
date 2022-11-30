@@ -697,6 +697,10 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "gastroacid":
+					if (foeActivePokemon.helpers.hasAbilityCannotBeDisabled) {
+						res.unviable.push(decisions[i]);
+						continue;
+					}
 					if (!foeActivePokemon.supressedAbility) {
 						res.viable.push(decisions[i]);
 					} else {
@@ -705,6 +709,10 @@ exports.setup = function (Data) {
 					continue;
 				case "simplebeam":
 					if (pokeB.item && pokeB.item.id === "abilityshield") {
+						res.unviable.push(decisions[i]);
+						continue;
+					}
+					if (foeActivePokemon.helpers.hasAbilityCannotBeDisabled) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
@@ -719,6 +727,10 @@ exports.setup = function (Data) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
+					if (foeActivePokemon.helpers.hasAbilityCannotBeDisabled) {
+						res.unviable.push(decisions[i]);
+						continue;
+					}
 					if (!pokeB.ability || pokeB.ability.id !== "insomnia") {
 						res.viable.push(decisions[i]);
 					} else {
@@ -730,7 +742,7 @@ exports.setup = function (Data) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
-					if (pokeA.ability && pokeB.ability && pokeA.ability.id !== pokeB.ability.id && !EntrainmentFails.has(pokeB.ability.id)) {
+					if (pokeA.ability && pokeB.ability && pokeA.ability.id !== pokeB.ability.id && !EntrainmentFails.has(pokeB.ability.id) && !foeActivePokemon.helpers.hasAbilityCannotBeEntrainment) {
 						res.viable.push(decisions[i]);
 					} else {
 						res.unviable.push(decisions[i]);
@@ -748,7 +760,7 @@ exports.setup = function (Data) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
-					if (pokeA.ability && pokeB.ability && pokeA.ability.id !== pokeB.ability.id && !SkillSwapFails.has(pokeB.ability.id)) {
+					if (pokeA.ability && pokeB.ability && pokeA.ability.id !== pokeB.ability.id && !SkillSwapFails.has(pokeB.ability.id) && !foeActivePokemon.helpers.hasAbilityCannotBeSwapped) {
 						res.viable.push(decisions[i]);
 					} else {
 						res.unviable.push(decisions[i]);

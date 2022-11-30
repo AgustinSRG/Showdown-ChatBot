@@ -303,7 +303,7 @@ exports.setup = function (Data) {
 			if (!des.ultra) return 0; // Ultra burst always
 		}
 
-		if (move.id === "fakeout") {
+		if (move.id in { "fakeout": 1, "firstimpression": 1 }) {
 			if (!(findAnyNotNull(battle.self.active).helpers.sw === battle.turn || findAnyNotNull(battle.self.active).helpers.sw === battle.turn - 1)) {
 				return 0; // Fake out only works for first turn
 			}

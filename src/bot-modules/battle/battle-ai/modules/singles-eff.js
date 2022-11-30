@@ -468,6 +468,10 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "gastroacid":
+					if (battle.foe.active[0].helpers.hasAbilityCannotBeDisabled) {
+						res.unviable.push(decisions[i]);
+						continue;
+					}
 					if (!battle.foe.active[0].supressedAbility) {
 						res.viable.push(decisions[i]);
 					} else {
@@ -476,6 +480,10 @@ exports.setup = function (Data) {
 					continue;
 				case "simplebeam":
 					if (pokeB.item && pokeB.item.id === "abilityshield") {
+						res.unviable.push(decisions[i]);
+						continue;
+					}
+					if (battle.foe.active[0].helpers.hasAbilityCannotBeDisabled) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
@@ -490,6 +498,10 @@ exports.setup = function (Data) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
+					if (battle.foe.active[0].helpers.hasAbilityCannotBeDisabled) {
+						res.unviable.push(decisions[i]);
+						continue;
+					}
 					if (!pokeB.ability || pokeB.ability.id !== "insomnia") {
 						res.viable.push(decisions[i]);
 					} else {
@@ -501,7 +513,7 @@ exports.setup = function (Data) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
-					if (pokeA.ability && pokeB.ability && pokeA.ability.id !== pokeB.ability.id && !EntrainmentFails.has(pokeB.ability.id)) {
+					if (pokeA.ability && pokeB.ability && pokeA.ability.id !== pokeB.ability.id && !EntrainmentFails.has(pokeB.ability.id) && !battle.foe.active[0].helpers.hasAbilityCannotBeEntrainment) {
 						res.viable.push(decisions[i]);
 					} else {
 						res.unviable.push(decisions[i]);
@@ -519,7 +531,15 @@ exports.setup = function (Data) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
-					if (pokeA.ability && pokeB.ability && pokeA.ability.id !== pokeB.ability.id && !SkillSwapFails.has(pokeB.ability.id)) {
+					if (pokeA.ability && pokeB.ability && pokeA.ability.id !== pokeB.ability.id && !SkillSwapFails.has(pokeB.ability.id) && !battle.foe.active[0].helpers.hasAbilityCannotBeSwapped) {
+						res.viable.push(decisions[i]);
+					} else {
+						res.unviable.push(decisions[i]);
+					}
+					continue;
+				case "trick":
+				case "switcheroo":
+					if (!battle.foe.active[0].helpers.hasItemCannotBeChanged && pokeA.item && (pokeA.item.id in { 'choicescarf': 1, 'choiceband': 1, 'choicespecs': 1, 'stickybarb': 1, 'ringtarget': 1 })) {
 						res.viable.push(decisions[i]);
 					} else {
 						res.unviable.push(decisions[i]);
