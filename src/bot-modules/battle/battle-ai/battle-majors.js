@@ -215,7 +215,7 @@ exports.setup = function (App, BattleData) {
 			/* Get the pokemon or create a new one */
 			let poke = null;
 			for (let i = 0; i < this.players[p].pokemon.length; i++) {
-				if (this.players[p].pokemon[i].name === name) {
+				if (!this.players[p].pokemon[i].active && !this.players[p].pokemon[i].fainted && this.players[p].pokemon[i].hasSameDetails(name, details)) {
 					poke = this.players[p].pokemon[i];
 				}
 			}

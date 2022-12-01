@@ -371,6 +371,10 @@ exports.setup = function (App) {
 			}
 		}
 
+		hasSameDetails(name, details) {
+			return this.name === name && details.species === this.species && details.level === this.level && details.shiny === this.shiny && details.gender === this.gender;
+		}
+
 		addVolatile(volatile) {
 			volatile = Text.toId(volatile);
 			this.volatiles[volatile] = true;

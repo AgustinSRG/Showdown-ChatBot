@@ -554,7 +554,7 @@ exports.setup = function (App, CustomModules) {
 
 			if (!pokeActive) {
 				for (let i = 0; i < this.self.pokemon.length; i++) {
-					if (this.self.pokemon[i].name === identName) {
+					if (!this.self.pokemon[i].active && !this.self.pokemon[i].fainted && this.self.pokemon[i].hasSameDetails(identName, details)) {
 						pokeActive = this.self.pokemon[i];
 					}
 				}
