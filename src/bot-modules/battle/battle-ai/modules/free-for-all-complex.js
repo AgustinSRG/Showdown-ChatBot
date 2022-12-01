@@ -634,7 +634,9 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "sleeptalk":
-					if (pokeA.status === "slp") {
+					if (pokeA.ability && pokeA.ability.id === "comatose") {
+						res.viable.push(decisions[i]);
+					} else if (pokeA.status === "slp") {
 						if (typeof findAnyNotNull(battle.self.active).helpers.sleepCounter === "number") {
 							if (findAnyNotNull(battle.self.active).helpers.sleepCounter < 2) res.sleepTalk = decisions[i];
 						}
