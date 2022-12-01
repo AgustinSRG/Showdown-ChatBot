@@ -365,6 +365,11 @@ exports.setup = function (Data) {
 					pokeB.ability = targets[i].pokemon.ability;
 				}
 			}
+			if (pokeB.ability && pokeB.ability.id === "commander" && conditionsB.volatiles["activeability"] && targets[i].player.active.filter(p => p.species === "Dondozo" && !p.fainted).length > 0) {
+				// If commanding, the move will always miss
+				continue;
+			}
+
 			let dmg = Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, battle.conditions, battle.gen);
 			dmg = dmg.getMax();
 			if (move.ohko) {

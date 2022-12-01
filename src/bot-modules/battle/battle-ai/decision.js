@@ -231,8 +231,8 @@ exports.getDecisions = function (battle) {
 		let tables = [];
 		for (let i = 0; i < req.active.length; i++) {
 			tables.push([]);
-			if (req.side.pokemon[i].condition === "0 fnt") {
-				//fainted, pass
+			if (req.side.pokemon[i].condition === "0 fnt" || req.side.pokemon[i].commanding) {
+				//fainted or commanding, pass
 				tables[i].push(new PassDecision());
 				continue;
 			}

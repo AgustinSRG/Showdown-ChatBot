@@ -577,6 +577,7 @@ exports.setup = function (App, BattleData) {
 			let ofIdent = this.parsePokemonIdent(kwargs.of);
 			if (effect.effectType === 'Ability') {
 				poke.markAbility(effect.name);
+				poke.addVolatile('activeability');
 			}
 			switch (effect.id) {
 				case 'brickbreak':
