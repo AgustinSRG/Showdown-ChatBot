@@ -611,7 +611,6 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			break;
 		case "ragefist":
 			bp = Math.min(300, 50 + (50 * (pokeA.timesHit || 0)));
-			console.log("Base power: " + bp);
 			break;
 	}
 

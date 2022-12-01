@@ -29,7 +29,6 @@ module.exports = {
 		let punishment = Text.toId(this.args[2]) || 'mute';
 		let strictMode = Text.toId(this.args[3]) || 'std';
 		let nicks = Text.toId(this.args[4]) || 'std';
-		console.log(word + ' | ' + type + ' | ' + punishment + ' | ' + strictMode + ' | ' + nicks);
 		if (!word || !(type in {'banned': 1, 'inap': 1, 'insult': 1, 'emote': 1}) || !(strictMode in {'std': 1, 'strict': 1}) || !(nicks in {'std': 1, 'ignorenicks': 1})) {
 			return this.errorReply(this.usage({desc: this.mlt('word')}, {desc: 'banned/inap/insult/emote', optional: true},
 				{desc: this.mlt('punishment'), optional: true}, {desc: 'std/strict', optional: true},

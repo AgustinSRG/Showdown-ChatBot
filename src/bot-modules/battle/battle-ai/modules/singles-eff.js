@@ -815,6 +815,7 @@ exports.setup = function (Data) {
 			if (battle.request.active[0].canUltraBurst) {
 				if (!des.ultra) continue; // Ultra burst by default
 			}
+
 			let move = Data.getMove(battle.request.side.pokemon[0].moves[des.moveId]);
 			if (des.zmove) {
 				let zmove = Data.getMove(des.move);

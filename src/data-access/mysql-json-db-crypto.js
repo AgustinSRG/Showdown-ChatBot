@@ -32,7 +32,6 @@ function encrypt(text, algorithm, password) {
  * @returns {String} Decrypted text
  */
 function decrypt(text, algorithm, password) {
-	console.log("Text: " + text);
 	if (text.indexOf(":") === -1) {
 		let decipher = Crypto.createDecipher(algorithm, password);
 		let data = decipher.update(text, 'hex', 'utf8');
