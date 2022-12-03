@@ -299,7 +299,6 @@ exports.setup = function (App) {
 			let packed = '';
 			try {
 				check(id, "You must specify an id");
-				check(!mod.TeamBuilder.dynTeams[id], "Team already exists");
 				check(exportable, "Team cannot be blank");
 				check(format, "You must specify a format");
 				check(Object.keys(App.bot.formats).length === 0 || App.bot.formats[format], "Invalid Format");
