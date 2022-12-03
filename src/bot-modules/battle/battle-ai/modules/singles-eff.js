@@ -602,8 +602,29 @@ exports.setup = function (Data) {
 				case "reflect":
 					if (conditionsA.volatiles["reflect"]) { // Gen 1
 						res.unviable.push(decisions[i]);
-						continue;
 					}
+					continue;
+				case "soak":
+					if (!conditionsB.volatiles["typechange"] && defTypes.join() !== "Water") {
+						res.viable.push(decisions[i]);
+					} else {
+						res.unviable.push(decisions[i]);
+					}
+					continue;
+				case "trickortreat":
+					if (!conditionsB.volatiles["typechange"] && defTypes.indexOf("Ghost") === -1) {
+						res.viable.push(decisions[i]);
+					} else {
+						res.unviable.push(decisions[i]);
+					}
+					continue;
+				case "forestscurse":
+					if (!conditionsB.volatiles["typechange"] && defTypes.indexOf("Grass") === -1) {
+						res.viable.push(decisions[i]);
+					} else {
+						res.unviable.push(decisions[i]);
+					}
+					continue;
 			}
 			if (move.target !== "self" && move.target !== "allySide" && move.target !== "allyTeam" && move.target !== "foeSide" && move.ignoreImmunity === false) {
 				let mvCat = move.category;
