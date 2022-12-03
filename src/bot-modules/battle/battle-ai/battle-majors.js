@@ -329,11 +329,13 @@ exports.setup = function (App, BattleData) {
 				poke.moves.push(move);
 			}
 			if (move.id === 'wish' || move.id === 'healingwish' || move.id === 'lunardance') {
-				this.players[det.side].side.wish = {
-					move: move.id,
-					turn: this.turn,
-					poke: poke,
-				};
+				if (this.players[det.side]) {
+					this.players[det.side].side.wish = {
+						move: move.id,
+						turn: this.turn,
+						poke: poke,
+					};
+				}
 			}
 			if (move.id === 'batonpass') {
 				poke.passing = this.turn;
@@ -350,6 +352,12 @@ exports.setup = function (App, BattleData) {
 			poke.helpers.lastMove = move.id;
 			poke.helpers.lastMoveTurn = this.turn;
 			poke.helpers.lastMoveTarget = poke2 || (this.foe && this.foe.active[0]);
+			if (poke2) {
+				poke2.helpers.lastReceivedMove = move.id;
+				poke2.helpers.lastReceivedMoveTurn = this.turn;
+				poke2.helpers.lastReceivedMoveSide = det.side;
+				poke2.helpers.lastReceivedMoveOrigin = poke;
+			}
 		},
 
 		cant: function (args, kwargs, isIntro) {

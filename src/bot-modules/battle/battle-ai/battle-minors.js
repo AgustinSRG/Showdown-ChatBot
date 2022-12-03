@@ -228,6 +228,7 @@ exports.setup = function (App, BattleData) {
 
 		"-immune": function (args, kwargs) {
 			let poke = this.getActive(args[1]);
+			let det = this.parsePokemonIdent(args[1]);
 			let effect = BattleData.getEffect(args[2], this.gen);
 			let fromeffect = BattleData.getEffect(kwargs.from, this.gen);
 			switch (effect.id) {
@@ -237,8 +238,8 @@ exports.setup = function (App, BattleData) {
 					if (fromeffect && fromeffect.effectType === 'Ability') {
 						poke.markAbility(fromeffect.name);
 					}
+					this.onImmune(poke, fromeffect, this.players[det.side]);
 			}
-			// TODO: Check for ability shield and illusions
 		},
 
 		"-fail": function (args, kwargs) {

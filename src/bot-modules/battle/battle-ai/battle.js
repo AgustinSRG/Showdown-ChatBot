@@ -563,7 +563,7 @@ exports.setup = function (App, CustomModules) {
 			if (!str) {
 				return {
 					side: "unknown",
-					slot: "a",
+					slot: 0,
 					name: "Bulbasaur",
 				};
 			}
@@ -679,6 +679,121 @@ exports.setup = function (App, CustomModules) {
 			this.lastRespectsCache.bp = res;
 			this.lastRespectsCache.rqid = this.rqid;
 			return res;
+		}
+
+		supposeActivePokemonSimple(target, player) {
+			if (player === this.self) {
+				return this.getCalcRequestPokemon(target.slot);
+			} else {
+				let poke = new Calc.Pokemon(target.template, {
+					level: target.level,
+					gender: target.gender,
+					shiny: target.shiny,
+					evs: {},
+				});
+				poke.hp = target.hp;
+				poke.status = target.status;
+				poke.tera = target.tera;
+				poke.timesHit = target.timesHit;
+				poke.supressedAbility = target.supressedAbility;
+				if (target.item === "&unknown") {
+					poke.item = null;
+				} else {
+					poke.item = target.item;
+				}
+				if (target.ability === "&unknown") {
+					poke.ability = poke.template.abilities ? BattleData.getAbility(poke.template.abilities[0], this.gen) : null;
+				} else {
+					poke.ability = target.ability;
+				}
+				return poke;
+			}
+		}
+
+		onImmune(poke, effect, player) {
+			const move = BattleData.getMove(poke.helpers.lastReceivedMove, this.gen);
+			const poke2 = poke.helpers.lastReceivedMoveOrigin;
+			const player2 = this.players[poke.helpers.lastReceivedMoveSide];
+
+			if (!poke2 || !player2 || !player) {
+				return;
+			}
+
+			const pokeA = this.supposeActivePokemonSimple(poke2, player2);
+			const conditionsA = new Calc.Conditions({
+				side: player2.side,
+				volatiles: poke2.volatiles,
+				boosts: poke2.boosts,
+			});
+
+			const pokeB = this.supposeActivePokemonSimple(poke, player);
+			const conditionsB = new Calc.Conditions({
+				side: player.side,
+				volatiles: poke.volatiles,
+				boosts: poke.boosts,
+			});
+
+			if (move.category === "Status") {
+				if (effect && effect.effectType === 'Ability') {
+					const pokeAIgnoredAbility = this.gen < 3 || pokeA.supressedAbility || ((this.conditions["magicroom"] || conditionsA.volatiles["embargo"] || !pokeA.item || pokeA.item.id !== "abilityshield") && (this.conditions["neutralizinggas"]));
+					const pokeBIgnoredAbility = this.gen < 3 || pokeB.supressedAbility || ((this.conditions["magicroom"] || conditionsB.volatiles["embargo"] || !pokeB.item || pokeB.item.id !== "abilityshield") && (this.conditions["neutralizinggas"] || move.ignoreAbility || (pokeA.ability && !pokeAIgnoredAbility && (pokeA.ability.id in { "moldbreaker": 1, "turboblaze": 1, "teravolt": 1, "myceliummight": 1 }))));
+
+					if (pokeBIgnoredAbility) {
+						// The target has an Ability Shield
+						this.debug("[Immune] Detected ability shield from status move: " + move.id);
+						poke.item = BattleData.getItem(Text.toId("Ability Shield"), this.gen);
+					}
+				}
+				return;
+			}
+
+			const dmg = Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, this.conditions, this.gen).getMax();
+
+			this.debug("[Immune] Current damage: " + dmg);
+
+			if (dmg > 0) {
+				// Maybe a Zoroark?
+
+				let oldTemplate = pokeB.template;
+				pokeB.template = BattleData.getPokemon(Text.toId("Zoroark"), this.gen);
+				const dmgZoroark = Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, this.conditions, this.gen).getMax();
+				pokeB.template = oldTemplate;
+
+				this.debug("[Immune] Zoroark damage: " + dmgZoroark);
+
+				if (dmgZoroark <= 0) {
+					// The target is a zoroark disguised
+					poke.addVolatile("zoroark");
+				} else {
+					// Maybe a Zoroark-Hisui?
+
+					oldTemplate = pokeB.template;
+					pokeB.template = BattleData.getPokemon(Text.toId("Zoroark-Hisui"), this.gen);
+					const dmgZoroarkHisui = Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, this.conditions, this.gen).getMax();
+					pokeB.template = oldTemplate;
+
+					this.debug("[Immune] Zoroark-Hisui damage: " + dmgZoroarkHisui);
+
+					if (dmgZoroarkHisui <= 0) {
+						poke.addVolatile("zoroarkhisui");
+					}
+				}
+
+				if (effect && effect.effectType === 'Ability') {
+					// Calculate again with ability shield
+					let oldItem = pokeB.item;
+					pokeB.item = BattleData.getItem(Text.toId("Ability Shield"), this.gen);
+					const dmgAbilityShield = Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, this.conditions, this.gen).getMax();
+					pokeB.item = oldItem;
+
+					this.debug("[Immune] Ability shield damage: " + dmgAbilityShield);
+
+					if (dmgAbilityShield <= 0) {
+						// The target has an ability shield
+						poke.item = BattleData.getItem(Text.toId("Ability Shield"), this.gen);
+					}
+				}
+			}
 		}
 
 		destroy() {

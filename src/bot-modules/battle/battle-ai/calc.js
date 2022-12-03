@@ -203,7 +203,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	const pokeBIgnoredAbility = gen < 3 || pokeB.supressedAbility || ((gconditions["magicroom"] || conditionsB.volatiles["embargo"] || !pokeB.item || pokeB.item.id !== "abilityshield") && (gconditions["neutralizinggas"] || move.ignoreAbility || (pokeA.ability && !pokeAIgnoredAbility && (pokeA.ability.id in { "moldbreaker": 1, "turboblaze": 1, "teravolt": 1 }))));
 
 	let originalTypes = pokeA.template.types.slice();
-	let offTypes = pokeA.template.types.slice();
+	let offTypes = originalTypes.slice();
 	if (conditionsA.volatiles["typechange"] && conditionsA.volatiles["typechange"].length) offTypes = conditionsA.volatiles["typechange"].slice();
 	if (conditionsA.volatiles["typeadd"]) offTypes.push(conditionsA.volatiles["typeadd"]);
 	if (pokeA.typechange && pokeA.typechange.length) {
@@ -410,6 +410,11 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 
 	let eff;
 	let defTypes = pokeB.template.types.slice();
+	if (conditionsB.volatiles["zoroark"]) {
+		defTypes = ["Dark"];
+	} else if (conditionsB.volatiles["zoroarkhisui"]) {
+		defTypes = ["Normal", "Ghost"];
+	}
 	if (conditionsB.volatiles["typechange"] && conditionsB.volatiles["typechange"].length) defTypes = conditionsB.volatiles["typechange"].slice();
 	if (conditionsB.volatiles["typeadd"]) defTypes.push(conditionsB.volatiles["typeadd"]);
 	if (pokeB.typechange && pokeB.typechange.length) {
