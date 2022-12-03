@@ -47,17 +47,16 @@ exports.setup = function (Data) {
 		pokeB.status = target.status;
 		pokeB.tera = target.tera;
 		pokeB.timesHit = target.timesHit;
+		pokeB.supressedAbility = target.supressedAbility;
 		if (target.item === "&unknown") {
 			pokeB.item = null;
 		} else {
 			pokeB.item = target.item;
 		}
-		if (!target.supressedAbility) {
-			if (target.ability === "&unknown") {
-				pokeB.ability = pokeB.template.abilities ? Data.getAbility(pokeB.template.abilities[0]) : null;
-			} else {
-				pokeB.ability = target.ability;
-			}
+		if (target.ability === "&unknown") {
+			pokeB.ability = pokeB.template.abilities ? Data.getAbility(pokeB.template.abilities[0]) : null;
+		} else {
+			pokeB.ability = target.ability;
 		}
 		return pokeB;
 	}
@@ -276,15 +275,16 @@ exports.setup = function (Data) {
 				continue;
 			}
 
-			let defensiveAbilityIgnored = !(battle.gen >= 3 && pokeB.ability && !move.ignoreAbility && (!pokeA.ability || !(pokeA.ability.id in { "moldbreaker": 1, "turboblaze": 1, "teravolt": 1, "myceliummight": 1 })));
+			const pokeAIgnoredAbility = battle.gen < 3 || pokeA.supressedAbility || ((battle.conditions["magicroom"] || conditionsA.volatiles["embargo"] || !pokeA.item || pokeA.item.id !== "abilityshield") && (battle.conditions["neutralizinggas"]));
+			const pokeBIgnoredAbility = battle.gen < 3 || pokeB.supressedAbility || ((battle.conditions["magicroom"] || conditionsB.volatiles["embargo"] || !pokeB.item || pokeB.item.id !== "abilityshield") && (battle.conditions["neutralizinggas"] || move.ignoreAbility || (pokeA.ability && !pokeAIgnoredAbility && (pokeA.ability.id in { "moldbreaker": 1, "turboblaze": 1, "teravolt": 1, "myceliummight": 1 }))));
 
 			if (move.category === "Status") {
 				res.total++;
-				if (move.flags && move.flags['reflectable'] && !defensiveAbilityIgnored && !battle.conditions["neutralizinggas"] && pokeB.ability && pokeB.ability.id === "magicbounce") {
+				if (move.flags && move.flags['reflectable'] && pokeB.ability && !pokeBIgnoredAbility && pokeB.ability.id === "magicbounce") {
 					res.unviable.push(decisions[i]);
 					continue;
 				}
-				if (move.target !== "self" && battle.gen >= 7 && !battle.conditions["neutralizinggas"] && pokeA.ability && pokeA.ability.id === "prankster" && defTypes.indexOf("Dark") >= 0) {
+				if (move.target !== "self" && battle.gen >= 7 && pokeA.ability && !pokeAIgnoredAbility && pokeA.ability.id === "prankster" && defTypes.indexOf("Dark") >= 0) {
 					res.unviable.push(decisions[i]);
 					continue;
 				}
@@ -294,7 +294,7 @@ exports.setup = function (Data) {
 						continue;
 					}
 				}
-				if (!battle.conditions["neutralizinggas"] && pokeB.ability && pokeB.ability.id === "goodasgold" && move.target !== "self" && move.target !== "allySide" && move.target !== "foeSide" && move.target !== "allyTeam") {
+				if (pokeB.ability && !pokeBIgnoredAbility && pokeB.ability.id === "goodasgold" && move.target !== "self" && move.target !== "allySide" && move.target !== "foeSide" && move.target !== "allyTeam") {
 					res.unviable.push(decisions[i]);
 					continue;
 				}
@@ -306,7 +306,7 @@ exports.setup = function (Data) {
 			}
 
 			if (move.flags && move.flags["powder"] && battle.gen > 5) {
-				if (!battle.conditions["neutralizinggas"] && !defensiveAbilityIgnored && !pokeB.ability && pokeB.ability.id === "overcoat") {
+				if (pokeB.ability && !pokeBIgnoredAbility && pokeB.ability.id === "overcoat") {
 					res.unviable.push(decisions[i]);
 					continue;
 				}
@@ -441,7 +441,7 @@ exports.setup = function (Data) {
 					else res.unviable.push(decisions[i]);
 					continue;
 				case "geomancy":
-					if (pokeA.item && pokeA.item.id === "powerherb") res.viable.push(decisions[i]);
+					if (pokeA.item && pokeA.item.id === "powerherb" && !battle.conditions["magicroom"] && !conditionsA.volatiles["embargo"]) res.viable.push(decisions[i]);
 					else if (!pokeA.item) res.unviable.push(decisions[i]);
 					continue;
 				case "destinybond":
@@ -493,6 +493,10 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "gastroacid":
+					if (pokeB.item && pokeB.item.id === "abilityshield" && !battle.conditions["magicroom"] && !conditionsB.volatiles["embargo"]) {
+						res.unviable.push(decisions[i]);
+						continue;
+					}
 					if (battle.foe.active[0].helpers.hasAbilityCannotBeDisabled) {
 						res.unviable.push(decisions[i]);
 						continue;
@@ -504,7 +508,7 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "simplebeam":
-					if (pokeB.item && pokeB.item.id === "abilityshield") {
+					if (pokeB.item && pokeB.item.id === "abilityshield" && !battle.conditions["magicroom"] && !conditionsB.volatiles["embargo"]) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
@@ -519,7 +523,7 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "worryseed":
-					if (pokeB.item && pokeB.item.id === "abilityshield") {
+					if (pokeB.item && pokeB.item.id === "abilityshield" && !battle.conditions["magicroom"] && !conditionsB.volatiles["embargo"]) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
@@ -534,7 +538,7 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "entrainment":
-					if (pokeB.item && pokeB.item.id === "abilityshield") {
+					if (pokeB.item && pokeB.item.id === "abilityshield" && !battle.conditions["magicroom"] && !conditionsB.volatiles["embargo"]) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
@@ -552,7 +556,7 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "skillswap":
-					if (pokeB.item && pokeB.item.id === "abilityshield") {
+					if (pokeB.item && pokeB.item.id === "abilityshield" && !battle.conditions["magicroom"] && !conditionsB.volatiles["embargo"]) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
@@ -628,6 +632,38 @@ exports.setup = function (Data) {
 					if (conditionsB.boosts[j] > 0) boostsHaze++;
 				}
 				if (boostsHaze) {
+					res.viable.push(decisions[i]);
+				} else {
+					res.unviable.push(decisions[i]);
+				}
+				continue;
+			}
+			if (move.id in { "heartswap": 1, "powerswap": 1, "guardswap": 1 }) {
+				let boostSelf = 0;
+				for (let j in conditionsA.boosts) {
+					if (move.id === "powerswap" && j !== "atk" && j !== "spa") continue;
+					if (move.id === "guardswap" && j !== "def" && j !== "spd") continue;
+					boostSelf += conditionsA.boosts[j];
+				}
+				let boostFoe = 0;
+				for (let j in conditionsB.boosts) {
+					if (move.id === "powerswap" && j !== "atk" && j !== "spa") continue;
+					if (move.id === "guardswap" && j !== "def" && j !== "spd") continue;
+					boostFoe += conditionsB.boosts[j];
+				}
+				if (boostSelf < boostFoe) {
+					res.viable.push(decisions[i]);
+				} else {
+					res.unviable.push(decisions[i]);
+				}
+				continue;
+			}
+			if (move.id in { "batonpass": 1 }) {
+				let boostsToPass = 0;
+				for (let j in conditionsA.boosts) {
+					boostsToPass += conditionsA.boosts[j];
+				}
+				if (boostsToPass > 0 && !conditionsA.volatiles["perish3"] && !conditionsA.volatiles["perish2"] && !conditionsA.volatiles["perish1"]) {
 					res.viable.push(decisions[i]);
 				} else {
 					res.unviable.push(decisions[i]);
@@ -722,7 +758,7 @@ exports.setup = function (Data) {
 				if (usefulBoosts < 0) {
 					res.unviable.push(decisions[i]);
 					continue;
-				} else if (sumBoost < 0 && ((pokeB.item && pokeB.item.id === "clearamulet") || (pokeB.ability && pokeB.ability.id === "clearbody"))) {
+				} else if (sumBoost < 0 && ((pokeB.item && pokeB.item.id === "clearamulet" && !battle.conditions["magicroom"] && !conditionsB.volatiles["embargo"]) || (pokeB.ability && pokeB.ability.id === "clearbody"))) {
 					res.unviable.push(decisions[i]);
 					continue;
 				}
@@ -832,11 +868,13 @@ exports.setup = function (Data) {
 				move = dmove;
 			}
 			if (move.category !== "Physical" && move.category !== "Special") continue; // Status move
+
+			const pokeAIgnoredAbility = battle.gen < 3 || pokeA.supressedAbility || ((battle.conditions["magicroom"] || conditionsA.volatiles["embargo"] || !pokeA.item || pokeA.item.id !== "abilityshield") && (battle.conditions["neutralizinggas"]));
 			let dmgData = Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, battle.conditions, battle.gen);
 			let dmg = dmgData.getMax();
 			let dmgMin = dmgData.getMin();
 			if (move.ohko) {
-				if (battle.conditions["neutralizinggas"] || !pokeA.ability || !(pokeA.ability.id in { 'noguard': 1 })) {
+				if (!pokeA.ability || !pokeAIgnoredAbility || !(pokeA.ability.id in { 'noguard': 1 })) {
 					dmg = dmg * (0.3 * (pokeA.level / (pokeB.level || 100)));
 					dmgMin = dmgMin * (0.3 * (pokeA.level / (pokeB.level || 100)));
 				}
@@ -936,7 +974,7 @@ exports.setup = function (Data) {
 		});
 		if (bestSW) {
 			if (conditionsA.volatiles["perish1"] && bestSW) return bestSW; // Perish Song
-			if ((!pokeA.item || pokeA.item.id !== "heavydutyboots") && Calc.getHazardsDamage(pokeA, conditionsA, battle.gen, !!battle.conditions["inversebattle"]) > pokeA.hp) bestSW = null; //No switch if you die
+			if ((!pokeA.item || pokeA.item.id !== "heavydutyboots" || battle.conditions["magicroom"] || conditionsA.volatiles["embargo"]) && Calc.getHazardsDamage(pokeA, conditionsA, battle.gen, !!battle.conditions["inversebattle"]) > pokeA.hp) bestSW = null; //No switch if you die
 			if (conditionsA.volatiles["substitute"] && damageMoves.meh.length) bestSW = null;
 			if (conditionsA.volatiles["leechseed"]) switchIfNoOption = true;
 			if (conditionsA.boosts["spa"] && conditionsA.boosts["spa"] < 1) switchIfNoOption = true;

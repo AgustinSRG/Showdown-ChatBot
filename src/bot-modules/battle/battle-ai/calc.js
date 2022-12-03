@@ -30,6 +30,7 @@ class Pokemon {
 		this.tera = "";
 		this.timesHit = 0;
 		this.typechange = null;
+		this.supressedAbility = false;
 		for (let i in properties) {
 			if (typeof this[i] === "undefined" || typeof this[i] === "function") continue;
 			if (i === "template") continue;
@@ -197,8 +198,9 @@ exports.getHazardsDamage = function (poke, conditions, gen, inverse) {
 exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gconditions, gen) {
 	if (!gen) gen = 9;
 	if (!gconditions) gconditions = Object.create(null);
-	if (!conditionsA) conditionsA = Object.create(null);
-	if (!conditionsB) conditionsB = Object.create(null);
+
+	const pokeAIgnoredAbility = gen < 3 || pokeA.supressedAbility || ((gconditions["magicroom"] || conditionsA.volatiles["embargo"] || !pokeA.item || pokeA.item.id !== "abilityshield") && (gconditions["neutralizinggas"]));
+	const pokeBIgnoredAbility = gen < 3 || pokeB.supressedAbility || ((gconditions["magicroom"] || conditionsB.volatiles["embargo"] || !pokeB.item || pokeB.item.id !== "abilityshield") && (gconditions["neutralizinggas"] || move.ignoreAbility || (pokeA.ability && !pokeAIgnoredAbility && (pokeA.ability.id in { "moldbreaker": 1, "turboblaze": 1, "teravolt": 1 }))));
 
 	let originalTypes = pokeA.template.types.slice();
 	let offTypes = pokeA.template.types.slice();
@@ -273,18 +275,18 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	}
 
 	if (atkStat === "atk" && pokeA.status === "brn") {
-		if (gen < 3 || !pokeA.ability || pokeA.ability.id !== "guts") atk = Math.floor(atk * 0.5);
+		if (!pokeA.ability || !pokeAIgnoredAbility || pokeA.ability.id !== "guts") atk = Math.floor(atk * 0.5);
 	}
 
-	if (atkStat === "atk" && pokeB.ability && pokeB.ability.id === "tabletsofruin") {
+	if (atkStat === "atk" && pokeB.ability && !pokeBIgnoredAbility && pokeB.ability.id === "tabletsofruin") {
 		atk = Math.floor(atk * 0.75);
-	} else if (atkStat === "spa" && pokeB.ability && pokeB.ability.id === "vesselofruin") {
+	} else if (atkStat === "spa" && pokeB.ability && !pokeBIgnoredAbility && pokeB.ability.id === "vesselofruin") {
 		atk = Math.floor(atk * 0.75);
 	}
 
-	if (defStat === "def" && pokeA.ability && pokeA.ability.id === "swordofruin") {
+	if (defStat === "def" && pokeA.ability && !pokeAIgnoredAbility && pokeA.ability.id === "swordofruin") {
 		def = Math.floor(def * 0.75);
-	} else if (defStat === "spd" && pokeA.ability && pokeA.ability.id === "beadsofruin") {
+	} else if (defStat === "spd" && pokeA.ability && !pokeAIgnoredAbility && pokeA.ability.id === "beadsofruin") {
 		def = Math.floor(def * 0.75);
 	}
 
@@ -310,17 +312,20 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		noLevitation = true;
 	}
 
+	const pokeAItemDisabled = gconditions["magicroom"] || conditionsA.volatiles["embargo"];
+	const pokeBItemDisabled = gconditions["magicroom"] || conditionsB.volatiles["embargo"];
+
 	switch (move.id) {
 		case "naturalgift":
-			if (pokeA.item && pokeA.item.naturalGift && pokeA.item.naturalGift.type) moveType = pokeA.item.naturalGift.type;
+			if (pokeA.item && !pokeAItemDisabled && pokeA.item.naturalGift && pokeA.item.naturalGift.type) moveType = pokeA.item.naturalGift.type;
 			else moveType = "Normal";
 			break;
 		case "judgment":
-			if (pokeA.item && pokeA.item.onPlate) moveType = pokeA.item.onPlate;
+			if (pokeA.item && !pokeAItemDisabled && pokeA.item.onPlate) moveType = pokeA.item.onPlate;
 			else moveType = "Normal";
 			break;
 		case "multiattack":
-			if (pokeA.item && pokeA.item.onMemory) moveType = pokeA.item.onMemory;
+			if (pokeA.item && !pokeAItemDisabled && pokeA.item.onMemory) moveType = pokeA.item.onMemory;
 			else moveType = "Normal";
 			break;
 		case "terablast":
@@ -339,7 +344,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			break;
 	}
 
-	if (gen >= 3 && pokeA.ability) {
+	if (pokeA.ability && !pokeAIgnoredAbility) {
 		switch (pokeA.ability.id) {
 			case "normalize":
 				moveType = "Normal";
@@ -418,7 +423,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		//debug("EFF [" + moveType + ", " + defTypes[t] + "] = " + eff);
 		if (!eff && defTypes[t] === "Ghost") {
 			if (conditionsB.volatiles["foresight"]) eff = 1;
-			if (gen >= 3 && pokeA.ability && pokeA.ability.id === "scrappy") eff = 1;
+			if (pokeA.ability && !pokeAIgnoredAbility && pokeA.ability.id === "scrappy") eff = 1;
 		}
 		if (move.id === "freezedry" && defTypes[t] === "Water") eff = 2;
 		if (moveType === "Ground" && noLevitation && defTypes[t] === "Flying") eff = 1;
@@ -433,7 +438,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		typesMux = 1; /* Hit neutral */
 	}
 
-	if (gen >= 3 && pokeB.ability && !gconditions["neutralizinggas"] && !move.ignoreAbility && (!pokeA.ability || !(pokeA.ability.id in { "moldbreaker": 1, "turboblaze": 1, "teravolt": 1 }))) {
+	if (pokeB.ability && !pokeBIgnoredAbility) {
 		switch (pokeB.ability.id) {
 			case "stormdrain":
 				if (moveType === "Water") {
@@ -490,7 +495,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		}
 	}
 
-	if (pokeB.item) {
+	if (pokeB.item && !pokeBItemDisabled) {
 		switch (pokeB.item.id) {
 			case "airballoon":
 				if (moveType === "Ground" && !noLevitation) inmune = true;
@@ -502,7 +507,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		if (gconditions["psychicterrain"] && move.priority > 0) inmune = true;
 	}
 
-	if (gen < 3 || gconditions["neutralizinggas"] || !pokeA.ability || pokeA.supressedAbility || !(pokeA.ability.id in { 'airlock': 1, 'cloudnine': 1 })) {
+	if ((!pokeA.ability || !pokeAIgnoredAbility || !(pokeA.ability.id in { 'airlock': 1, 'cloudnine': 1 })) && (!pokeB.ability || !pokeBIgnoredAbility || !(pokeB.ability.id in { 'airlock': 1, 'cloudnine': 1 }))) {
 		if (gconditions.weather === "desolateland" && move.type === "Water") inmune = true;
 		if (gconditions.weather === "primordialsea" && move.type === "Fire") inmune = true;
 	}
@@ -539,11 +544,11 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			}
 			break;
 		case "fling":
-			if (pokeA.item && pokeA.item.fling) bp = pokeA.item.fling.basePower || 0;
+			if (pokeA.item && !pokeAItemDisabled && pokeA.item.fling) bp = pokeA.item.fling.basePower || 0;
 			else bp = 0;
 			break;
 		case "naturalgift":
-			if (pokeA.item && pokeA.item.naturalGift && pokeA.item.naturalGift.basePower) bp = pokeA.item.naturalGift.basePower;
+			if (pokeA.item && !pokeAItemDisabled && pokeA.item.naturalGift && pokeA.item.naturalGift.basePower) bp = pokeA.item.naturalGift.basePower;
 			else bp = 0;
 			break;
 		case "grassknot":
@@ -622,7 +627,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 
 		if (move.ohko) {
 			if (pokeA.level < pokeB.level) return new Damage(targetHP);
-			if (gen >= 3 && !gconditions["neutralizinggas"] && pokeB.ability && pokeB.ability.id === "sturdy" && !move.ignoreAbility && (!pokeA.ability || !(pokeA.ability.id in { "moldbreaker": 1, "turboblaze": 1, "teravolt": 1 }))) return new Damage(targetHP);
+			if (pokeB.ability && !pokeBIgnoredAbility && pokeB.ability.id === "sturdy") return new Damage(targetHP);
 			if (conditionsB.volatiles['dynamax']) return new Damage(targetHP);
 			return new Damage(targetHP, [targetHP]);
 		}
@@ -675,7 +680,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			break;
 	}
 
-	if (gen >= 3 && pokeA.ability) {
+	if (pokeA.ability && !pokeAIgnoredAbility) {
 		switch (pokeA.ability.id) {
 			case "technician":
 				if (bp <= 60) bp = Math.floor(bp * 1.5);
@@ -733,7 +738,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		}
 	}
 
-	if (gen >= 3 && pokeB.ability && !gconditions["neutralizinggas"] && !move.ignoreAbility && (!pokeA.ability || !(pokeA.ability.id in { "moldbreaker": 1, "turboblaze": 1, "teravolt": 1 }))) {
+	if (pokeB.ability && !pokeBIgnoredAbility) {
 		switch (pokeB.ability.id) {
 			case "dryskin":
 				if (moveType === "Fire") bp = Math.floor(bp * 1.3);
@@ -754,18 +759,18 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			minhits = move.multihit;
 			maxhits = move.multihit;
 		}
-		if (gen >= 3 && pokeA.ability && pokeA.ability.id === "skilllink") {
+		if (pokeA.ability && !pokeAIgnoredAbility && pokeA.ability.id === "skilllink") {
 			bp = Math.floor(bp * maxhits);
 		} else {
 			bp = Math.floor(bp * ((minhits + maxhits) / 2));
 		}
 	}
 
-	if (move.id in { skyattack: 1, skullbash: 1, razorwind: 1, meteorbeam: 1, iceburn: 1, freezeshock: 1 } && (!pokeA.item || pokeA.item.id !== "powerherb")) {
+	if (move.id in { skyattack: 1, skullbash: 1, razorwind: 1, meteorbeam: 1, iceburn: 1, freezeshock: 1 } && (!pokeA.item || !pokeAItemDisabled || pokeA.item.id !== "powerherb")) {
 		bp = Math.floor(bp / 2);
 	}
 
-	if (pokeA.item) {
+	if (pokeA.item && !pokeAItemDisabled) {
 		switch (pokeA.item.id) {
 			case "choiceband":
 				if (atkStat === "atk") atk = Math.floor(atk * 1.5);
@@ -782,11 +787,11 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 
 	let modifier = 1;
 
-	if (pokeA.item && pokeA.item.id === "lifeorb") modifier *= 1.3;
+	if (pokeA.item && !pokeAItemDisabled && pokeA.item.id === "lifeorb") modifier *= 1.3;
 
 	/* STAB */
-	if (offTypes.indexOf(moveType) >= 0 || (gen >= 3 && pokeA.ability && pokeA.ability.id in { "protean": 1, "libero": 1 })) {
-		if (gen >= 3 && pokeA.ability && pokeA.ability.id === "adaptability") modifier *= 2;
+	if (offTypes.indexOf(moveType) >= 0 || (pokeA.ability && !pokeAIgnoredAbility && pokeA.ability.id in { "protean": 1, "libero": 1 })) {
+		if (pokeA.ability && !pokeAIgnoredAbility && pokeA.ability.id === "adaptability") modifier *= 2;
 		else modifier *= 1.5;
 	}
 
@@ -801,7 +806,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	}
 
 	/* Weather */
-	if (gen < 3 || gconditions["neutralizinggas"] || !pokeA.ability || pokeA.supressedAbility || !(pokeA.ability.id in { 'airlock': 1, 'cloudnine': 1 })) {
+	if ((!pokeA.ability || !pokeAIgnoredAbility || !(pokeA.ability.id in { 'airlock': 1, 'cloudnine': 1 })) && (!pokeB.ability || !pokeBIgnoredAbility || !(pokeB.ability.id in { 'airlock': 1, 'cloudnine': 1 }))) {
 		if (move.type === "Water" && (gconditions.weather === "primordialsea" || gconditions.weather === "raindance")) modifier *= 2;
 
 		if (move.type === "Fire" && (gconditions.weather === "desolateland" || gconditions.weather === "sunnyday")) modifier *= 2;
@@ -830,7 +835,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 
 	if (conditionsA.boosts[atkStat] || stoleBoosts) {
 		let selfBoosts = conditionsA.boosts[atkStat] || 0;
-		if (!pokeB.ability || gconditions["neutralizinggas"] || pokeB.ability.id !== "unaware" || move.ignoreAbility || (pokeA.ability && (pokeA.ability.id in { "moldbreaker": 1, "turboblaze": 1, "teravolt": 1 }))) {
+		if (!pokeB.ability || !pokeBIgnoredAbility || pokeB.ability.id !== "unaware") {
 			let muxOff = 1 + (0.5) * Math.abs(selfBoosts + stoleBoosts);
 			if (selfBoosts + stoleBoosts < 0) muxOff = 1 / muxOff;
 			atk = Math.floor(atk * muxOff);
@@ -838,7 +843,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	}
 
 	if (conditionsB.boosts[defStat]) {
-		if (!conditionsA.inmediate["crit"] && !move.willCrit && !move.ignoreDefensive && (!pokeA.ability || pokeA.ability.id !== "unaware") && !move.stealsBoosts) {
+		if (!conditionsA.inmediate["crit"] && !move.willCrit && !move.ignoreDefensive && (!pokeA.ability || !pokeAIgnoredAbility || pokeA.ability.id !== "unaware") && !move.stealsBoosts) {
 			let muxDef = 1 + (0.5) * Math.abs(conditionsB.boosts[defStat]);
 			if (conditionsB.boosts[defStat] < 0) muxDef = 1 / muxDef;
 			def = Math.floor(def * muxDef);
@@ -896,5 +901,5 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	let dmg = (((((2 * pokeA.level / 5) + 2) * atk * bp / def) / 50) + 2) * typesMux * modifier;
 	if (bp === 0) dmg = 0;
 
-	return new Damage(targetHP, getRolls(dmg), (gen >= 3 && pokeB.hp >= 100 && !gconditions["neutralizinggas"] && !move.ignoreAbility && (!pokeA.ability || !(pokeA.ability.id in { "moldbreaker": 1, "turboblaze": 1, "teravolt": 1 })) && pokeB.ability && pokeB.ability.id === "sturdy"));
+	return new Damage(targetHP, getRolls(dmg), (pokeB.hp >= 100 && pokeB.ability && !pokeBIgnoredAbility && pokeB.ability.id === "sturdy"));
 };

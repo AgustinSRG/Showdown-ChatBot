@@ -64,6 +64,7 @@ exports.setup = function (App, BattleData) {
 			let det = this.parsePokemonIdent(args[1]);
 			let hp = this.parseHealth(args[2]);
 			poke.hp = hp;
+			poke.fainted = false;
 			if (kwargs.from) {
 				let effect = BattleData.getEffect(kwargs.from, this.gen);
 				if (effect.effectType === 'Ability') {
@@ -237,6 +238,7 @@ exports.setup = function (App, BattleData) {
 						poke.markAbility(fromeffect.name);
 					}
 			}
+			// TODO: Check for ability shield and illusions
 		},
 
 		"-fail": function (args, kwargs) {
@@ -570,6 +572,16 @@ exports.setup = function (App, BattleData) {
 			}
 		},
 
+		"-block": function (args, kwargs) {
+			let poke = this.getActive(args[1]);
+			let effect = BattleData.getEffect(args[2], this.gen);
+			if (effect.effectType === 'Ability') {
+				poke.markAbility(effect.name);
+			} else if (effect.effectType === 'Item') {
+				poke.item = BattleData.getItem(effect.id, this.gen);
+			}
+		},
+
 		"-activate": function (args, kwargs) {
 			let poke = this.getActive(args[1]);
 			let effect = BattleData.getEffect(args[2], this.gen);
@@ -615,6 +627,10 @@ exports.setup = function (App, BattleData) {
 				case 'safetygoggles':
 					poke.item = BattleData.getItem("safetygoggles", this.gen);
 					break;
+				default:
+					if (effect.effectType === 'Item') {
+						poke.item = BattleData.getItem(effect.id, this.gen);
+					}
 			}
 		},
 

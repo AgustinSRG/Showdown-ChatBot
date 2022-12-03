@@ -124,6 +124,7 @@ exports.setup = function (Data) {
 				pokeB.status = targets[j].status;
 				pokeB.tera = targets[j].tera;
 				pokeB.timesHit = targets[j].timesHit;
+				pokeB.supressedAbility = targets[j].supressedAbility;
 				if (targets[j].item === "&unknown") {
 					pokeB.item = null;
 				} else {
@@ -179,6 +180,7 @@ exports.setup = function (Data) {
 			pokeB.status = targets[i].status;
 			pokeB.tera = targets[i].tera;
 			pokeB.timesHit = targets[i].timesHit;
+			pokeB.supressedAbility = targets[i].supressedAbility;
 			if (targets[i].item === "&unknown") {
 				pokeB.item = null;
 			} else {
@@ -286,6 +288,7 @@ exports.setup = function (Data) {
 			pokeB.status = targets[i].status;
 			pokeB.tera = targets[i].tera;
 			pokeB.timesHit = targets[i].timesHit;
+			pokeB.supressedAbility = targets[i].supressedAbility;
 			if (targets[i].item === "&unknown") {
 				pokeB.item = null;
 			} else {

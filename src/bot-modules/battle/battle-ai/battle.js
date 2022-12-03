@@ -440,7 +440,14 @@ exports.setup = function (App, CustomModules) {
 		}
 
 		parseDetails(str) {
-			if (!str) return null;
+			if (!str) {
+				return {
+					species: "Bulbasaur",
+					level: 100,
+					shiny: false,
+					gender: false,
+				};
+			}
 			let details = str.split(",");
 			for (let d = 0; d < details.length; d++) {
 				details[d] = details[d].trim();
@@ -474,7 +481,12 @@ exports.setup = function (App, CustomModules) {
 		}
 
 		parseStatus(str) {
-			if (!str) return null;
+			if (!str) {
+				return {
+					hp: 100,
+					status: false,
+				};
+			}
 			let status = {
 				hp: 100,
 				status: false,
@@ -509,28 +521,52 @@ exports.setup = function (App, CustomModules) {
 		}
 
 		getSide(str) {
-			if (!str) return null;
+			if (!str) return new Player("unknown");
 			str = str.split(":")[0];
-			return this.players[str];
+			if (this.players[str]) {
+				return this.players[str];
+			} else {
+				return new Player("unknown");
+			}
 		}
 
 		getActive(str) {
-			if (!str) return null;
+			if (!str) return new BattleData.Pokemon(BattleData.getPokemon(Text.toId("Bulbasaur"), this.gen), { name: "Unknown Pokemon" });
 			let side = str.substr(0, 2);
 			str = str.substr(2);
 			let pokeId = str.substr(0, 1);
-			let slot = this.parseSlot(pokeId);
-			str = str.substr(1);
-			let name = (str.substr(1) || "").trim();
-			if (this.players[side] && this.players[side].active[slot]) {
-				this.players[side].active[slot].name = name;
-				return this.players[side].active[slot];
+
+			if (pokeId === ":") {
+				// Any
+				let name = (str.substr(2) || "").trim();
+				if (this.players[side]) {
+					for (let poke of this.players[side].pokemon) {
+						if (poke.name === name) {
+							return poke;
+						}
+					}
+				}
+			} else {
+				// Active
+				let slot = this.parseSlot(pokeId);
+				str = str.substr(1);
+				let name = (str.substr(1) || "").trim();
+				if (this.players[side] && this.players[side].active[slot]) {
+					this.players[side].active[slot].name = name;
+					return this.players[side].active[slot];
+				}
 			}
-			return null;
+			return new BattleData.Pokemon(BattleData.getPokemon(Text.toId("Bulbasaur"), this.gen), { name: "Unknown Pokemon" });
 		}
 
 		parsePokemonIdent(str) {
-			if (!str) return null;
+			if (!str) {
+				return {
+					side: "unknown",
+					slot: "a",
+					name: "Bulbasaur",
+				};
+			}
 			let side = str.substr(0, 2);
 			str = str.substr(2);
 			let pokeId = str.substr(0, 1);
@@ -567,6 +603,7 @@ exports.setup = function (App, CustomModules) {
 			if (pokeActive) {
 				pokeA.tera = pokeActive.tera;
 				pokeA.timesHit = pokeActive.timesHit;
+				pokeA.supressedAbility = pokeActive.supressedAbility;
 			}
 
 			pokeA.ability = p.ability ? BattleData.getAbility(p.ability, this.gen) : BattleData.getAbility(p.baseAbility, this.gen);
