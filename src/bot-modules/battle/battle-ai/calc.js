@@ -625,7 +625,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	}
 
 	if (!bp) {
-		if (move.id === "naturesmadness" || move.id === "superfang") return new Damage(targetHP, [Math.floor((statsB.hp * (pokeB.hp / 2)) / 100)]);
+		if (move.id === "naturesmadness" || move.id === "superfang" || move.id === "ruination") return new Damage(targetHP, [Math.floor((statsB.hp * (pokeB.hp / 2)) / 100)]);
 		if (move.id === "guardianofalola") return new Damage(targetHP, [Math.floor((statsB.hp * (pokeB.hp / 2)) / 100)]);
 		if (move.damage === "level") return new Damage(targetHP, [pokeA.level]);
 		if (typeof move.damage === "number") return new Damage(targetHP, [move.damage]);
