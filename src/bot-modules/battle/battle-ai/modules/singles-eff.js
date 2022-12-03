@@ -129,6 +129,12 @@ exports.setup = function (Data) {
 
 		let defTypes = pokeB.template.types.slice();
 
+		if (conditionsB.volatiles["zoroark"]) {
+			defTypes = ["Dark"];
+		} else if (conditionsB.volatiles["zoroarkhisui"]) {
+			defTypes = ["Normal", "Ghost"];
+		}
+
 		if (conditionsB.volatiles["typechange"] && conditionsB.volatiles["typechange"].length) defTypes = conditionsB.volatiles["typechange"].slice();
 		if (conditionsB.volatiles["typeadd"]) defTypes.push(conditionsB.volatiles["typeadd"]);
 
@@ -240,6 +246,11 @@ exports.setup = function (Data) {
 		if (conditionsA.volatiles["typechange"] && conditionsA.volatiles["typechange"].length) offTypes = conditionsA.volatiles["typechange"].slice();
 		if (conditionsA.volatiles["typeadd"]) offTypes.push(conditionsA.volatiles["typeadd"]);
 		let defTypes = pokeB.template.types.slice();
+		if (conditionsB.volatiles["zoroark"]) {
+			defTypes = ["Dark"];
+		} else if (conditionsB.volatiles["zoroarkhisui"]) {
+			defTypes = ["Normal", "Ghost"];
+		}
 		if (conditionsB.volatiles["typechange"] && conditionsB.volatiles["typechange"].length) defTypes = conditionsB.volatiles["typechange"].slice();
 		if (conditionsB.volatiles["typeadd"]) defTypes.push(conditionsB.volatiles["typeadd"]);
 
