@@ -208,6 +208,7 @@ exports.getDecisions = function (battle) {
 		let tables = [];
 		let toSw, canSw;
 		toSw = 0;
+		const isReviving = req.side.pokemon.filter(p => p.reviving).length > 0;
 		for (let i = 0; i < fw.length; i++) if (fw[i]) toSw++;
 		for (let i = 0; i < fw.length; i++) {
 			tables.push([]);
@@ -216,8 +217,14 @@ exports.getDecisions = function (battle) {
 			} else {
 				canSw = 0;
 				for (let k = 0; k < req.side.pokemon.length; k++) {
-					if (req.side.pokemon[k].condition === "0 fnt") continue; // Fainted
 					if (req.side.pokemon[k].active) continue; // Active
+
+					if (isReviving) {
+						if (req.side.pokemon[k].condition !== "0 fnt") continue; // Alive
+					} else {
+						if (req.side.pokemon[k].condition === "0 fnt") continue; // Fainted
+					}
+
 					canSw++;
 					tables[i].push(new SwitchDecision(k, req.side.pokemon[k].ident));
 				}

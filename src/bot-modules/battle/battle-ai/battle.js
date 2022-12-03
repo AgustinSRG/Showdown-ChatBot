@@ -647,6 +647,23 @@ exports.setup = function (App, CustomModules) {
 			return res;
 		}
 
+		countFaintedPokemon() {
+			let res = {
+				fainted: 0,
+				alive: 0,
+			};
+			if (this.request && this.request.side && this.request.side.pokemon) {
+				for (let poke of this.request.side.pokemon) {
+					if (poke.condition === "0 fnt") {
+						res.fainted++;
+					} else {
+						res.alive++;
+					}
+				}
+			}
+			return res;
+		}
+
 		getLastRespectsBasePower() {
 			if (this.lastRespectsCache.rqid === this.rqid) {
 				return this.lastRespectsCache.bp;

@@ -879,12 +879,21 @@ exports.setup = function (Data) {
 				}
 				continue;
 			}
+			if (move.id in { "revivalblessing": 1 }) {
+				const faintedPokemon = battle.countFaintedPokemon().fainted;
+				if (faintedPokemon > 0) {
+					res.viable.push(decisions[i]);
+				} else {
+					res.unviable.push(decisions[i]);
+				}
+			}
 			if (move.id in { "batonpass": 1 }) {
 				let boostsToPass = 0;
 				for (let j in conditionsA.boosts) {
 					boostsToPass += conditionsA.boosts[j];
 				}
-				if (boostsToPass > 0 && !conditionsA.volatiles["perish3"] && !conditionsA.volatiles["perish2"] && !conditionsA.volatiles["perish1"]) {
+				const livePokemon = battle.countFaintedPokemon().alive;
+				if (livePokemon > 0 && boostsToPass > 0 && !conditionsA.volatiles["perish3"] && !conditionsA.volatiles["perish2"] && !conditionsA.volatiles["perish1"]) {
 					res.viable.push(decisions[i]);
 				} else {
 					res.unviable.push(decisions[i]);
