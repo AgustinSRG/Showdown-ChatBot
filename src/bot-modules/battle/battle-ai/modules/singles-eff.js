@@ -224,6 +224,7 @@ exports.setup = function (Data) {
 			viable: [],
 			unviable: [],
 			sleepTalk: null,
+			batonPass: null,
 			total: 0,
 		};
 		let sideId = 0; // Active, singles
@@ -448,8 +449,12 @@ exports.setup = function (Data) {
 					else res.unviable.push(decisions[i]);
 					continue;
 				case "shedtail":
-					if (pokeA.hp >= 60) res.viable.push(decisions[i]);
-					else res.unviable.push(decisions[i]);
+					if (pokeA.hp >= 60) {
+						res.viable.push(decisions[i]);
+						res.batonPass = decisions[i];
+					} else {
+						res.unviable.push(decisions[i]);
+					}
 					continue;
 				case "geomancy":
 					if (pokeA.item && pokeA.item.id === "powerherb" && !battle.conditions["magicroom"] && !conditionsA.volatiles["embargo"]) res.viable.push(decisions[i]);
@@ -706,6 +711,7 @@ exports.setup = function (Data) {
 				const livePokemon = battle.countFaintedPokemon().alive;
 				if (livePokemon > 0 && boostsToPass > 0 && !conditionsA.volatiles["perish3"] && !conditionsA.volatiles["perish2"] && !conditionsA.volatiles["perish1"]) {
 					res.viable.push(decisions[i]);
+					res.batonPass = decisions[i];
 				} else {
 					res.unviable.push(decisions[i]);
 				}
@@ -1054,7 +1060,11 @@ exports.setup = function (Data) {
 			if (bestSW) {
 				let evBS = evaluatePokemon(battle, bestSW[0].pokeId);
 				if ((evBS.t < ev.t && evBS.t < evNoMega.t) || (evBS.t === ev.t && evBS.d > ev.d)) {
-					return bestSW;
+					if (supportMoves.batonPass) {
+						return supportMoves.batonPass;
+					} else {
+						return bestSW;
+					}
 				} else {
 					if (supportMoves.sleepTalk) return supportMoves.sleepTalk;
 					return moves[Math.floor(Math.random() * moves.length)];
@@ -1068,7 +1078,11 @@ exports.setup = function (Data) {
 			if (bestSW) {
 				let evBS = evaluatePokemon(battle, bestSW[0].pokeId);
 				if ((evBS.t < ev.t && evBS.t < evNoMega.t) || (evBS.t === ev.t && evBS.d > ev.d) || switchIfNoOption) {
-					return bestSW;
+					if (supportMoves.batonPass) {
+						return supportMoves.batonPass;
+					} else {
+						return bestSW;
+					}
 				} else {
 					if (supportMoves.sleepTalk) return supportMoves.sleepTalk;
 					return moves[Math.floor(Math.random() * moves.length)];
@@ -1079,7 +1093,11 @@ exports.setup = function (Data) {
 			}
 		} else if (bestSW) {
 			battle.self.active[0].helpers.hasNoViableMoves = battle.foe.active[0].name;
-			return bestSW;
+			if (supportMoves.batonPass) {
+				return supportMoves.batonPass;
+			} else {
+				return bestSW;
+			}
 		} else {
 			return decisions[Math.floor(Math.random() * decisions.length)];
 		}
