@@ -550,7 +550,7 @@ exports.setup = function (Data) {
 					res.unviable.push(decisions[i]);
 					continue;
 				}
-				if (pokeB.template.types.indexOf("Grass") >= 0) {
+				if (defTypes.indexOf("Grass") >= 0) {
 					res.unviable.push(decisions[i]);
 					continue;
 				}
@@ -660,7 +660,7 @@ exports.setup = function (Data) {
 					else res.unviable.push(decisions[i]);
 					continue;
 				case "leechseed":
-					if (!conditionsB.volatiles["leechseed"] && pokeB.template.types.indexOf("Grass") < 0) res.viable.push(decisions[i]);
+					if (!conditionsB.volatiles["leechseed"] && defTypes.indexOf("Grass") < 0) res.viable.push(decisions[i]);
 					else res.unviable.push(decisions[i]);
 					continue;
 				case "endeavor":
@@ -703,7 +703,7 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "curse":
-					if (pokeA.template.types.indexOf("Ghost") >= 0) {
+					if (offTypes.indexOf("Ghost") >= 0) {
 						if (!conditionsB.volatiles[move.volatileStatus]) res.viable.push(decisions[i]);
 						else res.unviable.push(decisions[i]);
 					} else {
@@ -726,7 +726,7 @@ exports.setup = function (Data) {
 					continue;
 				case "foresight":
 				case "odorsleuth":
-					if (!conditionsB.volatiles[move.volatileStatus] && pokeB.template.types.indexOf("Ghost") >= 0) {
+					if (!conditionsB.volatiles[move.volatileStatus] && defTypes.indexOf("Ghost") >= 0) {
 						res.viable.push(decisions[i]);
 					} else {
 						res.unviable.push(decisions[i]);
@@ -950,21 +950,21 @@ exports.setup = function (Data) {
 					continue;
 				}
 				if (move.status === "par") {
-					if (battle.gen > 5 && pokeB.template.types.indexOf("Electric") >= 0) {
+					if (battle.gen > 5 && defTypes.indexOf("Electric") >= 0) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
 				} else if (move.status === "brn") {
-					if (pokeB.template.types.indexOf("Fire") >= 0) {
+					if (defTypes.indexOf("Fire") >= 0) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
 				} else if (move.status === "psn" || move.status === "tox") {
-					if (pokeB.template.types.indexOf("Poison") >= 0) {
+					if (defTypes.indexOf("Poison") >= 0) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
-					if (battle.gen > 2 && pokeB.template.types.indexOf("Steel") >= 0) {
+					if (battle.gen > 2 && defTypes.indexOf("Steel") >= 0) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
@@ -1165,6 +1165,20 @@ exports.setup = function (Data) {
 					boosts: targets[j].pokemon.boosts,
 				});
 
+				let defTypes = pokeB.template.types.slice();
+				if (conditionsB.volatiles["zoroark"]) {
+					defTypes = ["Dark"];
+				} else if (conditionsB.volatiles["zoroarkhisui"]) {
+					defTypes = ["Normal", "Ghost"];
+				}
+				if (conditionsB.volatiles["typechange"] && conditionsB.volatiles["typechange"].length) defTypes = conditionsB.volatiles["typechange"].slice();
+				if (conditionsB.volatiles["typeadd"]) defTypes.push(conditionsB.volatiles["typeadd"]);
+				if (pokeB.typechange && pokeB.typechange.length) {
+					defTypes = pokeB.typechange.slice();
+				} else if (pokeB.tera && (!conditionsB.volatiles["typechange"] || !conditionsB.volatiles["typechange"].length)) {
+					defTypes = [pokeB.tera];
+				}
+
 				const pokeAIgnoredAbility = battle.gen < 3 || pokeA.supressedAbility || ((battle.conditions["magicroom"] || conditionsA.volatiles["embargo"] || !pokeA.item || pokeA.item.id !== "abilityshield") && (battle.conditions["neutralizinggas"]));
 
 				let dmgData = Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, battle.conditions, battle.gen);
@@ -1186,7 +1200,7 @@ exports.setup = function (Data) {
 				battle.debug("Move: " + move.name + " | Target: " + pokeB.name + " | Damage = " + dmg + " | Percent: " + pc);
 				if (move.id === "fakeout") {
 					if (findAnyNotNull(battle.self.active).helpers.sw === battle.turn || findAnyNotNull(battle.self.active).helpers.sw === battle.turn - 1) {
-						if (TypeChart.getMultipleEff("Normal", pokeB.template.types, battle.gen, true, !!battle.conditions["inversebattle"]) >= 1) {
+						if (TypeChart.getMultipleEff("Normal", defTypes, battle.gen, true, !!battle.conditions["inversebattle"]) >= 1) {
 							if (pc >= 90) {
 								res.ohko.push(decisions[i]);
 							} else {
