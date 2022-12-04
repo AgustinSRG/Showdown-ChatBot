@@ -552,7 +552,9 @@ exports.setup = function (App, CustomModules) {
 				str = str.substr(1);
 				let name = (str.substr(1) || "").trim();
 				if (this.players[side] && this.players[side].active[slot]) {
-					this.players[side].active[slot].name = name;
+					if (name) {
+						this.players[side].active[slot].name = name;
+					}
 					return this.players[side].active[slot];
 				}
 			}
@@ -682,7 +684,7 @@ exports.setup = function (App, CustomModules) {
 		}
 
 		supposeActivePokemonSimple(target, player) {
-			if (player === this.self) {
+			if (player === this.self && this.request.side.pokemon[target.slot]) {
 				return this.getCalcRequestPokemon(target.slot);
 			} else {
 				let poke = new Calc.Pokemon(target.template, {

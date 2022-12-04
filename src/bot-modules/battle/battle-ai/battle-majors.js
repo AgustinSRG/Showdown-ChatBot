@@ -358,6 +358,16 @@ exports.setup = function (App, BattleData) {
 				poke2.helpers.lastReceivedMoveSide = det.side;
 				poke2.helpers.lastReceivedMoveOrigin = poke;
 			}
+			if (kwargs.spread) {
+				const otherTargets = kwargs.spread.slit(",");
+				for (let otherTarget of otherTargets) {
+					const otherPoke = this.getActive(otherTarget);
+					otherPoke.helpers.lastReceivedMove = move.id;
+					otherPoke.helpers.lastReceivedMoveTurn = this.turn;
+					otherPoke.helpers.lastReceivedMoveSide = det.side;
+					otherPoke.helpers.lastReceivedMoveOrigin = poke;
+				}
+			}
 		},
 
 		cant: function (args, kwargs, isIntro) {
