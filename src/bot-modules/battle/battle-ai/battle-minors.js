@@ -69,6 +69,8 @@ exports.setup = function (App, BattleData) {
 				let effect = BattleData.getEffect(kwargs.from, this.gen);
 				if (effect.effectType === 'Ability') {
 					poke.markAbility(effect.name);
+				} else if (effect.effectType === 'Item') {
+					poke.item = BattleData.getItem(effect.id, this.gen);
 				}
 				switch (effect.id) {
 					case 'ingrain':
@@ -84,11 +86,6 @@ exports.setup = function (App, BattleData) {
 					case 'healingwish':
 					case 'wish':
 						this.players[det.side].side.wish = null;
-						break;
-					case 'leftovers':
-					case 'shellbell':
-					case 'blacksludge':
-						poke.item = BattleData.getItem(effect.name, this.gen);
 						break;
 				}
 			}
@@ -113,6 +110,8 @@ exports.setup = function (App, BattleData) {
 				let ofpoke = this.getActive(kwargs.of);
 				if (effect.effectType === 'Ability' && !(effect.id === 'weakarmor' && stat === 'spe')) {
 					(ofpoke || poke).markAbility(effect.name);
+				} else if (effect.effectType === 'Item') {
+					(ofpoke || poke).item = BattleData.getItem(effect.id, this.gen);
 				}
 			}
 		},
@@ -127,6 +126,8 @@ exports.setup = function (App, BattleData) {
 				let ofpoke = this.getActive(kwargs.of);
 				if (effect.effectType === 'Ability') {
 					(ofpoke || poke).markAbility(effect.name);
+				} else if (effect.effectType === 'Item') {
+					(ofpoke || poke).item = BattleData.getItem(effect.id, this.gen);
 				}
 			}
 		},
@@ -237,6 +238,8 @@ exports.setup = function (App, BattleData) {
 				default:
 					if (fromeffect && fromeffect.effectType === 'Ability') {
 						poke.markAbility(fromeffect.name);
+					} else if (fromeffect && fromeffect.effectType === 'Item') {
+						poke.item = BattleData.getItem(fromeffect.id, this.gen);
 					}
 					this.onImmune(poke, fromeffect, this.players[det.side]);
 			}
@@ -270,6 +273,8 @@ exports.setup = function (App, BattleData) {
 				case 'unboost':
 					if (fromeffect.effectType === 'Ability') {
 						poke.markAbility(fromeffect.id);
+					} else if (fromeffect.effectType === 'Item') {
+						poke.item = BattleData.getItem(fromeffect.id, this.gen);
 					}
 					break;
 			}
@@ -477,6 +482,8 @@ exports.setup = function (App, BattleData) {
 			poke.removeVolatile('typechange');
 			if (fromeffect.effectType === 'Ability') {
 				poke.markAbility(fromeffect.name);
+			} else if (fromeffect.effectType === 'Item') {
+				poke.item = BattleData.getItem(fromeffect.id, this.gen);
 			}
 			poke.addVolatile('formechange');
 			poke.volatiles.formechange = template.species;
@@ -591,6 +598,8 @@ exports.setup = function (App, BattleData) {
 			if (effect.effectType === 'Ability') {
 				poke.markAbility(effect.name);
 				poke.addVolatile('activeability');
+			} else if (effect.effectType === 'Item') {
+				poke.item = BattleData.getItem(effect.id, this.gen);
 			}
 			switch (effect.id) {
 				case 'brickbreak':
@@ -619,19 +628,6 @@ exports.setup = function (App, BattleData) {
 						if (!poke.baseAbility) poke.baseAbility = ofpokeability;
 					}
 					break;
-				case 'quickclaw':
-					poke.item = BattleData.getItem("quickclaw", this.gen);
-					break;
-				case 'focusband':
-					poke.item = BattleData.getItem("focusband", this.gen);
-					break;
-				case 'safetygoggles':
-					poke.item = BattleData.getItem("safetygoggles", this.gen);
-					break;
-				default:
-					if (effect.effectType === 'Item') {
-						poke.item = BattleData.getItem(effect.id, this.gen);
-					}
 			}
 		},
 

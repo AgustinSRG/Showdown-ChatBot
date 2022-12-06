@@ -87,13 +87,16 @@ exports.setup = function (App, CustomModules) {
 			App.bot.sendTo(this.id, data);
 		}
 
-		log(txt) {
+		log(txt, consoleLog) {
 			if (!App.config.debug) return;
 			this.buffer.push(txt);
+			if (consoleLog) {
+				console.log(txt);
+			}
 		}
 
 		debug(txt) {
-			this.log('DEBUG: ' + txt);
+			this.log('DEBUG: ' + txt, true);
 		}
 
 		evalBattle(txt) {
@@ -713,6 +716,10 @@ exports.setup = function (App, CustomModules) {
 		}
 
 		onImmune(poke, effect, player) {
+			if (poke.helpers.lastReceivedEffect !== "move") {
+				return;
+			}
+
 			const move = BattleData.getMove(poke.helpers.lastReceivedMove, this.gen);
 			const poke2 = poke.helpers.lastReceivedMoveOrigin;
 			const player2 = this.players[poke.helpers.lastReceivedMoveSide];
@@ -720,6 +727,8 @@ exports.setup = function (App, CustomModules) {
 			if (!poke2 || !player2 || !player) {
 				return;
 			}
+
+			this.debug("[ON Immune] " + player2.id + "(" + poke2.slot + ")" + ": " + poke2.name + " | VS | " + player.id + "(" + poke.slot + ")" + ": " + poke.name);
 
 			const pokeA = this.supposeActivePokemonSimple(poke2, player2);
 			const conditionsA = new Calc.Conditions({

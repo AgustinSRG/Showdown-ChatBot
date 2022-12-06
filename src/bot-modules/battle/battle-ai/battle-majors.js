@@ -282,6 +282,7 @@ exports.setup = function (App, BattleData) {
 			poke.active = false;
 			poke.passing = false;
 			poke.hp = 0;
+			poke.tera = '';
 			if (!isIntro) this.message("faint", det.side, poke.name);
 		},
 
@@ -353,6 +354,7 @@ exports.setup = function (App, BattleData) {
 			poke.helpers.lastMoveTurn = this.turn;
 			poke.helpers.lastMoveTarget = poke2 || (this.foe && this.foe.active[0]);
 			if (poke2) {
+				poke2.helpers.lastReceivedEffect = 'move';
 				poke2.helpers.lastReceivedMove = move.id;
 				poke2.helpers.lastReceivedMoveTurn = this.turn;
 				poke2.helpers.lastReceivedMoveSide = det.side;
@@ -362,6 +364,7 @@ exports.setup = function (App, BattleData) {
 				const otherTargets = kwargs.spread.slit(",");
 				for (let otherTarget of otherTargets) {
 					const otherPoke = this.getActive(otherTarget);
+					otherPoke.helpers.lastReceivedEffect = 'move';
 					otherPoke.helpers.lastReceivedMove = move.id;
 					otherPoke.helpers.lastReceivedMoveTurn = this.turn;
 					otherPoke.helpers.lastReceivedMoveSide = det.side;
