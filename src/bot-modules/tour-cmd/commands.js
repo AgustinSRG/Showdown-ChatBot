@@ -21,6 +21,9 @@ function parseAliases(format, App) {
 	for (let gen = 9; gen > 0; gen--) {
 		if (App.bot.formats["gen" + gen + format]) return "gen" + gen + format;
 	}
+	let aliases = Config.aliases;
+	if (aliases[format]) format = Text.toId(aliases[format]);
+	if (App.bot.formats[format]) return format;
 	try {
 		let aliases = App.data.getAliases();
 		if (aliases[format]) format = Text.toId(aliases[format]);
@@ -28,8 +31,6 @@ function parseAliases(format, App) {
 		App.log("Could not fetch aliases. ERROR: " + err.message);
 	}
 	if (App.bot.formats[format]) return format;
-	let aliases = Config.aliases;
-	if (aliases[format]) format = Text.toId(aliases[format]);
 	return Text.toFormatStandard(format);
 }
 
