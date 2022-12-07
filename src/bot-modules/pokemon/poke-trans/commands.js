@@ -102,4 +102,27 @@ module.exports = {
 		}
 		this.restrictReply(text + results.join(', '), "translate");
 	},
+
+	translatetable: function (App) {
+		this.setLangFile(Lang_File);
+		let server = App.config.server.url;
+		if (!server) {
+			return this.pmReply(this.mlt(9));
+		}
+
+		const lang = Text.toId(this.args[0]) || 'es';
+
+		const availableTables = ['es', 'lat'];
+
+		if (availableTables.indexOf(lang) === -1) {
+			return this.errorReply(this.mlt(4) + ": " + Chat.italics(lang) + ". " +
+				this.mlt(5) + ": " + Chat.italics(availableTables.join(', ')));
+		}
+
+		if (server.charAt(server.length - 1) === '/') {
+			return this.restrictReply(App.config.server.url + 'tradtable/' + lang, 'translate');
+		} else {
+			return this.restrictReply(App.config.server.url + '/tradtable/' + lang, 'translate');
+		}
+	},
 };

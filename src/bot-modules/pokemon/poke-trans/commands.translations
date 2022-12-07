@@ -12,6 +12,7 @@ $5 = Available languages
 $6 = pokemon / item / ability / move / nature
 $7 = origin language
 $8 = target language
+$9 = Feature not available
 
 $en = English
 $es = Spanish
@@ -34,6 +35,7 @@ $5 = Idiomas disponibles
 $6 = pokemon / objeto / habilidad / movimiento / naturaleza
 $7 = idioma origen
 $8 = idioma destino
+$9 = Funcionalidad no disponible
 
 $en = Inglés
 $es = Español

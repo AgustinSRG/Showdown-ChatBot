@@ -10,6 +10,8 @@ const Template = Tools('html-template');
 
 const mainTemplate = new Template(Path.resolve(__dirname, 'template.html'));
 
+const Available_Languages = require(Path.resolve(__dirname, 'poke-trans', 'translate.js')).supportedLanguages;
+
 exports.setup = function (App) {
 	/* Permissions */
 	App.server.setPermission('pokemon', 'Permission for changing the pokemon module configuration');
@@ -96,6 +98,111 @@ exports.setup = function (App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Pokemon - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), { title: "Pokemon - Showdown ChatBot" });
+	});
+
+	const TradTableCache = new Map();
+
+	const TradTableMessages = {
+		"es": {
+			title: "Traducciones disponibles (Inglés - Español)",
+			from: "Inglés",
+			to: "Español",
+			legacy: "Antiguas generaciones",
+			abilities: "Habilidades",
+			items: "Objetos",
+			moves: "Movimientos",
+			natures: "Naturalezas",
+			pokemon: "Pokemon",
+		},
+		"lat": {
+			title: "Traducciones disponibles (Inglés - Español Latino)",
+			from: "Inglés",
+			to: "Español Latino",
+			legacy: "Antiguas generaciones",
+			abilities: "Habilidades",
+			items: "Objetos",
+			moves: "Movimientos",
+			natures: "Naturalezas",
+			pokemon: "Pokemon",
+		},
+	};
+
+	App.server.setHandler('tradtable', (context, parts) => {
+		let html = '<!doctype html>';
+
+		if (!parts[0]) {
+			context.endWith404();
+			return;
+		}
+
+		const langTo = Text.toId(parts[0].split('?')[0] + "");
+
+		if (!langTo || !Available_Languages[langTo] || !TradTableMessages[langTo]) {
+			context.endWith404();
+			return;
+		}
+
+		if (TradTableCache.has(langTo)) {
+			html = TradTableCache.get(langTo);
+		} else {
+			html += '<html>';
+
+			html += '<head><title>' + Text.escapeHTML(TradTableMessages[langTo].title) + '</title>' +
+				'<style>td {padding:5px;}</style></head>';
+
+			html += '<body>';
+
+			let translateDataFrom = Available_Languages["en"];
+			let translateDataTo = Available_Languages[langTo];
+
+			let keys = ['abilities', 'items', 'moves', 'natures', 'pokemon'];
+
+			for (let key of keys) {
+				html += '<div style="text-align: center;" style="padding:5px;">';
+				html += '<h1>' + Text.escapeHTML(TradTableMessages[langTo][key]) + '</h1>';
+
+				html += '<table style="width: 100%;" border="1">';
+
+				html += '<tr>';
+
+				html += '<td><div style="text-align: center;"><h3><strong>' + Text.escapeHTML(TradTableMessages[langTo].from) + '</strong></h3></div></td>';
+				html += '<td><div style="text-align: center;"><h3><strong>' + Text.escapeHTML(TradTableMessages[langTo].to) + '</strong></h3></div></td>';
+
+				html += '</tr>';
+
+				for (let tradKey of Object.keys(translateDataFrom[key])) {
+					const fromName = translateDataFrom[key][tradKey];
+					const toName = translateDataTo[key][tradKey];
+					const legacyName = translateDataTo["legacy"][tradKey];
+
+					if (!toName) {
+						continue;
+					}
+
+					html += '<tr>';
+
+					html += '<td><strong>' + Text.escapeHTML(fromName) + '</strong> (' + Text.escapeHTML(TradTableMessages[langTo][key]) + ')</td>';
+
+					if (legacyName) {
+						html += '<td><strong>' + Text.escapeHTML(toName) + '</strong> (' + Text.escapeHTML(TradTableMessages[langTo][key]) + '), <strong>' + Text.escapeHTML(legacyName) + '</strong> (' + Text.escapeHTML(TradTableMessages[langTo]["legacy"]) + ')</td>';
+					} else {
+						html += '<td><strong>' + Text.escapeHTML(toName) + '</strong> (' + Text.escapeHTML(TradTableMessages[langTo][key]) + ')</td>';
+					}
+
+					html += '</tr>';
+				}
+
+				html += '</table>';
+				html += '</div>';
+			}
+
+			html += '</body>';
+			html += '</html>';
+
+			TradTableCache.set(langTo, html);
+		}
+
+		context.endWithHtml(html, 200);
 	});
 };
