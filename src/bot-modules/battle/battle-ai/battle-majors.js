@@ -361,7 +361,7 @@ exports.setup = function (App, BattleData) {
 				poke2.helpers.lastReceivedMoveOrigin = poke;
 			}
 			if (kwargs.spread) {
-				const otherTargets = kwargs.spread.slit(",");
+				const otherTargets = (kwargs.spread + "").split(",");
 				for (let otherTarget of otherTargets) {
 					const otherPoke = this.getActive(otherTarget);
 					otherPoke.helpers.lastReceivedEffect = 'move';
