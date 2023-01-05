@@ -3207,14 +3207,14 @@ exports.translations.pokemon = {
 /* Legacy Translation */
 
 exports.translations.legacy = {
-	"poisonsting": "Picotazo Ven.",
-	"seismictoss": "Mov. Sísmico",
-	"mirrormove": "Mov. Espejo",
+	"poisonsting": "Picotazo Veneno",
+	"seismictoss": "Movimiento Sísmico",
+	"mirrormove": "Movimiento Espejo",
 	"barrage": "Presa",
 	"rollout": "Desenrollar",
 	"falseswipe": "Falsotortazo",
 	"imprison": "Cerca",
-	"poisonfang": "Colmillo Ven.",
+	"poisonfang": "Colmillo Veneno",
 	"bulletseed": "Recurrente",
 	"powerswap": "Cambia Fuerza",
 	"guardswap": "Cambia Defensa",
@@ -3230,7 +3230,7 @@ exports.translations.legacy = {
 	"wrap": "Repetición",
 	"choiceband": "Cinta Elegida",
 	"choicescarf": "Pañuelo Elegido",
-	"choicespecs": "Gafas Elegid",
+	"choicespecs": "Gafas Elegidas",
 	"shellbell": "Campana Concha",
 	"stick": "Palo",
 	"waveincense": "Incienso Aqua",
