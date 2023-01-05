@@ -624,6 +624,10 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			break;
 	}
 
+	if (move.isMax && (!move.isMaxModified || move.basePower === 0) && !conditionsA.volatiles['dynamax']) {
+		return new Damage(targetHP, [1]);
+	}
+
 	if (!bp) {
 		if (move.id === "naturesmadness" || move.id === "superfang" || move.id === "ruination") return new Damage(targetHP, [Math.floor((statsB.hp * (pokeB.hp / 2)) / 100)]);
 		if (move.id === "guardianofalola") return new Damage(targetHP, [Math.floor((statsB.hp * (pokeB.hp / 2)) / 100)]);

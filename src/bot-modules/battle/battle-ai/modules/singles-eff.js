@@ -927,6 +927,7 @@ exports.setup = function (Data) {
 				let dmove = Data.getMove(des.move);
 				dmove.basePower = Data.getMaxPower(move.basePower || 0, Text.toId(dmove.name), move.isMax);
 				dmove.category = move.category;
+				dmove.isMaxModified = true;
 				move = dmove;
 			}
 			if (move.category !== "Physical" && move.category !== "Special") continue; // Status move
