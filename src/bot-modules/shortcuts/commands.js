@@ -31,6 +31,7 @@ module.exports = {
 		const Mod = App.modules.shortcuts.system;
 		let spl = this.arg.split(' ');
 		let cmd = Text.toCmdid(spl[0]);
+		const token = this.token;
 		let content = null;
 		if (!cmd) return this.errorReply(this.usage({ desc: this.usageTrans('command') }));
 		if (Mod.data.commands[cmd]) {
@@ -40,7 +41,13 @@ module.exports = {
 		}
 		if (content) {
 			const options = content.split("&&").map(function (a) {
-				return a.trim();
+				const cmdLine = a.trim();
+				const spaceIndex = cmdLine.indexOf(" ");
+				if (spaceIndex === -1) {
+					return token + Text.toCmdid(cmdLine);
+				} else {
+					return token + Text.toCmdid(cmdLine.substr(0, spaceIndex)) + " " + cmdLine.substr(spaceIndex + 1);
+				}
 			}).slice(0, 5);
 
 			for (let opt of options) {
