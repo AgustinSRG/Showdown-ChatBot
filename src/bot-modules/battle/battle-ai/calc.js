@@ -668,6 +668,9 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		case "burnup":
 			if (offTypes.indexOf("Fire") === -1) bp = 0;
 			break;
+		case "doubleshock":
+			if (offTypes.indexOf("Electric") === -1) bp = 0;
+			break;
 		case "retaliate":
 			if (conditionsA.side.faintedLastTurn) bp = Math.floor(bp * 2);
 			break;
