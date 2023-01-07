@@ -802,7 +802,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	if (pokeA.item && !pokeAItemDisabled && pokeA.item.id === "lifeorb") modifier *= 1.3;
 
 	/* STAB */
-	if (offTypes.indexOf(moveType) >= 0 || (pokeA.ability && !pokeAIgnoredAbility && pokeA.ability.id in { "protean": 1, "libero": 1 })) {
+	if (offTypes.indexOf(moveType) >= 0 || (pokeA.ability && !pokeAIgnoredAbility && pokeA.ability.id in { "protean": 1, "libero": 1 } && (gen < 9 || !conditionsA.volatiles["typechange"] || conditionsA.volatiles["typechange"].length === 0))) {
 		if (pokeA.ability && !pokeAIgnoredAbility && pokeA.ability.id === "adaptability") modifier *= 2;
 		else modifier *= 1.5;
 	}
