@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "busboy": "1.6.0",
-    "json5": "2.2.1",
+    "json5": "2.2.3",
     "sockjs-client": "1.6.1",
     "websocket": "1.0.34"
   },
@@ -35,6 +35,6 @@
   "private": true,
   "license": "MIT",
   "devDependencies": {
-    "eslint": "8.17.0"
+    "eslint": "8.31.0"
   }
 }
