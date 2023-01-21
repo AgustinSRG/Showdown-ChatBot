@@ -20,6 +20,8 @@ class Tournament {
 		this.autodq = details.autodq || false;
 		this.scoutProtect = details.scoutProtect || false;
 		this.forcedTimer = details.forcedTimer || false;
+		this.rules = details.rules || null;
+		this.name = details.name || null;
 	}
 
 	create() {
@@ -42,6 +44,12 @@ class Tournament {
 		if (!this.timeToStart) return;
 		this.signups = true;
 		let cmds = [];
+		if (this.name) {
+			cmds.push('/tournament name ' + this.name);
+		}
+		if (this.rules) {
+			cmds.push('/tournament rules ' + this.rules);
+		}
 		if (this.timeToStart) {
 			cmds.push('/tournament autostart ' + (this.timeToStart / 60000));
 		}

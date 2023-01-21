@@ -42,10 +42,13 @@ module.exports = {
 		if (!this.arg) {
 			return this.errorReply(this.usage(
 				{ desc: this.usageTrans('format') },
-				{ desc: 'elim|rr|double-elim|double-rr', optional: true },
-				{ desc: this.mlt('autostart'), optional: true },
-				{ desc: this.mlt('autodq'), optional: true },
-				{ desc: this.mlt('maxusers'), optional: true }
+				{ desc: 'type=' + 'elim|rr|double-elim|double-rr', optional: true },
+				{ desc: 'auto-start=' + this.mlt('autostart'), optional: true },
+				{ desc: 'dq=' + this.mlt('autodq'), optional: true },
+				{ desc: 'users=' + this.mlt('maxusers'), optional: true },
+				{ desc: 'rounds=' + this.mlt('rounds'), optional: true },
+				{ desc: 'name=' + this.mlt('name'), optional: true },
+				{ desc: 'rules=' + this.mlt('rules'), optional: true }
 			));
 		}
 		const Mod = App.modules.tourcmd.system;
@@ -68,6 +71,8 @@ module.exports = {
 			scoutProtect: Config.scoutProtect,
 			forcedTimer: Config.forcedTimer,
 			rounds: null,
+			rules: null,
+			name: null,
 		};
 		if (this.arg && this.arg.length) {
 			let args = this.args;
@@ -79,14 +84,20 @@ module.exports = {
 				autodq: null,
 				scout: null,
 				timer: null,
+				rules: "",
+				name: null,
 			};
 			let splArg;
+			let isRules = false;
 			for (let i = 0; i < args.length; i++) {
 				args[i] = args[i].trim();
 				if (!args[i]) continue;
 				splArg = args[i].split("=");
-				if (i > 0 && splArg.length < 2 && Text.toId(args[i]) in TourTypes) {
+				if (i > 0 && isRules && splArg.length < 2) {
+					params.rules += "," + args[i];
+				} else if (i > 0 && splArg.length < 2 && Text.toId(args[i]) in TourTypes) {
 					params.type = args[i];
+					isRules = false;
 				} else if (splArg.length < 2) {
 					switch (i) {
 						case 0:
@@ -108,6 +119,7 @@ module.exports = {
 				} else {
 					let idArg = Text.toId(splArg[0]);
 					let valueArg = splArg[1].trim();
+					isRules = false;
 					switch (idArg) {
 						case 'format':
 						case 'tier':
@@ -142,6 +154,19 @@ module.exports = {
 						case 'timer':
 						case 'forcetimer':
 							params.timer = valueArg;
+							break;
+						case 'name':
+							params.name = valueArg;
+							break;
+						case 'rule':
+						case 'rules':
+						case 'customrules':
+							if (params.rules) {
+								params.rules += ',' + valueArg;
+							} else {
+								params.rules = valueArg;
+							}
+							isRules = true;
 							break;
 						default:
 							return this.reply(this.mlt('param') + ' ' + idArg + ' ' +
@@ -236,6 +261,12 @@ module.exports = {
 				} else {
 					details.forcedTimer = false;
 				}
+			}
+			if (params.name) {
+				details.name = params.name;
+			}
+			if (params.rules) {
+				details.rules = params.rules;
 			}
 		}
 		Mod.newTour(this.room, details);

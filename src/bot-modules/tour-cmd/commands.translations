@@ -21,6 +21,9 @@ $paramhelp = not found, valid parameters are
 $autostart = Auto start time (mins)
 $autodq = Autodq (mins)
 $maxusers = Max users
+$rounds = Rounds
+$name = Name
+$rules = Rules (Split by commas)
 
 %spanish
 
@@ -41,3 +44,6 @@ $paramhelp = no encontrado, Los parámetros correctos son
 $autostart = Tiempo de inicio (mins)
 $autodq = Autodq (mins)
 $maxusers = Usuarios máximos
+$rounds = Rondas
+$name = Nombre
+$rules = Reglas (separadas por comas)
