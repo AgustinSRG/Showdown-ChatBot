@@ -15,6 +15,7 @@ const Flood_Interval = 45 * 1000;
 const Help_Msg_Interval = 2 * 60 * 1000;
 const Command_Wait_Interval = 1500;
 const Command_Reply_Wait_Interval = 10 * 1000;
+const Flood_Ban_Duration = 60 * 60 * 1000;
 
 const Util = require('util');
 const Path = require('path');
@@ -79,7 +80,7 @@ class CommandParser {
 		};
 
 		/* Abuse Monitor */
-		this.monitor = new AbuseMonitor(Max_Cmd_Flood, Flood_Interval);
+		this.monitor = new AbuseMonitor(Max_Cmd_Flood, Flood_Interval, Flood_Ban_Duration);
 		this.monitor.on('lock', function (user, msg) {
 			this.app.log("[PARSER - ABUSE] [LOCK: " + user + "]" + (msg ? (' ' + msg) : ''));
 		}.bind(this));
