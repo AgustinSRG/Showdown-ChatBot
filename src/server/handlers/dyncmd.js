@@ -35,7 +35,7 @@ exports.setup = function (App) {
 		}
 
 		let ok = null, error = null;
-		let addFail = {cmd: '', id: '', content: '', index: false};
+		let addFail = { cmd: '', id: '', content: '', index: false };
 		if (context.post.addtextcmd) {
 			let cmd = Text.toCmdid(context.post.cmd);
 			let content = (context.post.content || "").trim();
@@ -190,28 +190,126 @@ exports.setup = function (App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Dynamic Commands - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), { title: "Dynamic Commands - Showdown ChatBot" });
 	});
 
 	function serveDynCmdList(context) {
 		let html = '';
+		let cmdList = [];
+
+		// Classic dynamic commands
 		let cmds = App.parser.data.dyncmds;
-		for (let cmd in cmds) {
+		for (let cmd of Object.keys(cmds)) {
 			switch (typeof cmds[cmd]) {
-			case 'string':
-				html += '<p><strong>' + cmd + '</strong>&nbsp;&#8212;&nbsp;' + Text.escapeHTML(cmds[cmd]) + '</p>';
-				break;
-			case 'object':
-				html += '<p><strong>' + cmd + '</strong>&nbsp;&#8212;&nbsp;<u>Index Command</u></p>';
-				html += '<ul>';
-				for (let subcmd in cmds[cmd]) {
-					html += '<li><strong>' + subcmd + '</strong>&nbsp;&#8212;&nbsp;' + Text.escapeHTML(cmds[cmd][subcmd]) + '</li>';
-				}
-				html += '</ul>';
-				break;
+				case 'string':
+					cmdList.push({
+						id: cmd,
+						type: "text",
+						value: cmds[cmd],
+					});
+					break;
+				case 'object':
+					cmdList.push({
+						id: cmd,
+						type: "index",
+						value: cmds[cmd],
+					});
 			}
 		}
-		context.endWithHtml(listTemplate.make({list: html}));
+
+		// HTML commands
+
+		if (App.modules.htmlbox && App.modules.htmlbox.system) {
+			cmds = App.modules.htmlbox.system.data.commands;
+			for (let cmd of Object.keys(cmds)) {
+				cmdList.push({
+					id: cmd,
+					type: "html",
+					value: cmds[cmd],
+				});
+			}
+		}
+
+		// Random commands
+
+		if (App.modules.randcmd && App.modules.randcmd.system) {
+			cmds = App.modules.randcmd.system.data.commands;
+			for (let cmd of Object.keys(cmds)) {
+				const options = (cmds[cmd] + "").split("\n").map(function (a) {
+					return a.trim();
+				}).filter(a => {
+					return !!a;
+				});
+				if (options.length > 0) {
+					cmdList.push({
+						id: cmd,
+						type: "random",
+						value: options,
+					});
+				}
+			}
+		}
+
+		// Shortcut commands
+
+		if (App.modules.shortcuts && App.modules.shortcuts.system) {
+			cmds = App.modules.shortcuts.system.data.commands;
+			for (let cmd of Object.keys(cmds)) {
+				cmdList.push({
+					id: cmd,
+					type: "shortcut",
+					value: cmds[cmd],
+				});
+			}
+		}
+
+
+		// - Short
+
+		cmdList = cmdList.sort((a, b) => {
+			if (a.id < b.id) {
+				return -1;
+			} else {
+				return 1;
+			}
+		});
+
+		// - Respond with list
+
+		for (let cmd of cmdList) {
+			switch (cmd.type) {
+				case "text":
+					html += '<p><strong>' + Text.escapeHTML(cmd.id) + '</strong>&nbsp;&#8212;&nbsp;' + Text.escapeHTML(cmd.value) + '</p>';
+					break;
+				case "index":
+					html += '<p><strong>' + Text.escapeHTML(cmd.id) + '</strong>&nbsp;&#8212;&nbsp;<u>Index Command</u></p>';
+					html += '<ul>';
+					for (let subcmd of Object.keys(cmd.value)) {
+						html += '<li><strong>' + Text.escapeHTML(subcmd) + '</strong>&nbsp;&#8212;&nbsp;' + Text.escapeHTML(cmd.value[subcmd]) + '</li>';
+					}
+					html += '</ul>';
+					break;
+				case "random":
+					html += '<p><strong>' + Text.escapeHTML(cmd.id) + '</strong>&nbsp;&#8212;&nbsp;<u>Random Command</u></p>';
+					html += '<ul>';
+					for (let opt of cmd.value) {
+						html += '<li>' + Text.escapeHTML(opt) + '</li>';
+					}
+					html += '</ul>';
+					break;
+				case "shortcut":
+					html += '<p><strong>' + Text.escapeHTML(cmd.id) + '</strong>&nbsp;&#8212;&nbsp;<u>Shortcut</u>&nbsp;&#8212;&nbsp;' + Text.escapeHTML(cmd.value) + '</p>';
+					break;
+				case "html":
+					html += '<p><strong>' + Text.escapeHTML(cmd.id) + '</strong>&nbsp;&#8212;&nbsp;<u>HTML Command</u></p>';
+					html += '<textarea style="width: 100%;" rows="4">';
+					html += Text.escapeHTML(cmd.value);
+					html += '</textarea>';
+					break;
+			}
+		}
+
+		context.endWithHtml(listTemplate.make({ list: html }));
 	}
 
 	/* Auxiliar Functions */
