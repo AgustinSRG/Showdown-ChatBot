@@ -15,6 +15,7 @@ const indexCommandTemplate = new Template(Path.resolve(__dirname, 'templates', '
 const textCommandTemplate = new Template(Path.resolve(__dirname, 'templates', 'dyncmd-textcmd.html'));
 const subCommandTemplate = new Template(Path.resolve(__dirname, 'templates', 'dyncmd-subcmd.html'));
 const listTemplate = new Template(Path.resolve(__dirname, 'templates', 'dyncmd-list.html'));
+const aliasesTemplate = new Template(Path.resolve(__dirname, 'templates', 'dyncmd-aliases.html'));
 
 exports.setup = function (App) {
 	/* Permissions */
@@ -27,6 +28,10 @@ exports.setup = function (App) {
 	App.server.setHandler('dyncmd', (context, parts) => {
 		if (parts[0] && parts[0].split('?')[0] === 'list') {
 			return serveDynCmdList(context);
+		}
+
+		if (parts[0] && parts[0].split('?')[0] === 'aliases') {
+			return serveAliasesList(context);
 		}
 
 		if (!context.user || !context.user.can('dyncmd')) {
@@ -310,6 +315,94 @@ exports.setup = function (App) {
 		}
 
 		context.endWithHtml(listTemplate.make({ list: html }));
+	}
+
+	function serveAliasesList(context) {
+		let html = '';
+		const commands = Object.create(null);
+
+		// Regular aliases
+		if (App.parser.data.aliases) {
+			for (let alias of Object.keys(App.parser.data.aliases)) {
+				const cmd = App.parser.data.aliases[alias];
+				if (!commands[cmd]) {
+					commands[cmd] = {
+						id: cmd,
+						aliases: [],
+					};
+				}
+				commands[cmd].aliases.push(alias);
+			}
+		}
+
+		// HTML commands
+
+		if (App.modules.htmlbox && App.modules.htmlbox.system) {
+			const mod = App.modules.htmlbox.system;
+			for (let alias of Object.keys(mod.data.aliases)) {
+				const cmd = mod.data.aliases[alias];
+				if (!commands[cmd]) {
+					commands[cmd] = {
+						id: cmd,
+						aliases: [],
+					};
+				}
+				commands[cmd].aliases.push(alias);
+			}
+		}
+
+		// Random commands
+
+		if (App.modules.randcmd && App.modules.randcmd.system) {
+			const mod = App.modules.randcmd.system;
+			for (let alias of Object.keys(mod.data.aliases)) {
+				const cmd = mod.data.aliases[alias];
+				if (!commands[cmd]) {
+					commands[cmd] = {
+						id: cmd,
+						aliases: [],
+					};
+				}
+				commands[cmd].aliases.push(alias);
+			}
+		}
+
+		// Shortcut commands
+
+		if (App.modules.shortcuts && App.modules.shortcuts.system) {
+			const mod = App.modules.shortcuts.system;
+			for (let alias of Object.keys(mod.data.aliases)) {
+				const cmd = mod.data.aliases[alias];
+				if (!commands[cmd]) {
+					commands[cmd] = {
+						id: cmd,
+						aliases: [],
+					};
+				}
+				commands[cmd].aliases.push(alias);
+			}
+		}
+
+		// - Sort
+
+		const cmdList = Object.values(commands).sort((a, b) => {
+			if (a.id < b.id) {
+				return -1;
+			} else {
+				return 1;
+			}
+		});
+
+		// Respond with list
+
+		for (let cmd of cmdList) {
+			html += '<tr>';
+			html += '<td><b>' + Text.escapeHTML(cmd.id) + '</b></td>';
+			html += '<td>' + Text.escapeHTML(cmd.aliases.join(", ")) + '</td>';
+			html += '<tr>';
+		}
+
+		context.endWithHtml(aliasesTemplate.make({ list: html }));
 	}
 
 	/* Auxiliar Functions */
