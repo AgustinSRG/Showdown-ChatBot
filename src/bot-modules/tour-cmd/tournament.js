@@ -11,6 +11,7 @@ class Tournament {
 		this.type = details.type || 'elimination';
 		this.users = 0;
 		this.maxUsers = details.maxUsers || null;
+		this.rounds = details.rounds || null;
 		this.signups = false;
 		this.started = false;
 		this.startTimer = null;
@@ -22,7 +23,19 @@ class Tournament {
 	}
 
 	create() {
-		this.app.bot.sendTo(this.room, '/tournament create ' + this.format + ', ' + this.type);
+		if (this.maxUsers && this.maxUsers > 0) {
+			if (this.rounds && this.rounds > 0) {
+				this.app.bot.sendTo(this.room, '/tournament create ' + this.format + ', ' + this.type + ', ' + this.maxUsers + ', ' + this.rounds);
+			} else {
+				this.app.bot.sendTo(this.room, '/tournament create ' + this.format + ', ' + this.type + ', ' + this.maxUsers);
+			}
+		} else {
+			if (this.rounds && this.rounds > 0) {
+				this.app.bot.sendTo(this.room, '/tournament create ' + this.format + ', ' + this.type + ",," + this.rounds);
+			} else {
+				this.app.bot.sendTo(this.room, '/tournament create ' + this.format + ', ' + this.type);
+			}
+		}
 	}
 
 	startTimeout() {

@@ -42,7 +42,7 @@ module.exports = {
 		if (!this.arg) {
 			return this.errorReply(this.usage(
 				{ desc: this.usageTrans('format') },
-				{ desc: 'elim|rr', optional: true },
+				{ desc: 'elim|rr|double-elim|double-rr', optional: true },
 				{ desc: this.mlt('autostart'), optional: true },
 				{ desc: this.mlt('autodq'), optional: true },
 				{ desc: this.mlt('maxusers'), optional: true }
@@ -67,6 +67,7 @@ module.exports = {
 			autodq: Config.autodq,
 			scoutProtect: Config.scoutProtect,
 			forcedTimer: Config.forcedTimer,
+			rounds: null,
 		};
 		if (this.arg && this.arg.length) {
 			let args = this.args;
@@ -125,6 +126,9 @@ module.exports = {
 						case 'users':
 							params.maxUsers = valueArg;
 							break;
+						case 'rounds':
+							params.rounds = valueArg;
+							break;
 						case 'generator':
 						case 'type':
 							params.type = valueArg;
@@ -141,7 +145,7 @@ module.exports = {
 							break;
 						default:
 							return this.reply(this.mlt('param') + ' ' + idArg + ' ' +
-								this.mlt('paramhelp') + ": tier, autostart, dq, users, type, scout, timer");
+								this.mlt('paramhelp') + ": tier, autostart, dq, users, rounds, type, scout, timer");
 					}
 				}
 			}
@@ -185,8 +189,33 @@ module.exports = {
 					details.maxUsers = musers;
 				}
 			}
+			if (params.rounds) {
+				if (Text.toId(params.rounds) === 'off') {
+					details.rounds = null;
+				} else {
+					let rounds = parseInt(params.rounds);
+					if (!rounds || rounds < 1) {
+						rounds = null;
+					}
+					details.rounds = rounds;
+				}
+			}
 			if (params.type) {
 				let type = Text.toId(params.type);
+				switch (type) {
+					case "doubleelimination":
+					case "doubleelim":
+					case "de":
+						type = "elimination";
+						details.rounds = 2;
+						break;
+					case "doubleroundrobin":
+					case "doublerr":
+					case "drr":
+						type = "roundrobin";
+						details.rounds = 2;
+						break;
+				}
 				if (!(type in TourTypes)) {
 					return this.reply(this.mlt('e7'));
 				}
