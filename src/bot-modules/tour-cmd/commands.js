@@ -118,8 +118,7 @@ module.exports = {
 					}
 				} else {
 					let idArg = Text.toId(splArg[0]);
-					let valueArg = splArg[1].trim();
-					isRules = false;
+					let valueArg = splArg.slice(1).join("=").trim();
 					switch (idArg) {
 						case 'format':
 						case 'tier':
@@ -169,8 +168,16 @@ module.exports = {
 							isRules = true;
 							break;
 						default:
-							return this.reply(this.mlt('param') + ' ' + idArg + ' ' +
-								this.mlt('paramhelp') + ": tier, autostart, dq, users, rounds, type, scout, timer");
+							if (isRules) {
+								if (params.rules) {
+									params.rules += ',' + args[i];
+								} else {
+									params.rules = args[i];
+								}
+							} else {
+								return this.reply(this.mlt('param') + ' ' + idArg + ' ' +
+									this.mlt('paramhelp') + ": tier, autostart, dq, users, rounds, type, scout, timer");
+							}
 					}
 				}
 			}

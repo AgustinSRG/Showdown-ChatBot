@@ -54,8 +54,13 @@ exports.setup = function (App) {
 	}
 
 	function parseErrorMessage(room, spl) {
-		if (!tournaments[room] || tourData[room]) return;
 		let msg = spl.slice(1).join('|');
+		if (!tournaments[room] || tourData[room]) {
+			if (tourData[room] && msg.startsWith("Custom rule error:")) {
+				App.bot.sendTo(room, App.multilang.mlt(Lang_File_Err, getLanguage(room), 3) + " / " + msg.substr("Custom rule error:".length));
+			}
+			return;
+		}
 		/* Specific error messages, may be updated frecuently */
 		if (msg.indexOf("Tournaments are disabled in this room") === 0) {
 			App.bot.sendTo(room, App.multilang.mlt(Lang_File_Err, getLanguage(room), 0));

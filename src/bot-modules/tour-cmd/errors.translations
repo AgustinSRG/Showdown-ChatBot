@@ -7,9 +7,11 @@
 $0 = Error: Tournaments are disabled in this room
 $1 = Error: I have not permission to create a tournament
 $2 = Error: The server is in lockdown, so tournaments cannot be started
+$3 = Error: Could not set custom rules
 
 %spanish
 
 $0 = Error: Los torneos están desactivados en esta sala
 $1 = Error: No tengo los permisos necesarios para crear un torneo
 $2 = Error: El server se está reiniciando, por lo que no se pueden crear torneos
+$3 = Error: No se pudieron configurar las reglas personalizadas.
