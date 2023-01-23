@@ -18,6 +18,8 @@ const UsageFailureCache = new Cache(20, 2 * 60 * 60 * 1000);
 
 const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
+const USAGE_FAQ_URL = "https://www.smogon.com/forums/threads/gen-9-smogon-university-usage-statistics-discussion-thread.3711767/";
+
 /* Usage utils */
 
 function botCanHtml(room, App) {
@@ -180,7 +182,7 @@ module.exports = {
 			if (!link) {
 				return this.errorReply(this.mlt('error'));
 			}
-			this.restrictReply(this.mlt('stats') + ": " + link + " | FAQ: https://www.smogon.com/forums/threads/official-smogon-university-usage-statistics-discussion-thread-mk-3.3591776/post-7171782", 'usage');
+			this.restrictReply(this.mlt('stats') + ": " + link + " | FAQ: " + USAGE_FAQ_URL, 'usage');
 		}.bind(this));
 	},
 
@@ -698,7 +700,7 @@ module.exports = {
 							// Details
 							'<td style="padding: 12px;">' +
 							detailsHTML +
-							'<p><b>' + this.mlt('source') + ': </b><a href="' + Text.escapeHTML(link) + '">' + Text.escapeHTML(link) + '</a> | <a href="https://www.smogon.com/forums/threads/official-smogon-university-usage-statistics-discussion-thread-mk-3.3591776/post-7171782">FAQ</a></p>' +
+							'<p><b>' + this.mlt('source') + ': </b><a href="' + Text.escapeHTML(link) + '">' + Text.escapeHTML(link) + '</a> | <a href="' + USAGE_FAQ_URL + '">FAQ</a></p>' +
 							'</td>' +
 							'</tr>' +
 							'</table>';
