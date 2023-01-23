@@ -212,20 +212,18 @@ class ModeratorBot {
 
 		let muteregexp = /^(.+) was muted by (.+) for 7 minutes\.(\s\(.*\))?$/g;
 		let hourmuteRegExp = /^(.+) was muted by (.+) for 1 hour\.(\s\(.*\))?$/g;
-		let banRegExp = /^(.+) was banned from (.+) by (.+)\.(\s\(.*\))?$/g;
 
 		let muteRes = muteregexp.exec(raw);
 		let hmRes = hourmuteRegExp.exec(raw);
-		let banRes = banRegExp.exec(raw);
 
-		let res = muteRes || hmRes || banRes;
+		let res = muteRes || hmRes;
 
 		if (res) {
 			let user = Text.toId(res[1]);
 			if (user) {
 				if (this.modEnabled('cleartext', room)) {
 					this.app.bot.sendTo(room, '/cleartext ' + user);
-				} else if (!banRes) {
+				} else {
 					this.app.bot.sendTo(room, '/hidetext ' + user);
 				}
 			}
