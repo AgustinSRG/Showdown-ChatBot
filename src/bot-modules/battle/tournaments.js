@@ -12,10 +12,12 @@ exports.setup = function (App) {
 	const TournamentsManager = Object.create(null);
 	const tourData = TournamentsManager.tourData = Object.create(null);
 	const lastAction = TournamentsManager.lastAction = Object.create(null);
+	const startTimes = TournamentsManager.startTimes = Object.create(null);
 
 	const Config = App.config.modules.battle;
 
 	const canSendCommands = TournamentsManager.canSendCommands = function (room) {
+		if (startTimes[room] && Date.now() < startTimes[room]) return false;
 		let res = true;
 		if (lastAction[room] && Date.now() - lastAction[room] < ACTION_INTERVAL) res = false;
 		lastAction[room] = Date.now();
@@ -47,18 +49,23 @@ exports.setup = function (App) {
 	TournamentsManager.checkChallenges = function (room) {
 		let mod = App.modules.battle.system;
 		let cmds = [];
-		if (Config.joinTours && Config.joinTours[room] && tourData[room].format && !tourData[room].isJoined && !tourData[room].isStarted) {
+		if (Config.joinTours && Config.joinTours[room] && tourData[room].format && !tourData[room].isJoined && !tourData[room].isStarted && !tourData[room].mustLeave) {
 			let format = Text.toId(tourData[room].teambuilderFormat || tourData[room].format);
 			if (App.bot.formats[format] && !App.bot.formats[format].team) {
 				if (canSendCommands(room)) {
 					cmds.push('/tour join');
 				}
 			} else {
-				if (mod.TeamBuilder.hasTeam(tourData[room].format)) {
+				if (mod.TeamBuilder.hasTeam(tourData[room].format) && !tourData[room].hasCustomRules) {
 					if (canSendCommands(room)) {
 						cmds.push('/tour join');
 					}
 				}
+			}
+		}
+		if (tourData[room].isJoined && !tourData[room].isStarted && tourData[room].mustLeave) {
+			if (canSendCommands(room)) {
+				cmds.push('/tour leave');
 			}
 		}
 		if (tourData[room].isJoined && tourData[room].isStarted) {
@@ -121,9 +128,26 @@ exports.setup = function (App) {
 		}
 	};
 
+	TournamentsManager.handleTourWithCustomRules = function (room) {
+		if (!tourData[room]) return;
+
+		tourData[room].hasCustomRules = true;
+
+		let format = Text.toId(tourData[room].teambuilderFormat || tourData[room].format);
+
+		if (tourData[room].isJoined && !tourData[room].isStarted && App.bot.formats[format] && App.bot.formats[format].team) {
+			tourData[room].mustLeave = true;
+			tourData[room].isJoined = false;
+			App.bot.sendTo(room, ['/tour leave']);
+		}
+	};
+
 	TournamentsManager.parse = function (room, message, isIntro, spl) {
 		if (spl[0] !== 'tournament') return;
-		if (!tourData[room]) tourData[room] = Object.create(null);
+		if (!tourData[room]) {
+			tourData[room] = Object.create(null);
+			startTimes[room] = Date.now() + 2000;
+		}
 		switch (spl[1]) {
 			case "leave":
 			case "disqualify":

@@ -63,6 +63,11 @@ exports.setup = function (App) {
 					TourManager.reportRejection();
 				}
 				break;
+			case 'raw':
+				if ((spl[1] + "").startsWith('<div class="infobox infobox-limited">This tournament includes:')) {
+					TourManager.handleTourWithCustomRules(room);
+				}
+				break;
 			case 'tournament':
 				TourManager.parse(room, line, isIntro, spl);
 				break;
