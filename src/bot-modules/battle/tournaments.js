@@ -49,7 +49,7 @@ exports.setup = function (App) {
 	TournamentsManager.checkChallenges = function (room) {
 		let mod = App.modules.battle.system;
 		let cmds = [];
-		if (Config.joinTours && Config.joinTours[room] && tourData[room].format && !tourData[room].isJoined && !tourData[room].isStarted && !tourData[room].mustLeave) {
+		if (Config.joinTours && Config.joinTours[room] && tourData[room].format && !tourData[room].isJoined && !tourData[room].isStarted && !tourData[room].isBanned && !tourData[room].mustLeave) {
 			let format = Text.toId(tourData[room].teambuilderFormat || tourData[room].format);
 			if (App.bot.formats[format] && !App.bot.formats[format].team) {
 				if (canSendCommands(room)) {
@@ -178,6 +178,13 @@ exports.setup = function (App) {
 				delete tourData[room];
 				delete TournamentsManager.lastChallenges[room];
 				delete TournamentsManager.lastChallenged[room];
+				break;
+			case "error":
+				switch (spl[2]) {
+					case "Banned":
+						tourData[room].isBanned = true;
+						break;
+				}
 				break;
 		}
 	};
