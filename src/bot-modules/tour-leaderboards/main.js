@@ -273,7 +273,7 @@ exports.setup = function (App) {
 			}
 			res.winner = data.results[0];
 			res.finalist = data.results[1];
-			res.semiFinalists = data.results[2];
+			res.semiFinalists = data.results[2] || [];
 			return res;
 		} else {
 			App.log("Incompatible generator: " + data.generator);
