@@ -182,17 +182,28 @@ module.exports = {
 				}
 			}
 			if (params.format) {
-				let format = parseAliases(params.format, App);
-				if (!App.bot.formats[format]) {
-					let inexact = Inexact.safeResolve(App, format, { formats: 1, others: 0 });
-					return this.reply(this.mlt('e31') + ' "' + format + '" ' + this.mlt('e33') +
-						(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
+				let formatOptions = (params.format + "").split("|").filter(a => {
+					return !!(a.trim());
+				});
+				if (formatOptions.length > 0) {
+					const parsedFormats = [];
+					for (let formatOption of formatOptions) {
+						let format = parseAliases(formatOption, App);
+						if (!App.bot.formats[format]) {
+							let inexact = Inexact.safeResolve(App, format, { formats: 1, others: 0 });
+							return this.reply(this.mlt('e31') + ' "' + format + '" ' + this.mlt('e33') +
+								(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
+						}
+						if (App.bot.formats[format].disableTournaments) {
+							return this.reply(this.mlt('e31') + ' ' + Chat.italics(App.bot.formats[format].name) +
+								' ' + this.mlt('e32'));
+						}
+
+						parsedFormats.push(format);
+					}
+
+					details.format = parsedFormats[Math.floor(Math.random() * parsedFormats.length)];
 				}
-				if (App.bot.formats[format].disableTournaments) {
-					return this.reply(this.mlt('e31') + ' ' + Chat.italics(App.bot.formats[format].name) +
-						' ' + this.mlt('e32'));
-				}
-				details.format = format;
 			}
 			if (params.timeToStart) {
 				if (Text.toId(params.timeToStart) === 'off' || Text.toId(params.timeToStart) === 'infinite') {
