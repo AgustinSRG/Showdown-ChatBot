@@ -338,7 +338,7 @@ module.exports = {
 
 	setcontrolroom: function (App) {
 		this.setLangFile(Lang_File);
-		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
+		if (!this.isExcepted()) return;
 		if (this.args.length !== 2) {
 			return this.errorReply(this.usage({desc: this.mlt('controlroom')}, {desc: this.mlt('targetroom')}));
 		}
@@ -355,7 +355,7 @@ module.exports = {
 
 	rmcontrolroom: function (App) {
 		this.setLangFile(Lang_File);
-		if (!this.can('commands', this.room)) return this.replyAccessDenied('commands');
+		if (!this.isExcepted()) return;
 		if (!this.arg) return this.errorReply(this.usage({desc: this.mlt('controlroom')}));
 		let control = Text.toRoomid(this.arg);
 		if (!control) return this.errorReply(this.usage({desc: this.mlt('controlroom')}));
