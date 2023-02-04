@@ -33,10 +33,10 @@ exports.setup = function (App) {
 		}
 
 		let submenu = new SubMenu("Battle&nbsp;Bot", parts, context, [
-			{id: 'config', title: 'Configuration', url: '/battle/', handler: battleConfigurationHandler},
-			{id: 'algo', title: 'Battle&nbsp;Algorithms', url: '/battle/algo/', handler: battleAlgorithmsHandler},
-			{id: 'chall', title: 'Challenge', url: '/battle/chall/', handler: battleChallengeHandler},
-			{id: 'ladder', title: 'Ladder', url: '/battle/ladder/', handler: battleLadderHandler},
+			{ id: 'config', title: 'Configuration', url: '/battle/', handler: battleConfigurationHandler },
+			{ id: 'algo', title: 'Battle&nbsp;Algorithms', url: '/battle/algo/', handler: battleAlgorithmsHandler },
+			{ id: 'chall', title: 'Challenge', url: '/battle/chall/', handler: battleChallengeHandler },
+			{ id: 'ladder', title: 'Ladder', url: '/battle/ladder/', handler: battleLadderHandler },
 		], 'config');
 
 		return submenu.run();
@@ -97,7 +97,7 @@ exports.setup = function (App) {
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
 		html += configTemplate.make(htmlVars);
-		context.endWithWebPage(html, {title: "Battle Bot - Showdown ChatBot"});
+		context.endWithWebPage(html, { title: "Battle Bot - Showdown ChatBot" });
 	}
 
 	function battleAlgorithmsHandler(context, html) {
@@ -139,7 +139,7 @@ exports.setup = function (App) {
 			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
 		}
 
-		context.endWithWebPage(html, {title: "Battle Algorithm - Showdown ChatBot"});
+		context.endWithWebPage(html, { title: "Battle Algorithm - Showdown ChatBot" });
 	}
 
 	function battleChallengeHandler(context, html) {
@@ -178,7 +178,7 @@ exports.setup = function (App) {
 		} else if (context.post.cancelchall) {
 			if (mod.ChallManager.challenges && mod.ChallManager.challenges.challengeTo) {
 				App.bot.send('|/cancelchallenge ' + mod.ChallManager.challenges.challengeTo.to);
-				App.logServerAction(context.user.id, "Cancel Callenge");
+				App.logServerAction(context.user.id, "Cancel Challenge");
 				ok = 'Challenge Canceled';
 			} else {
 				error = "No challenges found.";
@@ -205,7 +205,7 @@ exports.setup = function (App) {
 			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
 		}
 
-		context.endWithWebPage(html, {title: "Battle Bot - Showdown ChatBot"});
+		context.endWithWebPage(html, { title: "Battle Bot - Showdown ChatBot" });
 	}
 
 	function battleLadderHandler(context, html) {
@@ -252,7 +252,7 @@ exports.setup = function (App) {
 		} else {
 			html += '<p><strong>Format</strong>:&nbsp;' + getLadderFormatsMenu() + '</p>';
 			html += '<p><strong>Search Interval (seconds)</strong>:&nbsp;' +
-			'<input name="interval" type="text" size="10" value="10" /></p>';
+				'<input name="interval" type="text" size="10" value="10" /></p>';
 			html += '<p><input type="submit" name="startladder" value="Start Laddering" /></p>';
 		}
 		html += '</form>';
@@ -263,7 +263,7 @@ exports.setup = function (App) {
 			html += '<p style="padding:5px;"><span class="ok-msg">' + ok + '</span></p>';
 		}
 
-		context.endWithWebPage(html, {title: "Battle Bot - Showdown ChatBot"});
+		context.endWithWebPage(html, { title: "Battle Bot - Showdown ChatBot" });
 	}
 
 	App.server.setHandler('teams', (context, parts) => {
@@ -287,7 +287,7 @@ exports.setup = function (App) {
 				mod.TeamBuilder.saveTeams();
 				mod.TeamBuilder.mergeTeams();
 				App.logServerAction(context.user.id, "Delete Team: " + id);
-				ok = 'Team <strong>' + id + '</strong> deleted sucessfully';
+				ok = 'Team <strong>' + id + '</strong> deleted successfully';
 			} else {
 				error = "Team not found";
 			}
@@ -317,7 +317,7 @@ exports.setup = function (App) {
 				mod.TeamBuilder.saveTeams();
 				mod.TeamBuilder.mergeTeams();
 				App.logServerAction(context.user.id, "Add Team: " + id);
-				ok = 'Team <strong>' + id + '</strong> added sucessfully';
+				ok = 'Team <strong>' + id + '</strong> added successfully';
 			}
 		}
 
@@ -332,13 +332,11 @@ exports.setup = function (App) {
 		submenu.push('<a class="submenu-option' + (!selectedFormat ? '-selected' : '') + '" href="./">All&nbsp;Teams</a>');
 		htmlVars.teams = '';
 		let teams = mod.TeamBuilder.dynTeams;
-		for (let id in teams) {
+		for (let id of Object.keys(teams)) {
 			let formatName = teams[id].format;
 			if (App.bot.formats[formatName]) formatName = App.bot.formats[formatName].name;
 			if (!formats[teams[id].format]) {
 				formats[teams[id].format] = true;
-				submenu.push('<a class="submenu-option' + (selectedFormat === teams[id].format ? '-selected' : '') +
-				'" href="./?format=' + teams[id].format + '">' + formatName + '</a>');
 			}
 			if (selectedFormat && selectedFormat !== teams[id].format) continue;
 			htmlVars.teams += teamsItemTemplate.make({
@@ -346,6 +344,15 @@ exports.setup = function (App) {
 				format: Text.escapeHTML(formatName),
 				pokemon: Teams.teamOverview(teams[id].packed),
 			});
+		}
+
+		const sortedFormats = Object.keys(formats).sort();
+
+		for (let format of sortedFormats) {
+			let formatName = format;
+			if (App.bot.formats[formatName]) formatName = App.bot.formats[formatName].name;
+			submenu.push('<a class="submenu-option' + (selectedFormat === format ? '-selected' : '') +
+				'" href="./?format=' + format + '">' + formatName + '</a>');
 		}
 
 		if (!htmlVars.teams) {
@@ -357,7 +364,7 @@ exports.setup = function (App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(teamsMainTemplate.make(htmlVars), {title: "Bot Teams - Showdown ChatBot"});
+		context.endWithWebPage(teamsMainTemplate.make(htmlVars), { title: "Bot Teams - Showdown ChatBot" });
 	});
 
 	/* Auxiliar functions */
@@ -375,8 +382,9 @@ exports.setup = function (App) {
 	}
 
 	function getFormatsMenu(selected) {
-		let formats = [];
-		for (let f in App.bot.formats) {
+		const formats = [];
+		const sortedFormatsList = Object.keys(App.bot.formats).sort();
+		for (let f of sortedFormatsList) {
 			formats.push('<option value="' + f + '"' + (selected === f ? 'selected="selected"' : '') +
 				'>' + App.bot.formats[f].name + '</option>');
 		}
