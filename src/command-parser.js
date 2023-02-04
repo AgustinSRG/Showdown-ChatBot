@@ -635,10 +635,64 @@ class DynamicCommand {
 		this.execNext(this.conf, context);
 	}
 
+	botCanHtml(room, App) {
+		let roomData = App.bot.rooms[room];
+		let botid = Text.toId(App.bot.getBotNick());
+		return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'bot'));
+	}
+
+	botCanUseBasicCommands(room, App) {
+		let roomData = App.bot.rooms[room];
+		let botid = Text.toId(App.bot.getBotNick());
+		return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'driver'));
+	}
+
+	sendReply(reply, context) {
+		if (!reply) {
+			return;
+		}
+
+		const replyText = reply + "";
+		const COMMAND_EXCEPTIONS = [
+			"/addhtmlbox",
+		];
+
+		let hasExemptedCommand = false;
+
+		for (let cmd of COMMAND_EXCEPTIONS) {
+			if (replyText.startsWith(cmd + " ")) {
+				hasExemptedCommand = true;
+				break;
+			}
+		}
+
+		if (replyText.startsWith("/wall ") || replyText.startsWith("/announce ")) {
+			const actualMessage = replyText.split(" ").slice(1).join(" ");
+			context.wall = true;
+			context.restrictReply(Text.stripCommands(actualMessage), 'info');
+		} else if (replyText.startsWith("!") || hasExemptedCommand) {
+			if (!context.can('info', context.room)) {
+				return context.replyAccessDenied('info');
+			}
+			if (context.getRoomType(context.room) !== 'chat') {
+				return context.errorReply(context.parser.app.multilang.mlt(Lang_File, context.lang, 'nochat'));
+			}
+			if (!this.botCanUseBasicCommands(context.room, context.parser.app)) {
+				return context.errorReply(context.parser.app.multilang.mlt(Lang_File, context.lang, 'nobot'));
+			}
+			if (hasExemptedCommand && !this.botCanHtml(context.room, context.parser.app)) {
+				return context.errorReply(context.parser.app.multilang.mlt(Lang_File, context.lang, 'nobot'));
+			}
+			context.replyCommand(replyText);
+		} else {
+			context.restrictReply(Text.stripCommands(replyText), 'info');
+		}
+	}
+
 	execNext(conf, context) {
 		switch (typeof conf) {
 			case "string":
-				context.restrictReply(Text.stripCommands(conf), 'info');
+				this.sendReply(conf || "", context);
 				break;
 			case "object":
 				let spaceIndex = context.arg.indexOf(" ");

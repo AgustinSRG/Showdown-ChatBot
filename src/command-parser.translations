@@ -19,6 +19,9 @@ $3 = Usage
 $4 = Unknown option
 $5 = Options for command
 
+$nochat = This command is only available for chat rooms
+$nobot = Bot requires rank of bot or higher to use this feature
+
 %spanish
 
 # Access Denied
@@ -33,3 +36,6 @@ $3 = Uso del Comando
 # Dyn Cmd Options
 $4 = Opción desconocida
 $5 = Opciones para el comando
+
+$nochat = Este comando solo está disponible para las salas de chat
+$nobot = Necesito rango de bot o superior para poder usar esta funcionalidad
