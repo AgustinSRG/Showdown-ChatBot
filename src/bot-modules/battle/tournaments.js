@@ -56,7 +56,7 @@ exports.setup = function (App) {
 					cmds.push('/tour join');
 				}
 			} else {
-				if (mod.TeamBuilder.hasTeam(tourData[room].format) && !tourData[room].hasCustomRules) {
+				if (mod.TeamBuilder.hasTeam(format) && !tourData[room].hasCustomRules) {
 					if (canSendCommands(room)) {
 						cmds.push('/tour join');
 					}
