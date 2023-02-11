@@ -74,6 +74,7 @@ module.exports = {
 
 			const COMMAND_EXCEPTIONS = [
 				"/addhtmlbox",
+				"/events",
 			];
 
 			let hasExemptedCommand = false;
