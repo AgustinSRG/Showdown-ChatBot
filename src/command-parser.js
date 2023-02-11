@@ -667,6 +667,20 @@ class DynamicCommand {
 			}
 		}
 
+		if (context.parser.data.infocmds) {
+			const extraCommands = (context.parser.data.infocmds + "").split(",");
+			for (let cmd of extraCommands) {
+				const cmdTrim = cmd.trim();
+				if (!cmdTrim) {
+					continue;
+				}
+				if (replyText.startsWith(cmdTrim + " ")) {
+					hasExemptedCommand = true;
+					break;
+				}
+			}
+		}
+
 		if (replyText.startsWith("/wall ") || replyText.startsWith("/announce ")) {
 			const actualMessage = replyText.split(" ").slice(1).join(" ");
 			context.wall = true;
