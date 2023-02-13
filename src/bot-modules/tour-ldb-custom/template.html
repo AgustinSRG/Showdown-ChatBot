@@ -1,0 +1,24 @@
+<script type="text/javascript">
+	function removeTable(table) {
+		var elem = document.getElementById('confirm-del-' + table);
+		if (elem) {
+			elem.innerHTML = '<form style="display:inline;" id="confirm-delete-form" method="post" action=""><input type="hidden" name="name" value="' + table + '" />Are you sure?&nbsp;<input type="submit" name="del" value="Delete Configuration" /></form>';
+		}
+		return false;
+	}
+</script>
+<script type="text/javascript">
+	function clearTable(table) {
+		var elem = document.getElementById('confirm-clear-' + table);
+		if (elem) {
+			elem.innerHTML = '<form style="display:inline;" id="confirm-delete-form" method="post" action=""><input type="hidden" name="name" value="' + table + '" />Are you sure?&nbsp;<input type="submit" name="clear" value="Clear" /></form>';
+		}
+		return false;
+	}
+</script>
+<h2>Leaderboards Configuration</h2>
+${TABLES}
+<form method="post" action="">
+	<input name="name" type="text" size="30" />&nbsp;&nbsp;<input type="submit" name="add" value="Add table" />
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

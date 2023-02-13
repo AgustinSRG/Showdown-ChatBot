@@ -1,0 +1,26 @@
+<h3>Table: ${NAME}</h3>
+<p><a href="/tourtablecustom/${ID}/get" target="_blank">View Leaderboards Table</a></p>
+<form method="post" action="">
+	<input type="hidden" name="name" value="${ID}" />
+	<table border="0">
+		<tr><td>Name: </td><td><input name="newname" type="text" size="10" value="${NAME}" /></td></tr><tr></tr>
+		<tr><td>Points for winner: </td><td><input name="winner" type="text" size="10" value="${WINNER}" /></td></tr><tr>
+		<tr><td>Points for finalist: </td><td><input name="finalist" type="text" size="10" value="${FINALIST}" /></td></tr><tr>
+		<tr><td>Points for semi-finalist: </td><td><input name="semifinalist" type="text" size="10" value="${SEMIFINALIST}" /></td></tr><tr>
+		<tr><td>Points per battle: </td><td><input name="battle" type="text" size="10" value="${BATTLE}" /></td></tr><tr>
+		<tr><td colspan="2"><input name="useratio" type="checkbox" value="true"${USERATIO} />&nbsp;Use battles won ratio to calculate score.</td></tr>
+	</table>
+	<p><input type="submit" name="edit" value="Save Changes" /></p>
+</form>
+<form method="post" action="">
+	<input type="hidden" name="name" value="${ID}" />
+	<p><input type="submit" name="gentable" value="Generate Table" /></p>
+</form>
+<p><button onclick="clearTable('${ID}');">Clear Leaderboards</button>&nbsp;<span id="confirm-clear-${ID}">&nbsp;</span></p>
+<p><button onclick="removeTable('${ID}');">Delete Configuration</button>&nbsp;<span id="confirm-del-${ID}">&nbsp;</span></p>
+<form method="post" action="">
+	<input type="hidden" name="name" value="${ID}" />
+	<p><textarea name="dtrestored" rows="2" placeholder="json data here"></textarea></p>
+	<p><input type="submit" name="restoredata" value="Restore data from json" /></p>
+</form>
+<hr />

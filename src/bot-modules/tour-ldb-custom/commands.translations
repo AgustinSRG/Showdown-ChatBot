@@ -1,0 +1,115 @@
+﻿# Translations file
+
+@ tour-leaderboards-custom
+
+%english
+
+$nochat = This command is only available for chat rooms
+$in = in
+$name = name
+$newname = new name
+
+$table = Table
+
+$0 = Creates a new leaderboards table
+$1 = Another table with the same name already exists
+$2 = Created leaderboards table
+$3 = Leaderboards table not found
+
+$4 = Tours points system for
+$5 = points for winner
+$6 = for finalist
+$7 = for semi-finalist
+$8 = per won battle
+$9 = The battle/tour ratio is used in order to calculate the score
+
+$10 = List of leaderboards tables
+
+$11 = Renamed leaderboards table
+$12 = Reset leaderboards table
+$13 = Removed leaderboards table
+$14 = Data backup
+
+$15 = The next tournament will be accounted for the leaderboards table
+$16 = The next tournament will not be accounted for any leaderboards table
+
+$17 = Invalid username
+
+$18 = Ranking of
+$19 = Points
+$20 = Tours Won
+$21 = Finalist
+$22 = Semi-Finalist
+$23 = Total
+$24 = tours played
+$25 = battles won
+
+$ratio = Ratio
+$user = User
+
+$26 = Leaderboards table
+$27 = is empty
+
+$28 = Tournament leaderboards
+
+$29 = Tours played
+$30 = Battles won
+
+$31 = Last reset
+$32 = Full table
+
+%spanish
+
+$nochat = Este comando solo está disponible para las salas de chat
+$in = en
+$name = nombre
+$newname = nuevo nombre
+
+$table = Tabla
+
+$0 = Crea una nueva tabla de clasificaciones de torneos
+$1 = Ya existe otra tabla de clasificaciones con el mismo nombre
+$2 = Tabla de clasificaciones de torneos creada
+$3 = No se encontró la tabla de clasificaciones
+
+$4 = Sistema de puntuaciones de la tabla de clasificaciones de torneos
+$5 = puntos para el ganador
+$6 = para el finalista
+$7 = para el semi-finalista
+$8 = por batalla ganada
+$9 = Los puntos se multiplican por el ratio batallas/torneos para calcular la puntuación final
+
+$10 = Lista de tablas de clasificaciones de torneos
+
+$11 = Se ha cambiado el nombre a la tabla de clasificaciones de torneos
+$12 = Se ha reiniciado la tabla de clasificaciones de torneos
+$13 = Se ha eliminado la tabla de clasificaciones de torneos
+$14 = Copia de seguridad
+
+$15 = El siguiente torneo será tenido en cuenta para la tabla de clasificaciones de torneos
+$16 = El siguiente no torneo será tenido en cuenta para las tablas clasificaciones de torneos
+
+$17 = Nombre de usuario no válido
+
+$18 = Ranking de
+$19 = Puntos
+$20 = Torneos ganados
+$21 = Finalista
+$22 = Semi-Finalista
+$23 = Total
+$24 = torneos jugados
+$25 = batallas ganadas
+
+$ratio = Ratio
+$user = Usuario
+
+$26 = La tabla de clasificaciones de torneos
+$27 = está vacía
+
+$28 = Puntuaciones en torneos
+
+$29 = Torneos jugados
+$30 = Batallas ganadas
+
+$31 = Último reinicio
+$32 = Tabla completa

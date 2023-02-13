@@ -1,0 +1,26 @@
+{
+  "id": "tourldbcustom",
+  "name": "Tour Leaderboards (Custom)",
+  "main": "main.js",
+  "commands": [
+    "commands.js"
+  ],
+  "handlers": [
+    "server-handler.js"
+  ],
+  "permissions": {
+    "ldbcustomrank": {
+      "group": "driver"
+    },
+    "ldbcustomofficial": {
+      "group": "driver"
+    },
+    "ldbcustomconfig": {
+      "excepted": true
+    }
+  },
+  "langfiles": [
+    "./commands.translations"
+  ],
+  "description": "Tournament leaderboards for custom use cases"
+}
