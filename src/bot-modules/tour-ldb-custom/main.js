@@ -237,7 +237,7 @@ exports.setup = function (App) {
 
 	function getResults(data) {
 		let generator = Text.toId(data.generator || "");
-		if (generator === "singleelimination") {
+		if ((generator + "").endsWith("elimination")) {
 			let res = Object.create(null);
 			let parsedTree = parseTourTree(data.bracketData.rootNode);
 			res.players = Object.keys(parsedTree);
@@ -266,7 +266,7 @@ exports.setup = function (App) {
 				}
 			}
 			return res;
-		} else if (generator === "roundrobin") {
+		} else if ((generator + "").endsWith("roundrobin")) {
 			let res = Object.create(null);
 			res.players = data.bracketData.tableHeaders.cols;
 			res.general = Object.create(null);

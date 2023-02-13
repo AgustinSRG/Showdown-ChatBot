@@ -439,8 +439,8 @@ module.exports = {
 						html += '<th>' + Text.escapeHTML(this.mlt(20)) + '</th>';
 						html += '<th>' + Text.escapeHTML(this.mlt(21)) + '</th>';
 						html += '<th>' + Text.escapeHTML(this.mlt(22)) + '</th>';
-						html += '<th>' + Text.escapeHTML(this.mlt(29)) + '</th>';
 						html += '<th>' + Text.escapeHTML(this.mlt(30)) + '</th>';
+						html += '<th>' + Text.escapeHTML(this.mlt(29)) + '</th>';
 						html += '<th>' + Text.escapeHTML(this.mlt("ratio")) + '</th>';
 						html += '</tr>';
 

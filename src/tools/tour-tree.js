@@ -22,7 +22,7 @@ function parseTourTree(tree) {
 	let aux;
 	for (let i = 0; i < children.length; i++) {
 		aux = parseTourTree(children[i]);
-		for (let j in aux) {
+		for (let j of Object.keys(aux)) {
 			if (!auxobj[j]) auxobj[j] = 0;
 			auxobj[j] += aux[j];
 		}
