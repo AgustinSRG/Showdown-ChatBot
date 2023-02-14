@@ -70,7 +70,7 @@ module.exports = {
 						finalist: 3,
 						semifinalist: 1,
 						battle: 0,
-						useratio: true,
+						useratio: false,
 						cleanPoint: now.toString(),
 					};
 

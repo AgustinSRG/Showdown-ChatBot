@@ -10,6 +10,8 @@ const Text = Tools('text');
 const parseTourTree = Tools('tour-tree');
 const checkDir = Tools('checkdir');
 
+const Lang_File = Path.resolve(__dirname, 'commands.translations');
+
 function toDecimalFormat(num) {
 	num = Math.floor(num * 100) / 100;
 	num = "" + num;
@@ -31,6 +33,10 @@ exports.setup = function (App) {
 	}
 
 	checkDir(Path.resolve(App.dataDir, 'tour-tables-custom/'));
+
+	function getLanguage(room) {
+		return App.config.language.rooms[room] || App.config.language['default'];
+	}
 
 	class TourLeaderBoardsModule {
 		constructor() {
@@ -99,6 +105,13 @@ exports.setup = function (App) {
 				if (a[5] !== b[5]) return b[5] - a[5]; //Tours played
 				return 0;
 			});
+		}
+
+		getUserName(leaderboardsId, user) {
+			let userid = Text.toId(user);
+			let ladder = this.data;
+			if (!ladder[leaderboardsId] || !ladder[leaderboardsId][userid]) return user;
+			return ladder[leaderboardsId][userid][0] || user;
 		}
 
 		getUserPoints(leaderboardsId, user) {
@@ -227,6 +240,120 @@ exports.setup = function (App) {
 			}
 			this.db.write();
 			this.generateTable(leaderboardsId);
+			this.sendResultsTable(room, leaderboardsId, results);
+		}
+
+		sendResultsTable(room, leaderboardsId, results) {
+			let top = this.getTop(leaderboardsId);
+			if (!top || !top.length) {
+				return;
+			}
+
+			const maxTableLength = 100;
+
+			let config = App.config.modules.tourldbcustom[leaderboardsId];
+
+			if (!config) {
+				return;
+			}
+
+			function mlt(key) {
+				return App.multilang.mlt(Lang_File, getLanguage(room), key);
+			}
+
+			let server = App.config.server.url;
+
+			let html = '<h3 style="text-align:center;">' + Text.escapeHTML(config.name || leaderboardsId) + " | " + Text.escapeHTML(mlt(28)) + '</h3><div style="overflow: auto; height: 200px; width: 100%;">';
+
+			if (config.winner > 0 && results.winner) {
+				let winners = results.winner;
+				if (!(winners instanceof Array)) {
+					winners = [winners];
+				}
+
+				html += '<p style="text-align:center;"><b>+' + Text.escapeHTML(config.winner) + "</b> " + Text.escapeHTML(mlt(5)) + ": " + winners.map(winner => {
+					return "<b>" + Text.escapeHTML(this.getUserName(leaderboardsId, winner)) + "</b>";
+				}).join(", ") + "</p>";
+			}
+
+			if (config.finalist > 0 && results.finalist) {
+				let finalists = results.finalist;
+				if (!(finalists instanceof Array)) {
+					finalists = [finalists];
+				}
+
+				html += '<p style="text-align:center;"><b>+' + Text.escapeHTML(config.finalist) + "</b> " + Text.escapeHTML(mlt(6)) + ": " + finalists.map(finalist => {
+					return "<b>" + Text.escapeHTML(this.getUserName(leaderboardsId, finalist)) + "</b>";
+				}).join(", ") + "</p>";
+			}
+
+			if (config.semifinalist > 0 && results.semiFinalists && results.semiFinalists.length > 0) {
+				let finalists = results.semiFinalists;
+				if (!(finalists instanceof Array)) {
+					finalists = [finalists];
+				}
+
+				html += '<p style="text-align:center;"><b>+' + Text.escapeHTML(config.semifinalist) + "</b> " + Text.escapeHTML(mlt(7)) + ": " + finalists.map(finalist => {
+					return "<b>" + Text.escapeHTML(this.getUserName(leaderboardsId, finalist)) + "</b>";
+				}).join(", ") + "</p>";
+			}
+
+			html += '<table border="1" cellspacing="0" cellpadding="3" style="min-width:100%;">';
+
+			html += '<tr>';
+			html += '<th>#</th>';
+			html += '<th>' + Text.escapeHTML(mlt("user")) + '</th>';
+			html += '<th>' + Text.escapeHTML(mlt(19)) + '</th>';
+			html += '<th>' + Text.escapeHTML(mlt(20)) + '</th>';
+			html += '<th>' + Text.escapeHTML(mlt(21)) + '</th>';
+			html += '<th>' + Text.escapeHTML(mlt(22)) + '</th>';
+			html += '<th>' + Text.escapeHTML(mlt(30)) + '</th>';
+			html += '<th>' + Text.escapeHTML(mlt(29)) + '</th>';
+			html += '<th>' + Text.escapeHTML(mlt("ratio")) + '</th>';
+			html += '</tr>';
+
+			for (let i = 0; i < maxTableLength && i < top.length; i++) {
+				html += '<tr>';
+
+				html += '<td style="text-align:center;"><b>' + (i + 1) + '</b></td>';
+
+				html += '<td><b>' + Text.escapeHTML(top[i][0]) + '</b></td>';
+
+				html += '<td>' + toDecimalFormat(top[i][6]) + '</td>';
+
+				html += '<td>' + top[i][1] + '</td>';
+
+				html += '<td>' + top[i][2] + '</td>';
+
+				html += '<td>' + top[i][3] + '</td>';
+
+				html += '<td>' + top[i][4] + '</td>';
+
+				html += '<td>' + top[i][5] + '</td>';
+
+				html += '<td>' + toDecimalFormat(top[i][4] / (top[i][5] || 1)) + '</td>';
+
+				html += '</tr>';
+			}
+
+			html += '</table>';
+
+			html += '<p>' + Text.escapeHTML(mlt(31)) + ': ' + Text.escapeHTML(config.cleanPoint || "-") + '</p>';
+
+			if (server) {
+				let fullTablelink;
+				if (server.charAt(server.length - 1) === '/') {
+					fullTablelink = App.config.server.url + 'tourtablecustom/' + leaderboardsId + '/get';
+				} else {
+					fullTablelink = App.config.server.url + '/tourtablecustom/' + leaderboardsId + '/get';
+				}
+
+				html += '<p>' + Text.escapeHTML(mlt(32)) + ': <a href="' + fullTablelink + '">' + fullTablelink + '</a></p>';
+			}
+
+			html += '</div>';
+
+			App.bot.sendTo(room, "/addhtmlbox " + html);
 		}
 	}
 

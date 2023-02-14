@@ -18,9 +18,9 @@ $3 = Leaderboards table not found
 
 $4 = Tours points system for
 $5 = points for winner
-$6 = for finalist
-$7 = for semi-finalist
-$8 = per won battle
+$6 = points for finalist
+$7 = points for semi-finalist
+$8 = points per won battle
 $9 = The battle/tour ratio is used in order to calculate the score
 
 $10 = List of leaderboards tables
@@ -74,9 +74,9 @@ $3 = No se encontró la tabla de clasificaciones
 
 $4 = Sistema de puntuaciones de la tabla de clasificaciones de torneos
 $5 = puntos para el ganador
-$6 = para el finalista
-$7 = para el semi-finalista
-$8 = por batalla ganada
+$6 = puntos para el finalista
+$7 = puntos para los semi-finalistas
+$8 = puntos por batalla ganada
 $9 = Los puntos se multiplican por el ratio batallas/torneos para calcular la puntuación final
 
 $10 = Lista de tablas de clasificaciones de torneos
