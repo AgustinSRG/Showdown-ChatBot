@@ -409,11 +409,14 @@ module.exports = {
 				}
 				break;
 			case "top":
+			case "top100":
 				{
 					let leaderboardsId = Text.toId(this.args[1]);
 					if (!leaderboardsId) {
-						return this.errorReply(this.usage({ desc: "top" }, { desc: this.mlt('table') }));
+						return this.errorReply(this.usage({ desc: option }, { desc: this.mlt('table') }));
 					}
+
+					let maxTableLength = (option === "top100") ? 100 : 10;
 
 					if (!Config[leaderboardsId]) {
 						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
@@ -444,7 +447,7 @@ module.exports = {
 						html += '<th>' + Text.escapeHTML(this.mlt("ratio")) + '</th>';
 						html += '</tr>';
 
-						for (let i = 0; i < 10 && i < top.length; i++) {
+						for (let i = 0; i < maxTableLength && i < top.length; i++) {
 							html += '<tr>';
 
 							html += '<td style="text-align:center;"><b>' + (i + 1) + '</b></td>';
@@ -510,7 +513,7 @@ module.exports = {
 				}
 				break;
 			default:
-				return this.errorReply(this.usage({ desc: 'create | config | list | rename | info | reset | remove | official | unofficial | rank | top | top5' }));
+				return this.errorReply(this.usage({ desc: 'create | config | list | rename | info | reset | remove | official | unofficial | rank | top | top5 | top100' }));
 		}
 	},
 };

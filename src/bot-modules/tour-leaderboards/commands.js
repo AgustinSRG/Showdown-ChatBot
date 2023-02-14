@@ -51,7 +51,16 @@ module.exports = {
 			return this.errorReply(this.usage({ desc: this.usageTrans('user'), optional: true }, { desc: this.usageTrans('room'), optional: true }));
 		}
 		if (!Config[room]) {
-			return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
+			const tableId = Text.toId(room);
+			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom && App.config.modules.tourldbcustom[room]) {
+				this.cmd = 'tourldbcustom';
+				this.arg = "rank" + ", " + tableId + "," + user;
+				this.args = ["rank", tableId, user];
+				this.parser.exec(this);
+				return;
+			} else {
+				return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
+			}
 		}
 		if (user.length > 19) {
 			return this.errorReply(this.mlt(1));
@@ -76,7 +85,16 @@ module.exports = {
 			return this.errorReply(this.usage({ desc: this.usageTrans('room') }));
 		}
 		if (!Config[room]) {
-			return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
+			const tableId = Text.toId(room);
+			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom && App.config.modules.tourldbcustom[room]) {
+				this.cmd = 'tourldbcustom';
+				this.arg = "top" + ", " + tableId;
+				this.args = ["top", tableId];
+				this.parser.exec(this);
+				return;
+			} else {
+				return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
+			}
 		}
 		let top = mod.getTop(room);
 		if (!top || !top.length) {
@@ -177,7 +195,16 @@ module.exports = {
 			return this.errorReply(this.usage({ desc: this.usageTrans('room') }));
 		}
 		if (!Config[room]) {
-			return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
+			const tableId = Text.toId(room);
+			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom && App.config.modules.tourldbcustom[room]) {
+				this.cmd = 'tourldbcustom';
+				this.arg = "top5" + ", " + tableId;
+				this.args = ["top5", tableId];
+				this.parser.exec(this);
+				return;
+			} else {
+				return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
+			}
 		}
 		let top = mod.getTop(room);
 		if (!top || !top.length) {
@@ -214,7 +241,16 @@ module.exports = {
 			return this.errorReply(this.usage({ desc: this.usageTrans('room') }));
 		}
 		if (!Config[room]) {
-			return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
+			const tableId = Text.toId(room);
+			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom && App.config.modules.tourldbcustom[room]) {
+				this.cmd = 'tourldbcustom';
+				this.arg = "info" + ", " + tableId;
+				this.args = ["info", tableId];
+				this.parser.exec(this);
+				return;
+			} else {
+				return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
+			}
 		}
 		this.restrictReply(this.mlt(18) + " " + Chat.italics(this.parser.getRoomTitle(room)) + ": " +
 			Chat.bold(Config[room].winner) + " " + this.mlt(19) + ", " + Chat.bold(Config[room].finalist) +
@@ -359,7 +395,16 @@ module.exports = {
 			return this.errorReply(this.usage({ desc: this.usageTrans('room') }));
 		}
 		if (!Config[room]) {
-			return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
+			const tableId = Text.toId(room);
+			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom && App.config.modules.tourldbcustom[room]) {
+				this.cmd = 'tourldbcustom';
+				this.arg = "top100" + ", " + tableId;
+				this.args = ["top100", tableId];
+				this.parser.exec(this);
+				return;
+			} else {
+				return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
+			}
 		}
 
 		if (this.getRoomType(this.room) === 'chat' && botCanHtml(this.room, App) && this.can('toursrank', this.room)) {
@@ -443,6 +488,18 @@ module.exports = {
 	"tourofficial": "official",
 	official: function (App) {
 		this.setLangFile(Lang_File);
+
+		if (this.arg && this.args.length === 1) {
+			const tableId = Text.toId(this.arg);
+			if (tableId && App.modules.tourldbcustom && App.modules.tourldbcustom.system) {
+				this.cmd = 'tourldbcustom';
+				this.arg = "official" + ", " + tableId;
+				this.args = ["official", tableId];
+				this.parser.exec(this);
+				return;
+			}
+		}
+
 		const Config = App.config.modules.tourleaderboards;
 		if (!this.can('tourofficial', this.room)) return this.replyAccessDenied('tourofficial');
 		let mod = App.modules.tourleaderboards.system;
@@ -467,10 +524,21 @@ module.exports = {
 	"tourunofficial": "unofficial",
 	unofficial: function (App) {
 		this.setLangFile(Lang_File);
+
+		let room = this.room;
+
+		if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.modules.tourldbcustom.system.isOfficial[room]) {
+			this.cmd = 'tourldbcustom';
+			this.arg = "unofficial";
+			this.args = ["unofficial"];
+			this.parser.exec(this);
+			return;
+		}
+
 		const Config = App.config.modules.tourleaderboards;
 		if (!this.can('tourofficial', this.room)) return this.replyAccessDenied('tourofficial');
 		let mod = App.modules.tourleaderboards.system;
-		let room = this.room;
+
 		if (!room || this.getRoomType(room) !== 'chat') {
 			return this.errorReply(this.mlt('nochat'));
 		}
