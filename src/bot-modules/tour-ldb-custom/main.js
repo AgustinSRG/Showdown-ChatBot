@@ -46,31 +46,92 @@ exports.setup = function (App) {
 
 			this.dbOfficial = App.dam.getDataBase('leaderloards-custom-official.json');
 			this.isOfficial = this.dbOfficial.data;
+
+			this.dbTourCache = App.dam.getDataBase('leaderloards-custom-tour-cache.json');
+			this.tourCacheData = this.dbTourCache.data;
+
+			if (!this.tourCacheData.cache) {
+				this.tourCacheData.cache = [];
+			}
+
+			if (!this.tourCacheData.next) {
+				this.tourCacheData.next = 1;
+			}
+
+			this.tourCache = this.tourCacheData.cache;
 		}
 
-		addUser(leaderboardsId, user, type, auxData) {
+		addTourToCache(room, tourData) {
+			if (!tourData || typeof tourData !== "object") {
+				return;
+			}
+
+			const id = this.tourCacheData.next;
+			this.tourCacheData.next++;
+
+			this.tourCache.push({
+				id: id,
+				room: room,
+				data: tourData,
+				date: (new Date()).toISOString(),
+			});
+
+			while (this.tourCache.length > 50) {
+				this.tourCache.shift();
+			}
+
+			this.dbTourCache.write();
+		}
+
+		addUser(leaderboardsId, user, type, auxData, isUndo) {
 			let ladder = this.data;
 			let userid = Text.toId(user);
 			if (!ladder[leaderboardsId]) ladder[leaderboardsId] = Object.create(null);
-			if (!ladder[leaderboardsId][userid]) ladder[leaderboardsId][userid] = [user, 0, 0, 0, 0, 0];
+			if (!ladder[leaderboardsId][userid]) {
+				if (isUndo) {
+					return;
+				} else {
+					ladder[leaderboardsId][userid] = [user, 0, 0, 0, 0, 0];
+				}
+			}
 			switch (type) {
 				case 'A':
 					ladder[leaderboardsId][userid][0] = user; //update user name
-					ladder[leaderboardsId][userid][5]++;
+					if (isUndo) {
+						ladder[leaderboardsId][userid][5] = Math.max(0, ladder[leaderboardsId][userid][5] - 1);
+					} else {
+						ladder[leaderboardsId][userid][5]++;
+					}
 					break;
 				case 'W':
-					ladder[leaderboardsId][userid][1]++;
+					if (isUndo) {
+						ladder[leaderboardsId][userid][1] = Math.max(0, ladder[leaderboardsId][userid][1] - 1);
+					} else {
+						ladder[leaderboardsId][userid][1]++;
+					}
 					break;
 				case 'F':
-					ladder[leaderboardsId][userid][2]++;
+					if (isUndo) {
+						ladder[leaderboardsId][userid][2] = Math.max(0, ladder[leaderboardsId][userid][2] - 1);
+					} else {
+						ladder[leaderboardsId][userid][2]++;
+					}
 					break;
 				case 'S':
-					ladder[leaderboardsId][userid][3]++;
+					if (isUndo) {
+						ladder[leaderboardsId][userid][3] = Math.max(0, ladder[leaderboardsId][userid][3] - 1);
+					} else {
+						ladder[leaderboardsId][userid][3]++;
+					}
 					break;
 				case 'B':
 					let val = parseInt(auxData);
 					if (!val) return;
-					ladder[leaderboardsId][userid][4] += val;
+					if (isUndo) {
+						ladder[leaderboardsId][userid][4] = Math.max(0, ladder[leaderboardsId][userid][4] - val);
+					} else {
+						ladder[leaderboardsId][userid][4] += val;
+					}
 					break;
 			}
 		}
@@ -203,43 +264,50 @@ exports.setup = function (App) {
 			FileSystem.writeFileSync(tableFile, html);
 		}
 
-		parseTourResults(room, data) {
-			if (!this.isOfficial[room]) return;
-			const leaderboardsId = Text.toId(this.isOfficial[room] + "");
+		applyTourResults(leaderboardsId, data, undo) {
 			let config = App.config.modules.tourldbcustom[leaderboardsId];
 			if (!config) return;
 			let results = getResults(data);
 			if (!results) return;
 			if (!this.data[leaderboardsId]) this.data[leaderboardsId] = Object.create(null);
 			for (let i = 0; i < results.players.length; i++) {
-				this.addUser(leaderboardsId, results.players[i], 'A');
+				this.addUser(leaderboardsId, results.players[i], 'A', null, undo);
 			}
 			if (results.winner) {
 				if (results.winner instanceof Array) {
 					for (let win of results.winner) {
-						this.addUser(leaderboardsId, win, 'W');
+						this.addUser(leaderboardsId, win, 'W', null, undo);
 					}
 				} else {
-					this.addUser(leaderboardsId, results.winner, 'W');
+					this.addUser(leaderboardsId, results.winner, 'W', null, undo);
 				}
 			}
 			if (results.finalist) {
 				if (results.finalist instanceof Array) {
 					for (let finalist of results.finalist) {
-						this.addUser(leaderboardsId, finalist, 'F');
+						this.addUser(leaderboardsId, finalist, 'F', null, undo);
 					}
 				} else {
-					this.addUser(leaderboardsId, results.finalist, 'F');
+					this.addUser(leaderboardsId, results.finalist, 'F', null, undo);
 				}
 			}
 			for (let i = 0; i < results.semiFinalists.length; i++) {
-				this.addUser(leaderboardsId, results.semiFinalists[i], 'S');
+				this.addUser(leaderboardsId, results.semiFinalists[i], 'S', null, undo);
 			}
 			for (let user in results.general) {
-				this.addUser(leaderboardsId, user, 'B', results.general[user]);
+				this.addUser(leaderboardsId, user, 'B', results.general[user], undo);
 			}
 			this.db.write();
 			this.generateTable(leaderboardsId);
+			return results;
+		}
+
+		parseTourResults(room, data) {
+			if (!this.isOfficial[room]) return;
+			const leaderboardsId = Text.toId(this.isOfficial[room] + "");
+			let config = App.config.modules.tourldbcustom[leaderboardsId];
+			if (!config) return;
+			const results = this.applyTourResults(leaderboardsId, data);
 			this.sendResultsTable(room, leaderboardsId, results);
 		}
 
@@ -412,17 +480,28 @@ exports.setup = function (App) {
 
 	App.bot.on('line', (room, line, spl, isIntro) => {
 		if (spl[0] !== 'tournament') return;
+
+		if (spl[1] === "end") {
+			let data = null;
+			try {
+				data = JSON.parse(spl.slice(2).join("|"));
+			} catch (e) {
+				App.log("INVALID TOUR DATA: " + spl.slice(2).join("|"));
+			}
+			TourLeaderBoardsMod.addTourToCache(room, data);
+		}
+
 		if (isIntro) return;
 		if (!tourData[room]) tourData[room] = Object.create(null);
 		switch (spl[1]) {
 			case 'update':
 				try {
-					let data = JSON.parse(spl[2]);
+					let data = JSON.parse(spl.slice(2).join("|"));
 					for (let i in data) {
 						tourData[room][i] = data[i];
 					}
 				} catch (e) {
-					App.log("INVALID TOUR DATA: " + spl[2]);
+					App.log("INVALID TOUR DATA: " + spl.slice(2).join("|"));
 				}
 				break;
 			case 'end':

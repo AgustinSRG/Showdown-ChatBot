@@ -58,6 +58,18 @@ $30 = Battles won
 $31 = Last reset
 $32 = Full table
 
+$33 = List of recent tournaments
+$34 = ID
+$35 = Room
+$36 = Type
+$37 = Format
+
+$38 = Could not find a tournament with the identifier
+$39 = Tournament results have been applied
+$40 = to the leaderboards table
+$41 = Tournament results have been reverted
+$42 = in the leaderboards table
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
@@ -113,3 +125,15 @@ $30 = Batallas ganadas
 
 $31 = Último reinicio
 $32 = Tabla completa
+
+$33 = Lista de torneos recientes
+$34 = ID
+$35 = Sala
+$36 = Tipo
+$37 = Formato
+
+$38 = No se pudo encontrar el torneo con el identificador
+$39 = Se han aplicado los resultados del torneo
+$40 = a la tabla de clasificaciones
+$41 = Se han deshecho los cambios provocados por el torneo
+$42 = en la tabla de clasificaciones

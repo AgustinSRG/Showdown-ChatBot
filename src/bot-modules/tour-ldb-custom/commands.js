@@ -512,8 +512,79 @@ module.exports = {
 					}
 				}
 				break;
+			case "recenttours":
+				{
+					if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
+
+					const cache = Mod.tourCache;
+					const lines = [];
+
+					for (let entry of cache) {
+						if (!entry.data || typeof entry.data !== "object") continue;
+						lines.push("[" + entry.date + "] " + this.mlt(34) + ": " + entry.id + ", " + this.mlt(35) + ": " + entry.room + ", " + this.mlt(36) + ": " + entry.data.generator + ", " + this.mlt(37) + ": " + entry.data.format);
+					}
+
+					this.replyCommand("!code " + this.mlt(33) + ":\n\n" + lines.reverse().join("\n"));
+				}
+				break;
+			case "apply":
+				{
+					if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
+
+					let leaderboardsId = Text.toId(this.args[1]);
+					let tourId = parseInt(this.args[2]);
+
+					if (!leaderboardsId || !tourId || isNaN(tourId)) {
+						return this.errorReply(this.usage({ desc: "apply" }, { desc: this.mlt('table') }, {desc: this.mlt(34)}));
+					}
+
+					if (!Config[leaderboardsId]) {
+						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
+					}
+
+					const cacheEntry = Mod.tourCache.filter(entry => {
+						return entry.id === tourId;
+					})[0];
+
+					if (!cacheEntry) {
+						return this.errorReply(this.mlt(38) + ": " + Chat.italics(tourId + ""));
+					}
+
+					Mod.applyTourResults(leaderboardsId, cacheEntry.data);
+
+					this.reply(this.mlt(39) + ": " + Chat.italics(tourId + "") + " " + this.mlt(40) + ": " + Chat.bold(Config[leaderboardsId].name || leaderboardsId));
+				}
+				break;
+			case "undo":
+				{
+					if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
+
+					let leaderboardsId = Text.toId(this.args[1]);
+					let tourId = parseInt(this.args[2]);
+
+					if (!leaderboardsId || !tourId || isNaN(tourId)) {
+						return this.errorReply(this.usage({ desc: "undo" }, { desc: this.mlt('table') }, {desc: this.mlt(34)}));
+					}
+
+					if (!Config[leaderboardsId]) {
+						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
+					}
+
+					const cacheEntry = Mod.tourCache.filter(entry => {
+						return entry.id === tourId;
+					})[0];
+
+					if (!cacheEntry) {
+						return this.errorReply(this.mlt(38) + ": " + Chat.italics(tourId + ""));
+					}
+
+					Mod.applyTourResults(leaderboardsId, cacheEntry.data, true);
+
+					this.reply(this.mlt(41) + ": " + Chat.italics(tourId + "") + " " + this.mlt(42) + ": " + Chat.bold(Config[leaderboardsId].name || leaderboardsId));
+				}
+				break;
 			default:
-				return this.errorReply(this.usage({ desc: 'create | config | list | rename | info | reset | remove | official | unofficial | rank | top | top5 | top100' }));
+				return this.errorReply(this.usage({ desc: 'create | config | list | rename | info | reset | remove | recent-tours | apply | undo | official | unofficial | rank | top | top5 | top100' }));
 		}
 	},
 };

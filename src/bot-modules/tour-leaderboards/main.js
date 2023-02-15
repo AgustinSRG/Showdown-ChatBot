@@ -288,12 +288,12 @@ exports.setup = function (App) {
 		switch (spl[1]) {
 			case 'update':
 				try {
-					let data = JSON.parse(spl[2]);
+					let data = JSON.parse(spl.slice(2).join("|"));
 					for (let i in data) {
 						tourData[room][i] = data[i];
 					}
 				} catch (e) {
-					App.log("INVALID TOUR DATA: " + spl[2]);
+					App.log("INVALID TOUR DATA: " + spl.slice(2).join("|"));
 				}
 				break;
 			case 'end':
