@@ -6,10 +6,11 @@
  * custom: sends a custom text to the current room
  * send: sends a custom text to an arbitrary room
  * sendpm: sends a custom private message
- * say: similar to custom, but no comands are allowed
+ * say: similar to custom, but no commands are allowed
+ * saycmd: similar to custom, but only commands are allowed, all broadcastable (!) and some excepted ones.
  * null: does nothing
  * eval: runs arbitrary javascript
- * hotpatch: realoads commands from bot modules
+ * hotpatch: reloads commands from bot modules
  * version: gets the package version
  * time: gets the bot time
  * uptime: gets the process uptime
@@ -107,6 +108,53 @@ module.exports = {
 		if (!this.can('say', this.room)) return this.replyAccessDenied('say');
 		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('message')}));
 		this.reply(Text.stripCommands(this.arg));
+	},
+
+	saycmd: function () {
+		this.setLangFile(Lang_File);
+		if (!this.can('saycmd', this.room)) return this.replyAccessDenied('saycmd');
+		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
+
+		const replyText = this.arg.trim();
+		let hasExemptedCommand = false;
+
+		const COMMAND_EXCEPTIONS = [
+			"/addhtmlbox",
+		];
+
+		for (let cmd of COMMAND_EXCEPTIONS) {
+			if (replyText.startsWith(cmd + " ")) {
+				hasExemptedCommand = true;
+				break;
+			}
+		}
+
+		if (this.parser.data.infocmds) {
+			const extraCommands = (this.parser.data.infocmds + "").split(",");
+			for (let cmd of extraCommands) {
+				const cmdTrim = cmd.trim();
+				if (!cmdTrim) {
+					continue;
+				}
+				if (replyText.startsWith(cmdTrim + " ")) {
+					hasExemptedCommand = true;
+					break;
+				}
+			}
+		}
+
+		if (replyText.startsWith("/wall ") || replyText.startsWith("/announce ")) {
+			const actualMessage = replyText.split(" ").slice(1).join(" ");
+			this.wall = true;
+			this.restrictReply(Text.stripCommands(actualMessage), 'info');
+		} else if (replyText.startsWith("!") || hasExemptedCommand) {
+			this.replyCommand(replyText);
+		} else if (replyText.startsWith("/")) {
+			const cmd = Text.toCmdid(replyText.split(" ")[0]);
+			this.errorReply(this.mlt(12) + ": " + Chat.code("/" + cmd));
+		} else {
+			this.errorReply(this.mlt(13));
+		}
 	},
 
 	/* Development */

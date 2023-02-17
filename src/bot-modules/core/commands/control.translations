@@ -19,6 +19,9 @@ $9 = days
 $10 = Bot Uptime
 $11 = Connection Time
 
+$12 = The command is not in the whitelist
+$13 = The provided message is not a server command
+
 %spanish
 
 $0 = Comandos actualizados
@@ -35,3 +38,6 @@ $8 = día
 $9 = días
 $10 = Tiempo de Actividad del Bot
 $11 = Tiempo de Conexión
+
+$12 = El comando especificado no está permitido
+$13 = El mensaje especificado no contiene un comando del servidor válido

@@ -16,6 +16,7 @@
 	"leaveroom": {"group": "admin"},
 	"send": {"group": "admin"},
 	"say": {"group": "mod"},
+  "saycmd": {"group": "mod"},
 	"alts": {"group": "user"},
 	"fullalts": {"group": "admin"}
   },

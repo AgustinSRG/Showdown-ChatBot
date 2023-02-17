@@ -655,7 +655,6 @@ class DynamicCommand {
 		const replyText = reply + "";
 		const COMMAND_EXCEPTIONS = [
 			"/addhtmlbox",
-			"/events",
 		];
 
 		let hasExemptedCommand = false;
