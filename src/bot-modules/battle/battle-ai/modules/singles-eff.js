@@ -598,7 +598,14 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "perishsong":
-					if (!conditionsB.volatiles["perish3"] && !conditionsB.volatiles["perish2"] && !conditionsB.volatiles["perish1"]) {
+					if (!conditionsB.volatiles["perish3"] && !conditionsB.volatiles["perish2"] && !conditionsB.volatiles["perish1"] && !conditionsA.volatiles["ingrain"]) {
+						res.viable.push(decisions[i]);
+					} else {
+						res.unviable.push(decisions[i]);
+					}
+					continue;
+				case "igrain":
+					if (!conditionsA.volatiles["perish3"] && !conditionsA.volatiles["perish2"] && !conditionsA.volatiles["perish1"] && !conditionsA.volatiles["ingrain"]) {
 						res.viable.push(decisions[i]);
 					} else {
 						res.unviable.push(decisions[i]);
@@ -824,7 +831,7 @@ exports.setup = function (Data) {
 				}
 				continue;
 			}
-			if (move.id in { "ingrain": 1, "acuaring": 1, "focusenergy": 1, "imprison": 1, "magnetrise": 1, "powertrick": 1 }) {
+			if (move.id in { "acuaring": 1, "focusenergy": 1, "imprison": 1, "magnetrise": 1, "powertrick": 1 }) {
 				if (conditionsA.volatiles[move.volatileStatus]) {
 					res.unviable.push(decisions[i]);
 				} else {
