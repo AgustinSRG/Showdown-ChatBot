@@ -13,21 +13,6 @@ const LineSplitter = Tools('line-splitter');
 
 const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
-function toDecimalFormat(num) {
-	num = Math.floor(num * 100) / 100;
-	num = "" + num;
-	let decimal = num.split(".")[1];
-	if (decimal) {
-		while (decimal.length < 2) {
-			decimal += "0";
-			num += "0";
-		}
-		return num;
-	} else {
-		return num + ".00";
-	}
-}
-
 function botCanHtml(room, App) {
 	let roomData = App.bot.rooms[room];
 	let botid = Text.toId(App.bot.getBotNick());
@@ -69,8 +54,6 @@ module.exports = {
 						winner: 5,
 						finalist: 3,
 						semifinalist: 1,
-						battle: 0,
-						useratio: false,
 						cleanPoint: now.toString(),
 					};
 
@@ -90,7 +73,7 @@ module.exports = {
 
 					let leaderboardsId = Text.toId(this.args[1]);
 					if (!leaderboardsId) {
-						return this.errorReply(this.usage({ desc: "config" }, { desc: this.mlt('table') }, { desc: 'win: N', optional: true }, { desc: 'final: N', optional: true }, { desc: 'semi_final: N', optional: true }, { desc: 'battle_win: N', optional: true }, { desc: 'use_ratio: yes/no', optional: true }));
+						return this.errorReply(this.usage({ desc: "config" }, { desc: this.mlt('table') }, { desc: 'win: N', optional: true }, { desc: 'final: N', optional: true }, { desc: 'semi_final: N', optional: true }));
 					}
 
 					if (!Config[leaderboardsId]) {
@@ -102,8 +85,6 @@ module.exports = {
 							winner: Config[leaderboardsId].winner,
 							finalist: Config[leaderboardsId].finalist,
 							semifinalist: Config[leaderboardsId].semifinalist,
-							battle: Config[leaderboardsId].battle,
-							useratio: Config[leaderboardsId].useratio,
 						};
 
 						for (let i = 2; i < this.args.length; i++) {
@@ -111,12 +92,11 @@ module.exports = {
 							let parts = arg.split(":");
 
 							if (parts.length < 2) {
-								return this.errorReply(this.usage({ desc: "config" }, { desc: this.mlt('table') }, { desc: 'win: N', optional: true }, { desc: 'final: N', optional: true }, { desc: 'semi_final: N', optional: true }, { desc: 'battle_win: N', optional: true }, { desc: 'use_ratio: yes/no', optional: true }));
+								return this.errorReply(this.usage({ desc: "config" }, { desc: this.mlt('table') }, { desc: 'win: N', optional: true }, { desc: 'final: N', optional: true }, { desc: 'semi_final: N', optional: true }));
 							}
 
 							let key = Text.toId(parts[0]);
 							let val = parseInt(parts[1].trim()) || 0;
-							let valBool = ['y', 'yes', 'true', '1'].indexOf(Text.toId(parts[1])) >= 0;
 
 							switch (key) {
 								case "win":
@@ -132,24 +112,14 @@ module.exports = {
 								case "semifinalist":
 									newConfig.semifinalist = val;
 									break;
-								case "battle":
-								case "battlewin":
-									newConfig.battle = val;
-									break;
-								case "ratio":
-								case "useratio":
-									newConfig.useratio = valBool;
-									break;
 								default:
-									return this.errorReply(this.usage({ desc: "config" }, { desc: this.mlt('table') }, { desc: 'win: N', optional: true }, { desc: 'final: N', optional: true }, { desc: 'semi_final: N', optional: true }, { desc: 'battle_win: N', optional: true }, { desc: 'use_ratio: yes/no', optional: true }));
+									return this.errorReply(this.usage({ desc: "config" }, { desc: this.mlt('table') }, { desc: 'win: N', optional: true }, { desc: 'final: N', optional: true }, { desc: 'semi_final: N', optional: true }));
 							}
 						}
 
 						Config[leaderboardsId].winner = newConfig.winner;
 						Config[leaderboardsId].finalist = newConfig.finalist;
 						Config[leaderboardsId].semifinalist = newConfig.semifinalist;
-						Config[leaderboardsId].battle = newConfig.battle;
-						Config[leaderboardsId].useratio = newConfig.useratio;
 
 						App.db.write();
 						Mod.generateTable(leaderboardsId);
@@ -158,9 +128,7 @@ module.exports = {
 
 					this.restrictReply(this.mlt(4) + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId) + ": " +
 						Chat.bold(Config[leaderboardsId].winner) + " " + this.mlt(5) + ", " + Chat.bold(Config[leaderboardsId].finalist) +
-						" " + this.mlt(6) + ", " + Chat.bold(Config[leaderboardsId].semifinalist) + " " + this.mlt(7) +
-						", " + Chat.bold(Config[leaderboardsId].battle) + " " + this.mlt(8) + "." +
-						(Config[leaderboardsId].useratio ? (" " + this.mlt(9) + ".") : ""), "ldbcustomrank");
+						" " + this.mlt(6) + ", " + Chat.bold(Config[leaderboardsId].semifinalist) + " " + this.mlt(7) + ".", "ldbcustomrank");
 				}
 				break;
 			case "list":
@@ -191,9 +159,7 @@ module.exports = {
 
 					this.restrictReply(this.mlt(4) + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId) + ": " +
 						Chat.bold(Config[leaderboardsId].winner) + " " + this.mlt(5) + ", " + Chat.bold(Config[leaderboardsId].finalist) +
-						" " + this.mlt(6) + ", " + Chat.bold(Config[leaderboardsId].semifinalist) + " " + this.mlt(7) +
-						", " + Chat.bold(Config[leaderboardsId].battle) + " " + this.mlt(8) + "." +
-						(Config[leaderboardsId].useratio ? (" " + this.mlt(9) + ".") : ""), "ldbcustomrank");
+						" " + this.mlt(6) + ", " + Chat.bold(Config[leaderboardsId].semifinalist) + " " + this.mlt(7) + ".", "ldbcustomrank");
 				}
 				break;
 			case "rename":
@@ -362,11 +328,9 @@ module.exports = {
 					let rank = Mod.getUserPoints(leaderboardsId, userId);
 					let txt = this.mlt(18) + " " + Chat.bold(rank.name) + " " +
 						this.mlt('in') + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId) + " | ";
-					txt += this.mlt(19) + ": " + toDecimalFormat(rank.points) + " | ";
+					txt += this.mlt(19) + ": " + rank.points + " | ";
 					txt += this.mlt(20) + ": " + rank.wins + ", " + this.mlt(21) +
-						": " + rank.finals + ", " + this.mlt(22) + ": " + rank.semis + ". ";
-					txt += this.mlt(23) + ": " + rank.tours + " " + this.mlt(24) +
-						", " + rank.battles + " " + this.mlt(25) + " (" + this.mlt('ratio') + " = " + toDecimalFormat(rank.ratio) + ").";
+						": " + rank.finals + ", " + this.mlt(22) + ": " + rank.semis + ", " + this.mlt("extra") + ": " + rank.extra + ".";
 					this.restrictReply(txt, 'ldbcustomrank');
 				}
 				break;
@@ -390,7 +354,7 @@ module.exports = {
 
 					let topResults = [];
 					for (let i = 0; i < 5 && i < top.length; i++) {
-						topResults.push(Chat.italics("#" + (i + 1)) + " " + Chat.bold(top[i][0]) + " (" + toDecimalFormat(top[i][6]) + ")");
+						topResults.push(Chat.italics("#" + (i + 1)) + " " + Chat.bold(top[i][0]) + " (" + top[i][6] + ")");
 					}
 
 					let spl = new LineSplitter(App.config.bot.maxMessageLength);
@@ -442,9 +406,7 @@ module.exports = {
 						html += '<th>' + Text.escapeHTML(this.mlt(20)) + '</th>';
 						html += '<th>' + Text.escapeHTML(this.mlt(21)) + '</th>';
 						html += '<th>' + Text.escapeHTML(this.mlt(22)) + '</th>';
-						html += '<th>' + Text.escapeHTML(this.mlt(30)) + '</th>';
-						html += '<th>' + Text.escapeHTML(this.mlt(29)) + '</th>';
-						html += '<th>' + Text.escapeHTML(this.mlt("ratio")) + '</th>';
+						html += '<th>' + Text.escapeHTML(this.mlt("extra")) + '</th>';
 						html += '</tr>';
 
 						for (let i = 0; i < maxTableLength && i < top.length; i++) {
@@ -454,7 +416,7 @@ module.exports = {
 
 							html += '<td><b>' + Text.escapeHTML(top[i][0]) + '</b></td>';
 
-							html += '<td>' + toDecimalFormat(top[i][6]) + '</td>';
+							html += '<td>' + Text.escapeHTML(top[i][6] + "") + '</td>';
 
 							html += '<td>' + top[i][1] + '</td>';
 
@@ -463,10 +425,6 @@ module.exports = {
 							html += '<td>' + top[i][3] + '</td>';
 
 							html += '<td>' + top[i][4] + '</td>';
-
-							html += '<td>' + top[i][5] + '</td>';
-
-							html += '<td>' + toDecimalFormat(top[i][4] / (top[i][5] || 1)) + '</td>';
 
 							html += '</tr>';
 						}
@@ -493,7 +451,7 @@ module.exports = {
 						// Send text message
 						let topResults = [];
 						for (let i = 0; i < 5 && i < top.length; i++) {
-							topResults.push(Chat.italics("#" + (i + 1)) + " " + Chat.bold(top[i][0]) + " (" + toDecimalFormat(top[i][6]) + ")");
+							topResults.push(Chat.italics("#" + (i + 1)) + " " + Chat.bold(top[i][0]) + " (" + top[i][6] + ")");
 						}
 
 						let spl = new LineSplitter(App.config.bot.maxMessageLength);
@@ -535,7 +493,7 @@ module.exports = {
 					let tourId = parseInt(this.args[2]);
 
 					if (!leaderboardsId || !tourId || isNaN(tourId)) {
-						return this.errorReply(this.usage({ desc: "apply" }, { desc: this.mlt('table') }, {desc: this.mlt(34)}));
+						return this.errorReply(this.usage({ desc: "apply" }, { desc: this.mlt('table') }, { desc: this.mlt(34) }));
 					}
 
 					if (!Config[leaderboardsId]) {
@@ -563,7 +521,7 @@ module.exports = {
 					let tourId = parseInt(this.args[2]);
 
 					if (!leaderboardsId || !tourId || isNaN(tourId)) {
-						return this.errorReply(this.usage({ desc: "undo" }, { desc: this.mlt('table') }, {desc: this.mlt(34)}));
+						return this.errorReply(this.usage({ desc: "undo" }, { desc: this.mlt('table') }, { desc: this.mlt(34) }));
 					}
 
 					if (!Config[leaderboardsId]) {
@@ -583,8 +541,109 @@ module.exports = {
 					this.reply(this.mlt(41) + ": " + Chat.italics(tourId + "") + " " + this.mlt(42) + ": " + Chat.bold(Config[leaderboardsId].name || leaderboardsId));
 				}
 				break;
+			case "ep":
+			case "extrapoints":
+				{
+					if (!this.can('ldbcustomofficial', this.room)) return this.replyAccessDenied('ldbcustomofficial');
+
+					let room = this.room;
+					if (!room || this.getRoomType(room) !== 'chat') {
+						return this.errorReply(this.mlt('nochat'));
+					}
+
+					let leaderboardsId = Text.toId(this.args[1]);
+					if (!leaderboardsId) {
+						return this.errorReply(this.usage({ desc: "extra-points" }, { desc: this.mlt('table') }, { desc: this.mlt("user") + ": " + this.mlt(19) }, { desc: "...", optional: true }));
+					}
+
+					if (!Config[leaderboardsId]) {
+						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
+					}
+
+					let pointsToAdd = [];
+
+					for (let i = 2; i < this.args.length; i++) {
+						const argParts = (this.args[i] + "").split(":");
+
+						if (argParts.length !== 2) {
+							continue;
+						}
+
+						const uid = Text.toId(argParts[0]);
+						const name = (argParts[0] + "").trim();
+
+						if (uid.length > 19) {
+							return this.errorReply(this.mlt(17) + ": " + uid);
+						}
+
+						const points = parseInt((argParts[1] + "").trim());
+
+						if (!points || isNaN(points) || !isFinite(points)) {
+							continue;
+						}
+
+						pointsToAdd.push({
+							id: uid,
+							name: name,
+							points: points,
+						});
+					}
+
+					if (pointsToAdd.length) {
+						const lines = [];
+						for (let p of pointsToAdd) {
+							const oldRank = Mod.getUserPoints(leaderboardsId, p.id);
+
+							Mod.addUser(leaderboardsId, p.name, 'A', null);
+							Mod.addUser(leaderboardsId, p.id, 'B', Math.abs(p.points), p.points < 0);
+
+							const newRank = Mod.getUserPoints(leaderboardsId, p.id);
+
+							let diffPoints = newRank.points - oldRank.points;
+
+							if (diffPoints > 0) {
+								diffPoints = "+" + diffPoints;
+							} else if (diffPoints < 0) {
+								diffPoints = "" + diffPoints;
+							} else {
+								diffPoints = "";
+							}
+
+							lines.push("    " + p.name + ": " + oldRank.points + " → " + newRank.points + (diffPoints ? (" (" + diffPoints + ")") : ""));
+						}
+
+						Mod.db.write();
+						Mod.generateTable(leaderboardsId);
+
+						this.replyCommand("!code " + this.mlt(43) + "\n\n" + lines.join("\n"));
+					} else {
+						this.errorReply(this.usage({ desc: "extra-points" }, { desc: this.mlt('table') }, { desc: this.mlt("user") + ": " + this.mlt(19) }, { desc: "...", optional: true }));
+					}
+				}
+				break;
 			default:
-				return this.errorReply(this.usage({ desc: 'create | config | list | rename | info | reset | remove | recent-tours | apply | undo | official | unofficial | rank | top | top5 | top100' }));
+				return this.errorReply(this.usage({ desc: 'create | config | list | rename | info | reset | remove | recent-tours | apply | undo | official | unofficial | extra-points | rank | top | top5 | top100' }));
 		}
+	},
+
+	extrapoints: function (App) {
+		this.setLangFile(Lang_File);
+		if (!this.can('ldbcustomofficial', this.room)) return this.replyAccessDenied('ldbcustomofficial');
+
+		let room = this.room;
+		if (!room || this.getRoomType(room) !== 'chat') {
+			return this.errorReply(this.mlt('nochat'));
+		}
+
+		let leaderboardsId = Text.toId(this.args[1]);
+		if (!leaderboardsId) {
+			return this.errorReply(this.usage({ desc: this.mlt('table') }, { desc: this.mlt("user") + ": " + this.mlt(19) }, { desc: "...", optional: true }));
+		}
+
+		this.cmd = 'tourldbcustom';
+		this.arg = "extrapoints" + "," + this.arg;
+		this.args = ["extrapoints"].concat(this.args);
+		this.parser.exec(this);
+		return;
 	},
 };

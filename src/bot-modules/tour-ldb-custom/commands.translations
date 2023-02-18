@@ -42,10 +42,11 @@ $21 = Finalist
 $22 = Semi-Finalist
 $23 = Total
 $24 = tours played
-$25 = battles won
+$25 = extra points
 
 $ratio = Ratio
 $user = User
+$extra = Extra points
 
 $26 = Leaderboards table
 $27 = is empty
@@ -69,6 +70,8 @@ $39 = Tournament results have been applied
 $40 = to the leaderboards table
 $41 = Tournament results have been reverted
 $42 = in the leaderboards table
+
+$43 = Modified points
 
 %spanish
 
@@ -110,10 +113,11 @@ $21 = Finalista
 $22 = Semi-Finalista
 $23 = Total
 $24 = torneos jugados
-$25 = batallas ganadas
+$25 = puntos extra
 
 $ratio = Ratio
 $user = Usuario
+$extra = Puntos extra
 
 $26 = La tabla de clasificaciones de torneos
 $27 = está vacía
@@ -137,3 +141,5 @@ $39 = Se han aplicado los resultados del torneo
 $40 = a la tabla de clasificaciones
 $41 = Se han deshecho los cambios provocados por el torneo
 $42 = en la tabla de clasificaciones
+
+$43 = Puntuaciones modificadas

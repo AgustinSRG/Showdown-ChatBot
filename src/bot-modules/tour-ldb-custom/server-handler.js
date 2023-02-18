@@ -55,8 +55,6 @@ exports.setup = function (App) {
 					winner: 5,
 					finalist: 3,
 					semifinalist: 1,
-					battle: 0,
-					useratio: false,
 					cleanPoint: now.toString(),
 				};
 				App.db.write();
@@ -157,8 +155,6 @@ exports.setup = function (App) {
 			let winner = parseInt(context.post.winner);
 			let finalist = parseInt(context.post.finalist);
 			let semifinalist = parseInt(context.post.semifinalist);
-			let battle = parseInt(context.post.battle);
-			let useratio = !!context.post.useratio;
 
 			try {
 				check(leaderboardsId, "You must specify a leaderboards ID");
@@ -169,18 +165,15 @@ exports.setup = function (App) {
 				check(!isNaN(winner) && winner >= 0, "Invalid configuration");
 				check(!isNaN(finalist) && finalist >= 0, "Invalid configuration");
 				check(!isNaN(semifinalist) && semifinalist >= 0, "Invalid configuration");
-				check(!isNaN(battle) && battle >= 0, "Invalid configuration");
 			} catch (err) {
 				error = err.message;
 			}
 
 			if (!error) {
 				Config[leaderboardsId].name = newName;
-				Config[leaderboardsId].useratio = useratio;
 				Config[leaderboardsId].winner = winner;
 				Config[leaderboardsId].finalist = finalist;
 				Config[leaderboardsId].semifinalist = semifinalist;
-				Config[leaderboardsId].battle = battle;
 
 				if (newId !== leaderboardsId) {
 					Config[newId] = Config[leaderboardsId];
@@ -208,8 +201,6 @@ exports.setup = function (App) {
 				winner: Config[leaderboardsId].winner,
 				finalist: Config[leaderboardsId].finalist,
 				semifinalist: Config[leaderboardsId].semifinalist,
-				battle: Config[leaderboardsId].battle,
-				useratio: (Config[leaderboardsId].useratio ? ' checked="checked"' : ''),
 			});
 		}
 

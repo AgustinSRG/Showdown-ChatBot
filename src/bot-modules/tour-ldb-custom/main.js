@@ -12,21 +12,6 @@ const checkDir = Tools('checkdir');
 
 const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
-function toDecimalFormat(num) {
-	num = Math.floor(num * 100) / 100;
-	num = "" + num;
-	let decimal = num.split(".")[1];
-	if (decimal) {
-		while (decimal.length < 2) {
-			decimal += "0";
-			num += "0";
-		}
-		return num;
-	} else {
-		return num + ".00";
-	}
-}
-
 exports.setup = function (App) {
 	if (!App.config.modules.tourldbcustom) {
 		App.config.modules.tourldbcustom = Object.create(null);
@@ -97,11 +82,6 @@ exports.setup = function (App) {
 			switch (type) {
 				case 'A':
 					ladder[leaderboardsId][userid][0] = user; //update user name
-					if (isUndo) {
-						ladder[leaderboardsId][userid][5] = Math.max(0, ladder[leaderboardsId][userid][5] - 1);
-					} else {
-						ladder[leaderboardsId][userid][5]++;
-					}
 					break;
 				case 'W':
 					if (isUndo) {
@@ -144,17 +124,13 @@ exports.setup = function (App) {
 				winner: config.winner || 0,
 				finalist: config.finalist || 0,
 				semifinalist: config.semifinalist || 0,
-				battle: config.battle || 0,
 			};
 			if (!ladder[leaderboardsId]) return [];
 			let top = [];
 			let rank = 0;
 			for (let u in ladder[leaderboardsId]) {
 				rank = (points.winner * ladder[leaderboardsId][u][1]) + (points.finalist * ladder[leaderboardsId][u][2]) +
-					(points.semifinalist * ladder[leaderboardsId][u][3]) + (points.battle * ladder[leaderboardsId][u][4]);
-				if (config.useratio) {
-					rank = rank * (ladder[leaderboardsId][u][4] / ladder[leaderboardsId][u][5]);
-				}
+					(points.semifinalist * ladder[leaderboardsId][u][3]) + (ladder[leaderboardsId][u][4]);
 				top.push(ladder[leaderboardsId][u].concat([rank]));
 			}
 			return top.sort(function (a, b) {
@@ -162,8 +138,7 @@ exports.setup = function (App) {
 				if (a[1] !== b[1]) return b[1] - a[1]; //Wins
 				if (a[2] !== b[2]) return b[2] - a[2]; //Finals
 				if (a[3] !== b[3]) return b[3] - a[3]; //Semis
-				if (a[4] !== b[4]) return b[4] - a[4]; //Battles
-				if (a[5] !== b[5]) return b[5] - a[5]; //Tours played
+				if (a[4] !== b[4]) return b[4] - a[4]; //Extra
 				return 0;
 			});
 		}
@@ -184,31 +159,23 @@ exports.setup = function (App) {
 				winner: config.winner || 0,
 				finalist: config.finalist || 0,
 				semifinalist: config.semifinalist || 0,
-				battle: config.battle || 0,
 			};
 			let res = {
 				name: user,
 				wins: 0,
 				finals: 0,
 				semis: 0,
-				battles: 0,
-				tours: 0,
+				extra: 0,
 				points: 0,
-				ratio: 0,
 			};
 			if (!ladder[leaderboardsId] || !ladder[leaderboardsId][userid]) return res;
 			res.name = ladder[leaderboardsId][userid][0];
 			res.wins = ladder[leaderboardsId][userid][1];
 			res.finals = ladder[leaderboardsId][userid][2];
 			res.semis = ladder[leaderboardsId][userid][3];
-			res.battles = ladder[leaderboardsId][userid][4];
-			res.tours = ladder[leaderboardsId][userid][5];
-			res.ratio = ladder[leaderboardsId][userid][4] / ladder[leaderboardsId][userid][5];
+			res.extra = ladder[leaderboardsId][userid][4];
 			res.points = (points.winner * res.wins) + (res.finals * points.finalist) +
-				(res.semis * points.semifinalist) + (res.battles * points.battle);
-			if (config.useratio) {
-				res.points = res.points * (ladder[leaderboardsId][userid][4] / ladder[leaderboardsId][userid][5]);
-			}
+				(res.semis * points.semifinalist) + (res.extra);
 			return res;
 		}
 
@@ -233,21 +200,17 @@ exports.setup = function (App) {
 				'<td><div align="center"><h3><strong>Winner </strong></h3></div></td>' +
 				'<td><div align="center"><h3><strong>Finalist</strong></h3></div></td>' +
 				'<td><div align="center"><h3><strong>Semi-Finalist</strong></h3></div></td>' +
-				'<td><div align="center"><h3><strong>Battles Won </strong></h3></div></td>' +
-				'<td><div align="center"><h3><strong>Tours Played </strong></h3></div></td>' +
-				'<td><div align="center"><h3><strong>Ratio </strong></h3></div></td></tr>';
+				'<td><div align="center"><h3><strong>Extra Points</strong></h3></div></td></tr>';
 
 			for (let i = 0; i < top.length && i < 1000; i++) {
 				html += '<tr>';
 				html += '<td><div align="center">' + (i + 1) + '</div></td>';
 				html += '<td><div align="center">' + top[i][0] + '</div></td>';
-				html += '<td><div align="center">' + toDecimalFormat(top[i][6]) + '</div></td>';
+				html += '<td><div align="center">' + top[i][6] + '</div></td>';
 				html += '<td><div align="center">' + top[i][1] + '</div></td>';
 				html += '<td><div align="center">' + top[i][2] + '</div></td>';
 				html += '<td><div align="center">' + top[i][3] + '</div></td>';
 				html += '<td><div align="center">' + top[i][4] + '</div></td>';
-				html += '<td><div align="center">' + top[i][5] + '</div></td>';
-				html += '<td><div align="center">' + toDecimalFormat(top[i][4] / top[i][5]) + '</div></td>';
 				html += '</tr>';
 			}
 
@@ -270,32 +233,31 @@ exports.setup = function (App) {
 			let results = getResults(data);
 			if (!results) return;
 			if (!this.data[leaderboardsId]) this.data[leaderboardsId] = Object.create(null);
-			for (let i = 0; i < results.players.length; i++) {
-				this.addUser(leaderboardsId, results.players[i], 'A', null, undo);
-			}
 			if (results.winner) {
 				if (results.winner instanceof Array) {
 					for (let win of results.winner) {
+						this.addUser(leaderboardsId, results.players[win] || win, 'A', null, undo);
 						this.addUser(leaderboardsId, win, 'W', null, undo);
 					}
 				} else {
+					this.addUser(leaderboardsId, results.players[results.winner] || results.winner, 'A', null, undo);
 					this.addUser(leaderboardsId, results.winner, 'W', null, undo);
 				}
 			}
 			if (results.finalist) {
 				if (results.finalist instanceof Array) {
 					for (let finalist of results.finalist) {
+						this.addUser(leaderboardsId, results.players[finalist] || finalist, 'A', null, undo);
 						this.addUser(leaderboardsId, finalist, 'F', null, undo);
 					}
 				} else {
+					this.addUser(leaderboardsId, results.players[results.finalist] || results.finalist, 'A', null, undo);
 					this.addUser(leaderboardsId, results.finalist, 'F', null, undo);
 				}
 			}
 			for (let i = 0; i < results.semiFinalists.length; i++) {
+				this.addUser(leaderboardsId, results.players[results.semiFinalists[i]] || results.semiFinalists[i], 'A', null, undo);
 				this.addUser(leaderboardsId, results.semiFinalists[i], 'S', null, undo);
-			}
-			for (let user in results.general) {
-				this.addUser(leaderboardsId, user, 'B', results.general[user], undo);
 			}
 			this.db.write();
 			this.generateTable(leaderboardsId);
@@ -375,9 +337,7 @@ exports.setup = function (App) {
 			html += '<th>' + Text.escapeHTML(mlt(20)) + '</th>';
 			html += '<th>' + Text.escapeHTML(mlt(21)) + '</th>';
 			html += '<th>' + Text.escapeHTML(mlt(22)) + '</th>';
-			html += '<th>' + Text.escapeHTML(mlt(30)) + '</th>';
-			html += '<th>' + Text.escapeHTML(mlt(29)) + '</th>';
-			html += '<th>' + Text.escapeHTML(mlt("ratio")) + '</th>';
+			html += '<th>' + Text.escapeHTML(mlt("extra")) + '</th>';
 			html += '</tr>';
 
 			for (let i = 0; i < maxTableLength && i < top.length; i++) {
@@ -387,7 +347,7 @@ exports.setup = function (App) {
 
 				html += '<td><b>' + Text.escapeHTML(top[i][0]) + '</b></td>';
 
-				html += '<td>' + toDecimalFormat(top[i][6]) + '</td>';
+				html += '<td>' + Text.escapeHTML(top[i][6]) + '</td>';
 
 				html += '<td>' + top[i][1] + '</td>';
 
@@ -396,10 +356,6 @@ exports.setup = function (App) {
 				html += '<td>' + top[i][3] + '</td>';
 
 				html += '<td>' + top[i][4] + '</td>';
-
-				html += '<td>' + top[i][5] + '</td>';
-
-				html += '<td>' + toDecimalFormat(top[i][4] / (top[i][5] || 1)) + '</td>';
 
 				html += '</tr>';
 			}
@@ -435,7 +391,10 @@ exports.setup = function (App) {
 		if ((generator + "").endsWith("elimination")) {
 			let res = Object.create(null);
 			let parsedTree = parseTourTree(data.bracketData.rootNode);
-			res.players = Object.keys(parsedTree);
+			res.players = Object.create(null);
+			for (let player of Object.keys(parsedTree)) {
+				res.players[Text.toId(player)] = player;
+			}
 			res.general = Object.create(null);
 			for (let i in parsedTree) {
 				res.general[Text.toId(i)] = parsedTree[i];
@@ -463,10 +422,13 @@ exports.setup = function (App) {
 			return res;
 		} else if ((generator + "").endsWith("roundrobin")) {
 			let res = Object.create(null);
-			res.players = data.bracketData.tableHeaders.cols;
+			res.players = Object.create(null);
+			for (let player of data.bracketData.tableHeaders.cols) {
+				res.players[Text.toId(player)] = player;
+			}
 			res.general = Object.create(null);
-			for (let i = 0; i < res.players.length; i++) {
-				res.general[Text.toId(res.players[i])] = data.bracketData.scores[i];
+			for (let i = 0; i < data.bracketData.tableHeaders.cols.length; i++) {
+				res.general[Text.toId(data.bracketData.tableHeaders.cols[i])] = data.bracketData.scores[i];
 			}
 			res.winner = data.results[0];
 			res.finalist = data.results[1];
