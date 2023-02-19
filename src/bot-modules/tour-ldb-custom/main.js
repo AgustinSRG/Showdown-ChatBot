@@ -108,7 +108,7 @@ exports.setup = function (App) {
 					let val = parseInt(auxData);
 					if (!val) return;
 					if (isUndo) {
-						ladder[leaderboardsId][userid][4] = Math.max(0, ladder[leaderboardsId][userid][4] - val);
+						ladder[leaderboardsId][userid][4] -= val;
 					} else {
 						ladder[leaderboardsId][userid][4] += val;
 					}
