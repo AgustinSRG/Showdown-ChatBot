@@ -347,7 +347,7 @@ exports.setup = function (App) {
 
 				html += '<td><b>' + Text.escapeHTML(top[i][0]) + '</b></td>';
 
-				html += '<td>' + Text.escapeHTML(top[i][6]) + '</td>';
+				html += '<td>' + Text.escapeHTML(top[i][6] + "") + '</td>';
 
 				html += '<td>' + top[i][1] + '</td>';
 
