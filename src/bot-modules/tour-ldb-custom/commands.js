@@ -190,7 +190,7 @@ module.exports = {
 				{
 					if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
 
-					if (this.args.length !== 2) {
+					if (this.args.length !== 3) {
 						return this.errorReply(this.usage({ desc: "rename" }, { desc: this.mlt('table') }, { desc: this.mlt('newname') }));
 					}
 
