@@ -73,6 +73,10 @@ $42 = in the leaderboards table
 
 $43 = Modified points
 
+$44 = The leaderboards table
+$45 = has been assigned to room
+$46 = is available only for room
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
@@ -143,3 +147,7 @@ $41 = Se han deshecho los cambios provocados por el torneo
 $42 = en la tabla de clasificaciones
 
 $43 = Puntuaciones modificadas
+
+$44 = La tabla
+$45 = ha sido asignada a la sala
+$46 = solo está disponible en la sala

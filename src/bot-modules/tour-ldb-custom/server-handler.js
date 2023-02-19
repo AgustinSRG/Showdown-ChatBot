@@ -156,6 +156,8 @@ exports.setup = function (App) {
 			let finalist = parseInt(context.post.finalist);
 			let semifinalist = parseInt(context.post.semifinalist);
 
+			let room = Text.toRoomid(context.post.room);
+
 			try {
 				check(leaderboardsId, "You must specify a leaderboards ID");
 				check(Config[leaderboardsId], "Leaderboards ID not found");
@@ -171,6 +173,7 @@ exports.setup = function (App) {
 
 			if (!error) {
 				Config[leaderboardsId].name = newName;
+				Config[leaderboardsId].room = room;
 				Config[leaderboardsId].winner = winner;
 				Config[leaderboardsId].finalist = finalist;
 				Config[leaderboardsId].semifinalist = semifinalist;
@@ -198,6 +201,7 @@ exports.setup = function (App) {
 			htmlVars.tables += tableTemplate.make({
 				id: leaderboardsId,
 				name: Text.escapeHTML(Config[leaderboardsId].name || leaderboardsId),
+				room: Config[leaderboardsId].room || "",
 				winner: Config[leaderboardsId].winner,
 				finalist: Config[leaderboardsId].finalist,
 				semifinalist: Config[leaderboardsId].semifinalist,

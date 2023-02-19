@@ -32,15 +32,16 @@ module.exports = {
 				{
 					if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
 
-					if (this.args.length !== 2) {
-						return this.errorReply(this.usage({ desc: "create" }, { desc: this.mlt('name') }) + " - " + this.mlt(0));
+					if (this.args.length !== 3) {
+						return this.errorReply(this.usage({ desc: "create" }, { desc: this.mlt('name') }, { desc: this.usageTrans("room") }) + " - " + this.mlt(0));
 					}
 
 					const tableName = (this.args[1] + "").trim();
 					const tableId = Text.toId(tableName);
+					const room = this.parseRoomAliases(Text.toRoomid(this.args[2] || ""));
 
-					if (!tableId) {
-						return this.errorReply(this.usage({ desc: "create" }, { desc: this.mlt('name') }) + " - " + this.mlt(0));
+					if (!tableId || !room) {
+						return this.errorReply(this.usage({ desc: "create" }, { desc: this.mlt('name') }, { desc: this.usageTrans("room") }) + " - " + this.mlt(0));
 					}
 
 					if (Config[tableId]) {
@@ -51,6 +52,7 @@ module.exports = {
 
 					Config[tableId] = {
 						name: tableName,
+						room: room,
 						winner: 5,
 						finalist: 3,
 						semifinalist: 1,
@@ -65,6 +67,28 @@ module.exports = {
 
 					this.reply(this.mlt(2) + ": " + Chat.bold(tableName));
 					this.addToSecurityLog();
+				}
+				break;
+			case "setroom":
+				{
+					if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
+
+					let leaderboardsId = Text.toId(this.args[1]);
+					const room = this.parseRoomAliases(Text.toRoomid(this.args[2] || ""));
+
+					if (!leaderboardsId || !room) {
+						return this.errorReply(this.usage({ desc: "set-room" }, { desc: this.mlt('table') }, { desc: this.usageTrans("room") }));
+					}
+
+					if (!Config[leaderboardsId]) {
+						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
+					}
+
+					Config[leaderboardsId].room = room;
+
+					App.db.write();
+
+					this.reply(this.mlt(44) + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId) + " " + this.mlt(45) + " <<" + room + ">>");
 				}
 				break;
 			case "config":
@@ -285,6 +309,10 @@ module.exports = {
 
 					if (!Config[leaderboardsId]) {
 						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
+					}
+
+					if (Config[leaderboardsId].room && Config[leaderboardsId].room !== room) {
+						return this.errorReply(this.mlt(44) + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId) + " " + this.mlt(46) + " <<" + Config[leaderboardsId].room + ">>");
 					}
 
 					Mod.isOfficial[room] = leaderboardsId;
@@ -560,6 +588,10 @@ module.exports = {
 						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
 					}
 
+					if (Config[leaderboardsId].room && Config[leaderboardsId].room !== room) {
+						return this.errorReply(this.mlt(44) + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId) + " " + this.mlt(46) + " <<" + Config[leaderboardsId].room + ">>");
+					}
+
 					let pointsToAdd = [];
 
 					for (let i = 2; i < this.args.length; i++) {
@@ -615,14 +647,14 @@ module.exports = {
 						Mod.db.write();
 						Mod.generateTable(leaderboardsId);
 
-						this.replyCommand("!code " + this.mlt(43) + "\n\n" + lines.join("\n"));
+						this.replyCommand("!code " + this.mlt(43) + ":\n\n" + lines.join("\n"));
 					} else {
 						this.errorReply(this.usage({ desc: "extra-points" }, { desc: this.mlt('table') }, { desc: this.mlt("user") + ": " + this.mlt(19) }, { desc: "...", optional: true }));
 					}
 				}
 				break;
 			default:
-				return this.errorReply(this.usage({ desc: 'create | config | list | rename | info | reset | remove | recent-tours | apply | undo | official | unofficial | extra-points | rank | top | top5 | top100' }));
+				return this.errorReply(this.usage({ desc: 'create | set-room | config | list | rename | info | reset | remove | recent-tours | apply | undo | official | unofficial | extra-points | rank | top | top5 | top100' }));
 		}
 	},
 

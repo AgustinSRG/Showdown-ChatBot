@@ -19,7 +19,7 @@ exports.toId = function (str) {
  * @param {String} str
  * @returns {String} room id
  */
-exports.toRoomid = function (str) {
+exports.toRoomid = exports.toRoomId = function (str) {
 	if (!str) return '';
 	return ('' + str).replace(/[^a-zA-Z0-9-]+/g, '').toLowerCase();
 };
@@ -29,7 +29,7 @@ exports.toRoomid = function (str) {
  * @param {String} str
  * @returns {String} command id
  */
-exports.toCmdid = function (str) {
+exports.toCmdid = exports.toCmdId = function (str) {
 	if (!str) return '';
 	return ('' + str).replace(/[^_a-zA-Z0-9-]+/g, '').toLowerCase();
 };
