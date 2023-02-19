@@ -207,15 +207,21 @@ module.exports = {
 						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
 					}
 
-					if (Config[newId]) {
-						return this.errorReply(this.mlt(1));
+					if (leaderboardsId === newId) {
+						Config[leaderboardsId].name = newName;
+					} else {
+						if (Config[newId]) {
+							return this.errorReply(this.mlt(1));
+						}
+
+						Config[leaderboardsId].name = newName;
+
+						Config[newId] = Config[leaderboardsId];
+						delete Config[leaderboardsId];
+
+						Mod.data[newId] = Mod.data[leaderboardsId];
+						delete Mod.data[leaderboardsId];
 					}
-
-					Config[newId] = Config[leaderboardsId];
-					delete Config[leaderboardsId];
-
-					Mod.data[newId] = Mod.data[leaderboardsId];
-					delete Mod.data[leaderboardsId];
 
 					App.db.write();
 					Mod.db.write();
