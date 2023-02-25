@@ -31,7 +31,11 @@ function botCanHtml(room, App) {
 function toSpriteId(str) {
 	const id = ('' + str).replace(/[^a-zA-Z0-9-]+/g, '').toLowerCase();
 	const parts = id.split("-");
-	return parts[0] + (parts.length > 1 ? ("-" + parts.slice(1).join("")) : "");
+	if (["wo-chien", "chien-pao", "ting-lu", "chi-yu"].includes(id)) {
+		return parts.join("");
+	} else {
+		return parts[0] + (parts.length > 1 ? ("-" + parts.slice(1).join("")) : "");
+	}
 }
 
 function addLeftZero(num, nz) {
