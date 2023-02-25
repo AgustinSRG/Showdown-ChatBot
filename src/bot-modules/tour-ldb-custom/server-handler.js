@@ -158,6 +158,9 @@ exports.setup = function (App) {
 
 			let room = Text.toRoomid(context.post.room);
 
+			let customTitle = ((context.post.ctitle || "") + "").trim();
+			let description = ((context.post.description || "") + "").trim();
+
 			try {
 				check(leaderboardsId, "You must specify a leaderboards ID");
 				check(Config[leaderboardsId], "Leaderboards ID not found");
@@ -177,6 +180,8 @@ exports.setup = function (App) {
 				Config[leaderboardsId].winner = winner;
 				Config[leaderboardsId].finalist = finalist;
 				Config[leaderboardsId].semifinalist = semifinalist;
+				Config[leaderboardsId].customTitle = customTitle;
+				Config[leaderboardsId].description = description;
 
 				if (newId !== leaderboardsId) {
 					Config[newId] = Config[leaderboardsId];
@@ -205,6 +210,8 @@ exports.setup = function (App) {
 				winner: Config[leaderboardsId].winner,
 				finalist: Config[leaderboardsId].finalist,
 				semifinalist: Config[leaderboardsId].semifinalist,
+				ctitle: Text.escapeHTML(Config[leaderboardsId].customTitle || ""),
+				description: Text.escapeHTML(Config[leaderboardsId].description || ""),
 			});
 		}
 

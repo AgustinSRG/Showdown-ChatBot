@@ -20,6 +20,8 @@ function botCanHtml(room, App) {
 }
 
 module.exports = {
+	tlbdc: "tourldbcustom",
+	tourleaderboardscustom: "tourldbcustom",
 	tourldbcustom: function (App) {
 		this.setLangFile(Lang_File);
 		const Config = App.config.modules.tourldbcustom;
@@ -87,8 +89,66 @@ module.exports = {
 					Config[leaderboardsId].room = room;
 
 					App.db.write();
+					this.addToSecurityLog();
 
 					this.reply(this.mlt(44) + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId) + " " + this.mlt(45) + " <<" + room + ">>");
+				}
+				break;
+			case "title":
+				{
+					if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
+
+					if (this.args.length < 3) {
+						return this.errorReply(this.usage({ desc: "title" }, { desc: this.mlt('table') }, { desc: this.mlt("title") }));
+					}
+
+					let leaderboardsId = Text.toId(this.args[1]);
+					const title = (this.args.slice(2).join(",") + "").trim();
+
+					if (!leaderboardsId) {
+						return this.errorReply(this.usage({ desc: "title" }, { desc: this.mlt('table') }, { desc: this.mlt("title") }));
+					}
+
+					if (!Config[leaderboardsId]) {
+						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
+					}
+
+					Config[leaderboardsId].customTitle = title;
+
+					App.db.write();
+					Mod.generateTable(leaderboardsId);
+					this.addToSecurityLog();
+
+					this.reply(this.mlt(47) + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId) + ": " + Chat.code(title));
+				}
+				break;
+			case "desc":
+			case "description":
+				{
+					if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
+
+					if (this.args.length < 3) {
+						return this.errorReply(this.usage({ desc: "description" }, { desc: this.mlt('table') }, { desc: this.mlt("desc") }));
+					}
+
+					let leaderboardsId = Text.toId(this.args[1]);
+					const description = (this.args.slice(2).join(",") + "").trim();
+
+					if (!leaderboardsId) {
+						return this.errorReply(this.usage({ desc: "description" }, { desc: this.mlt('table') }, { desc: this.mlt("desc") }));
+					}
+
+					if (!Config[leaderboardsId]) {
+						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
+					}
+
+					Config[leaderboardsId].description = description;
+
+					App.db.write();
+					Mod.generateTable(leaderboardsId);
+					this.addToSecurityLog();
+
+					this.reply(this.mlt(48) + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId) + ": " + Chat.code(description));
 				}
 				break;
 			case "config":
@@ -244,21 +304,14 @@ module.exports = {
 						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
 					}
 
+					let key = App.data.temp.createTempFile(Mod.makeTableHTML(leaderboardsId));
+
 					let now = new Date();
-					const data = Mod.data[leaderboardsId];
 					Mod.data[leaderboardsId] = Object.create(null);
 					Config[leaderboardsId].cleanPoint = now.toString();
 					App.db.write();
 					Mod.db.write();
 					Mod.generateTable(leaderboardsId);
-
-					let key = App.data.temp.createTempFile(
-						"<html>" +
-						"<body><p>" +
-						JSON.stringify(data) +
-						"</p></body>" +
-						"</html>"
-					);
 
 					this.reply(this.mlt(12) + ": " + Chat.bold(Config[leaderboardsId].name || leaderboardsId) + ". " + this.mlt(14) + ": " + App.server.getControlPanelLink('/temp/' + key));
 					this.addToSecurityLog();
@@ -277,23 +330,15 @@ module.exports = {
 						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
 					}
 
-					const deletedName = Config[leaderboardsId].name || leaderboardsId;
+					let key = App.data.temp.createTempFile(Mod.makeTableHTML(leaderboardsId));
 
-					const data = Mod.data[leaderboardsId];
+					const deletedName = Config[leaderboardsId].name || leaderboardsId;
 
 					delete Mod.data[leaderboardsId];
 					delete Config[leaderboardsId];
 
 					App.db.write();
 					Mod.db.write();
-
-					let key = App.data.temp.createTempFile(
-						"<html>" +
-						"<body><p>" +
-						JSON.stringify(data) +
-						"</p></body>" +
-						"</html>"
-					);
 
 					this.reply(this.mlt(13) + ": " + Chat.bold(deletedName) + ". " + this.mlt(14) + ": " + App.server.getControlPanelLink('/temp/' + key));
 					this.addToSecurityLog();
@@ -429,7 +474,19 @@ module.exports = {
 
 					if (this.getRoomType(this.room) === 'chat' && botCanHtml(this.room, App) && this.can('ldbcustomrank', this.room)) {
 						// Send html table in chat
-						let html = '<h3 style="text-align:center;">' + Text.escapeHTML(Config[leaderboardsId].name || leaderboardsId) + " | " + Text.escapeHTML(this.mlt(28)) + '</h3><div style="overflow: auto; height: 200px; width: 100%;">';
+						let html = '';
+
+						if (Config[leaderboardsId].customTitle) {
+							html += '<h3 style="text-align:center;">' + Text.escapeHTML(Config[leaderboardsId].customTitle) + '</h3>';
+						} else {
+							html += '<h3 style="text-align:center;">' + Text.escapeHTML(Config[leaderboardsId].name || leaderboardsId) + " | " + Text.escapeHTML(this.mlt(28)) + '</h3>';
+						}
+
+						if (Config[leaderboardsId].description) {
+							html += '<p style="text-align:center;">' + Text.escapeHTML(Config[leaderboardsId].description) + '</p>';
+						}
+
+						html += '<div style="overflow: auto; height: 200px; width: 100%;">';
 
 						html += '<table border="1" cellspacing="0" cellpadding="3" style="min-width:100%;">';
 
@@ -660,7 +717,7 @@ module.exports = {
 				}
 				break;
 			default:
-				return this.errorReply(this.usage({ desc: 'create | set-room | config | list | rename | info | reset | remove | recent-tours | apply | undo | official | unofficial | extra-points | rank | top | top5 | top100' }));
+				return this.errorReply(this.usage({ desc: 'create | set-room | title | description | config | list | rename | info | reset | remove | recent-tours | apply | undo | official | unofficial | extra-points | rank | top | top5 | top100' }));
 		}
 	},
 

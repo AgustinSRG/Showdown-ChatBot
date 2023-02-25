@@ -179,20 +179,34 @@ exports.setup = function (App) {
 			return res;
 		}
 
-		generateTable(leaderboardsId) {
-			let tableFile = Path.resolve(App.dataDir, 'tour-tables-custom', leaderboardsId + '.html');
+		makeTableHTML(leaderboardsId) {
 			let config = App.config.modules.tourldbcustom[leaderboardsId];
-			if (!config) return;
+			if (!config) return "";
 			let top = this.getTop(leaderboardsId);
-			if (!top) return;
+			if (!top) return "";
 			let html = '';
 			html += '<html>';
-			html += '<head><title>Leaderboards of ' + Text.escapeHTML(config.name || leaderboardsId) + '</title>' +
-				'<style>td {padding:5px;}</style></head>';
+			if (config.customTitle) {
+				html += '<head><title>' + Text.escapeHTML(config.customTitle) + '</title>' +
+					'<style>td {padding:5px;}</style></head>';
+			} else {
+				html += '<head><title>Leaderboards of ' + Text.escapeHTML(config.name || leaderboardsId) + '</title>' +
+					'<style>td {padding:5px;}</style></head>';
+			}
+
 			html += '<body>';
 			html += '<div align="center" style="padding:5px;">';
-			html += '<h1>Tours Leaderboards</h1>';
-			html += '<h2>' + Text.escapeHTML(config.name || leaderboardsId) + '</h2>';
+			if (config.customTitle) {
+				html += '<h1>' + Text.escapeHTML(config.customTitle) + '</h1>';
+			} else {
+				html += '<h1>Tours Leaderboards</h1>';
+				html += '<h2>' + Text.escapeHTML(config.name || leaderboardsId) + '</h2>';
+			}
+
+			if (config.description) {
+				html += '<p style="text-align: center;">' + Text.escapeHTML(config.description) + '</p>';
+			}
+
 			html += '<table width="100%" border="1">';
 			html += '<tr><td><div align="center"><h3><strong>#</strong></h3></div></td>' +
 				'<td><div align="center"><h3><strong>Name</strong></h3></div></td>' +
@@ -224,6 +238,12 @@ exports.setup = function (App) {
 			html += '</div>';
 			html += '</body>';
 			html += '</html>';
+			return html;
+		}
+
+		generateTable(leaderboardsId) {
+			let tableFile = Path.resolve(App.dataDir, 'tour-tables-custom', leaderboardsId + '.html');
+			let html = this.makeTableHTML(leaderboardsId);
 			FileSystem.writeFileSync(tableFile, html);
 		}
 
@@ -293,7 +313,19 @@ exports.setup = function (App) {
 
 			let server = App.config.server.url;
 
-			let html = '<h3 style="text-align:center;">' + Text.escapeHTML(config.name || leaderboardsId) + " | " + Text.escapeHTML(mlt(28)) + '</h3><div style="overflow: auto; height: 200px; width: 100%;">';
+			let html = '';
+
+			if (config.customTitle) {
+				html += '<h3 style="text-align:center;">' + Text.escapeHTML(config.customTitle) + '</h3>';
+			} else {
+				html += '<h3 style="text-align:center;">' + Text.escapeHTML(config.name || leaderboardsId) + " | " + Text.escapeHTML(mlt(28)) + '</h3>';
+			}
+
+			if (config.description) {
+				html += '<p style="text-align:center;">' + Text.escapeHTML(config.description) + '</p>';
+			}
+
+			html += '<div style="overflow: auto; height: 200px; width: 100%;">';
 
 			if (config.winner > 0 && results.winner) {
 				let winners = results.winner;

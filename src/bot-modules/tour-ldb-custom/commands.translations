@@ -10,6 +10,8 @@ $name = name
 $newname = new name
 
 $table = Table
+$title = Title
+$desc = Description
 
 $0 = Creates a new leaderboards table
 $1 = Another table with the same name already exists
@@ -77,6 +79,9 @@ $44 = The leaderboards table
 $45 = has been assigned to room
 $46 = is available only for room
 
+$47 = Title changed for table
+$48 = Description changed for table
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
@@ -85,6 +90,8 @@ $name = nombre
 $newname = nuevo nombre
 
 $table = Tabla
+$title = Título
+$desc = Descripción
 
 $0 = Crea una nueva tabla de clasificaciones de torneos
 $1 = Ya existe otra tabla de clasificaciones con el mismo nombre
@@ -151,3 +158,6 @@ $43 = Puntuaciones modificadas
 $44 = La tabla
 $45 = ha sido asignada a la sala
 $46 = solo está disponible en la sala
+
+$47 = Título cambiado para la tabla
+$48 = Descripción cambiada para la tabla
