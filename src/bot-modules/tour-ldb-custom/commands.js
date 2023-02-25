@@ -75,7 +75,7 @@ module.exports = {
 				{
 					if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
 
-					let leaderboardsId = Text.toId(this.args[1]);
+					let leaderboardsId = Mod.findAlias(Text.toId(this.args[1]));
 					const room = this.parseRoomAliases(Text.toRoomid(this.args[2] || ""));
 
 					if (!leaderboardsId || !room) {
@@ -102,7 +102,7 @@ module.exports = {
 						return this.errorReply(this.usage({ desc: "title" }, { desc: this.mlt('table') }, { desc: this.mlt("title") }));
 					}
 
-					let leaderboardsId = Text.toId(this.args[1]);
+					let leaderboardsId = Mod.findAlias(Text.toId(this.args[1]));
 					const title = (this.args.slice(2).join(",") + "").trim();
 
 					if (!leaderboardsId) {
@@ -131,7 +131,7 @@ module.exports = {
 						return this.errorReply(this.usage({ desc: "description" }, { desc: this.mlt('table') }, { desc: this.mlt("desc") }));
 					}
 
-					let leaderboardsId = Text.toId(this.args[1]);
+					let leaderboardsId = Mod.findAlias(Text.toId(this.args[1]));
 					const description = (this.args.slice(2).join(",") + "").trim();
 
 					if (!leaderboardsId) {
@@ -151,11 +151,82 @@ module.exports = {
 					this.reply(this.mlt(48) + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId) + ": " + Chat.code(description));
 				}
 				break;
+			case "addalias":
+				{
+					if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
+
+					if (this.args.length !== 3) {
+						return this.errorReply(this.usage({ desc: "add-alias" }, { desc: this.mlt('table') }, { desc: this.mlt("alias") }));
+					}
+
+					let leaderboardsId = Mod.findAlias(Text.toId(this.args[1]));
+					const alias = Text.toId(this.args[2]);
+
+					if (!leaderboardsId || !alias) {
+						return this.errorReply(this.usage({ desc: "add-alias" }, { desc: this.mlt('table') }, { desc: this.mlt("alias") }));
+					}
+
+					if (!Config[leaderboardsId]) {
+						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
+					}
+
+					const oldAliases = (Config[leaderboardsId].aliases || "").split(",").map(a => {
+						return Text.toId(a);
+					}).filter(a => {
+						return !!a;
+					});
+
+					if (!oldAliases.includes(alias)) {
+						oldAliases.push(alias);
+					}
+
+					Config[leaderboardsId].aliases = oldAliases.join(",");
+
+					App.db.write();
+					this.addToSecurityLog();
+
+					this.reply(this.mlt(49) + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId) + ": " + Chat.code(alias));
+				}
+				break;
+			case "removealias":
+			case "rmalias":
+				{
+					if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
+
+					if (this.args.length !== 3) {
+						return this.errorReply(this.usage({ desc: "rm-alias" }, { desc: this.mlt('table') }, { desc: this.mlt("alias") }));
+					}
+
+					let leaderboardsId = Mod.findAlias(Text.toId(this.args[1]));
+					const alias = Text.toId(this.args[2]);
+
+					if (!leaderboardsId || !alias) {
+						return this.errorReply(this.usage({ desc: "rm-alias" }, { desc: this.mlt('table') }, { desc: this.mlt("alias") }));
+					}
+
+					if (!Config[leaderboardsId]) {
+						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
+					}
+
+					const oldAliases = (Config[leaderboardsId].aliases || "").split(",").map(a => {
+						return Text.toId(a);
+					}).filter(a => {
+						return !!a && a !== alias;
+					});
+
+					Config[leaderboardsId].aliases = oldAliases.join(",");
+
+					App.db.write();
+					this.addToSecurityLog();
+
+					this.reply(this.mlt(50) + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId) + ": " + Chat.code(alias));
+				}
+				break;
 			case "config":
 				{
 					if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
 
-					let leaderboardsId = Text.toId(this.args[1]);
+					let leaderboardsId = Mod.findAlias(Text.toId(this.args[1]));
 					if (!leaderboardsId) {
 						return this.errorReply(this.usage({ desc: "config" }, { desc: this.mlt('table') }, { desc: 'win: N', optional: true }, { desc: 'final: N', optional: true }, { desc: 'semi_final: N', optional: true }));
 					}
@@ -224,7 +295,24 @@ module.exports = {
 					let text = this.mlt(10) + ":\n";
 
 					for (let tableId of list) {
-						text += "\n    " + (Config[tableId].name || tableId);
+						text += "\n  - " + this.mlt("table") + ": " + (Config[tableId].name || tableId);
+						text += "\n    " + this.mlt(35) + ": " + (Config[tableId].room || "-");
+						if (Config[tableId].customTitle) {
+							text += "\n    " + this.mlt("title") + ": " + (Config[tableId].customTitle);
+						}
+						if (Config[tableId].description) {
+							text += "\n    " + this.mlt("desc") + ": " + (Config[tableId].description);
+						}
+						if (Config[tableId].aliases) {
+							text += "\n    " + this.mlt("alias") + ": " + (Config[tableId].aliases);
+						}
+
+						text += "\n    " + this.mlt(19) + ": " + Config[tableId].winner + " " + this.mlt(5) + ", " + Config[tableId].finalist +
+							" " + this.mlt(6) + ", " + Config[tableId].semifinalist + " " + this.mlt(7) + ".";
+
+						text += "\n    " + this.mlt(31) + ": " + (Config[tableId].cleanPoint || "-");
+
+						text += "\n";
 					}
 
 					this.replyCommand("!code " + text);
@@ -232,7 +320,7 @@ module.exports = {
 				break;
 			case "info":
 				{
-					let leaderboardsId = Text.toId(this.args[1]);
+					let leaderboardsId = Mod.findAlias(Text.toId(this.args[1]));
 					if (!leaderboardsId) {
 						return this.errorReply(this.usage({ desc: "info" }, { desc: this.mlt('table') }));
 					}
@@ -254,7 +342,7 @@ module.exports = {
 						return this.errorReply(this.usage({ desc: "rename" }, { desc: this.mlt('table') }, { desc: this.mlt('newname') }));
 					}
 
-					const leaderboardsId = Text.toId(this.args[1]);
+					let leaderboardsId = Mod.findAlias(Text.toId(this.args[1]));
 
 					const newName = (this.args[2] + "").trim();
 					const newId = Text.toId(newName);
@@ -295,7 +383,7 @@ module.exports = {
 				{
 					if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
 
-					let leaderboardsId = Text.toId(this.args[1]);
+					let leaderboardsId = Mod.findAlias(Text.toId(this.args[1]));
 					if (!leaderboardsId) {
 						return this.errorReply(this.usage({ desc: "reset" }, { desc: this.mlt('table') }));
 					}
@@ -321,7 +409,7 @@ module.exports = {
 				{
 					if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
 
-					let leaderboardsId = Text.toId(this.args[1]);
+					let leaderboardsId = Mod.findAlias(Text.toId(this.args[1]));
 					if (!leaderboardsId) {
 						return this.errorReply(this.usage({ desc: "remove" }, { desc: this.mlt('table') }));
 					}
@@ -353,7 +441,7 @@ module.exports = {
 						return this.errorReply(this.mlt('nochat'));
 					}
 
-					let leaderboardsId = Text.toId(this.args[1]);
+					let leaderboardsId = Mod.findAlias(Text.toId(this.args[1]));
 					if (!leaderboardsId) {
 						return this.errorReply(this.usage({ desc: "official" }, { desc: this.mlt('table') }));
 					}
@@ -389,7 +477,7 @@ module.exports = {
 				break;
 			case "rank":
 				{
-					let leaderboardsId = Text.toId(this.args[1]);
+					let leaderboardsId = Mod.findAlias(Text.toId(this.args[1]));
 					let userId = Text.toId(this.args[2]);
 
 					if (!leaderboardsId || !userId) {
@@ -415,7 +503,7 @@ module.exports = {
 				break;
 			case "top5":
 				{
-					let leaderboardsId = Text.toId(this.args[1]);
+					let leaderboardsId = Mod.findAlias(Text.toId(this.args[1]));
 					if (!leaderboardsId) {
 						return this.errorReply(this.usage({ desc: "top5" }, { desc: this.mlt('table') }));
 					}
@@ -454,7 +542,7 @@ module.exports = {
 			case "top":
 			case "top100":
 				{
-					let leaderboardsId = Text.toId(this.args[1]);
+					let leaderboardsId = Mod.findAlias(Text.toId(this.args[1]));
 					if (!leaderboardsId) {
 						return this.errorReply(this.usage({ desc: option }, { desc: this.mlt('table') }));
 					}
@@ -486,7 +574,7 @@ module.exports = {
 							html += '<p style="text-align:center;">' + Text.escapeHTML(Config[leaderboardsId].description) + '</p>';
 						}
 
-						html += '<div style="overflow: auto; height: 200px; width: 100%;">';
+						html += '<div style="overflow: auto; height: 120px; width: 100%;">';
 
 						html += '<table border="1" cellspacing="0" cellpadding="3" style="min-width:100%;">';
 
@@ -580,7 +668,7 @@ module.exports = {
 				{
 					if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
 
-					let leaderboardsId = Text.toId(this.args[1]);
+					let leaderboardsId = Mod.findAlias(Text.toId(this.args[1]));
 					let tourId = parseInt(this.args[2]);
 
 					if (!leaderboardsId || !tourId || isNaN(tourId)) {
@@ -608,7 +696,7 @@ module.exports = {
 				{
 					if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
 
-					let leaderboardsId = Text.toId(this.args[1]);
+					let leaderboardsId = Mod.findAlias(Text.toId(this.args[1]));
 					let tourId = parseInt(this.args[2]);
 
 					if (!leaderboardsId || !tourId || isNaN(tourId)) {
@@ -642,7 +730,7 @@ module.exports = {
 						return this.errorReply(this.mlt('nochat'));
 					}
 
-					let leaderboardsId = Text.toId(this.args[1]);
+					let leaderboardsId = Mod.findAlias(Text.toId(this.args[1]));
 					if (!leaderboardsId) {
 						return this.errorReply(this.usage({ desc: "extra-points" }, { desc: this.mlt('table') }, { desc: this.mlt("user") + ": " + this.mlt(19) }, { desc: "...", optional: true }));
 					}
@@ -717,7 +805,7 @@ module.exports = {
 				}
 				break;
 			default:
-				return this.errorReply(this.usage({ desc: 'create | set-room | title | description | config | list | rename | info | reset | remove | recent-tours | apply | undo | official | unofficial | extra-points | rank | top | top5 | top100' }));
+				return this.errorReply(this.usage({ desc: 'create | set-room | title | description | add-alias | rm-alias | config | list | rename | info | reset | remove | recent-tours | apply | undo | official | unofficial | extra-points | rank | top | top5 | top100' }));
 		}
 	},
 

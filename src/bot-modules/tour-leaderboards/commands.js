@@ -52,7 +52,7 @@ module.exports = {
 		}
 		if (!Config[room]) {
 			const tableId = Text.toId(room);
-			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom && App.config.modules.tourldbcustom[room]) {
+			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom) {
 				this.cmd = 'tourldbcustom';
 				this.arg = "rank" + ", " + tableId + "," + user;
 				this.args = ["rank", tableId, user];
@@ -86,7 +86,7 @@ module.exports = {
 		}
 		if (!Config[room]) {
 			const tableId = Text.toId(room);
-			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom && App.config.modules.tourldbcustom[room]) {
+			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom) {
 				this.cmd = 'tourldbcustom';
 				this.arg = "top" + ", " + tableId;
 				this.args = ["top", tableId];
@@ -105,7 +105,7 @@ module.exports = {
 
 		if (this.getRoomType(this.room) === 'chat' && botCanHtml(this.room, App) && this.can('toursrank', this.room)) {
 			// Send html table in chat
-			let html = '<h3 style="text-align:center;">' + Text.escapeHTML(this.parser.getRoomTitle(room)) + " | " + Text.escapeHTML(this.mlt(25)) + '</h3><div style="overflow: auto; height: 200px; width: 100%;">';
+			let html = '<h3 style="text-align:center;">' + Text.escapeHTML(this.parser.getRoomTitle(room)) + " | " + Text.escapeHTML(this.mlt(25)) + '</h3><div style="overflow: auto; height: 120px; width: 100%;">';
 
 			html += '<table border="1" cellspacing="0" cellpadding="3" style="min-width:100%;">';
 
@@ -196,7 +196,7 @@ module.exports = {
 		}
 		if (!Config[room]) {
 			const tableId = Text.toId(room);
-			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom && App.config.modules.tourldbcustom[room]) {
+			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom) {
 				this.cmd = 'tourldbcustom';
 				this.arg = "top5" + ", " + tableId;
 				this.args = ["top5", tableId];
@@ -242,7 +242,7 @@ module.exports = {
 		}
 		if (!Config[room]) {
 			const tableId = Text.toId(room);
-			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom && App.config.modules.tourldbcustom[room]) {
+			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom) {
 				this.cmd = 'tourldbcustom';
 				this.arg = "info" + ", " + tableId;
 				this.args = ["info", tableId];
@@ -396,7 +396,7 @@ module.exports = {
 		}
 		if (!Config[room]) {
 			const tableId = Text.toId(room);
-			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom && App.config.modules.tourldbcustom[room]) {
+			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom) {
 				this.cmd = 'tourldbcustom';
 				this.arg = "top100" + ", " + tableId;
 				this.args = ["top100", tableId];
@@ -415,7 +415,7 @@ module.exports = {
 			}
 
 			// Send html table in chat
-			let html = '<h3 style="text-align:center;">' + Text.escapeHTML(this.parser.getRoomTitle(room)) + " | " + Text.escapeHTML(this.mlt(25)) + '</h3><div style="overflow: auto; height: 200px; width: 100%;">';
+			let html = '<h3 style="text-align:center;">' + Text.escapeHTML(this.parser.getRoomTitle(room)) + " | " + Text.escapeHTML(this.mlt(25)) + '</h3><div style="overflow: auto; height: 120px; width: 100%;">';
 
 			html += '<table border="1" cellspacing="0" cellpadding="3" style="min-width:100%;">';
 

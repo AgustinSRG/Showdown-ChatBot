@@ -46,6 +46,29 @@ exports.setup = function (App) {
 			this.tourCache = this.tourCacheData.cache;
 		}
 
+		findAlias(alias) {
+			if (!alias) {
+				return "";
+			}
+
+			if (App.config.modules.tourldbcustom[alias]) {
+				return alias;
+			}
+
+			for (let tableId of Object.keys(App.config.modules.tourldbcustom)) {
+				const table = App.config.modules.tourldbcustom[tableId];
+				if (!table || !table.aliases) continue;
+				const aliases = (table.aliases + "").split(",").map(a => {
+					return Text.toId(a);
+				});
+				if (aliases.includes(alias)) {
+					return tableId;
+				}
+			}
+
+			return alias;
+		}
+
 		addTourToCache(room, tourData) {
 			if (!tourData || typeof tourData !== "object") {
 				return;
@@ -325,7 +348,7 @@ exports.setup = function (App) {
 				html += '<p style="text-align:center;">' + Text.escapeHTML(config.description) + '</p>';
 			}
 
-			html += '<div style="overflow: auto; height: 200px; width: 100%;">';
+			html += '<div style="overflow: auto; height: 120px; width: 100%;">';
 
 			if (config.winner > 0 && results.winner) {
 				let winners = results.winner;

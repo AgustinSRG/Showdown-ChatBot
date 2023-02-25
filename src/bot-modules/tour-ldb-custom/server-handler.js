@@ -161,6 +161,8 @@ exports.setup = function (App) {
 			let customTitle = ((context.post.ctitle || "") + "").trim();
 			let description = ((context.post.description || "") + "").trim();
 
+			let aliases = ((context.post.aliases || "") + "").trim();
+
 			try {
 				check(leaderboardsId, "You must specify a leaderboards ID");
 				check(Config[leaderboardsId], "Leaderboards ID not found");
@@ -182,6 +184,7 @@ exports.setup = function (App) {
 				Config[leaderboardsId].semifinalist = semifinalist;
 				Config[leaderboardsId].customTitle = customTitle;
 				Config[leaderboardsId].description = description;
+				Config[leaderboardsId].aliases = aliases;
 
 				if (newId !== leaderboardsId) {
 					Config[newId] = Config[leaderboardsId];
@@ -212,6 +215,7 @@ exports.setup = function (App) {
 				semifinalist: Config[leaderboardsId].semifinalist,
 				ctitle: Text.escapeHTML(Config[leaderboardsId].customTitle || ""),
 				description: Text.escapeHTML(Config[leaderboardsId].description || ""),
+				aliases: Text.escapeHTML(Config[leaderboardsId].aliases || ""),
 			});
 		}
 
