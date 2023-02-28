@@ -842,6 +842,10 @@ exports.translations.items = {
 	"maliciousarmor": "Armadura Maldita",
 	"mirrorherb": "Hierba Copia",
 	"punchingglove": "Guante de Boxeo",
+	"adamantcrystal": "Gran Diamansfera",
+	"griseouscore": "Gran Griseosfera",
+	"lustrousglobe": "Gran Lustresfera",
+	"strangeball": "Extraña Ball",
 };
 
 /* Battle Moves */
@@ -1780,6 +1784,8 @@ exports.translations.moves = {
 	"wavecrash": "Envite Acuático",
 	"wickedtorque": "Ominochoque",
 	"wildboltstorm": "Electormenta",
+	"hydrosteam": "Hidrovapor",
+	"psyblade": "Psicohojas",
 };
 
 /* Natures */
@@ -3202,6 +3208,12 @@ exports.translations.pokemon = {
 	"clodsire": "Clodsire",
 	"annihilape": "Annihilape",
 	"saharaja": "Saharaja",
+	"taurospaldeacombat": "Tauros de Paldea (Variedad combatiente)",
+	"taurospaldeablaze": "Tauros de Paldea (Variedad ardiente)",
+	"taurospaldeaaqua": "Tauros de Paldea (Variedad acuática)",
+	"walkingwake": "Ondulagua",
+	"ironleaves": "Iron Leaves",
+	"saharascal": "Ferroverdor",
 };
 
 exports.translations.legacy = Object.create(null);

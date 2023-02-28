@@ -842,6 +842,10 @@ exports.translations.items = {
 	"maliciousarmor": "Malicious Armor",
 	"mirrorherb": "Mirror Herb",
 	"punchingglove": "Punching Glove",
+	"adamantcrystal": "Adamant Crystal",
+	"griseouscore": "Griseous Core",
+	"lustrousglobe": "Lustrous Globe",
+	"strangeball": "Strange Ball",
 };
 
 /* Battle Moves */
@@ -1780,6 +1784,8 @@ exports.translations.moves = {
 	"wavecrash": "Wave Crash",
 	"wickedtorque": "Wicked Torque",
 	"wildboltstorm": "Wildbolt Storm",
+	"hydrosteam": "Hydro Steam",
+	"psyblade": "Psyblade",
 };
 
 /* Natures */
@@ -3202,6 +3208,12 @@ exports.translations.pokemon = {
 	"clodsire": "Clodsire",
 	"annihilape": "Annihilape",
 	"saharaja": "Saharaja",
+	"taurospaldeacombat": "Tauros-Paldea-Combat",
+	"taurospaldeablaze": "Tauros-Paldea-Blaze",
+	"taurospaldeaaqua": "Tauros-Paldea-Aqua",
+	"walkingwake": "Walking Wake",
+	"ironleaves": "Iron Leaves",
+	"saharascal": "Saharascal",
 };
 
 /* Legacy Translation */
