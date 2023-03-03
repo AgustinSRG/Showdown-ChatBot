@@ -7,6 +7,7 @@
 const Path = require('path');
 const FileSystem = require('fs');
 const Text = Tools('text');
+const Chat = Tools('chat');
 const parseTourTree = Tools('tour-tree');
 const checkDir = Tools('checkdir');
 
@@ -227,7 +228,7 @@ exports.setup = function (App) {
 			}
 
 			if (config.description) {
-				html += '<p style="text-align: center;">' + Text.escapeHTML(config.description) + '</p>';
+				html += '<p style="text-align: center;">' + Chat.parseMessage(Text.escapeHTML(config.description)) + '</p>';
 			}
 
 			html += '<table width="100%" border="1">';
@@ -345,7 +346,7 @@ exports.setup = function (App) {
 			}
 
 			if (config.description) {
-				html += '<p style="text-align:center;">' + Text.escapeHTML(config.description) + '</p>';
+				html += '<p style="text-align:center;">' + Chat.parseMessage(Text.escapeHTML(config.description)) + '</p>';
 			}
 
 			html += '<div style="overflow: auto; height: 120px; width: 100%;">';

@@ -571,7 +571,7 @@ module.exports = {
 						}
 
 						if (Config[leaderboardsId].description) {
-							html += '<p style="text-align:center;">' + Text.escapeHTML(Config[leaderboardsId].description) + '</p>';
+							html += '<p style="text-align:center;">' + Chat.parseMessage(Text.escapeHTML(Config[leaderboardsId].description)) + '</p>';
 						}
 
 						html += '<div style="overflow: auto; height: 120px; width: 100%;">';
