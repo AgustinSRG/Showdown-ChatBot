@@ -91,8 +91,8 @@ module.exports = {
 		if (this.getRoomType(this.room) !== 'chat') {
 			return this.errorReply(this.mlt('nochat'));
 		}
-		let minutes = parseMinutes(this.args[0]) || 0;
-		let seconds = parseInt(this.args[1]) || 0;
+		let minutes = parseMinutes((this.args[0] || "0").trim().split(" ")[0]) || 0;
+		let seconds = parseInt((this.args[1] || "0").trim().split(" ")[0]) || 0;
 		let time = (minutes * 60) + seconds;
 		time = Math.floor(time * 1000);
 		if (isNaN(time) || time <= 0) {
