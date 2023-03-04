@@ -554,7 +554,7 @@ module.exports = {
 					}
 
 					let top = Mod.getTop(leaderboardsId);
-					if (!top || !top.length) {
+					if (!top) {
 						return this.restrictReply(this.mlt(26) + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId) + " " + this.mlt(27), "ldbcustomrank");
 					}
 
@@ -628,6 +628,10 @@ module.exports = {
 						this.send("/addhtmlbox " + html, this.room);
 					} else {
 						// Send text message
+						if (!top.length) {
+							return this.restrictReply(this.mlt(26) + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId) + " " + this.mlt(27), "ldbcustomrank");
+						}
+
 						let topResults = [];
 						for (let i = 0; i < 5 && i < top.length; i++) {
 							topResults.push(Chat.italics("#" + (i + 1)) + " " + Chat.bold(top[i][0]) + " (" + top[i][6] + ")");
