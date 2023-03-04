@@ -85,7 +85,11 @@ module.exports = {
 			return;
 		}
 		if (Mod.timers[this.room]) {
-			return this.restrictReply(this.mlt(3) + " | " + Mod.getAnnounce(Mod.timers[this.room]), 'timer');
+			if (this.arg) {
+				return this.restrictReply(this.mlt(3) + " | " + Mod.getAnnounce(Mod.timers[this.room]), 'timer');
+			} else {
+				return this.restrictReply(Mod.getAnnounce(Mod.timers[this.room]), 'timer');
+			}
 		}
 		if (!this.can('timer', this.room)) return this.replyAccessDenied('timer');
 		if (this.getRoomType(this.room) !== 'chat') {

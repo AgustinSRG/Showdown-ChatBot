@@ -10,6 +10,7 @@ $minute = minute
 $minutes = minutes
 $hour = hour
 $hours = hours
+$instants = 0 seconds
 
 $0 = 
 $1 = left!
@@ -29,3 +30,4 @@ $2 = ¡El tiempo ha terminado!
 $3 = Queda
 $hour = hora
 $hours = horas
+$instants = 0 segundos

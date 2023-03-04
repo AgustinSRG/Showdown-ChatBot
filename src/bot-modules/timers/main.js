@@ -85,7 +85,7 @@ exports.setup = function (App) {
 			if (seconds > 0) {
 				dates.push(seconds + ' ' + (seconds === 1 ? trans(timer.room, 'second') : trans(timer.room, 'seconds')));
 			}
-			return dates.join(', ');
+			return dates.join(', ') || trans(timer.room, 'instants');
 		}
 
 		createTimer(room, time) {
