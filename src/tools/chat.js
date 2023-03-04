@@ -171,5 +171,7 @@ exports.parseMessage = function (str, isShowdown) {
 	str = str.replace(/\_\_([^< ](?:[^<]*?[^< ])??)\_\_(?![^<]*?<\/a)/g, '<i>$1</i>');
 	// **bold**
 	str = str.replace(/\*\*([^< ](?:[^<]*?[^< ])??)\*\*/g, '<b>$1</b>');
+	// Line breaks
+	str = str.replace(/\|\|/g, '<br />');
 	return str;
 };
