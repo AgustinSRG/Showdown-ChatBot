@@ -16,8 +16,6 @@ const randomize = Tools('randomize');
 
 const Lang_File = Path.resolve(__dirname, 'kunc.translations');
 
-const KuncSets = require(Path.resolve(__dirname, 'kunc-sets.js')).sets;
-
 function toWordId(str) {
 	if (!str) return '';
 	str = normalize(str);
@@ -47,7 +45,7 @@ exports.setup = function (App) {
 			this.names = Object.create(null);
 			this.timer = null;
 
-			this.questions = randomize(KuncSets);
+			this.questions = randomize(App.modules.games.system.templates.kunc.data.sets);
 			this.qid = -1;
 		}
 

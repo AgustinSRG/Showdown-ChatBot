@@ -15,7 +15,7 @@ const trigger = require(Path.resolve(__dirname, 'cmd-trigger.js'));
 module.exports = {
 	kunc: function (App) {
 		this.setLangFile(Lang_File);
-		const Kunc = App.modules.games.system.templates.kunc;
+		const Kunc = App.modules.games.system.templates.kunc.kunc;
 		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 		if (!this.arg) {
 			return this.errorReply(this.usage({desc: this.mlt('games')},
