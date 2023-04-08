@@ -71,7 +71,7 @@ exports.setup = function (App) {
 		}
 
 		html += getServerTemplate.get();
-		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js'] });
+		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.6.4.min.js'] });
 	}
 
 	function toolBotSend(context, html, parts) {
@@ -92,7 +92,7 @@ exports.setup = function (App) {
 			return context.endWithText(result);
 		}
 		html += botSendTemplate.get();
-		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js'] });
+		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.6.4.min.js'] });
 	}
 
 	function toolBotLogin(context, html, parts) {
@@ -112,7 +112,7 @@ exports.setup = function (App) {
 			return context.endWithText(result);
 		}
 		html += botLoginTemplate.get();
-		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js'] });
+		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.6.4.min.js'] });
 	}
 
 	function toolSeen(context, html, parts) {
@@ -174,7 +174,7 @@ exports.setup = function (App) {
 			}
 		} else {
 			html += seenTemplate.get();
-			context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js'] });
+			context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.6.4.min.js'] });
 		}
 	}
 
@@ -195,7 +195,7 @@ exports.setup = function (App) {
 			return;
 		}
 		html += evalTemplate.get();
-		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.0.0.min.js'] });
+		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot", scripts: ['/static/jquery-3.6.4.min.js'] });
 	}
 
 	function toolHotpatch(context, html, parts) {

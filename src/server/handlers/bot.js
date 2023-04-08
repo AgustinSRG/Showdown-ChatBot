@@ -153,6 +153,6 @@ exports.setup = function (App) {
 
 		context.endWithWebPage(mainTemplate.make(htmlVars), {
 			title: "Bot Configuration - Showdown ChatBot",
-			scripts: ['/static/jquery-3.0.0.min.js']});
+			scripts: ['/static/jquery-3.6.4.min.js']});
 	});
 };
