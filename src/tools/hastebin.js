@@ -19,7 +19,7 @@ exports.upload = function (data, callback) {
 	let request = Https.request(Hastebin_Request_Options, response => {
 		response.on('data', chunk => {
 			try {
-				let key = JSON.parse(chunk.toString())['key'];
+				let key = JSON.parseNoPrototype(chunk.toString())['key'];
 				return callback(Util.format('https://hastebin.com/%s', key));
 			} catch (err) {
 				return callback(null, err);

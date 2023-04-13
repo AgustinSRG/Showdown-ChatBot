@@ -110,8 +110,8 @@ exports.setup = function (Data) {
 		} else {
 			conditionsA = new Conditions({
 				side: battle.self.side,
-				volatiles: {},
-				boosts: {},
+				volatiles: Object.create(null),
+				boosts: Object.create(null),
 			});
 		}
 

@@ -89,7 +89,7 @@ class UserDataManager {
 		for (let line of data) {
 			if (line.substr(0, id.length + 1) === (id + ",")) {
 				try {
-					let userData = JSON.parse(line.substr(id.length + 1));
+					let userData = JSON.parseNoPrototype(line.substr(id.length + 1));
 					this.cache.cache(id, userData);
 					return this.applyBuffer(id, userData);
 				} catch (err) {
@@ -153,7 +153,7 @@ class UserDataManager {
 			index = data.length - 1;
 		} else if (!name) {
 			try {
-				let obj = JSON.parse(data[index].substr(id.length + 1));
+				let obj = JSON.parseNoPrototype(data[index].substr(id.length + 1));
 				name = obj.name;
 			} catch (err) {}
 		}

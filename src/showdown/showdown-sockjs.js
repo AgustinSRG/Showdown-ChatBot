@@ -328,7 +328,7 @@ class Bot {
 					return;
 				}
 				try {
-					str = JSON.parse(str.substr(1));
+					str = JSON.parseNoPrototype(str.substr(1));
 					if (str.actionsuccess) {
 						str = str.assertion;
 					} else {

@@ -95,7 +95,7 @@ exports.setup = function (App) {
 		if (context.post.edit) {
 			let data = Object.create(null);
 			try {
-				data = JSON.parse(context.post.content);
+				data = JSON.parseNoPrototype(context.post.content);
 				check(typeof data === "object", 'Root must be object');
 				check(typeof data.players === "object", 'Players must be object');
 				check(typeof data.teams === "object", 'Teams must be object');

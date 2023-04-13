@@ -71,7 +71,7 @@ class JSONDataBase {
 		if (FileSystem.existsSync(this.file)) {
 			let data = FileSystem.readFileSync(this.file).toString();
 			try {
-				this.data = JSON.parse(data);
+				this.data = JSON.parseNoPrototype(data);
 				this.events.emit('load');
 			} catch (err) {
 				this.events.emit('error', err);

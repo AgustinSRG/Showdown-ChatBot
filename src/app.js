@@ -93,7 +93,7 @@ class ChatBotApp {
 
 		if (Object.keys(this.db.data).length === 0 && FileSystem.existsSync(Path.resolve(confDir, 'config.json'))) {
 			try {
-				let oldConfig = JSON.parse(FileSystem.readFileSync(Path.resolve(confDir, 'config.json')).toString());
+				let oldConfig = JSON.parseNoPrototype(FileSystem.readFileSync(Path.resolve(confDir, 'config.json')).toString());
 				this.db.set(oldConfig);
 				this.db.write();
 				console.log("Configuration was encrypted");

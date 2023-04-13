@@ -248,7 +248,7 @@ exports.BattleMovedex = {
 				name: "Doom Desire",
 				basePower: 120,
 				category: "Physical",
-				flags: {},
+				flags: Object.create(null),
 				willCrit: false,
 				type: '???',
 			}, true);
@@ -263,7 +263,7 @@ exports.BattleMovedex = {
 					basePower: 0,
 					damage: damage,
 					category: "Physical",
-					flags: {},
+					flags: Object.create(null),
 					effectType: 'Move',
 					isFutureMove: true,
 					type: '???',
@@ -428,7 +428,7 @@ exports.BattleMovedex = {
 				name: "Future Sight",
 				basePower: 80,
 				category: "Special",
-				flags: {},
+				flags: Object.create(null),
 				willCrit: false,
 				type: '???',
 			}, true);
@@ -443,7 +443,7 @@ exports.BattleMovedex = {
 					basePower: 0,
 					damage: damage,
 					category: "Special",
-					flags: {},
+					flags: Object.create(null),
 					effectType: 'Move',
 					isFutureMove: true,
 					type: '???',
@@ -703,7 +703,7 @@ exports.BattleMovedex = {
 	},
 	spikes: {
 		inherit: true,
-		flags: {},
+		flags: Object.create(null),
 	},
 	spite: {
 		inherit: true,

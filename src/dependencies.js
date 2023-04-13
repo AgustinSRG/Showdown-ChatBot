@@ -43,3 +43,12 @@ Object.createFromKeys = function (keys, value) {
 	for (let key of keys) object[key] = value;
 	return object;
 };
+
+JSON.parseNoPrototype = function (str) {
+	return JSON.parse(str, function (k, v) {
+		if (v && typeof v === 'object' && !Array.isArray(v)) {
+			return Object.assign(Object.create(null), v);
+		}
+		return v;
+	});
+};

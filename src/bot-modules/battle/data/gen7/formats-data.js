@@ -4437,7 +4437,7 @@ exports.BattleFormatsData = {
 		tier: "NU",
 		doublesTier: "(DUU)",
 	},
-	miniormeteor: {},
+	miniormeteor: Object.create(null),
 	komala: {
 		randomBattleMoves: ["return", "suckerpunch", "woodhammer", "earthquake", "playrough", "uturn"],
 		randomDoubleBattleMoves: ["protect", "return", "uturn", "suckerpunch", "woodhammer", "shadowclaw", "playrough", "swordsdance"],
@@ -4470,7 +4470,7 @@ exports.BattleFormatsData = {
 		tier: "UU",
 		doublesTier: "DUU",
 	},
-	mimikyubustedtotem: {},
+	mimikyubustedtotem: Object.create(null),
 	bruxish: {
 		randomBattleMoves: ["psychicfangs", "crunch", "liquidation", "icefang", "aquajet", "swordsdance"],
 		randomDoubleBattleMoves: ["psychicfangs", "crunch", "liquidation", "aquajet", "protect", "swordsdance"],

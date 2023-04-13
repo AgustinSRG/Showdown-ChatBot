@@ -288,7 +288,7 @@ exports.setup = function (App) {
 		switch (spl[1]) {
 			case 'update':
 				try {
-					let data = JSON.parse(spl.slice(2).join("|"));
+					let data = JSON.parseNoPrototype(spl.slice(2).join("|"));
 					for (let i in data) {
 						tourData[room][i] = data[i];
 					}
@@ -298,7 +298,7 @@ exports.setup = function (App) {
 				break;
 			case 'end':
 				try {
-					let data = JSON.parse(spl[2]);
+					let data = JSON.parseNoPrototype(spl[2]);
 					for (let i in data) {
 						tourData[room][i] = data[i];
 					}

@@ -36,9 +36,9 @@ class JSONDataBase {
 		try {
 			let data = this.dam.getFileContent(this.file);
 			try {
-				this.data = JSON.parse(data);
+				this.data = JSON.parseNoPrototype(data);
 			} catch (err) {
-				this.data = JSON.parse(this.dam.getFileContent(this.file, true));
+				this.data = JSON.parseNoPrototype(this.dam.getFileContent(this.file, true));
 			}
 		} catch (err) {
 			this.data = Object.create(null);

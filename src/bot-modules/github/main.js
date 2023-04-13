@@ -12,7 +12,7 @@ exports.setup = function (App) {
 			room: '',
 			port: 3420,
 			secret: '',
-			blacklist: {},
+			blacklist: Object.create(null),
 			enabled: false,
 		};
 	}

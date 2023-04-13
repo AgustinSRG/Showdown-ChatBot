@@ -39,7 +39,7 @@ exports.getShowdownServer = function (url, callback) {
 				data = data.substr(search.length, data.indexOf(';') - search.length);
 				while (typeof data === "string") {
 					try {
-						data = JSON.parse(data);
+						data = JSON.parseNoPrototype(data);
 					} catch (err) {
 						return callback(err);
 					}

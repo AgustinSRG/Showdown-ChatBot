@@ -118,7 +118,7 @@ exports.setup = function (App) {
 				check(room, "You must specify a room");
 				check(Config[room], "Room not found");
 
-				restoredData = JSON.parse(context.post.dtrestored + "");
+				restoredData = JSON.parseNoPrototype(context.post.dtrestored + "");
 
 				check(typeof restoredData === "object" && !!restoredData, "Invalid data provided");
 			} catch (err) {

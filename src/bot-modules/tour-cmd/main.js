@@ -21,9 +21,9 @@ exports.setup = function (App) {
 			autodq: 2,
 			scoutProtect: false,
 			createMessage: '',
-			aliases: {},
-			finalAnnouncement: {},
-			congratsWinner: {},
+			aliases: Object.create(null),
+			finalAnnouncement: Object.create(null),
+			congratsWinner: Object.create(null),
 		};
 	}
 
@@ -137,7 +137,7 @@ exports.setup = function (App) {
 				break;
 			case 'update':
 				try {
-					let data = JSON.parse(spl[2]);
+					let data = JSON.parseNoPrototype(spl[2]);
 					for (let i in data) {
 						tourData[room][i] = data[i];
 					}
@@ -178,7 +178,7 @@ exports.setup = function (App) {
 				break;
 			case 'end':
 				try {
-					let data = JSON.parse(spl[2]);
+					let data = JSON.parseNoPrototype(spl[2]);
 					for (let i in data) {
 						tourData[room][i] = data[i];
 					}

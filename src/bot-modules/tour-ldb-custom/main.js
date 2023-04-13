@@ -502,7 +502,7 @@ exports.setup = function (App) {
 		if (spl[1] === "end") {
 			let data = null;
 			try {
-				data = JSON.parse(spl.slice(2).join("|"));
+				data = JSON.parseNoPrototype(spl.slice(2).join("|"));
 			} catch (e) {
 				App.log("INVALID TOUR DATA: " + spl.slice(2).join("|"));
 			}
@@ -514,7 +514,7 @@ exports.setup = function (App) {
 		switch (spl[1]) {
 			case 'update':
 				try {
-					let data = JSON.parse(spl.slice(2).join("|"));
+					let data = JSON.parseNoPrototype(spl.slice(2).join("|"));
 					for (let i in data) {
 						tourData[room][i] = data[i];
 					}
@@ -524,7 +524,7 @@ exports.setup = function (App) {
 				break;
 			case 'end':
 				try {
-					let data = JSON.parse(spl[2]);
+					let data = JSON.parseNoPrototype(spl[2]);
 					for (let i in data) {
 						tourData[room][i] = data[i];
 					}

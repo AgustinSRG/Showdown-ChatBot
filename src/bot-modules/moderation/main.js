@@ -31,7 +31,7 @@ exports.setup = function (App) {
 			if (!data.modexception) {
 				data.modexception = {
 					global: 'driver',
-					rooms: {},
+					rooms: Object.create(null),
 				};
 			}
 

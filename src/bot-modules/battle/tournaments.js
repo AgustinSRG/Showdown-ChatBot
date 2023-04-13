@@ -159,7 +159,7 @@ exports.setup = function (App) {
 				break;
 			case 'update':
 				try {
-					let data = JSON.parse(spl[2]);
+					let data = JSON.parseNoPrototype(spl[2]);
 					for (let i in data) {
 						tourData[room][i] = data[i];
 					}

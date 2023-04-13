@@ -33,7 +33,7 @@ exports.BattleMovedex = {
 		},
 		beforeTurnCallback: function () {},
 		onTryHit: function () {},
-		effect: {},
+		effect: Object.create(null),
 		priority: -1,
 	},
 	crabhammer: {
@@ -418,7 +418,7 @@ exports.BattleMovedex = {
 	skyattack: {
 		inherit: true,
 		critRatio: 1,
-		secondary: {},
+		secondary: Object.create(null),
 	},
 	slash: {
 		inherit: true,

@@ -51,7 +51,7 @@ module.exports = {
 			"Steel": 0,
 			"Water": 0,
 		},
-		HPivs: {},
+		HPivs: Object.create(null),
 	},
 	"Dragon": {
 		damageTaken: {

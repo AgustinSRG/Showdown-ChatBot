@@ -13,7 +13,7 @@ const checkdir = Tools('checkdir');
 exports.setup = function (App) {
 	if (!App.config.modules.chatlogger) {
 		App.config.modules.chatlogger = {
-			rooms: {},
+			rooms: Object.create(null),
 			logpm: false,
 			maxold: 7,
 		};

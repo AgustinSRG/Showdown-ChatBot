@@ -51,7 +51,7 @@ exports.setup = function (App) {
 					private: !!context.post.private,
 					name: Text.trim(context.post.room).replace(/[\,]/g, ""),
 					intro: "",
-					users: {},
+					users: Object.create(null),
 					authfrom: "",
 				};
 				App.modules.groupchats.system.saveData();

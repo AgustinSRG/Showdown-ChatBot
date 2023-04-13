@@ -22,7 +22,7 @@ exports.setup = function (App, BattleData) {
 				return;
 			}
 			try {
-				this.request = JSON.parse(data);
+				this.request = JSON.parseNoPrototype(data);
 			} catch (err) {
 				return;
 			}

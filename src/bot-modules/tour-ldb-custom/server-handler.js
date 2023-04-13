@@ -116,7 +116,7 @@ exports.setup = function (App) {
 				check(leaderboardsId, "You must specify a leaderboards ID");
 				check(Config[leaderboardsId], "Leaderboards ID not found");
 
-				restoredData = JSON.parse(context.post.dtrestored + "");
+				restoredData = JSON.parseNoPrototype(context.post.dtrestored + "");
 
 				check(typeof restoredData === "object" && !!restoredData, "Invalid data provided");
 			} catch (err) {

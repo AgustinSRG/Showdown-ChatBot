@@ -694,7 +694,7 @@ exports.setup = function (App, CustomModules) {
 					level: target.level,
 					gender: target.gender,
 					shiny: target.shiny,
-					evs: {},
+					evs: Object.create(null),
 				});
 				poke.hp = target.hp;
 				poke.status = target.status;

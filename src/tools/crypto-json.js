@@ -120,7 +120,7 @@ class JSONDataBase {
 			let data = FileSystem.readFileSync(this.file).toString();
 			data = decrypt(data, this.algo, this.password);
 			try {
-				this.data = JSON.parse(data);
+				this.data = JSON.parseNoPrototype(data);
 				this.events.emit('load');
 			} catch (err) {
 				this.events.emit('error', err);

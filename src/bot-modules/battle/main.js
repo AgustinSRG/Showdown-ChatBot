@@ -15,7 +15,7 @@ exports.setup = function (App) {
 			winmsg: ['GG', 'g_g'],
 			losemsg: ['gg', 'wp'],
 			ladderBattles: 1,
-			joinTours: {},
+			joinTours: Object.create(null),
 			ignoreAbandonedbattles: false,
 			maxTurns: 0,
 		};

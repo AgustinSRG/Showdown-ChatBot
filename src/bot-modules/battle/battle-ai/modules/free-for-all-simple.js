@@ -174,8 +174,8 @@ exports.setup = function (Data) {
 		if (Text.toId(battle.tier || "").indexOf("challengecup") >= 0) pokeA.happiness = 100;
 		let conditionsA = new Conditions({
 			side: battle.self.side,
-			volatiles: {},
-			boosts: {},
+			volatiles: Object.create(null),
+			boosts: Object.create(null),
 		});
 		for (let i = 0; i < p.moves.length; i++) {
 			let move = Data.getMove(p.moves[i], battle.gen);

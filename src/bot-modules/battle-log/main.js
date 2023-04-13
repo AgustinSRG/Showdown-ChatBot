@@ -201,7 +201,7 @@ exports.setup = function (App) {
 				let msg;
 
 				try {
-					msg = JSON.parse(data);
+					msg = JSON.parseNoPrototype(data);
 				} catch (ex) {
 					return; // Invalid JSON
 				}

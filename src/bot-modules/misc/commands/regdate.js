@@ -89,7 +89,7 @@ module.exports = {
 					return this.pmReply(this.mlt('err') + " " + url);
 				}
 				try {
-					data = JSON.parse(data);
+					data = JSON.parseNoPrototype(data);
 				} catch (error) {
 					return this.pmReply(this.mlt('err') + " " + url);
 				}
@@ -149,7 +149,7 @@ module.exports = {
 					return this.pmReply(this.mlt('err') + " " + url);
 				}
 				try {
-					data = JSON.parse(data);
+					data = JSON.parseNoPrototype(data);
 				} catch (error) {
 					return this.pmReply(this.mlt('err') + " " + url);
 				}
@@ -215,7 +215,7 @@ module.exports = {
 					return this.pmReply(this.mlt('err') + " " + url);
 				}
 				try {
-					data = JSON.parse(data);
+					data = JSON.parseNoPrototype(data);
 				} catch (error) {
 					return this.pmReply(this.mlt('err') + " " + url);
 				}

@@ -142,9 +142,14 @@ class DataManager {
 			let startIndex = fileData.indexOf("{");
 			fileData = fileData.substr(startIndex - 1).trim();
 			fileData = fileData.substr(0, fileData.length - 1);
-			data = JSON5.parse(fileData);
+			data = JSON5.parse(fileData, function (k, v) {
+				if (v && typeof v === 'object' && !Array.isArray(v)) {
+					return Object.assign(Object.create(null), v);
+				}
+				return v;
+			});
 		} else {
-			data = JSON.parse(FileSystem.readFileSync(Path.resolve(this.path, file)).toString());
+			data = JSON.parseNoPrototype(FileSystem.readFileSync(Path.resolve(this.path, file)).toString());
 		}
 
 		Data_Cache.set(file, data);

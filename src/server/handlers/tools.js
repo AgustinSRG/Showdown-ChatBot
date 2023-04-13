@@ -364,7 +364,7 @@ exports.setup = function (App) {
 					}
 					if (!error) {
 						try {
-							backup = JSON.parse(backup);
+							backup = JSON.parseNoPrototype(backup);
 							if (typeof backup !== "object" || typeof backup.signature !== "string") {
 								throw new Error("Invalid backup.");
 							}

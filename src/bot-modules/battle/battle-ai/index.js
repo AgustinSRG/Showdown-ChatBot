@@ -16,7 +16,7 @@ exports.setup = function (App) {
 		if (spl[0] === "updatesearch" && !App.config.modules.battle.ignoreAbandonedbattles) {
 			let searchData = spl.slice(1);
 			try {
-				searchData = JSON.parse(searchData);
+				searchData = JSON.parseNoPrototype(searchData);
 				if (searchData !== null && typeof searchData === "object" && searchData.games !== null && typeof searchData.games === "object") {
 					App.bot.joinRooms(Object.keys(searchData.games));
 				}
@@ -27,7 +27,7 @@ exports.setup = function (App) {
 	});
 
 	return {
-		battles: {},
+		battles: Object.create(null),
 		battlesCount: 0,
 		interval: null,
 		customModules: CustomModules,

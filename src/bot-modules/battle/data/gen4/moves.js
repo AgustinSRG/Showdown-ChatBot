@@ -53,7 +53,7 @@ exports.BattleMovedex = {
 	},
 	aquaring: {
 		inherit: true,
-		flags: {},
+		flags: Object.create(null),
 	},
 	beatup: {
 		inherit: true,
@@ -180,7 +180,7 @@ exports.BattleMovedex = {
 	},
 	conversion: {
 		inherit: true,
-		flags: {},
+		flags: Object.create(null),
 	},
 	copycat: {
 		inherit: true,
@@ -318,7 +318,7 @@ exports.BattleMovedex = {
 				name: "Doom Desire",
 				basePower: 120,
 				category: "Special",
-				flags: {},
+				flags: Object.create(null),
 				willCrit: false,
 				type: '???',
 			}, true);
@@ -333,7 +333,7 @@ exports.BattleMovedex = {
 					basePower: 0,
 					damage: damage,
 					category: "Special",
-					flags: {},
+					flags: Object.create(null),
 					effectType: 'Move',
 					isFutureMove: true,
 					type: '???',
@@ -517,7 +517,7 @@ exports.BattleMovedex = {
 				name: "Future Sight",
 				basePower: 80,
 				category: "Special",
-				flags: {},
+				flags: Object.create(null),
 				willCrit: false,
 				type: '???',
 			}, true);
@@ -532,7 +532,7 @@ exports.BattleMovedex = {
 					basePower: 0,
 					damage: damage,
 					category: "Special",
-					flags: {},
+					flags: Object.create(null),
 					effectType: 'Move',
 					isFutureMove: true,
 					type: '???',
@@ -749,7 +749,7 @@ exports.BattleMovedex = {
 	},
 	luckychant: {
 		inherit: true,
-		flags: {},
+		flags: Object.create(null),
 	},
 	lunardance: {
 		inherit: true,
@@ -943,7 +943,7 @@ exports.BattleMovedex = {
 	},
 	powertrick: {
 		inherit: true,
-		flags: {},
+		flags: Object.create(null),
 	},
 	protect: {
 		inherit: true,
@@ -974,7 +974,7 @@ exports.BattleMovedex = {
 	},
 	recycle: {
 		inherit: true,
-		flags: {},
+		flags: Object.create(null),
 	},
 	reversal: {
 		inherit: true,
@@ -1066,7 +1066,7 @@ exports.BattleMovedex = {
 	},
 	spikes: {
 		inherit: true,
-		flags: {},
+		flags: Object.create(null),
 	},
 	spite: {
 		inherit: true,
@@ -1074,7 +1074,7 @@ exports.BattleMovedex = {
 	},
 	stealthrock: {
 		inherit: true,
-		flags: {},
+		flags: Object.create(null),
 	},
 	struggle: {
 		inherit: true,
@@ -1189,7 +1189,7 @@ exports.BattleMovedex = {
 	},
 	toxicspikes: {
 		inherit: true,
-		flags: {},
+		flags: Object.create(null),
 		effect: {
 			// this is a side condition
 			onStart: function (side) {

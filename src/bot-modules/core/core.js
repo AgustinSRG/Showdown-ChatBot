@@ -100,7 +100,7 @@ function setup(App) {
 		CoreMod.waitingQueryResponse = false;
 		data = data.join("|");
 		try {
-			data = JSON.parse(data);
+			data = JSON.parseNoPrototype(data);
 			if (typeof data !== "object" || data === null) {
 				App.logToConsole("Parse Failure (queryresponse): " + JSON.stringify(data));
 				runFirstLogin();

@@ -15,8 +15,8 @@ exports.setup = function (App) {
 
 	return {
 		tools: Teams,
-		teams: {},
-		dynTeams: {},
+		teams: Object.create(null),
+		dynTeams: Object.create(null),
 
 		loadTeamList: function () {
 			this.dynTeams = teamsDataBase.data;

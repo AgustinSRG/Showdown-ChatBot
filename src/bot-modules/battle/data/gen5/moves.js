@@ -278,7 +278,7 @@ exports.BattleMovedex = {
 					name: "Future Sight",
 					basePower: 100,
 					category: "Special",
-					flags: {},
+					flags: Object.create(null),
 					ignoreImmunity: false,
 					type: 'Psychic',
 				},
@@ -574,7 +574,7 @@ exports.BattleMovedex = {
 		name: "Mud Sport",
 		pp: 15,
 		priority: 0,
-		flags: {},
+		flags: Object.create(null),
 		volatileStatus: 'mudsport',
 		onTryHitField: function (target, source) {
 			if (source.volatiles['mudsport']) return false;
@@ -692,7 +692,7 @@ exports.BattleMovedex = {
 		name: "Rage Powder",
 		pp: 20,
 		priority: 3,
-		flags: {},
+		flags: Object.create(null),
 		volatileStatus: 'followme',
 		secondary: false,
 		target: "self",
@@ -978,7 +978,7 @@ exports.BattleMovedex = {
 		name: "Water Sport",
 		pp: 15,
 		priority: 0,
-		flags: {},
+		flags: Object.create(null),
 		volatileStatus: 'watersport',
 		onTryHitField: function (target, source) {
 			if (source.volatiles['watersport']) return false;
