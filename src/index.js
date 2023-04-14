@@ -3,7 +3,7 @@
  * A Pokemon Showdown Bot written in ES6 for Node JS
  *
  * Showdown ChatBot is distributed under the terms of the MIT License
- * (https://github.com/asanrom/Showdown-ChatBot/blob/master/LICENSE)
+ * (https://github.com/AgustinSRG/Showdown-ChatBot/blob/master/LICENSE)
  */
 
 'use strict';

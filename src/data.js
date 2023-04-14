@@ -1,7 +1,7 @@
 /**
  * Pokemon Showdown Bot Data Manager
  * Showdown ChatBot is distributed under the terms of the MIT License
- * (https://github.com/asanrom/Showdown-ChatBot/blob/master/LICENSE)
+ * (https://github.com/AgustinSRG/Showdown-ChatBot/blob/master/LICENSE)
  *
  * This tool downloads data of pokemon, moves, items, etc
  * from Pokemon Showdown! website and repository

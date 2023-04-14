@@ -1,7 +1,7 @@
 /**
  * Showdown ChatBot Control Panel Server
  * Showdown ChatBot is distributed under the terms of the MIT License
- * (https://github.com/asanrom/Showdown-ChatBot/blob/master/LICENSE)
+ * (https://github.com/AgustinSRG/Showdown-ChatBot/blob/master/LICENSE)
  *
  * This file handles with the control pannel,
  * the main method to configure the bot and accesing

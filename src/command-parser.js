@@ -1,7 +1,7 @@
 /**
  * Command Parser for Showdown ChatBot
  * Showdown ChatBot is distributed under the terms of the MIT License
- * (https://github.com/asanrom/Showdown-ChatBot/blob/master/LICENSE)
+ * (https://github.com/AgustinSRG/Showdown-ChatBot/blob/master/LICENSE)
  *
  * This file handles with bot commands, the main
  * ineteraction system between the bot and
@@ -70,7 +70,7 @@ class CommandParser {
 		/* Dynamic Commands */
 		if (!this.data.dyncmds) this.data.dyncmds = Object.create(null);
 		if (Object.keys(this.data.dyncmds).length === 0) {
-			this.data.dyncmds['help'] = 'https://github.com/asanrom/Showdown-ChatBot/wiki/Commands-List';
+			this.data.dyncmds['help'] = 'https://github.com/AgustinSRG/Showdown-ChatBot/wiki/Commands-List';
 		}
 
 		/* Permissions */

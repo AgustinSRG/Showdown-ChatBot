@@ -4,7 +4,7 @@
   "author": {
     "name": "Agustin San Roman",
     "email": "agustinsanromanguzman@gmail.com",
-    "url": "https://github.com/asanrom"
+    "url": "https://github.com/AgustinSRG"
   },
   "scripts": {
     "start": "node run-forever",
@@ -27,10 +27,10 @@
     "mysql": "2.18.1"
   },
   "description": "Bot for Pokemon Showdown",
-  "homepage": "https://github.com/asanrom/Showdown-ChatBot",
+  "homepage": "https://github.com/AgustinSRG/Showdown-ChatBot",
   "repository": {
     "type": "git",
-    "url": "https://github.com/asanrom/Showdown-ChatBot.git"
+    "url": "https://github.com/AgustinSRG/Showdown-ChatBot.git"
   },
   "private": true,
   "license": "MIT",

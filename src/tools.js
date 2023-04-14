@@ -1,7 +1,7 @@
 /**
  * Showdown ChatBot Tools manager
  * Showdown ChatBot is distributed under the terms of the MIT License
- * (https://github.com/asanrom/Showdown-ChatBot/blob/master/LICENSE)
+ * (https://github.com/AgustinSRG/Showdown-ChatBot/blob/master/LICENSE)
  *
  * Intended for making a global to provide
  * tools stored in a unique directory without

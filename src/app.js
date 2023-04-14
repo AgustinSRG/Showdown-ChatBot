@@ -1,7 +1,7 @@
 /**
  * Showdown ChatBot Application
  * Showdown ChatBot is distributed under the terms of the MIT License
- * (https://github.com/asanrom/Showdown-ChatBot/blob/master/LICENSE)
+ * (https://github.com/AgustinSRG/Showdown-ChatBot/blob/master/LICENSE)
  *
  * This file loads the server, bot, modules, commands, etc
  * to generate the Showdown-ChatBot application
