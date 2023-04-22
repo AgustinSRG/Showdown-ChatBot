@@ -11,6 +11,8 @@ const TypeChart = require(Path.resolve(__dirname, '..', 'typechart.js'));
 const Pokemon = Calc.Pokemon;
 const Conditions = Calc.Conditions;
 
+const TargetsDirectHit = { "normal": 1, "allAdjacentFoes": 1, "allAdjacent": 1, "all": 1, "any": 1, "scripted": 1, "randomNormal": 1, "adjacentFoe": 1 };
+
 const SkillSwapFails = new Set(["Wonder Guard", "Multitype", "Illusion", "Stance Change", "Schooling", "Comatose", "Shields Down", "Disguise", "RKS System", "Battle Bond", "Power Construct", "Ice Face", "Gulp Missile", "Neutralizing Gas"].map(a => Text.toId(a)));
 const EntrainmentFails = new Set(["Truant", "Multitype", "Stance Change", "Schooling", "Comatose", "Shields Down", "Disguise", "RKS System", "Battle Bond", "Ice Face", "Gulp Missile"].map(a => Text.toId(a)));
 
@@ -296,17 +298,23 @@ exports.setup = function (Data) {
 					res.unviable.push(decisions[i]);
 					continue;
 				}
-				if (move.target !== "self" && battle.gen >= 7 && pokeA.ability && !pokeAIgnoredAbility && pokeA.ability.id === "prankster" && defTypes.indexOf("Dark") >= 0) {
+				if (pokeB.isGrounded() || conditionsB.volatiles['smackdown'] || battle.conditions['gravity']) {
+					if (move.target in TargetsDirectHit && battle.conditions["psychicterrain"] && (move.priority > 0 || (pokeA.ability && !pokeAIgnoredAbility && pokeA.ability.id === "prankster"))) {
+						res.unviable.push(decisions[i]);
+						continue;
+					}
+				}
+				if (move.target in TargetsDirectHit && battle.gen >= 7 && pokeA.ability && !pokeAIgnoredAbility && pokeA.ability.id === "prankster" && defTypes.indexOf("Dark") >= 0) {
 					res.unviable.push(decisions[i]);
 					continue;
 				}
-				if (conditionsB.volatiles["substitute"] && move.target !== "self" && move.target !== "allySide" && move.target !== "foeSide" && move.target !== "allyTeam") {
+				if (conditionsB.volatiles["substitute"] && move.target in TargetsDirectHit) {
 					if (!move.flags || !move.flags['authentic']) {
 						res.unviable.push(decisions[i]);
 						continue;
 					}
 				}
-				if (pokeB.ability && !pokeBIgnoredAbility && pokeB.ability.id === "goodasgold" && move.target !== "self" && move.target !== "allySide" && move.target !== "foeSide" && move.target !== "allyTeam") {
+				if (pokeB.ability && !pokeBIgnoredAbility && pokeB.ability.id === "goodasgold" && move.target in TargetsDirectHit) {
 					res.unviable.push(decisions[i]);
 					continue;
 				}
@@ -638,7 +646,7 @@ exports.setup = function (Data) {
 					}
 					continue;
 			}
-			if (move.target !== "self" && move.target !== "allySide" && move.target !== "allyTeam" && move.target !== "foeSide" && move.ignoreImmunity === false) {
+			if (move.target in TargetsDirectHit && move.ignoreImmunity === false) {
 				let mvCat = move.category;
 				let mvBp = move.basePower;
 				move.basePower = 50;
