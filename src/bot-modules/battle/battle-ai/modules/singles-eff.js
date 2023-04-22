@@ -289,6 +289,46 @@ exports.setup = function (Data) {
 				continue;
 			}
 
+			if (move.id in { 'mirrorcoat': 1, 'counter': 1, 'metalburst': 1, 'comeuppance': 1 }) {
+				let mvBp = move.basePower;
+				move.basePower = 50;
+				if (Calc.calculate(pokeA, pokeB, move, conditionsA, conditionsB, battle.conditions, battle.gen).getMax() === 0) {
+					move.basePower = mvBp;
+					res.unviable.push(decisions[i]);
+					continue;
+				}
+
+				let requiredCategories;
+
+				switch (move.id) {
+					case "mirrorcoat":
+						requiredCategories = { 'Special': 1 };
+						break;
+					case "counter":
+						requiredCategories = { 'Physical': 1 };
+						break;
+					default:
+						requiredCategories = { 'Physical': 1, 'Special': 1 };
+				}
+
+				let counterMoveViable = false;
+
+				for (let move of battle.foe.active[0].moves) {
+					if (!move.disabled && move.pp > 0 && move.template.category in requiredCategories) {
+						counterMoveViable = true;
+						break;
+					}
+				}
+
+				if (counterMoveViable) {
+					res.viable.push(decisions[i]);
+				} else {
+					res.unviable.push(decisions[i]);
+				}
+
+				continue;
+			}
+
 			const pokeAIgnoredAbility = battle.gen < 3 || pokeA.supressedAbility || ((battle.conditions["magicroom"] || conditionsA.volatiles["embargo"] || !pokeA.item || pokeA.item.id !== "abilityshield") && (battle.conditions["neutralizinggas"]));
 			const pokeBIgnoredAbility = battle.gen < 3 || pokeB.supressedAbility || ((battle.conditions["magicroom"] || conditionsB.volatiles["embargo"] || !pokeB.item || pokeB.item.id !== "abilityshield") && (battle.conditions["neutralizinggas"] || move.ignoreAbility || (pokeA.ability && !pokeAIgnoredAbility && (pokeA.ability.id in { "moldbreaker": 1, "turboblaze": 1, "teravolt": 1, "myceliummight": 1 }))));
 
