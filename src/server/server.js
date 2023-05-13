@@ -797,6 +797,7 @@ class RequestContext {
 				}
 				if (busboy) {
 					let stream = new Stream.PassThrough();
+					stream.on("error", function () {}); // Ignore errors from this stream
 					let files = this.files = Object.create(null);
 					let post = this.post = Object.create(null);
 					busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
