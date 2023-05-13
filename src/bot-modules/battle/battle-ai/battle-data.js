@@ -71,7 +71,7 @@ exports.setup = function (App) {
 			temp = App.data.getPokedex()[poke];
 			for (let i in temp) pokemon[i] = temp[i];
 		} catch (e) { }
-		for (let i = 7; i >= gen; i--) {
+		for (let i = 8; i >= gen; i--) {
 			try {
 				temp = require(Path.resolve(BAT_DATA_DIR, "gen" + i, "pokedex.js")).BattlePokedex[poke];
 				if (!temp) continue;
@@ -176,7 +176,7 @@ exports.setup = function (App) {
 			temp = App.data.getMoves()[move];
 			for (let i in temp) moveData[i] = temp[i];
 		} catch (e) { }
-		for (let i = 7; i >= gen; i--) {
+		for (let i = 8; i >= gen; i--) {
 			try {
 				temp = require(Path.resolve(BAT_DATA_DIR, "gen" + i, "moves.js")).BattleMovedex[move];
 				if (!temp) continue;
@@ -224,7 +224,7 @@ exports.setup = function (App) {
 			temp = App.data.getItems()[item];
 			for (let i in temp) itemData[i] = temp[i];
 		} catch (e) { }
-		for (let i = 7; i >= gen; i--) {
+		for (let i = 8; i >= gen; i--) {
 			try {
 				temp = require(Path.resolve(BAT_DATA_DIR, "gen" + i, "items.js")).BattleItems[item];
 				if (!temp) continue;
@@ -265,7 +265,7 @@ exports.setup = function (App) {
 			temp = App.data.getAbilities()[ab];
 			for (let i in temp) ability[i] = temp[i];
 		} catch (e) { }
-		for (let i = 7; i >= gen; i--) {
+		for (let i = 8; i >= gen; i--) {
 			try {
 				temp = require(Path.resolve(BAT_DATA_DIR, "gen" + i, "abilities.js")).BattleAbilities[ab];
 				if (!temp) continue;
