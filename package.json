@@ -1,6 +1,6 @@
 {
   "name": "showdown-chatbot",
-  "version": "2.8.4",
+  "version": "2.8.5",
   "author": {
     "name": "Agustin San Roman",
     "email": "agustinsanromanguzman@gmail.com",
@@ -35,6 +35,6 @@
   "private": true,
   "license": "MIT",
   "devDependencies": {
-    "eslint": "8.41.0"
+    "eslint": "8.43.0"
   }
 }
