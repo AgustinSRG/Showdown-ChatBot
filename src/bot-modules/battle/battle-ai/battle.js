@@ -720,6 +720,10 @@ exports.setup = function (App, CustomModules) {
 				return;
 			}
 
+			if (!this.request) {
+				return;
+			}
+
 			const move = BattleData.getMove(poke.helpers.lastReceivedMove, this.gen);
 			const poke2 = poke.helpers.lastReceivedMoveOrigin;
 			const player2 = this.players[poke.helpers.lastReceivedMoveSide];
