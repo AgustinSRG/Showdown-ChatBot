@@ -352,7 +352,7 @@ exports.setup = function (App) {
 				return;
 			}
 
-			const maxTableLength = 100;
+			const maxTableLength = 10;
 
 			let config = App.config.modules.tourldbcustom[leaderboardsId];
 
