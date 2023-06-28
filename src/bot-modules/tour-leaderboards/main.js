@@ -80,7 +80,11 @@ exports.setup = function (App) {
 			if (!ladder[room]) return [];
 			let top = [];
 			let rank = 0;
+			let bannedUsers = new Set((config.banned || "").split(",").map(Text.toId).filter(a => !!a));
 			for (let u in ladder[room]) {
+				if (bannedUsers.has(u)) {
+					continue;
+				}
 				rank = (points.winner * ladder[room][u][1]) + (points.finalist * ladder[room][u][2]) +
 					(points.semifinalist * ladder[room][u][3]) + (points.battle * ladder[room][u][4]);
 				if (config.useratio) {

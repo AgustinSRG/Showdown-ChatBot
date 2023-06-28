@@ -122,6 +122,51 @@ module.exports = {
 					this.reply(this.mlt(47) + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId) + ": " + Chat.code(title));
 				}
 				break;
+			case "auto":
+				{
+					if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
+
+					if (this.args.length < 3) {
+						return this.errorReply(this.usage({ desc: "auto" }, { desc: this.mlt('table') }, { desc: "on/off" }));
+					}
+
+					let leaderboardsId = Mod.findAlias(Text.toId(this.args[1]));
+
+					if (!leaderboardsId) {
+						return this.errorReply(this.usage({ desc: "auto" }, { desc: this.mlt('table') }, { desc: "on/off" }));
+					}
+
+					if (!Config[leaderboardsId]) {
+						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
+					}
+
+					switch (Text.toId(this.args[2])) {
+						case "on":
+						case "true":
+						case "yes":
+						case "1":
+							Config[leaderboardsId].automated = true;
+							break;
+						case "off":
+						case "false":
+						case "no":
+						case "0":
+							Config[leaderboardsId].automated = false;
+							break;
+						default:
+							return this.errorReply(this.usage({ desc: "auto" }, { desc: this.mlt('table') }, { desc: "on/off" }));
+					}
+
+					App.db.write();
+					this.addToSecurityLog();
+
+					if (Config[leaderboardsId].automated) {
+						this.reply(this.mlt(51) + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId));
+					} else {
+						this.reply(this.mlt(52) + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId));
+					}
+				}
+				break;
 			case "desc":
 			case "description":
 				{
@@ -311,6 +356,10 @@ module.exports = {
 							" " + this.mlt(6) + ", " + Config[tableId].semifinalist + " " + this.mlt(7) + ".";
 
 						text += "\n    " + this.mlt(31) + ": " + (Config[tableId].cleanPoint || "-");
+
+						if (Config[tableId].automated) {
+							text += "\n    " + this.mlt(53);
+						}
 
 						text += "\n";
 					}
@@ -809,7 +858,7 @@ module.exports = {
 				}
 				break;
 			default:
-				return this.errorReply(this.usage({ desc: 'create | set-room | title | description | add-alias | rm-alias | config | list | rename | info | reset | remove | recent-tours | apply | undo | official | unofficial | extra-points | rank | top | top5 | top100' }));
+				return this.errorReply(this.usage({ desc: 'create | set-room | title | description | add-alias | rm-alias | config | auto | list | rename | info | reset | remove | recent-tours | apply | undo | official | unofficial | extra-points | rank | top | top5 | top100' }));
 		}
 	},
 

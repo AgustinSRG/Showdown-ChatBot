@@ -86,6 +86,11 @@ $48 = Description changed for table
 $49 = Alias created for table
 $50 = Alias removed for table
 
+$51 = Tournaments will be automatically counted as official for table
+$52 = Tournaments may be manually set as official for table
+
+$53 = Automated mode enabled
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
@@ -169,3 +174,7 @@ $48 = Descripción cambiada para la tabla
 
 $49 = Creado un alias para la tabla
 $50 = Eliminado un alias para la tabla
+
+$51 = Los torneos serán contados automáticamente como oficiales para la tabla
+$52 = Los torneos debe ser manualmente configurados como oficiales para que cuenten en la tabla
+$53 = Modo automático activado

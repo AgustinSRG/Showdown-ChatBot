@@ -9,7 +9,7 @@ $in = in
 
 $0 = Leaderboards are not enabled for room
 $1 = Invalid username
-$2 = Ranking of
+$2 = Ranking (Historical) of
 $3 = Points
 $4 = Tours Won
 $5 = Finalist
@@ -40,7 +40,7 @@ $22 = per won battle
 $23 = Only official tours are rated
 $24 = The battle/tour ratio is used in order to calculate the score
 
-$25 = Tournament leaderboard
+$25 = Tournament leaderboards
 
 $26 = Tours played
 $27 = Battles won
@@ -48,7 +48,7 @@ $27 = Battles won
 $28 = Last reset
 $29 = Full table
 
-$30 = Sucessfully reset leaderboards data for room
+$30 = Successfully reset leaderboards data for room
 $31 = Data backup
 
 %spanish
@@ -58,7 +58,7 @@ $in = en
 
 $0 = El sistema de clasificaciones de torneos no está activado en la sala
 $1 = Nombre de usuario no válido
-$2 = Ranking de
+$2 = Ranking histórico de
 $3 = Puntos
 $4 = Torneos ganados
 $5 = Finalista

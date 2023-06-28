@@ -43,6 +43,36 @@ module.exports = {
 	rank: "toursrank",
 	toursrank: function (App) {
 		this.setLangFile(Lang_File);
+		let user = Text.toId(this.args[0]) || this.byIdent.id;
+		let room = this.parseRoomAliases(Text.toRoomid(this.args[1])) || this.room;
+		if (!user || !room) {
+			return this.errorReply(this.usage({ desc: this.usageTrans('user'), optional: true }, { desc: this.usageTrans('room'), optional: true }));
+		}
+
+		if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom) {
+			const customConfig = App.config.modules.tourldbcustom;
+			const Mod = App.modules.tourldbcustom.system;
+			const tableId = Mod.findAlias(Text.toId(room));
+
+			if (customConfig[tableId] && (this.args[1] || customConfig[tableId].room === this.room)) {
+				// Custom table found
+				this.cmd = 'tourldbcustom';
+				this.arg = "rank" + ", " + tableId + "," + user;
+				this.args = ["rank", tableId, user];
+				this.parser.exec(this);
+			} else {
+				this.cmd = 'toursrankh';
+				this.parser.exec(this);
+			}
+		} else {
+			this.cmd = 'toursrankh';
+			this.parser.exec(this);
+		}
+	},
+
+	rankh: "toursrankh",
+	toursrankh: function (App) {
+		this.setLangFile(Lang_File);
 		const Config = App.config.modules.tourleaderboards;
 		let mod = App.modules.tourleaderboards.system;
 		let user = Text.toId(this.args[0]) || this.byIdent.id;
@@ -50,18 +80,11 @@ module.exports = {
 		if (!user || !room) {
 			return this.errorReply(this.usage({ desc: this.usageTrans('user'), optional: true }, { desc: this.usageTrans('room'), optional: true }));
 		}
+
 		if (!Config[room]) {
-			const tableId = Text.toId(room);
-			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom) {
-				this.cmd = 'tourldbcustom';
-				this.arg = "rank" + ", " + tableId + "," + user;
-				this.args = ["rank", tableId, user];
-				this.parser.exec(this);
-				return;
-			} else {
-				return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
-			}
+			return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
 		}
+
 		if (user.length > 19) {
 			return this.errorReply(this.mlt(1));
 		}
@@ -78,24 +101,49 @@ module.exports = {
 
 	top: function (App) {
 		this.setLangFile(Lang_File);
-		const Config = App.config.modules.tourleaderboards;
-		let mod = App.modules.tourleaderboards.system;
-		let room = this.parseRoomAliases(Text.toRoomid(this.arg)) || this.room;
+		let room = this.parseRoomAliases(Text.toRoomid(this.args[0])) || this.room;
 		if (!room) {
 			return this.errorReply(this.usage({ desc: this.usageTrans('room') }));
 		}
-		if (!Config[room]) {
-			const tableId = Text.toId(room);
-			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom) {
+
+		if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom) {
+			const customConfig = App.config.modules.tourldbcustom;
+			const Mod = App.modules.tourldbcustom.system;
+			const tableId = Mod.findAlias(Text.toId(room));
+
+			if (customConfig[tableId] && (this.arg || customConfig[tableId].room === this.room)) {
+				// Custom table found
 				this.cmd = 'tourldbcustom';
 				this.arg = "top" + ", " + tableId;
 				this.args = ["top", tableId];
 				this.parser.exec(this);
-				return;
 			} else {
-				return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
+				this.cmd = 'toph';
+				this.arg = room;
+				this.args = [room];
+				this.parser.exec(this);
 			}
+		} else {
+			this.cmd = 'toph';
+			this.arg = room;
+			this.args = [room];
+			this.parser.exec(this);
 		}
+	},
+
+	toph: function (App) {
+		this.setLangFile(Lang_File);
+		const Config = App.config.modules.tourleaderboards;
+		let mod = App.modules.tourleaderboards.system;
+		let room = this.parseRoomAliases(Text.toRoomid(this.args[0])) || this.room;
+		if (!room) {
+			return this.errorReply(this.usage({ desc: this.usageTrans('room') }));
+		}
+
+		if (!Config[room]) {
+			return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
+		}
+
 		let top = mod.getTop(room);
 		if (!top || !top.length) {
 			return this.restrictReply(this.mlt(10) + " " + Chat.italics(room) + " " + this.mlt(11), "rank");
@@ -188,23 +236,48 @@ module.exports = {
 
 	top5: function (App) {
 		this.setLangFile(Lang_File);
+		let room = this.parseRoomAliases(Text.toRoomid(this.arg)) || this.room;
+		if (!room) {
+			return this.errorReply(this.usage({ desc: this.usageTrans('room') }));
+		}
+
+		if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom) {
+			const customConfig = App.config.modules.tourldbcustom;
+			const Mod = App.modules.tourldbcustom.system;
+			const tableId = Mod.findAlias(Text.toId(room));
+
+			if (customConfig[tableId] && (this.arg || customConfig[tableId].room === this.room)) {
+				// Custom table found
+				this.cmd = 'tourldbcustom';
+				this.arg = "top5" + ", " + tableId;
+				this.args = ["top5", tableId];
+				this.parser.exec(this);
+			} else {
+				this.cmd = 'toph5';
+				this.arg = room;
+				this.args = [room];
+				this.parser.exec(this);
+			}
+		} else {
+			this.cmd = 'toph5';
+			this.arg = room;
+			this.args = [room];
+			this.parser.exec(this);
+		}
+	},
+
+	top5h: "toph5",
+	toph5: function (App) {
+		this.setLangFile(Lang_File);
 		const Config = App.config.modules.tourleaderboards;
 		let mod = App.modules.tourleaderboards.system;
 		let room = this.parseRoomAliases(Text.toRoomid(this.arg)) || this.room;
 		if (!room) {
 			return this.errorReply(this.usage({ desc: this.usageTrans('room') }));
 		}
+
 		if (!Config[room]) {
-			const tableId = Text.toId(room);
-			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom) {
-				this.cmd = 'tourldbcustom';
-				this.arg = "top5" + ", " + tableId;
-				this.args = ["top5", tableId];
-				this.parser.exec(this);
-				return;
-			} else {
-				return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
-			}
+			return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
 		}
 		let top = mod.getTop(room);
 		if (!top || !top.length) {
@@ -235,23 +308,48 @@ module.exports = {
 
 	toursrankconfig: function (App) {
 		this.setLangFile(Lang_File);
+		let room = this.parseRoomAliases(Text.toRoomid(this.arg)) || this.room;
+		if (!room) {
+			return this.errorReply(this.usage({ desc: this.usageTrans('room') }));
+		}
+
+		if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom) {
+			const customConfig = App.config.modules.tourldbcustom;
+			const Mod = App.modules.tourldbcustom.system;
+			const tableId = Mod.findAlias(Text.toId(room));
+
+			if (customConfig[tableId] && (this.arg || customConfig[tableId].room === this.room)) {
+				// Custom table found
+				this.cmd = 'tourldbcustom';
+				this.arg = "info" + ", " + tableId;
+				this.args = ["info", tableId];
+				this.parser.exec(this);
+			} else {
+				this.cmd = 'toursrankconfigh';
+				this.arg = room;
+				this.args = [room];
+				this.parser.exec(this);
+			}
+		} else {
+			this.cmd = 'toursrankconfigh';
+			this.arg = room;
+			this.args = [room];
+			this.parser.exec(this);
+		}
+	},
+
+	toursrankconfigh: function (App) {
+		this.setLangFile(Lang_File);
 		const Config = App.config.modules.tourleaderboards;
 		let room = this.parseRoomAliases(Text.toRoomid(this.arg)) || this.room;
 		if (!room) {
 			return this.errorReply(this.usage({ desc: this.usageTrans('room') }));
 		}
+
 		if (!Config[room]) {
-			const tableId = Text.toId(room);
-			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom) {
-				this.cmd = 'tourldbcustom';
-				this.arg = "info" + ", " + tableId;
-				this.args = ["info", tableId];
-				this.parser.exec(this);
-				return;
-			} else {
-				return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
-			}
+			return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
 		}
+
 		this.restrictReply(this.mlt(18) + " " + Chat.italics(this.parser.getRoomTitle(room)) + ": " +
 			Chat.bold(Config[room].winner) + " " + this.mlt(19) + ", " + Chat.bold(Config[room].finalist) +
 			" " + this.mlt(20) + ", " + Chat.bold(Config[room].semifinalist) + " " + this.mlt(21) +
@@ -387,6 +485,40 @@ module.exports = {
 	top100: "tourleaderboards",
 	tourleaderboards: function (App) {
 		this.setLangFile(Lang_File);
+		let room = this.parseRoomAliases(Text.toRoomid(this.arg)) || this.room;
+		if (!room) {
+			return this.errorReply(this.usage({ desc: this.usageTrans('room') }));
+		}
+
+		if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom) {
+			const customConfig = App.config.modules.tourldbcustom;
+			const Mod = App.modules.tourldbcustom.system;
+			const tableId = Mod.findAlias(Text.toId(room));
+
+			if (customConfig[tableId] && (this.arg || customConfig[tableId].room === this.room)) {
+				// Custom table found
+				this.cmd = 'tourldbcustom';
+				this.arg = "top100" + ", " + tableId;
+				this.args = ["top100", tableId];
+				this.parser.exec(this);
+			} else {
+				this.cmd = 'tourleaderboardsh';
+				this.arg = room;
+				this.args = [room];
+				this.parser.exec(this);
+			}
+		} else {
+			this.cmd = 'tourleaderboardsh';
+			this.arg = room;
+			this.args = [room];
+			this.parser.exec(this);
+		}
+	},
+
+	top100h: "tourleaderboardsh",
+	toph100: "tourleaderboardsh",
+	tourleaderboardsh: function (App) {
+		this.setLangFile(Lang_File);
 		const Config = App.config.modules.tourleaderboards;
 		let mod = App.modules.tourleaderboards.system;
 		let server = App.config.server.url;
@@ -394,17 +526,9 @@ module.exports = {
 		if (!room) {
 			return this.errorReply(this.usage({ desc: this.usageTrans('room') }));
 		}
+
 		if (!Config[room]) {
-			const tableId = Text.toId(room);
-			if (App.modules.tourldbcustom && App.modules.tourldbcustom.system && App.config.modules.tourldbcustom) {
-				this.cmd = 'tourldbcustom';
-				this.arg = "top100" + ", " + tableId;
-				this.args = ["top100", tableId];
-				this.parser.exec(this);
-				return;
-			} else {
-				return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
-			}
+			return this.errorReply(this.mlt(0) + " " + Chat.italics(room));
 		}
 
 		if (this.getRoomType(this.room) === 'chat' && botCanHtml(this.room, App) && this.can('toursrank', this.room)) {

@@ -162,6 +162,10 @@ exports.setup = function (App) {
 			let description = ((context.post.description || "") + "").trim();
 
 			let aliases = ((context.post.aliases || "") + "").trim();
+			let banned = ((context.post.banned || "") + "").trim();
+
+			let automated = !!context.post.automated;
+			let silent = !!context.post.silent;
 
 			try {
 				check(leaderboardsId, "You must specify a leaderboards ID");
@@ -185,6 +189,9 @@ exports.setup = function (App) {
 				Config[leaderboardsId].customTitle = customTitle;
 				Config[leaderboardsId].description = description;
 				Config[leaderboardsId].aliases = aliases;
+				Config[leaderboardsId].banned = banned;
+				Config[leaderboardsId].automated = automated;
+				Config[leaderboardsId].silent = silent;
 
 				if (newId !== leaderboardsId) {
 					Config[newId] = Config[leaderboardsId];
@@ -216,6 +223,9 @@ exports.setup = function (App) {
 				ctitle: Text.escapeHTML(Config[leaderboardsId].customTitle || ""),
 				description: Text.escapeHTML(Config[leaderboardsId].description || ""),
 				aliases: Text.escapeHTML(Config[leaderboardsId].aliases || ""),
+				banned: Text.escapeHTML(Config[leaderboardsId].banned || ""),
+				automated: (Config[leaderboardsId].automated ? 'checked="checked"' : ''),
+				silent: (Config[leaderboardsId].silent ? 'checked="checked"' : ''),
 			});
 		}
 

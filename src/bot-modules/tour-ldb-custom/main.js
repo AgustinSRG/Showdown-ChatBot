@@ -152,7 +152,11 @@ exports.setup = function (App) {
 			if (!ladder[leaderboardsId]) return [];
 			let top = [];
 			let rank = 0;
+			let bannedUsers = new Set((config.banned || "").split(",").map(Text.toId).filter(a => !!a));
 			for (let u in ladder[leaderboardsId]) {
+				if (bannedUsers.has(u)) {
+					continue;
+				}
 				rank = (points.winner * ladder[leaderboardsId][u][1]) + (points.finalist * ladder[leaderboardsId][u][2]) +
 					(points.semifinalist * ladder[leaderboardsId][u][3]) + (ladder[leaderboardsId][u][4]);
 				top.push(ladder[leaderboardsId][u].concat([rank]));
@@ -309,12 +313,37 @@ exports.setup = function (App) {
 		}
 
 		parseTourResults(room, data) {
-			if (!this.isOfficial[room]) return;
-			const leaderboardsId = Text.toId(this.isOfficial[room] + "");
-			let config = App.config.modules.tourldbcustom[leaderboardsId];
-			if (!config) return;
-			const results = this.applyTourResults(leaderboardsId, data);
-			this.sendResultsTable(room, leaderboardsId, results);
+			let officialApplied = null;
+			if (this.isOfficial[room]) {
+				const leaderboardsId = Text.toId(this.isOfficial[room] + "");
+				officialApplied = leaderboardsId;
+				const config = App.config.modules.tourldbcustom[leaderboardsId];
+				if (config) {
+					const results = this.applyTourResults(leaderboardsId, data);
+
+					if (!config.silent) {
+						this.sendResultsTable(room, leaderboardsId, results);
+					}
+				}
+			}
+
+			// Check auto
+			for (let leaderboardsId of Object.keys(App.config.modules.tourldbcustom)) {
+				if (leaderboardsId === officialApplied) {
+					continue;
+				}
+				const config = App.config.modules.tourldbcustom[leaderboardsId];
+
+				if (!config || !config.automated || config.room !== room) {
+					continue;
+				}
+
+				const results = this.applyTourResults(leaderboardsId, data);
+
+				if (!config.silent) {
+					this.sendResultsTable(room, leaderboardsId, results);
+				}
+			}
 		}
 
 		sendResultsTable(room, leaderboardsId, results) {
@@ -357,9 +386,11 @@ exports.setup = function (App) {
 					winners = [winners];
 				}
 
-				html += '<p style="text-align:center;"><b>+' + Text.escapeHTML(config.winner) + "</b> " + Text.escapeHTML(mlt(5)) + ": " + winners.map(winner => {
-					return "<b>" + Text.escapeHTML(this.getUserName(leaderboardsId, winner)) + "</b>";
-				}).join(", ") + "</p>";
+				if (winners.length > 0) {
+					html += '<p style="text-align:center;"><b>+' + Text.escapeHTML(config.winner) + "</b> " + Text.escapeHTML(mlt(5)) + ": " + winners.map(winner => {
+						return "<b>" + Text.escapeHTML(this.getUserName(leaderboardsId, winner)) + "</b>";
+					}).join(", ") + "</p>";
+				}
 			}
 
 			if (config.finalist > 0 && results.finalist) {
@@ -368,20 +399,24 @@ exports.setup = function (App) {
 					finalists = [finalists];
 				}
 
-				html += '<p style="text-align:center;"><b>+' + Text.escapeHTML(config.finalist) + "</b> " + Text.escapeHTML(mlt(6)) + ": " + finalists.map(finalist => {
-					return "<b>" + Text.escapeHTML(this.getUserName(leaderboardsId, finalist)) + "</b>";
-				}).join(", ") + "</p>";
+				if (finalists.length > 0) {
+					html += '<p style="text-align:center;"><b>+' + Text.escapeHTML(config.finalist) + "</b> " + Text.escapeHTML(mlt(6)) + ": " + finalists.map(finalist => {
+						return "<b>" + Text.escapeHTML(this.getUserName(leaderboardsId, finalist)) + "</b>";
+					}).join(", ") + "</p>";
+				}
 			}
 
-			if (config.semifinalist > 0 && results.semiFinalists && results.semiFinalists.length > 0) {
+			if (config.semifinalist > 0 && results.semiFinalists) {
 				let finalists = results.semiFinalists;
 				if (!(finalists instanceof Array)) {
 					finalists = [finalists];
 				}
 
-				html += '<p style="text-align:center;"><b>+' + Text.escapeHTML(config.semifinalist) + "</b> " + Text.escapeHTML(mlt(7)) + ": " + finalists.map(finalist => {
-					return "<b>" + Text.escapeHTML(this.getUserName(leaderboardsId, finalist)) + "</b>";
-				}).join(", ") + "</p>";
+				if (finalists.length > 0) {
+					html += '<p style="text-align:center;"><b>+' + Text.escapeHTML(config.semifinalist) + "</b> " + Text.escapeHTML(mlt(7)) + ": " + finalists.map(finalist => {
+						return "<b>" + Text.escapeHTML(this.getUserName(leaderboardsId, finalist)) + "</b>";
+					}).join(", ") + "</p>";
+				}
 			}
 
 			html += '<table border="1" cellspacing="0" cellpadding="3" style="min-width:100%;">';

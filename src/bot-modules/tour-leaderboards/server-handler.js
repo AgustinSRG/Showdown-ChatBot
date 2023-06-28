@@ -154,6 +154,7 @@ exports.setup = function (App) {
 			let finalist = parseInt(context.post.finalist);
 			let semifinalist = parseInt(context.post.semifinalist);
 			let battle = parseInt(context.post.battle);
+			let banned = ((context.post.banned || "") + "").trim();
 			let official = !!context.post.onlyofficial;
 			let useratio = !!context.post.useratio;
 			try {
@@ -174,6 +175,7 @@ exports.setup = function (App) {
 				Config[room].finalist = finalist;
 				Config[room].semifinalist = semifinalist;
 				Config[room].battle = battle;
+				Config[room].banned = banned;
 				App.db.write();
 				App.logServerAction(context.user.id, "Leaderboards: Edit configuration: " + room);
 				ok = "Leaderboards configuration saved";
@@ -191,6 +193,7 @@ exports.setup = function (App) {
 				finalist: Config[room].finalist,
 				semifinalist: Config[room].semifinalist,
 				battle: Config[room].battle,
+				banned: Text.escapeHTML(Config[room].banned || ""),
 				onlyofficial: (Config[room].onlyOfficial ? ' checked="checked"' : ''),
 				useratio: (Config[room].useratio ? ' checked="checked"' : ''),
 			});
