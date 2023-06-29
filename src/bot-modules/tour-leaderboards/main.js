@@ -267,6 +267,11 @@ exports.setup = function (App) {
 					}
 				}
 			}
+
+			res.semiFinalists = res.semiFinalists.filter(sf => {
+				return sf !== res.finalist && sf !== res.winner;
+			});
+
 			return res;
 		} else if ((generator + "").endsWith("roundrobin")) {
 			let res = Object.create(null);
