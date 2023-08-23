@@ -482,7 +482,10 @@ exports.setup = function (Data) {
 
 			let targets = [];
 			if (typeof des.target === "number") {
-				targets = [getSpecificTarget(battle, des.target)];
+				const specificTarget = getSpecificTarget(battle, des.target);
+				if (specificTarget) {
+					targets.push(specificTarget);
+				}
 
 				if (moveIsRedirectedImmune(battle, move, pokeA, conditionsA)) {
 					res.unviable.push(decisions[i]);
@@ -1153,7 +1156,10 @@ exports.setup = function (Data) {
 
 			let targets = [];
 			if (typeof des.target === "number") {
-				targets = [getSpecificTarget(battle, des.target)];
+				const specificTarget = getSpecificTarget(battle, des.target);
+				if (specificTarget) {
+					targets.push(specificTarget);
+				}
 
 				if (moveIsRedirectedImmune(battle, move, pokeA, conditionsA)) {
 					res.immune.push(decisions[i]);
