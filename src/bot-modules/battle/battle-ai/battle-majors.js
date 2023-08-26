@@ -263,6 +263,11 @@ exports.setup = function (App, BattleData) {
 					for (let vol in active.volatiles) poke.addVolatile(vol);
 					for (let b in active.boosts) poke.boosts[b] = active.boosts[b];
 					active.passing = false;
+					active.passingSubstitute = false;
+				} else if (active.passingSubstitute && active.passingSubstitute === this.turn) {
+					poke.addVolatile('substitute');
+					active.passing = false;
+					active.passingSubstitute = false;
 				}
 				active.removeAllVolatiles();
 				active.removeAllBoosts();
@@ -281,6 +286,7 @@ exports.setup = function (App, BattleData) {
 			poke.fainted = true;
 			poke.active = false;
 			poke.passing = false;
+			poke.passingSubstitute = false;
 			poke.hp = 0;
 			poke.tera = '';
 			if (!isIntro) this.message("faint", det.side, poke.name);
@@ -340,6 +346,8 @@ exports.setup = function (App, BattleData) {
 			}
 			if (move.id === 'batonpass') {
 				poke.passing = this.turn;
+			} else if (move.id === 'shedtail') {
+				poke.passingSubstitute = this.turn;
 			}
 			if (!noDeductPP && kwargs.from !== 'lockedmove') {
 				if (args[1] !== args[3] && poke2 && poke2.ability && poke2.ability.id === "pressure") {

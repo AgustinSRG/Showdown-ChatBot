@@ -360,6 +360,7 @@ exports.setup = function (App) {
 			this.boosts = Object.create(null);
 
 			this.passing = false;
+			this.passingSubstitute = false;
 			this.prepared = null;
 
 			this.helpers = Object.create(null);
