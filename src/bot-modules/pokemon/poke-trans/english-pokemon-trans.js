@@ -312,6 +312,14 @@ exports.translations.abilities = {
 	"windpower": "Wind Power",
 	"windrider": "Wind Rider",
 	"zerotohero": "Zero to Hero",
+	"embodyaspectcornerstone": "Embody Aspect (Cornerstone)",
+	"embodyaspecthearthflame": "Embody Aspect (Hearthflame)",
+	"embodyaspectteal": "Embody Aspect (Teal)",
+	"embodyaspectwellspring": "Embody Aspect (Wellspring)",
+	"hospitality": "Hospitality",
+	"mindseye": "Mind's Eye",
+	"supersweetsyrup": "Supersweet Syrup",
+	"toxicchain": "Toxic Chain",
 };
 
 /* Battle Items */
@@ -846,6 +854,14 @@ exports.translations.items = {
 	"griseouscore": "Griseous Core",
 	"lustrousglobe": "Lustrous Globe",
 	"strangeball": "Strange Ball",
+	"bignugget": "Big Nugget",
+	"cornerstonemask": "Cornerstone Mask",
+	"fairyfeather": "Fairy Feather",
+	"hearthflamemask": "Hearthflame Mask",
+	"masterpieceteacup": "Masterpiece Teacup",
+	"syrupyapple": "Syrupy Apple",
+	"unremarkableteacup": "Unremarkable Teacup",
+	"wellspringmask": "Wellspring Mask",
 };
 
 /* Battle Moves */
@@ -1786,6 +1802,10 @@ exports.translations.moves = {
 	"wildboltstorm": "Wildbolt Storm",
 	"hydrosteam": "Hydro Steam",
 	"psyblade": "Psyblade",
+	"bloodmoon": "Blood Moon",
+	"ivycudgel": "Ivy Cudgel",
+	"matchagotcha": "Matcha Gotcha",
+	"syrupbomb": "Syrup Bomb",
 };
 
 /* Natures */
@@ -3214,6 +3234,27 @@ exports.translations.pokemon = {
 	"walkingwake": "Walking Wake",
 	"ironleaves": "Iron Leaves",
 	"saharascal": "Saharascal",
+	"greninjabond": "Greninja-Bond",
+	"ursalunabloodmoon": "Ursaluna-Bloodmoon",
+	"dipplin": "Dipplin",
+	"poltchageist": "Poltchageist",
+	"poltchageistartisan": "Poltchageist-Artisan",
+	"sinistcha": "Sinistcha",
+	"sinistchamasterpiece": "Sinistcha-Masterpiece",
+	"okidogi": "Okidogi",
+	"munkidori": "Munkidori",
+	"fezandipiti": "Fezandipiti",
+	"ogerpon": "Ogerpon",
+	"ogerponwellspring": "Ogerpon-Wellspring",
+	"ogerponhearthflame": "Ogerpon-Hearthflame",
+	"ogerponcornerstone": "Ogerpon-Cornerstone",
+	"ogerpontealtera": "Ogerpon-Teal-Tera",
+	"ogerponwellspringtera": "Ogerpon-Wellspring-Tera",
+	"ogerponhearthflametera": "Ogerpon-Hearthflame-Tera",
+	"ogerponcornerstonetera": "Ogerpon-Cornerstone-Tera",
+	"ababo": "Ababo",
+	"scattervein": "Scattervein",
+	"hemogoblin": "Hemogoblin",
 };
 
 /* Legacy Translation */

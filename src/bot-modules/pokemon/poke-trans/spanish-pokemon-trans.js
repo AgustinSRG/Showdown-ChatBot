@@ -312,6 +312,14 @@ exports.translations.abilities = {
 	"windpower": "Energía Eólica",
 	"windrider": "Surcavientos",
 	"zerotohero": "Cambio Heroico",
+	"embodyaspectcornerstone": "Evocarrecuerdos (Cimiento)",
+	"embodyaspecthearthflame": "Evocarrecuerdos (Horno)",
+	"embodyaspectteal": "Evocarrecuerdos (Turquesa)",
+	"embodyaspectwellspring": "Evocarrecuerdos (Fuente)",
+	"hospitality": "Hospitalidad",
+	"mindseye": "Ojo Mental",
+	"supersweetsyrup": "Néctar Dulce",
+	"toxicchain": "Cadena Tóxica",
 };
 
 /* Battle Items */
@@ -846,6 +854,14 @@ exports.translations.items = {
 	"griseouscore": "Gran Griseosfera",
 	"lustrousglobe": "Gran Lustresfera",
 	"strangeball": "Extraña Ball",
+	"bignugget": "Maxipepita",
+	"cornerstonemask": "Máscara Cimiento",
+	"fairyfeather": "Pluma Hada",
+	"hearthflamemask": "Máscara Horno",
+	"masterpieceteacup": "Cuenco Exquisito",
+	"syrupyapple": "Manzana Melosa",
+	"unremarkableteacup": "Cuenco Mediocre",
+	"wellspringmask": "Máscara Fuente",
 };
 
 /* Battle Moves */
@@ -1786,6 +1802,10 @@ exports.translations.moves = {
 	"wildboltstorm": "Electormenta",
 	"hydrosteam": "Hidrovapor",
 	"psyblade": "Psicohojas",
+	"bloodmoon": "Luna Roja",
+	"ivycudgel": "Garrote Liana",
+	"matchagotcha": "Cañón Batidor",
+	"syrupbomb": "Bomba Caramelo",
 };
 
 /* Natures */
@@ -3214,6 +3234,27 @@ exports.translations.pokemon = {
 	"walkingwake": "Ondulagua",
 	"ironleaves": "Iron Leaves",
 	"saharascal": "Ferroverdor",
+	"greninjabond": "Greninja (Vínculo)",
+	"ursalunabloodmoon": "Ursaluna (Luna Carmesí)",
+	"dipplin": "Dipplin",
+	"poltchageist": "Poltchageist",
+	"poltchageistartisan": "Poltchageist (Forma Opulenta)",
+	"sinistcha": "Sinistcha",
+	"sinistchamasterpiece": "Sinistcha (Forma Exquisita)",
+	"okidogi": "Okidogi",
+	"munkidori": "Munkidori",
+	"fezandipiti": "Fezandipiti",
+	"ogerpon": "Ogerpon",
+	"ogerponwellspring": "Ogerpon (Máscara Fuente)",
+	"ogerponhearthflame": "Ogerpon (Máscara Horno)",
+	"ogerponcornerstone": "Ogerpon (Máscara Cimiento)",
+	"ogerpontealtera": "Ogerpon (Máscara Tuquesa) (Tera)",
+	"ogerponwellspringtera": "Ogerpon (Máscara Fuente) (Tera)",
+	"ogerponhearthflametera": "Ogerpon (Máscara Horno) (Tera)",
+	"ogerponcornerstonetera": "Ogerpon (Máscara Cimiento) (Tera)",
+	"ababo": "Ababo",
+	"scattervein": "Scattervein",
+	"hemogoblin": "Hemogoblin",
 };
 
 /* Legacy Translation */

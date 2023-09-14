@@ -4,7 +4,7 @@ Showdown ChatBot
 ![NodeJS Workflow](https://github.com/AgustinSRG/Showdown-ChatBot/actions/workflows/node.js.yml/badge.svg)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/AgustinSRG/Showdown-ChatBot/blob/master/LICENSE)
 
-[Pokemon Showdown](https://github.com/Zarel/Pokemon-Showdown) bot written for [Node JS](http://nodejs.org/) with a ton of features often useful for chat rooms like automated moderation, blacklist, customizable help / information commands, games, tournament tools and chat logs. All of those features can be configured with a web control panel that does not require any programming knowledge to be used.
+[Pokemon Showdown](https://github.com/smogon/pokemon-showdown) bot written for [Node JS](http://nodejs.org/) with a ton of features often useful for chat rooms like automated moderation, blacklist, customizable help / information commands, games, tournament tools and chat logs. All of those features can be configured with a web control panel that does not require any programming knowledge to be used.
 
 Features
 ------------
