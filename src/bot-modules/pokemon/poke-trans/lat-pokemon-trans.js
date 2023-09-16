@@ -856,7 +856,7 @@ exports.translations.items = {
 	"strangeball": "Extraña Ball", // SAME
 	"bignugget": "Maxipepita", // SAME
 	"cornerstonemask": "Máscara Cimiento", // SAME
-	"fairyfeather": "Pluma Hada", // SAME
+	"fairyfeather": "Pluma Feérica", // SAME
 	"hearthflamemask": "Máscara Horno", // SAME
 	"masterpieceteacup": "Cuenco Exquisito", // SAME
 	"syrupyapple": "Manzana Melosa", // SAME
