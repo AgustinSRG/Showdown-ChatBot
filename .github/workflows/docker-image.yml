@@ -38,14 +38,14 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Tag version (GitHub Packages)
-      run: docker tag asanrom/showdown-chatbot:latest ghcr.io/AgustinSRG/showdown-chatbot:$GITHUB_REF_NAME
+      run: docker tag asanrom/showdown-chatbot:latest ghcr.io/agustinsrg/showdown-chatbot:$GITHUB_REF_NAME
 
     - name: Tag latest (GitHub Packages)
-      run: docker tag asanrom/showdown-chatbot:latest ghcr.io/AgustinSRG/showdown-chatbot:latest
+      run: docker tag asanrom/showdown-chatbot:latest ghcr.io/agustinsrg/showdown-chatbot:latest
 
     - name: Push the Docker image (GitHub Packages) (Current Version)
-      run: docker push ghcr.io/AgustinSRG/showdown-chatbot:$GITHUB_REF_NAME
+      run: docker push ghcr.io/agustinsrg/showdown-chatbot:$GITHUB_REF_NAME
         
     - name: Push the Docker image (GitHub Packages) (Latest)
-      run: docker push ghcr.io/AgustinSRG/showdown-chatbot:latest
+      run: docker push ghcr.io/agustinsrg/showdown-chatbot:latest
     
