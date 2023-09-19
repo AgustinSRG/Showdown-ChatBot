@@ -339,6 +339,22 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			else if (gconditions.weather === "hail") moveType = "Ice";
 			else moveType = "Normal";
 			break;
+		case "ivycudgel":
+			switch (pokeA.template.species) {
+				case 'Ogerpon-Wellspring':
+				case 'Ogerpon-Wellspring-Tera':
+					moveType = "Water";
+					break;
+				case 'Ogerpon-Hearthflame':
+				case 'Ogerpon-Hearthflame-Tera':
+					moveType = "Fire";
+					break;
+				case 'Ogerpon-Cornerstone':
+				case 'Ogerpon-Cornerstone-Tera':
+					moveType = "Rock";
+					break;
+			}
+			break;
 		case "thousandarrows":
 			noLevitation = true;
 			break;
