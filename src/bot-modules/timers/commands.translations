@@ -7,11 +7,13 @@
 $nochat = This command is only available for chat rooms
 
 $time = time (eg: 1h 30m)
+$name = name
 
 $1 = Time must be higher that 5 seconds
 $2 = Time cannot be higher than 2 hours
 $3 = There is already a timer in this room
 $4 = There is not a timer running in this room
+$4b = There is not a timer with the specified name running in this room
 $5 = The timer was stopped
 $6 = minutes
 $7 = seconds
@@ -24,7 +26,7 @@ $12 = There was no repeat message set for this room
 
 $13 = There are already too many repeats in this room
 
-$14 = All repears for this room have been deleted
+$14 = All repeats for this room have been deleted
 
 $15 = That text was already being repeated
 $16 = That text was not being repeated
@@ -33,16 +35,26 @@ $17 = List of active repeats for this room
 
 $18 = The message will be repeated once each
 
+$19 = There are already too many timers in this room
+
+$20 = The name is too long. It cannot exceed 100 characters total.
+
+$21 = There are already too many repeating messages in this room
+
+$22 = All active timers for this room have been deleted
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
 
 $time = tiempo (ejemplo: 1h 30m)
+$name = nombre
 
 $1 = El tiempo no puede ser inferior a 5 segundos
 $2 = El tiempo no puede ser superior a 48 horas
 $3 = Ya hay un timer en esta sala
 $4 = No había ningún timer activo en esta sala
+$4b = No había ningún timer activo con el nombre especificado en esta sala
 $5 = El timer se ha detenido
 $6 = minutos
 $7 = segundos
@@ -62,3 +74,11 @@ $16 = Ese mensaje no se está repitiendo en esta sala
 $17 = Mensajes que se están repitiendo en esta sala
 
 $18 = El mensaje se repetirá una vez cada
+
+$19 = Ya hay demasiados timers en esta sala
+
+$20 = El nombre es demasiado largo. No puede ser mayor que 100 caracteres de largo.
+
+$21 = Ya hay demasiados mensajes repitiéndose en esta sala
+
+$22 = Se han borrado todos los timers activos en esta sala

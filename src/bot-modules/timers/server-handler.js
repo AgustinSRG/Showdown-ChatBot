@@ -29,8 +29,9 @@ exports.setup = function (App) {
 		let ok = null, error = null;
 		if (context.post.cleartimer) {
 			let room = Text.toRoomid(context.post.room);
-			Mod.stopTimer(room);
-			App.logServerAction(context.user.id, "Clear timer: " + room);
+			let name = Text.toId(context.post.name);
+			Mod.stopTimer(room, name);
+			App.logServerAction(context.user.id, "Clear timer: " + room + " | Name: " + (name || "-"));
 			ok = "Timer cleared.";
 		} else if (context.post.clearrepeat) {
 			let room = Text.toRoomid(context.post.room);
@@ -45,12 +46,27 @@ exports.setup = function (App) {
 		htmlVars.timers = "";
 
 		for (let timer of Object.values(Mod.timers)) {
-			htmlVars.timers += '<tr><td class="bold">' + Text.escapeHTML(timer.room) +
-				'</td><td>' + Text.escapeHTML(Mod.getDiff(timer)) +
-				'</td><td><form action="" method="post" style="margin-block-end: 0;">' +
-				'<input name="room" type="hidden" value="' + Text.escapeHTML(timer.room) + '" />' +
-				'<input type="submit" name="cleartimer" value="Clear timer" />' +
-				'</form></td></tr>';
+			if (Array.isArray(timer)) {
+				for (let timerSingle of timer) {
+					htmlVars.timers += '<tr><td class="bold">' + Text.escapeHTML(timerSingle.room) +
+						'</td><td>' + Text.escapeHTML(timerSingle.name || "-") +
+						'</td><td>' + Text.escapeHTML(Mod.getDiff(timerSingle)) +
+						'</td><td><form action="" method="post" style="margin-block-end: 0;">' +
+						'<input name="room" type="hidden" value="' + Text.escapeHTML(timerSingle.room) + '" />' +
+						'<input name="name" type="hidden" value="' + Text.toId(timerSingle.name || '') + '" />' +
+						'<input type="submit" name="cleartimer" value="Clear timer" />' +
+						'</form></td></tr>';
+				}
+			} else {
+				htmlVars.timers += '<tr><td class="bold">' + Text.escapeHTML(timer.room) +
+					'</td><td>' + Text.escapeHTML(timer.name || "-") +
+					'</td><td>' + Text.escapeHTML(Mod.getDiff(timer)) +
+					'</td><td><form action="" method="post" style="margin-block-end: 0;">' +
+					'<input name="room" type="hidden" value="' + Text.escapeHTML(timer.room) + '" />' +
+					'<input name="name" type="hidden" value="' + Text.toId(timer.name || '') + '" />' +
+					'<input type="submit" name="cleartimer" value="Clear timer" />' +
+					'</form></td></tr>';
+			}
 		}
 
 		htmlVars.repeats = "";

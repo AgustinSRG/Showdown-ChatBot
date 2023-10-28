@@ -8,6 +8,9 @@ const Path = require('path');
 const Chat = Tools('chat');
 const Text = Tools('text');
 
+const TIMER_LIMIT_PER_ROOM = 32;
+const REPEAT_LIMIT_PER_ROOM = 100;
+
 const Lang_File = Path.resolve(__dirname, 'timers.translations');
 
 exports.setup = function (App) {
@@ -41,25 +44,105 @@ exports.setup = function (App) {
 			this.db.write();
 		}
 
+		getTimers(room) {
+			if (!this.timers[room]) return [];
+
+			if (!Array.isArray(this.timers[room])) {
+				this.timers[room] = [this.timers[room]];
+			}
+
+			return this.timers[room];
+		}
+
+		findTimer(room, name) {
+			if (!this.timers[room]) return null;
+
+			if (!Array.isArray(this.timers[room])) {
+				this.timers[room] = [this.timers[room]];
+			}
+
+			if (this.timers[room].length === 1 && !name) {
+				return this.timers[room][0];
+			}
+
+			for (let t of this.timers[room]) {
+				if (Text.toId(t.name || "") === Text.toId(name || "")) {
+					return t;
+				}
+			}
+
+			return null;
+		}
+
+		countTimers(room) {
+			if (!this.timers[room]) return 0;
+
+			if (!Array.isArray(this.timers[room])) {
+				this.timers[room] = [this.timers[room]];
+			}
+
+			return this.timers[room].length;
+		}
+
+		getTimerPrefix(timer) {
+			if (timer.name) {
+				return Chat.bold((timer.name + "").replace(/\*\*/g, "") + ":");
+			} else {
+				return Chat.bold(trans(timer.room, "timer") + ":");
+			}
+		}
+
+		deleteTimer(timer) {
+			const timers = this.timers[timer.room];
+
+			if (Array.isArray(timers)) {
+				for (let i = 0; i < timers.length; i++) {
+					if (Text.toId(timers[i].name || "") === Text.toId(timer.name || "")) {
+						timers.splice(i, 1);
+						break;
+					}
+				}
+				if (timers.length === 0) {
+					delete this.timers[timer.room];
+				}
+			} else {
+				delete this.timers[timer.room];
+			}
+
+			this.save();
+		}
+
+		checkTimer(timer) {
+			if (Date.now() >= timer.ends) {
+				App.bot.sendTo(timer.room, this.getTimerPrefix(timer) + " " + Chat.bold(trans(timer.room, 2)));
+				this.deleteTimer(timer);
+			} else if (!timer.midAnnounced && Date.now() >= timer.mid) {
+				let diff = this.getDiff(timer);
+				App.bot.sendTo(timer.room, this.getTimerPrefix(timer) + " " + trans(timer.room, (diff.substr(0, 2) === '1 ' ? 3 : 0)) + ' ' +
+					diff + ' ' + trans(timer.room, 1));
+				timer.midAnnounced = true;
+				this.save();
+			}
+		}
+
 		checkTimers() {
 			for (let timer of Object.values(this.timers)) {
-				if (Date.now() >= timer.ends) {
-					App.bot.sendTo(timer.room, Chat.bold(trans(timer.room, 2)));
-					delete this.timers[timer.room];
-					this.save();
-				} else if (!timer.midAnnounced && Date.now() >= timer.mid) {
-					let diff = this.getDiff(timer);
-					App.bot.sendTo(timer.room, Chat.bold("Timer:") + " " + trans(timer.room, (diff.substr(0, 2) === '1 ' ? 3 : 0)) + ' ' +
-						diff + ' ' + trans(timer.room, 1));
-					timer.midAnnounced = true;
-					this.save();
+				if (!timer) {
+					continue;
+				}
+				if (Array.isArray(timer)) {
+					for (let t of timer) {
+						this.checkTimer(t);
+					}
+				} else {
+					this.checkTimer(timer);
 				}
 			}
 		}
 
 		getAnnounce(timer) {
 			let diff = this.getDiff(timer);
-			let str = Chat.bold("Timer:") + " " + trans(timer.room, (diff.substr(0, 2) === '1 ' ? 3 : 0)) +
+			let str = this.getTimerPrefix(timer) + " " + trans(timer.room, (diff.substr(0, 2) === '1 ' ? 3 : 0)) +
 				' ' + diff + ' ' + trans(timer.room, 1);
 			return str;
 		}
@@ -88,24 +171,63 @@ exports.setup = function (App) {
 			return dates.join(', ') || trans(timer.room, 'instants');
 		}
 
-		createTimer(room, time) {
-			if (this.timers[room]) return false;
-			this.timers[room] = {
+		createTimer(room, time, name) {
+			if (!this.timers[room]) {
+				this.timers[room] = [];
+			} else if (!Array.isArray(this.timers[room])) {
+				this.timers[room] = [this.timers[room]];
+			}
+
+			for (let t of this.timers[room]) {
+				if (Text.toId(name || "") === Text.toId(t.name || "")) {
+					return false;
+				}
+			}
+
+			if (this.timers[room].length >= TIMER_LIMIT_PER_ROOM) {
+				return false;
+			}
+
+			const timer = {
 				room: room,
+				name: name,
 				ends: Date.now() + time,
 				mid: Date.now() + (time / 2),
 				midAnnounced: false,
 			};
 
-			App.bot.sendTo(room, this.getAnnounce(this.timers[room]));
+			this.timers[room].push(timer);
+
+			App.bot.sendTo(room, this.getAnnounce(timer));
+
 			this.save();
+
 			return true;
 		}
 
-		stopTimer(room) {
+		stopTimer(room, name) {
 			if (!this.timers[room]) return false;
+
+			if (!Array.isArray(this.timers[room])) {
+				this.timers[room] = [this.timers[room]];
+			}
+
+			for (let t of this.timers[room]) {
+				if (Text.toId(name || "") === Text.toId(t.name || "")) {
+					this.deleteTimer(t);
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		stopAllTimers(room) {
+			if (!this.timers[room]) return false;
+
 			delete this.timers[room];
 			this.save();
+
 			return true;
 		}
 
@@ -130,6 +252,11 @@ exports.setup = function (App) {
 					active: [],
 				};
 			}
+
+			if (this.repeats[room].active.length > REPEAT_LIMIT_PER_ROOM) {
+				return false;
+			}
+
 			this.repeats[room].active.push({
 				text: text,
 				interval: interval,
