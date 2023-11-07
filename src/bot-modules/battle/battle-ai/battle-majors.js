@@ -448,5 +448,13 @@ exports.setup = function (App, BattleData) {
 			}
 			this.makeDecision(true);
 		},
+
+		cantleave: function () {
+			this.leaveForbidden = true;
+		},
+
+		allowleave: function () {
+			this.leaveForbidden = false;
+		},
 	};
 };

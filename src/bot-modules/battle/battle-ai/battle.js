@@ -6,7 +6,7 @@
 'use strict';
 
 const MAX_RECURSIVE = 5;
-const MIN_TIME_LOCK = 3 * 1000; // 3 secods to avoid send spam
+const MIN_TIME_LOCK = 3 * 1000; // 3 seconds to avoid send spam
 
 const Path = require('path');
 const Util = require('util');
@@ -79,6 +79,7 @@ exports.setup = function (App, CustomModules) {
 				rqid: -1,
 				bp: 50,
 			};
+			this.leaveForbidden = false;
 		}
 
 		send(data) {
@@ -208,6 +209,10 @@ exports.setup = function (App, CustomModules) {
 		}
 
 		leave() {
+			if (this.leaveForbidden) {
+				this.send("/confirmready");
+				return;
+			}
 			if (!this.leaveInterval) {
 				this.leaveInterval = setInterval(function () {
 					this.send("/leave");
@@ -217,6 +222,9 @@ exports.setup = function (App, CustomModules) {
 		}
 
 		leaveBattle() {
+			if (this.id.indexOf("game-") === 0) {
+				return;
+			}
 			this.send('/leavebattle');
 		}
 
