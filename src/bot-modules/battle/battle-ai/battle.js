@@ -182,7 +182,7 @@ exports.setup = function (App, CustomModules) {
 		}
 
 		tick() {
-			if (!this.battleReadyToStart) {
+			if (!this.battleReadyToStart && !this.leaveForbidden) {
 				if (Date.now() - this.creationTimestamp > (90 * 1000)) {
 					// 1 minute waiting, leave
 					this.leaveBattle();
