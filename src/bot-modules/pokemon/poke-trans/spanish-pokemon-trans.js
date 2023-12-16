@@ -320,6 +320,10 @@ exports.translations.abilities = {
 	"mindseye": "Ojo Mental",
 	"supersweetsyrup": "Néctar Dulce",
 	"toxicchain": "Cadena Tóxica",
+	"poisonpuppeteer": "Títere Tóxico",
+	"teraformzero": "Teraformación 0",
+	"terashell": "Teracaparazón",
+	"terashift": "Teracambio",
 };
 
 /* Battle Items */
@@ -862,6 +866,7 @@ exports.translations.items = {
 	"syrupyapple": "Manzana Melosa",
 	"unremarkableteacup": "Cuenco Mediocre",
 	"wellspringmask": "Máscara Fuente",
+	"metalalloy": "Metal Compuesto",
 };
 
 /* Battle Moves */
@@ -1806,6 +1811,21 @@ exports.translations.moves = {
 	"ivycudgel": "Garrote Liana",
 	"matchagotcha": "Cañón Batidor",
 	"syrupbomb": "Bomba Caramelo",
+	"alluringvoice": "Canto Encantador",
+	"burningbulwark": "Llama Protectora",
+	"dragoncheer": "Bramido Dragón",
+	"electroshot": "Electrorrayo",
+	"ficklebeam": "Láser Veleidoso",
+	"hardpress": "Prensa Metálica",
+	"malignantchain": "Cadena Virulenta",
+	"mightycleave": "Filo Potente",
+	"psychicnoise": "Psicorruido",
+	"supercellslam": "Plancha Voltaica",
+	"tachyoncutter": "Tajo Taquión",
+	"temperflare": "Cólera Ardiente",
+	"terastarstorm": "Teraclúster",
+	"thunderclap": "Relámpago Súbito",
+	"upperhand": "Palma Rauda",
 };
 
 /* Natures */
@@ -3255,6 +3275,17 @@ exports.translations.pokemon = {
 	"ababo": "Ababo",
 	"scattervein": "Scattervein",
 	"hemogoblin": "Hemogoblin",
+	"archaludon": "Archaludon",
+	"hydrapple": "Hydrapple",
+	"gougingfire": "Flamariete",
+	"ragingbolt": "Electrofuria",
+	"ironboulder": "Ferromole",
+	"ironcrown": "Ferrotesta",
+	"terapagos": "Terapagos",
+	"terapagosterastal": "Terapagos (Forma Teracristal)",
+	"terapagosstellar": "Terapagos (Forma Astral)",
+	"pecharunt": "Pecharunt",
+	"cresceidon": "", //CAP
 };
 
 /* Legacy Translation */

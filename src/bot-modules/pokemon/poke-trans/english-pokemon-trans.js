@@ -320,6 +320,10 @@ exports.translations.abilities = {
 	"mindseye": "Mind's Eye",
 	"supersweetsyrup": "Supersweet Syrup",
 	"toxicchain": "Toxic Chain",
+	"poisonpuppeteer": "Poison Puppeteer",
+	"teraformzero": "Teraform Zero",
+	"terashell": "Tera Shell",
+	"terashift": "Tera Shift",
 };
 
 /* Battle Items */
@@ -862,6 +866,7 @@ exports.translations.items = {
 	"syrupyapple": "Syrupy Apple",
 	"unremarkableteacup": "Unremarkable Teacup",
 	"wellspringmask": "Wellspring Mask",
+	"metalalloy": "Metal Alloy",
 };
 
 /* Battle Moves */
@@ -1806,6 +1811,21 @@ exports.translations.moves = {
 	"ivycudgel": "Ivy Cudgel",
 	"matchagotcha": "Matcha Gotcha",
 	"syrupbomb": "Syrup Bomb",
+	"alluringvoice": "Alluring Voice",
+	"burningbulwark": "Burning Bulwark",
+	"dragoncheer": "Dragon Cheer",
+	"electroshot": "Electro Shot",
+	"ficklebeam": "Fickle Beam",
+	"hardpress": "Hard Press",
+	"malignantchain": "Malignant Chain",
+	"mightycleave": "Mighty Cleave",
+	"psychicnoise": "Psychic Noise",
+	"supercellslam": "Supercell Slam",
+	"tachyoncutter": "Tachyon Cutter",
+	"temperflare": "Temper Flare",
+	"terastarstorm": "Tera Starstorm",
+	"thunderclap": "Thunderclap",
+	"upperhand": "Upper Hand",
 };
 
 /* Natures */
@@ -3255,6 +3275,17 @@ exports.translations.pokemon = {
 	"ababo": "Ababo",
 	"scattervein": "Scattervein",
 	"hemogoblin": "Hemogoblin",
+	"archaludon": "Archaludon",
+	"hydrapple": "Hydrapple",
+	"gougingfire": "Gouging Fire",
+	"ragingbolt": "Raging Bolt",
+	"ironboulder": "Iron Boulder",
+	"ironcrown": "Iron Crown",
+	"terapagos": "Terapagos",
+	"terapagosterastal": "Terapagos-Terastal",
+	"terapagosstellar": "Terapagos-Stellar",
+	"pecharunt": "Pecharunt",
+	"cresceidon": "Cresceidon",
 };
 
 /* Legacy Translation */
