@@ -457,6 +457,7 @@ exports.setup = function (App, CustomModules) {
 					level: 100,
 					shiny: false,
 					gender: false,
+					tera: "",
 				};
 			}
 			let details = str.split(",");
@@ -468,15 +469,33 @@ exports.setup = function (App, CustomModules) {
 				level: 100,
 				shiny: false,
 				gender: false,
+				tera: "",
 			};
-			if (details[details.length - 1] === "shiny") {
-				poke.shiny = true;
-				details.pop();
+
+			let done = false;
+
+			while (!done) {
+				if (details[details.length - 1] === "shiny") {
+					poke.shiny = true;
+					details.pop();
+					continue;
+				}
+
+				if (details[details.length - 1] === "M" || details[details.length - 1] === "F") {
+					poke.gender = details[details.length - 1];
+					details.pop();
+					continue;
+				}
+
+				if ((details[details.length - 1] + "").indexOf("tera:") === 0) {
+					poke.tera = ((details[details.length - 1] + "").split(":")[1] + "").trim();
+					details.pop();
+					continue;
+				}
+
+				done = true;
 			}
-			if (details[details.length - 1] === "M" || details[details.length - 1] === "F") {
-				poke.gender = details[details.length - 1];
-				details.pop();
-			}
+
 			if (details[1]) {
 				poke.level = parseInt(details[1].substr(1)) || 100;
 			}

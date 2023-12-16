@@ -208,7 +208,8 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	if (conditionsA.volatiles["typeadd"]) offTypes.push(conditionsA.volatiles["typeadd"]);
 	if (pokeA.typechange && pokeA.typechange.length) {
 		offTypes = pokeA.typechange.slice();
-	} else if (pokeA.tera && (!conditionsA.volatiles["typechange"] || !conditionsA.volatiles["typechange"].length)) {
+	}
+	if (pokeA.tera && pokeA.tera !== "Stellar") {
 		offTypes = [pokeA.tera];
 	}
 
@@ -435,9 +436,12 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 	if (conditionsB.volatiles["typeadd"]) defTypes.push(conditionsB.volatiles["typeadd"]);
 	if (pokeB.typechange && pokeB.typechange.length) {
 		defTypes = pokeB.typechange.slice();
-	} else if (pokeB.tera && (!conditionsB.volatiles["typechange"] || !conditionsB.volatiles["typechange"].length)) {
+	}
+
+	if (pokeB.tera && pokeB.tera !== "Stellar") {
 		defTypes = [pokeB.tera];
 	}
+
 	//debug(defTypes);
 	for (let t = 0; t < defTypes.length; t++) {
 		eff = typechart.getEffectiveness(moveType, defTypes[t], gen);
@@ -828,7 +832,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		if (originalTypes.indexOf(moveType) >= 0 && offTypes.indexOf(moveType) === -1) {
 			modifier *= 1.5; // Preserve the original stabs
 		}
-		if (moveType === pokeA.tera && originalTypes.indexOf(moveType) >= 0) {
+		if ((moveType === pokeA.tera || pokeA.tera === "Stellar") && originalTypes.indexOf(moveType) >= 0) {
 			modifier *= (4 / 3);
 		}
 	}
