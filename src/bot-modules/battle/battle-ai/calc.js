@@ -330,6 +330,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			else moveType = "Normal";
 			break;
 		case "terablast":
+		case "terastarstorm":
 			if (pokeA.tera) moveType = pokeA.tera;
 			else moveType = "Normal";
 			break;
@@ -517,6 +518,12 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			case "windrider":
 				if (move.flags && move.flags['wind']) typesMux = 0;
 				break;
+			case "terablast":
+			case "terastarstorm":
+				if (pokeA.tera === "Stellar" && pokeB.tera) {
+					typesMux = 2;
+				}
+				break;
 		}
 	}
 
@@ -639,8 +646,16 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		case "dreameater":
 			if (pokeB.status !== 'slp') bp = 0;
 			break;
+		case "upperhand":
+			bp = 0; // TODO: Interaction with this move (Fails if user is not using a priority move)
+			break;
 		case "ragefist":
 			bp = Math.min(300, 50 + (50 * (pokeA.timesHit || 0)));
+			break;
+		case "terablast":
+			if (pokeA.tera === "Stellar") {
+				bp = 100;
+			}
 			break;
 	}
 
@@ -699,11 +714,17 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			if (gconditions.weather === "primordialsea" || gconditions.weather === "raindance" || gconditions.weather === "sandstorm" || gconditions.weather === "hail") bp = Math.floor(bp * 0.25);
 			if (gconditions.weather !== "desolateland" && gconditions.weather !== "sunnyday" && (!pokeA.item || pokeA.item.id !== "powerherb")) bp = Math.floor(bp * 0.5);
 			break;
+		case "electroshot":
+			if (gconditions.weather !== "primordialsea" && gconditions.weather !== "raindance" && (!pokeA.item || pokeA.item.id !== "powerherb")) bp = Math.floor(bp * 0.5);
+			break;
 		case "hyperspacefury":
 			if (pokeA.template.species !== "Hoopa-Unbound") bp = 0;
 			break;
 		case "aurawheel":
 			if (pokeA.template.species !== "Morpeko" && pokeA.template.species !== "Morpeko-Hangry") bp = 0;
+			break;
+		case "hardpress":
+			bp = Math.floor(Math.floor((120 * (100 * Math.floor(pokeA.hp * 4096 / 100)) + 2048 - 1) / 4096) / 100) || 1;
 			break;
 		case "waterspout":
 		case "eruption":

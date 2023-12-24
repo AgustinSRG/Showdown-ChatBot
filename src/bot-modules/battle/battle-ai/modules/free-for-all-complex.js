@@ -879,7 +879,7 @@ exports.setup = function (Data) {
 				else res.unviable.push(decisions[i]);
 				continue;
 			}
-			let singleTurnMoves = { "protect": 1, "detect": 1, "endure": 1, "kingsshield": 1, "quickguard": 1, "spikyshield": 1, "silktrap": 1, "wideguard": 1, "maxguard": 1, "obstruct": 1 };
+			let singleTurnMoves = { "protect": 1, "detect": 1, "endure": 1, "kingsshield": 1, "quickguard": 1, "spikyshield": 1, "silktrap": 1, "wideguard": 1, "maxguard": 1, "obstruct": 1, 'burningbulwark': 1 };
 			if (move.id in singleTurnMoves) {
 				if (findAnyNotNull(battle.self.active).helpers.lastMove in singleTurnMoves) res.unviable.push(decisions[i]);
 				else res.viable.push(decisions[i]);
