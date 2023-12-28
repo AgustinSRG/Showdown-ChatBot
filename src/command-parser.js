@@ -59,6 +59,7 @@ class CommandParser {
 		if (!this.data.permissions) this.data.permissions = Object.create(null); /* Permission configuration */
 		if (!this.data.roompermissions) this.data.roompermissions = Object.create(null); /* Permission configuration in rooms */
 		if (!this.data.sleep) this.data.sleep = Object.create(null); /* Sleeping rooms */
+		if (!this.data.roomTokensOverride) this.data.roomTokensOverride = Object.create(null); /* Room tokens override */
 		if (!this.data.lockedUsers) this.data.lockedUsers = Object.create(null); /* Locked users */
 		if (!this.data.roomctrl) this.data.roomctrl = Object.create(null); /* Control rooms */
 		if (!this.data.roomaliases) this.data.roomaliases = Object.create(null); /* Rooms aliases */
@@ -405,6 +406,8 @@ class CommandParser {
 		if (room === null) {
 			// PM specific tokens
 			tokens = tokens.concat(this.data.pmTokens || []);
+		} else if (this.data.roomTokensOverride[room]) {
+			tokens = (this.data.roomTokensOverride[room] + "").split(" ");
 		}
 
 		let token = null;

@@ -79,24 +79,24 @@ exports.setup = function (App) {
 
 		let htmlVars = Object.create(null);
 
-		htmlVars.tokens = App.config.parser.tokens.join(' ');
-		htmlVars.pmtokens = App.parser.data.pmTokens.join(' ');
-		htmlVars.groups = App.config.parser.groups.join(', ');
-		htmlVars.voice = App.config.parser.voice;
-		htmlVars.driver = App.config.parser.driver;
-		htmlVars.mod = App.config.parser.mod;
-		htmlVars.bot = App.config.parser.bot;
-		htmlVars.owner = App.config.parser.owner;
-		htmlVars.admin = App.config.parser.admin;
-		htmlVars.helpmsg = App.parser.data.helpmsg;
-		htmlVars.infocmds = App.parser.data.infocmds || "";
-		htmlVars.sleep = Object.keys(App.parser.data.sleep).join(', ');
-		htmlVars.locklist = Object.keys(App.parser.data.lockedUsers).join(', ');
-		htmlVars.antispam = (App.parser.data.antispam ? ' checked="checked"' : '');
-		htmlVars.antirepeat = (App.parser.data.antirepeat ? ' checked="checked"' : '');
+		htmlVars.tokens = Text.escapeHTML(App.config.parser.tokens.join(' '));
+		htmlVars.pmtokens = Text.escapeHTML(App.parser.data.pmTokens.join(' '));
+		htmlVars.groups = Text.escapeHTML(App.config.parser.groups.join(', '));
+		htmlVars.voice = Text.escapeHTML(App.config.parser.voice);
+		htmlVars.driver = Text.escapeHTML(App.config.parser.driver);
+		htmlVars.mod = Text.escapeHTML(App.config.parser.mod);
+		htmlVars.bot = Text.escapeHTML(App.config.parser.bot);
+		htmlVars.owner = Text.escapeHTML(App.config.parser.owner);
+		htmlVars.admin = Text.escapeHTML(App.config.parser.admin);
+		htmlVars.helpmsg = Text.escapeHTML(App.parser.data.helpmsg);
+		htmlVars.infocmds = Text.escapeHTML(App.parser.data.infocmds || "");
+		htmlVars.sleep = Text.escapeHTML(Object.keys(App.parser.data.sleep).join(', '));
+		htmlVars.locklist = Text.escapeHTML(Object.keys(App.parser.data.lockedUsers).join(', '));
+		htmlVars.antispam = Text.escapeHTML(App.parser.data.antispam ? ' checked="checked"' : '');
+		htmlVars.antirepeat = Text.escapeHTML(App.parser.data.antirepeat ? ' checked="checked"' : '');
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
-		htmlVars.request_msg = (ok ? ok : (error || ""));
+		htmlVars.request_msg = Text.escapeHTML(ok ? ok : (error || ""));
 
 		html += configTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Command Parser Configuration - Showdown ChatBot"});
@@ -144,20 +144,20 @@ exports.setup = function (App) {
 
 		htmlVars.aliases = '';
 		for (let alias in App.parser.data.aliases) {
-			htmlVars.aliases += '<tr><td>' + alias + '</td><td>' + App.parser.data.aliases[alias] +
+			htmlVars.aliases += '<tr><td>' + Text.escapeHTML(alias) + '</td><td>' + Text.escapeHTML(App.parser.data.aliases[alias]) +
 			'</td><td><div align="center"><form style="display:inline;" method="post" action="">' +
-			'<input type="hidden" name="alias" value="' + alias +
+			'<input type="hidden" name="alias" value="' + Text.escapeHTML(alias) +
 			'" /><input type="submit" name="remove" value="Remove Alias" /></form></div></td></tr>';
 		}
 
 		htmlVars.cmd_list = '';
 		let cmds = App.parser.getCommadsArray().sort();
 		for (let i = 0; i < cmds.length; i++) {
-			htmlVars.cmd_list += '<option value="' + cmds[i] + '">' + cmds[i] + '</option>';
+			htmlVars.cmd_list += '<option value="' + Text.escapeHTML(cmds[i]) + '">' + Text.escapeHTML(cmds[i]) + '</option>';
 		}
 
-		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
-		htmlVars.request_msg = (ok ? ok : (error || ""));
+		htmlVars.request_result = Text.escapeHTML(ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = Text.escapeHTML(ok ? ok : (error || ""));
 
 		html += aliasesTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Commands Aliases - Showdown ChatBot"});
@@ -186,8 +186,11 @@ exports.setup = function (App) {
 			} else {
 				if (App.parser.data.roompermissions[room]) {
 					delete App.parser.data.roompermissions[room];
+					if (App.parser.data.roomTokensOverride[room]) {
+						delete App.parser.data.roomTokensOverride[room];
+					}
 					App.parser.saveData();
-					App.logServerAction(context.user.id, "Delete custom perrmission room: " + room);
+					App.logServerAction(context.user.id, "Delete custom permission room: " + room);
 					ok = 'Room <strong>' + room + '</strong> removed from the custom permission configuration list.';
 				} else {
 					error = "Room <strong>" + room + "</strong> not found.";
@@ -206,6 +209,14 @@ exports.setup = function (App) {
 						App.parser.data.roompermissions[room] = Object.create(null);
 					}
 					data = App.parser.data.roompermissions[room];
+
+					let roomTokensOverride = (context.post.tokens_override || "") + "";
+
+					if (roomTokensOverride) {
+						App.parser.data.roomTokensOverride[room] = roomTokensOverride;
+					} else if (App.parser.data.roomTokensOverride[room]) {
+						delete App.parser.data.roomTokensOverride[room];
+					}
 				}
 				for (let i in App.parser.modPermissions) {
 					let rank = context.post["perm-" + i];
@@ -218,8 +229,8 @@ exports.setup = function (App) {
 					}
 				}
 				App.parser.saveData();
-				App.logServerAction(context.user.id, "Edit custom perrmission room: " + room);
-				ok = 'Configuration for room <strong>' + room + '</strong> was editted sucessfully.';
+				App.logServerAction(context.user.id, "Edit custom permission room: " + room);
+				ok = 'Configuration for room <strong>' + room + '</strong> was edited successfully.';
 			}
 		} else if (context.post.editexp) {
 			let expcmds = [];
@@ -237,19 +248,19 @@ exports.setup = function (App) {
 			App.parser.data.canExceptions = expcmds;
 			App.parser.saveData();
 			App.logServerAction(context.user.id, "Edit Permission Exceptions");
-			ok = 'Permission exceptions configuration editted sucessfully.';
+			ok = 'Permission exceptions configuration edited successfully.';
 		}
 
 		let htmlVars = Object.create(null);
 
-		htmlVars.expusers = Object.keys(App.parser.data.exceptions).join(', ');
+		htmlVars.expusers = Text.escapeHTML(Object.keys(App.parser.data.exceptions).join(', '));
 		let exceptions = [];
 		for (let i = 0; i < App.parser.data.canExceptions.length; i++) {
 			exceptions.push(App.parser.data.canExceptions[i].perm + ", " +
 			App.parser.data.canExceptions[i].user +
 				(App.parser.data.canExceptions[i].room ? (", " + App.parser.data.canExceptions[i].room) : ""));
 		}
-		htmlVars.canexp = exceptions.join('\n');
+		htmlVars.canexp = Text.escapeHTML(exceptions.join('\n'));
 
 		htmlVars.global_chart = getPermissionChart('global-room', 'Global Configuration');
 		htmlVars.rooms_charts = '';
@@ -258,11 +269,11 @@ exports.setup = function (App) {
 			htmlVars.rooms_charts += getPermissionChart(r, 'Room: ' + r);
 		}
 
-		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
-		htmlVars.request_msg = (ok ? ok : (error || ""));
+		htmlVars.request_result = Text.escapeHTML(ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = Text.escapeHTML(ok ? ok : (error || ""));
 
 		html += permissionsTemplate.make(htmlVars);
-		context.endWithWebPage(html, {title: "Commands Permisions - Showdown ChatBot"});
+		context.endWithWebPage(html, {title: "Commands Permissions - Showdown ChatBot"});
 	}
 
 	function parserRoomControlHandler(context, html) {
@@ -302,13 +313,13 @@ exports.setup = function (App) {
 
 		htmlVars.rooms = '';
 		for (let control in App.parser.data.roomctrl) {
-			htmlVars.rooms += '<tr><td>' + control + '</td><td>' + App.parser.data.roomctrl[control] +
+			htmlVars.rooms += '<tr><td>' + Text.escapeHTML(control) + '</td><td>' + Text.escapeHTML(App.parser.data.roomctrl[control]) +
 			'</td><td><div align="center"><form style="display:inline;" method="post" action=""><input type="hidden" name="control" value="' +
 			control + '" /><input type="submit" name="remove" value="Remove Control Room" /></form></div></td></tr>';
 		}
 
-		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
-		htmlVars.request_msg = (ok ? ok : (error || ""));
+		htmlVars.request_result = Text.escapeHTML(ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = Text.escapeHTML(ok ? ok : (error || ""));
 
 		html += roomControlTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Control Rooms - Showdown ChatBot"});
@@ -351,13 +362,13 @@ exports.setup = function (App) {
 
 		htmlVars.rooms = '';
 		for (let alias in App.parser.data.roomaliases) {
-			htmlVars.rooms += '<tr><td>' + alias + '</td><td>' + App.parser.data.roomaliases[alias] +
+			htmlVars.rooms += '<tr><td>' + Text.escapeHTML(alias) + '</td><td>' + Text.escapeHTML(App.parser.data.roomaliases[alias]) +
 			'</td><td><div align="center"><form style="display:inline;" method="post" action=""><input type="hidden" name="alias" value="' +
 			alias + '" /><input type="submit" name="remove" value="Remove Room Alias" /></form></div></td></tr>';
 		}
 
-		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
-		htmlVars.request_msg = (ok ? ok : (error || ""));
+		htmlVars.request_result = Text.escapeHTML(ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = Text.escapeHTML(ok ? ok : (error || ""));
 
 		html += roomAliasesTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Rooms Aliases - Showdown ChatBot"});
@@ -397,13 +408,13 @@ exports.setup = function (App) {
 
 		htmlVars.locklist = '';
 		for (let locked in App.parser.monitor.locked) {
-			htmlVars.locklist += '<tr><td>' + locked + '</td>' + '<td><div align="center"><form style="display:inline;" method="post" action="">' +
-			'<input type="hidden" name="locked" value="' + locked +
+			htmlVars.locklist += '<tr><td>' + Text.escapeHTML(locked) + '</td>' + '<td><div align="center"><form style="display:inline;" method="post" action="">' +
+			'<input type="hidden" name="locked" value="' + Text.escapeHTML(locked) +
 			'" /><input type="submit" name="unlock" value="Unlock" /></form></div></td></tr>';
 		}
 
-		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
-		htmlVars.request_msg = (ok ? ok : (error || ""));
+		htmlVars.request_result = Text.escapeHTML(ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = Text.escapeHTML(ok ? ok : (error || ""));
 
 		html += abuseMonitorTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Control Rooms - Showdown ChatBot"});
@@ -415,6 +426,11 @@ exports.setup = function (App) {
 		html += '<h3>' + title + '</h3>';
 		html += '<form method="post" action="">';
 		html += '<input type="hidden" name="room" value="' + room + '" />';
+
+		if (room !== 'global-room') {
+			html += '<p><strong>Command Tokens (override)</strong>:&nbsp;<input name="tokens_override" type="text" size="50" value="' + Text.escapeHTML(App.parser.data.roomTokensOverride[room] || '') + '" autocomplete="off" />&nbsp;(Separated by spaces)</p>';
+		}
+
 		html += '<table border="1">';
 		html += '<tr><td width="200px"><div align="center"><strong>Permission</strong></div></td> ' +
 		'<td width="200px"><div align="center"><strong>Min Rank Required </strong></div></td></tr>';
