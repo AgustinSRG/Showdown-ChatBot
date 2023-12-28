@@ -93,7 +93,7 @@ exports.setup = function (App) {
 				App.modules.tourldbcustom.system.db.write();
 				App.modules.tourldbcustom.system.generateTable(leaderboardsId);
 				App.logServerAction(context.user.id, "Leaderboards custom: Clear: " + leaderboardsId);
-				ok = "Leaderboards data cleared for " + leaderboardsId;
+				ok = "Leaderboards data cleared for " + Text.escapeHTML(leaderboardsId);
 			}
 		} else if (context.post.gentable) {
 			let leaderboardsId = Text.toId(context.post.name);
@@ -107,7 +107,7 @@ exports.setup = function (App) {
 			if (!error) {
 				App.modules.tourldbcustom.system.generateTable(leaderboardsId);
 				App.logServerAction(context.user.id, "Leaderboards custom: Generate Table: " + leaderboardsId);
-				ok = "Leaderboards table generated for " + leaderboardsId;
+				ok = "Leaderboards table generated for " + Text.escapeHTML(leaderboardsId);
 			}
 		} else if (context.post.restoredata) {
 			let leaderboardsId = Text.toId(context.post.name);
@@ -120,7 +120,7 @@ exports.setup = function (App) {
 
 				check(typeof restoredData === "object" && !!restoredData, "Invalid data provided");
 			} catch (err) {
-				error = err.message;
+				error = Text.escapeHTML(err.message);
 			}
 
 			if (!error) {
@@ -144,7 +144,7 @@ exports.setup = function (App) {
 				App.modules.tourldbcustom.system.db.write();
 				App.modules.tourldbcustom.system.generateTable(leaderboardsId);
 				App.logServerAction(context.user.id, "Leaderboards custom: Restore data: " + leaderboardsId);
-				ok = "Leaderboards data restored for " + leaderboardsId;
+				ok = "Leaderboards data restored for " + Text.escapeHTML(leaderboardsId);
 			}
 		} else if (context.post.edit) {
 			let leaderboardsId = Text.toId(context.post.name);
@@ -214,12 +214,12 @@ exports.setup = function (App) {
 		htmlVars.tables = '';
 		for (let leaderboardsId in Config) {
 			htmlVars.tables += tableTemplate.make({
-				id: leaderboardsId,
+				id: Text.escapeHTML(leaderboardsId),
 				name: Text.escapeHTML(Config[leaderboardsId].name || leaderboardsId),
-				room: Config[leaderboardsId].room || "",
-				winner: Config[leaderboardsId].winner,
-				finalist: Config[leaderboardsId].finalist,
-				semifinalist: Config[leaderboardsId].semifinalist,
+				room: Text.escapeHTML(Config[leaderboardsId].room || ""),
+				winner: Text.escapeHTML(Config[leaderboardsId].winner),
+				finalist: Text.escapeHTML(Config[leaderboardsId].finalist),
+				semifinalist: Text.escapeHTML(Config[leaderboardsId].semifinalist),
 				ctitle: Text.escapeHTML(Config[leaderboardsId].customTitle || ""),
 				description: Text.escapeHTML(Config[leaderboardsId].description || ""),
 				aliases: Text.escapeHTML(Config[leaderboardsId].aliases || ""),

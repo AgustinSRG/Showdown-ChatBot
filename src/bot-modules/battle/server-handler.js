@@ -84,14 +84,14 @@ exports.setup = function (App) {
 
 		let htmlVars = Object.create(null);
 
-		htmlVars.maxbattles = Config.maxBattles;
-		htmlVars.maxladder = Config.ladderBattles;
-		htmlVars.maxturns = Config.maxTurns || 0;
+		htmlVars.maxbattles = Text.escapeHTML(Config.maxBattles);
+		htmlVars.maxladder = Text.escapeHTML(Config.ladderBattles);
+		htmlVars.maxturns = Text.escapeHTML(Config.maxTurns || 0);
 		htmlVars.jointours = Object.keys(Config.joinTours).join(', ');
 		htmlVars.join_abandoned = (!Config.ignoreAbandonedbattles ? "checked=\"checked\"" : "");
-		htmlVars.initmsg = Config.initBattleMsg.join('\n');
-		htmlVars.winmsg = Config.winmsg.join('\n');
-		htmlVars.losemsg = Config.losemsg.join('\n');
+		htmlVars.initmsg = Text.escapeHTML(Config.initBattleMsg.join('\n'));
+		htmlVars.winmsg = Text.escapeHTML(Config.winmsg.join('\n'));
+		htmlVars.losemsg = Text.escapeHTML(Config.losemsg.join('\n'));
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
@@ -152,9 +152,9 @@ exports.setup = function (App) {
 			try {
 				check(!mod.ChallManager.challenges || !mod.ChallManager.challenges.challengeTo, "There is a pending challenge request");
 				check(user, "You must specify an user to send the challenge");
-				check(App.bot.formats[format] && App.bot.formats[format].chall, "Format " + format + " is not available for challenges");
-				check(team || !App.bot.formats[format].team || mod.TeamBuilder.hasTeam(format), "No teams available for " + format);
-				check(!team || mod.TeamBuilder.dynTeams[team], "Team " + team + " not found");
+				check(App.bot.formats[format] && App.bot.formats[format].chall, "Format " + Text.escapeHTML(format) + " is not available for challenges");
+				check(team || !App.bot.formats[format].team || mod.TeamBuilder.hasTeam(format), "No teams available for " + Text.escapeHTML(format));
+				check(!team || mod.TeamBuilder.dynTeams[team], "Team " + Text.escapeHTML(team) + " not found");
 			} catch (err) {
 				error = err.message;
 			}
@@ -173,7 +173,7 @@ exports.setup = function (App) {
 				cmds.push('|/challenge ' + user + ", " + format);
 				App.bot.send(cmds);
 				App.logServerAction(context.user.id, "Send Challenge: " + user + " | " + format + " | " + (team || "-"));
-				ok = "Challenge request sent to " + user;
+				ok = "Challenge request sent to " + Text.escapeHTML(user);
 			}
 		} else if (context.post.cancelchall) {
 			if (mod.ChallManager.challenges && mod.ChallManager.challenges.challengeTo) {
@@ -218,7 +218,7 @@ exports.setup = function (App) {
 				check(!mod.LadderManager.laddering, "Already laddering");
 				check(format, "You must specify a format");
 				check(App.bot.formats[format] && App.bot.formats[format].ladder, "Invalid Format");
-				check(!App.bot.formats[format].team || mod.TeamBuilder.hasTeam(format), "No available teams for " + format);
+				check(!App.bot.formats[format].team || mod.TeamBuilder.hasTeam(format), "No available teams for " + Text.escapeHTML(format));
 				check(!isNaN(seconds) && seconds > 0, "Invalid interval");
 			} catch (err) {
 				error = err.message;
@@ -227,7 +227,7 @@ exports.setup = function (App) {
 			if (!error) {
 				mod.LadderManager.start(format, seconds * 1000);
 				App.logServerAction(context.user.id, "Start Laddering. Format: " + format + ", interval: " + seconds);
-				ok = 'Laddering in format: ' + App.bot.formats[format].name;
+				ok = 'Laddering in format: ' + Text.escapeHTML(App.bot.formats[format].name);
 			}
 		} else if (context.post.stopladder) {
 			try {
@@ -287,7 +287,7 @@ exports.setup = function (App) {
 				mod.TeamBuilder.saveTeams();
 				mod.TeamBuilder.mergeTeams();
 				App.logServerAction(context.user.id, "Delete Team: " + id);
-				ok = 'Team <strong>' + id + '</strong> deleted successfully';
+				ok = 'Team <strong>' + Text.escapeHTML(id) + '</strong> deleted successfully';
 			} else {
 				error = "Team not found";
 			}
@@ -317,7 +317,7 @@ exports.setup = function (App) {
 				mod.TeamBuilder.saveTeams();
 				mod.TeamBuilder.mergeTeams();
 				App.logServerAction(context.user.id, "Add Team: " + id);
-				ok = 'Team <strong>' + id + '</strong> added successfully';
+				ok = 'Team <strong>' + Text.escapeHTML(id) + '</strong> added successfully';
 			}
 		}
 
@@ -340,9 +340,9 @@ exports.setup = function (App) {
 			}
 			if (selectedFormat && selectedFormat !== teams[id].format) continue;
 			htmlVars.teams += teamsItemTemplate.make({
-				id: id,
+				id: Text.escapeHTML(id),
 				format: Text.escapeHTML(formatName),
-				pokemon: Teams.teamOverview(teams[id].packed),
+				pokemon: Text.escapeHTML(Teams.teamOverview(teams[id].packed)),
 			});
 		}
 

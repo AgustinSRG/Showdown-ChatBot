@@ -42,7 +42,7 @@ exports.setup = function (App) {
 			let room = Text.toRoomid(context.post.room);
 			try {
 				check(room, 'You must specify a room');
-				check(!data[room], 'Room <strong>' + room + '</strong> already exists in this list.');
+				check(!data[room], 'Room <strong>' + Text.escapeHTML(room) + '</strong> already exists in this list.');
 			} catch (err) {
 				error = err.message;
 			}
@@ -50,7 +50,7 @@ exports.setup = function (App) {
 				data[room] = Object.create(null);
 				App.modules.joinphrases.system.db.write();
 				App.logServerAction(context.user.id, "Add Join-phrases Room: " + room);
-				ok = 'Room <strong>' + room + '</strong> added to the join-phrases feature.';
+				ok = 'Room <strong>' + Text.escapeHTML(room) + '</strong> added to the join-phrases feature.';
 			}
 		}
 
@@ -58,7 +58,7 @@ exports.setup = function (App) {
 
 		let opts = [];
 		for (let room in App.modules.joinphrases.system.config.rooms) {
-			opts.push('<a class="submenu-option" href="/joinphrases/room/' + room + '/">' + room + '</a>');
+			opts.push('<a class="submenu-option" href="/joinphrases/room/' + Text.escapeHTML(room) + '/">' + Text.escapeHTML(room) + '</a>');
 		}
 		htmlVars.submenu = opts.join(' | ');
 
@@ -89,7 +89,7 @@ exports.setup = function (App) {
 				config.rooms[room][user] = phrase;
 				App.modules.joinphrases.system.db.write();
 				App.logServerAction(context.user.id, "Set Join-phrase. Room: " + room + ", User: " + user);
-				ok = 'Join-Phrase successfully set for user <strong>' + user + '</strong>.';
+				ok = 'Join-Phrase successfully set for user <strong>' + Text.escapeHTML(user) + '</strong>.';
 			}
 		} else if (context.post.remove) {
 			let user = Text.toId(context.post.user);
@@ -106,18 +106,18 @@ exports.setup = function (App) {
 				}
 				App.modules.joinphrases.system.db.write();
 				App.logServerAction(context.user.id, "Delete Join-phrase. Room: " + room + ", User: " + user);
-				ok = 'Join-Phrase successfully deleted for user <strong>' + user + '</strong>.';
+				ok = 'Join-Phrase successfully deleted for user <strong>' + Text.escapeHTML(user) + '</strong>.';
 			}
 		}
 
 		let htmlVars = Object.create(null);
 
-		htmlVars.room = room;
+		htmlVars.room = Text.escapeHTML(room);
 		htmlVars.name = Text.escapeHTML(App.parser.getRoomTitle(room));
 
 		let opts = [];
 		for (let k in config.rooms) {
-			opts.push('<a class="submenu-option' + (room === k ? '-selected' : '') + '" href="/joinphrases/room/' + k + '/">' + k + '</a>');
+			opts.push('<a class="submenu-option' + (room === k ? '-selected' : '') + '" href="/joinphrases/room/' + Text.escapeHTML(k) + '/">' + Text.escapeHTML(k) + '</a>');
 		}
 		htmlVars.submenu = opts.join(' | ');
 
@@ -125,10 +125,10 @@ exports.setup = function (App) {
 		if (config.rooms[room]) {
 			for (let user in config.rooms[room]) {
 				htmlVars.phrases += '<tr>';
-				htmlVars.phrases += '<td>' + user + '</td>';
+				htmlVars.phrases += '<td>' + Text.escapeHTML(user) + '</td>';
 				htmlVars.phrases += '<td>' + Text.escapeHTML(config.rooms[room][user]) + '</td>';
 				htmlVars.phrases += '<td><div align="center"><form style="display:inline;" method="post" action="">' +
-					'<input type="hidden" name="user" value="' + user +
+					'<input type="hidden" name="user" value="' + Text.escapeHTML(user) +
 					'" /><input type="submit" name="remove" value="Delete" /></form></div></td>';
 				htmlVars.phrases += '</tr>';
 			}

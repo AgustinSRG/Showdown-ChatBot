@@ -59,10 +59,10 @@ exports.setup = function (App) {
 
 		let htmlVars = Object.create(null);
 
-		htmlVars.room = config.room;
-		htmlVars.port = config.port;
-		htmlVars.secret = config.secret;
-		htmlVars.bl = Object.keys(config.blacklist).join(', ');
+		htmlVars.room = Text.escapeHTML(config.room);
+		htmlVars.port = Text.escapeHTML(config.port);
+		htmlVars.secret = Text.escapeHTML(config.secret);
+		htmlVars.bl = Text.escapeHTML(Object.keys(config.blacklist).join(', '));
 		htmlVars.enabled = (config.enabled ? ' checked="checked"' : '');
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));

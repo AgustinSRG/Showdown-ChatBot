@@ -85,14 +85,14 @@ exports.setup = function (App) {
 		}
 
 		let htmlVars = Object.create(null);
-		htmlVars.usage_link = Config.usagelink || "";
-		htmlVars.def_format = (Config.gtier || "");
+		htmlVars.usage_link = Text.escapeHTML(Config.usagelink || "");
+		htmlVars.def_format = Text.escapeHTML(Config.gtier || "");
 		htmlVars.rooms = '';
 
 		for (let room in Config.roomtier) {
-			htmlVars.rooms += '<tr><td>' + room + '</td><td>' + Config.roomtier[room] +
+			htmlVars.rooms += '<tr><td>' + Text.escapeHTML(room) + '</td><td>' + Text.escapeHTML(Config.roomtier[room]) +
 				'</td><td><div align="center"><form method="post" action="" style="display:inline;"><input type="hidden" name="room" value="' +
-				room + '" /><label><input type="submit" name="deleteroom" value="Delete" /></label></form></div></td></tr>';
+				Text.escapeHTML(room) + '" /><label><input type="submit" name="deleteroom" value="Delete" /></label></form></div></td></tr>';
 		}
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));

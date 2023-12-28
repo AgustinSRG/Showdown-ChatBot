@@ -95,7 +95,7 @@ exports.setup = function (App) {
 				App.modules.tourleaderboards.system.db.write();
 				App.modules.tourleaderboards.system.generateTable(room);
 				App.logServerAction(context.user.id, "Leaderboards: Clear Room: " + room);
-				ok = "Leaderboards data cleared for room " + room;
+				ok = "Leaderboards data cleared for room " + Text.escapeHTML(room);
 			}
 		} else if (context.post.gentable) {
 			let room = Text.toRoomid(context.post.room);
@@ -109,7 +109,7 @@ exports.setup = function (App) {
 			if (!error) {
 				App.modules.tourleaderboards.system.generateTable(room);
 				App.logServerAction(context.user.id, "Leaderboards: Generate Table: " + room);
-				ok = "Leaderboards table generated for room " + room;
+				ok = "Leaderboards table generated for room " + Text.escapeHTML(room);
 			}
 		} else if (context.post.restoredata) {
 			let room = Text.toRoomid(context.post.room);
@@ -122,7 +122,7 @@ exports.setup = function (App) {
 
 				check(typeof restoredData === "object" && !!restoredData, "Invalid data provided");
 			} catch (err) {
-				error = err.message;
+				error = Text.escapeHTML(err.message);
 			}
 
 			if (!error) {
@@ -146,7 +146,7 @@ exports.setup = function (App) {
 				App.modules.tourleaderboards.system.db.write();
 				App.modules.tourleaderboards.system.generateTable(room);
 				App.logServerAction(context.user.id, "Leaderboards: Restore data: " + room);
-				ok = "Leaderboards data restored for room " + room;
+				ok = "Leaderboards data restored for room " + Text.escapeHTML(room);
 			}
 		} else if (context.post.edit) {
 			let room = Text.toRoomid(context.post.room);
@@ -187,12 +187,12 @@ exports.setup = function (App) {
 		htmlVars.rooms = '';
 		for (let room in Config) {
 			htmlVars.rooms += roomTemplate.make({
-				room: room,
+				room: Text.escapeHTML(room),
 				name: Text.escapeHTML(App.parser.getRoomTitle(room)),
-				winner: Config[room].winner,
-				finalist: Config[room].finalist,
-				semifinalist: Config[room].semifinalist,
-				battle: Config[room].battle,
+				winner: Text.escapeHTML(Config[room].winner),
+				finalist: Text.escapeHTML(Config[room].finalist),
+				semifinalist: Text.escapeHTML(Config[room].semifinalist),
+				battle: Text.escapeHTML(Config[room].battle),
 				banned: Text.escapeHTML(Config[room].banned || ""),
 				onlyofficial: (Config[room].onlyOfficial ? ' checked="checked"' : ''),
 				useratio: (Config[room].useratio ? ' checked="checked"' : ''),

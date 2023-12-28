@@ -81,7 +81,7 @@ exports.setup = function (App) {
 		for (let id in quotes) {
 			htmlVars.quotes += '<tr><td style="word-wrap: break-word;">' + Text.escapeHTML(quotes[id]) + '</td>';
 			htmlVars.quotes += ' <td><div align="center"><form style="display:inline;" method="post" action="">' +
-			'<input type="hidden" name="id" value="' + id + '" /><input type="submit" name="remove" value="Remove" /></form></div></td></tr>';
+			'<input type="hidden" name="id" value="' + Text.escapeHTML(id) + '" /><input type="submit" name="remove" value="Remove" /></form></div></td></tr>';
 		}
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
@@ -130,7 +130,7 @@ exports.setup = function (App) {
 		for (let id in jokes) {
 			htmlVars.jokes += '<tr><td style="word-wrap: break-word;">' + Text.escapeHTML(jokes[id]) + '</td>';
 			htmlVars.jokes += ' <td><div align="center"><form style="display:inline;" method="post" action="">' +
-			'<input type="hidden" name="id" value="' + id + '" /><input type="submit" name="remove" value="Remove" /></form></div></td></tr>';
+			'<input type="hidden" name="id" value="' + Text.escapeHTML(id) + '" /><input type="submit" name="remove" value="Remove" /></form></div></td></tr>';
 		}
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));

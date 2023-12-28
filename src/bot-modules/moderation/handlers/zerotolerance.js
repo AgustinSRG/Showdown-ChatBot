@@ -80,14 +80,14 @@ exports.setup = function (App) {
 				}
 				App.modules.moderation.system.db.write();
 				App.logServerAction(context.user.id, "Edit Zero Tolerance. Room: " + room);
-				ok = 'Zero Tolerance list for room <strong>' + room + '</strong> saved.';
+				ok = 'Zero Tolerance list for room <strong>' + Text.escapeHTML(room) + '</strong> saved.';
 			}
 		} else if (context.post.add) {
 			let data = App.modules.moderation.system.data.zeroTolerance;
 			let room = Text.toRoomid(context.post.room);
 			try {
 				check(room, 'You must specify a room');
-				check(!data[room], 'Room <strong>' + room + '</strong> already exists in this list.');
+				check(!data[room], 'Room <strong>' + Text.escapeHTML(room) + '</strong> already exists in this list.');
 			} catch (err) {
 				error = err.message;
 			}
@@ -95,7 +95,7 @@ exports.setup = function (App) {
 				data[room] = Object.create(null);
 				App.modules.moderation.system.db.write();
 				App.logServerAction(context.user.id, "Add Zero Tolerance Room: " + room);
-				ok = 'Room <strong>' + room + '</strong> added to the zero tolerance feature.';
+				ok = 'Room <strong>' + Text.escapeHTML(room) + '</strong> added to the zero tolerance feature.';
 			}
 		}
 
@@ -125,14 +125,14 @@ exports.setup = function (App) {
 				}
 			}
 			htmlVars.rooms += roomTemplate.make({
-				room: room,
+				room: Text.escapeHTML(room),
 				name: Text.escapeHTML(App.parser.getRoomTitle(room)),
 				enabled: (App.modules.moderation.system.data.enableZeroTol[room] ? ' checked="checked"' : ''),
-				min: minTol.join(', '),
-				low: lowTol.join(', '),
-				normal: normalTol.join(', '),
-				high: highTol.join(', '),
-				max:  maxTol.join(', '),
+				min: Text.escapeHTML(minTol.join(', ')),
+				low: Text.escapeHTML(lowTol.join(', ')),
+				normal: Text.escapeHTML(normalTol.join(', ')),
+				high: Text.escapeHTML(highTol.join(', ')),
+				max: Text.escapeHTML(maxTol.join(', ')),
 			});
 		}
 

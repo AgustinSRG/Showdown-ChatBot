@@ -8,6 +8,7 @@
 const Path = require('path');
 const SubMenu = Tools('submenu');
 const Template = Tools('html-template');
+const Text = Tools('text');
 
 const mainTemplate = new Template(Path.resolve(__dirname, 'templates', 'modules.html'));
 const menuTemplate = new Template(Path.resolve(__dirname, 'templates', 'modules-menu.html'));
@@ -42,8 +43,8 @@ exports.setup = function (App) {
 				}
 			}
 			App.saveConfig();
-			ok = "Modules configuration saved sucessfully.";
-			App.logServerAction(context.user.id, 'Modules configuration was editted');
+			ok = "Modules configuration saved successfully.";
+			App.logServerAction(context.user.id, 'Modules configuration was edited');
 		}
 
 		let htmlVars = Object.create(null);
@@ -51,8 +52,8 @@ exports.setup = function (App) {
 		htmlVars.modules = '<table border="0">';
 		for (let id in App.modules) {
 			htmlVars.modules += '<tr>';
-			htmlVars.modules += '<td><strong>' + App.modules[id].name + '</strong>&nbsp;</td>';
-			htmlVars.modules += '<td><select name="' + id + '">';
+			htmlVars.modules += '<td><strong>' + Text.escapeHTML(App.modules[id].name) + '</strong>&nbsp;</td>';
+			htmlVars.modules += '<td><select name="' + Text.escapeHTML(id) + '">';
 			htmlVars.modules += '<option value="e"' + (App.config.loadmodules[id] !== false ? ' selected="selected"' : '') + '>Enabled</option>';
 			htmlVars.modules += '<option value="d"' + (App.config.loadmodules[id] === false ? ' selected="selected"' : '') + '>Disabled</option>';
 			htmlVars.modules += '</select></td>';
@@ -78,8 +79,8 @@ exports.setup = function (App) {
 			}
 			App.config.menuOrder = menuOrder;
 			App.saveConfig();
-			ok = "Control panel menu configuration saved sucessfully.";
-			App.logServerAction(context.user.id, 'Control panel menu configuration was editted');
+			ok = "Control panel menu configuration saved successfully.";
+			App.logServerAction(context.user.id, 'Control panel menu configuration was edited');
 		}
 		let htmlVars = Object.create(null);
 
@@ -90,9 +91,9 @@ exports.setup = function (App) {
 				level = App.config.menuOrder[opt];
 			}
 			htmlVars.opts += '<tr>';
-			htmlVars.opts += '<td><strong>' + App.server.menu[opt].name + '</strong></td>';
-			htmlVars.opts += '<td><input name="' + opt + '" type="text" value="' +
-			level + '" size="15" placeholder="default" autocomplete="off" /></td>';
+			htmlVars.opts += '<td><strong>' + Text.escapeHTML(App.server.menu[opt].name) + '</strong></td>';
+			htmlVars.opts += '<td><input name="' + Text.escapeHTML(opt) + '" type="text" value="' +
+			Text.escapeHTML(level) + '" size="15" placeholder="default" autocomplete="off" /></td>';
 			htmlVars.opts += '<tr>';
 			htmlVars.opts += '</tr>';
 		}

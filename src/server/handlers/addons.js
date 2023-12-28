@@ -48,7 +48,7 @@ exports.setup = function (App) {
 					App.reportCrash(err);
 				}
 				App.logServerAction(context.user.id, 'Add-on uninstalled: ' + addon);
-				ok = "Addon " + addon + " deleted sucessfully";
+				ok = "Addon " + Text.escapeHTML(addon) + " deleted successfully";
 			} else {
 				error = "Invalid add-on";
 			}
@@ -59,7 +59,7 @@ exports.setup = function (App) {
 
 		for (let file in App.addons) {
 			htmlVars.addons_list += addonItemTemplate.make({
-				file: file,
+				file: Text.escapeHTML(file),
 				desc: (App.addons[file].desc ? ('<p>' + Text.escapeHtml(App.addons[file].desc) + '</p>') : ""),
 			});
 		}
@@ -81,7 +81,7 @@ exports.setup = function (App) {
 				check(addon, "You must specify an addon filename");
 				check(addon.length <= 20, "Addon filename is too long");
 				check(content, "Addon content cannot be blank");
-				check(!App.addons[file], "Addon " + file + " already exists");
+				check(!App.addons[file], "Addon " + Text.escapeHTML(file) + " already exists");
 			} catch (err) {
 				error = err.message;
 			}
@@ -131,7 +131,7 @@ exports.setup = function (App) {
 			try {
 				check(addon, "You must specify an addon filename");
 				check(content, "Addon content cannot be blank");
-				check(App.addons[addon], "Addon " + addon + " not found");
+				check(App.addons[addon], "Addon " + Text.escapeHTML(addon) + " not found");
 			} catch (err) {
 				error = err.message;
 			}
@@ -146,14 +146,14 @@ exports.setup = function (App) {
 					error = "Failed to re-install the add-on";
 				} else {
 					App.logServerAction(context.user.id, 'Add-on re-installed: ' + addon);
-					ok = "Add-on re-installed sucessfully";
+					ok = "Add-on re-installed successfully";
 				}
 			}
 		}
 
 		let htmlVars = Object.create(null);
 		htmlVars.content = JSON.stringify(addonContent);
-		htmlVars.file = path;
+		htmlVars.file = Text.escapeHTML(path);
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 

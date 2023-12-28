@@ -7,9 +7,9 @@
 $nochat = This command is only available for chat rooms
 $inv = Invalid username
 
-$0 = Join-Phrase sucessfully set for user
+$0 = Join-Phrase successfully set for user
 $1 = in room
-$2 = Join-Phrase sucessfully removed for user
+$2 = Join-Phrase successfully removed for user
 $3 = There is not a Join-Phrase set for user
 $4 = There are not join-phrases set for room
 $5 = Upload error. Try again later.

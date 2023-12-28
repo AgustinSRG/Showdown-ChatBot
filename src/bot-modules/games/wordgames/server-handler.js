@@ -7,6 +7,7 @@
 const Path = require('path');
 const check = Tools('check');
 const Template = Tools('html-template');
+const Text = Tools('text');
 
 const mainTemplate = new Template(Path.resolve(__dirname, 'template.html'));
 const groupTemplate = new Template(Path.resolve(__dirname, 'template-group.html'));
@@ -53,7 +54,7 @@ exports.setup = function (App) {
 				mod.data[group] = words;
 				mod.db.write();
 				App.logServerAction(context.user.id, "Words of Games: Add");
-				ok = "Group <strong>" + group + "</strong> added sucessfully.";
+				ok = "Group <strong>" + Text.escapeHTML(group) + "</strong> added successfully.";
 			}
 		} else if (context.post.delgroup) {
 			let group = (context.post.wordgroup || "");
@@ -68,7 +69,7 @@ exports.setup = function (App) {
 				delete mod.data[group];
 				mod.db.write();
 				App.logServerAction(context.user.id, "Words of Games: Delete");
-				ok = "Group <strong>" + group + "</strong> deleted sucessfully.";
+				ok = "Group <strong>" + Text.escapeHTML(group) + "</strong> deleted successfully.";
 			}
 		} else if (context.post.edit) {
 			let group = (context.post.wordgroup || "");
@@ -93,7 +94,7 @@ exports.setup = function (App) {
 				mod.data[group] = words;
 				mod.db.write();
 				App.logServerAction(context.user.id, "Words of Games: Edit");
-				ok = "Group <strong>" + group + "</strong> sucessfully modified.";
+				ok = "Group <strong>" + Text.escapeHTML(group) + "</strong> successfully modified.";
 			}
 		}
 
@@ -102,13 +103,12 @@ exports.setup = function (App) {
 		htmlVars.groups = '';
 		for (let group in mod.data) {
 			htmlVars.groups += groupTemplate.make({
-				group: group,
-				jsongroup: JSON.stringify(group),
-				words: mod.data[group].join(', '),
+				group: Text.escapeHTML(group),
+				words: Text.escapeHTM(mod.data[group].join(', ')),
 			});
 		}
 
-		htmlVars.words = (errAdd ? (context.post.words || "") : '');
+		htmlVars.words = Text.escapeHTML(errAdd ? (context.post.words || "") : '');
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 

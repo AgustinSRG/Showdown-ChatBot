@@ -42,7 +42,7 @@ exports.setup = function (App) {
 			let room = Text.toRoomid(context.post.room);
 			try {
 				check(room, 'You must specify a room');
-				check(!data[room], 'Groupchat <strong>' + room + '</strong> already exists in this list.');
+				check(!data[room], 'Groupchat <strong>' + Text.escapeHTML(room) + '</strong> already exists in this list.');
 			} catch (err) {
 				error = err.message;
 			}
@@ -58,14 +58,14 @@ exports.setup = function (App) {
 				App.modules.groupchats.system.cacheRooms();
 				App.modules.groupchats.system.tick();
 				App.logServerAction(context.user.id, "Add groupchat: " + room);
-				ok = 'Groupchat <strong>' + room + '</strong> added to the groupchats feature.';
+				ok = 'Groupchat <strong>' + Text.escapeHTML(room) + '</strong> added to the groupchats feature.';
 			}
 		} else if (context.post.remove) {
 			let data = App.modules.groupchats.system.config;
 			let room = Text.toRoomid(context.post.room);
 			try {
 				check(room, 'You must specify a room');
-				check(data[room], 'Groupchat <strong>' + room + '</strong> does not exists in this list.');
+				check(data[room], 'Groupchat <strong>' + Text.escapeHTML(room) + '</strong> does not exists in this list.');
 			} catch (err) {
 				error = err.message;
 			}
@@ -76,7 +76,7 @@ exports.setup = function (App) {
 				App.modules.groupchats.system.cacheRooms();
 				App.modules.groupchats.system.tick();
 				App.logServerAction(context.user.id, "Delete groupchat: " + room);
-				ok = 'Groupchat <strong>' + room + '</strong> removed sucessfully.';
+				ok = 'Groupchat <strong>' + Text.escapeHTML(room) + '</strong> removed successfully.';
 			}
 		}
 
@@ -84,7 +84,7 @@ exports.setup = function (App) {
 
 		let opts = [];
 		for (let room in App.modules.groupchats.system.config) {
-			opts.push('<a class="submenu-option" href="/groupchats/room/' + room + '/">' +
+			opts.push('<a class="submenu-option" href="/groupchats/room/' + Text.escapeHTML(room) + '/">' +
 					  Text.escapeHTML(App.modules.groupchats.system.config[room].name) + '</a>');
 		}
 		htmlVars.submenu = opts.join(' | ');
@@ -121,7 +121,7 @@ exports.setup = function (App) {
 				App.modules.groupchats.system.cacheRooms();
 				App.modules.groupchats.system.tick();
 				App.logServerAction(context.user.id, "Edit groupchat: " + room);
-				ok = 'Changes saved sucessfully.';
+				ok = 'Changes saved successfully.';
 			}
 		} else if (context.post.modintro) {
 			let data = App.modules.groupchats.system.config;
@@ -130,7 +130,7 @@ exports.setup = function (App) {
 			App.modules.groupchats.system.saveData();
 			App.modules.groupchats.system.setRoomIntro(room);
 			App.logServerAction(context.user.id, "Edit groupchat (roomintro): " + room);
-			ok = 'Changes saved sucessfully.';
+			ok = 'Changes saved successfully.';
 		} else if (context.post.setauth) {
 			let data = App.modules.groupchats.system.config;
 			let user = Text.toId(context.post.user);
@@ -151,22 +151,22 @@ exports.setup = function (App) {
 				App.modules.groupchats.system.saveData();
 				App.modules.groupchats.system.setAuth(room, user, group);
 				App.logServerAction(context.user.id, "Edit groupchat (auth): " + room + " / " + user + " / " + group);
-				ok = 'Changes saved sucessfully.';
+				ok = 'Changes saved successfully.';
 			}
 		}
 
 		let htmlVars = Object.create(null);
 
-		htmlVars.room = room;
+		htmlVars.room = Text.escapeHTML(room);
 		htmlVars.name = Text.escapeHTML(config[room].name);
 		htmlVars.private = config[room].private ? 'checked="checked"' : '';
-		htmlVars.authfrom = config[room].authfrom || "";
+		htmlVars.authfrom = Text.escapeHTML(config[room].authfrom || "");
 
 		htmlVars.intro = JSON.stringify(config[room].intro);
 
 		let opts = [];
 		for (let room in App.modules.groupchats.system.config) {
-			opts.push('<a class="submenu-option" href="/groupchats/room/' + room + '/">' +
+			opts.push('<a class="submenu-option" href="/groupchats/room/' + Text.escapeHTML(room) + '/">' +
 					  Text.escapeHTML(App.modules.groupchats.system.config[room].name) + '</a>');
 		}
 		htmlVars.submenu = opts.join(' | ');

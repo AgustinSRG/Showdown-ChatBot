@@ -43,7 +43,7 @@ exports.setup = function (App) {
 			let room = Text.toRoomid(context.post.room);
 			try {
 				check(room, 'You must specify a room');
-				check(!Mod.rooms[room], 'Room <strong>' + room + '</strong> already exists in this list.');
+				check(!Mod.rooms[room], 'Room <strong>' + Text.escapeHTML(room) + '</strong> already exists in this list.');
 			} catch (err) {
 				error = err.message;
 			}
@@ -51,13 +51,13 @@ exports.setup = function (App) {
 				Mod.createAuction(room);
 				Mod.saveData();
 				App.logServerAction(context.user.id, "Add Players-Auction Room: " + room);
-				ok = 'Room <strong>' + room + '</strong> added to the players-auction feature.';
+				ok = 'Room <strong>' + Text.escapeHTML(room) + '</strong> added to the players-auction feature.';
 			}
 		} else if (context.post.remove) {
 			let room = Text.toRoomid(context.post.room);
 			try {
 				check(room, 'You must specify a room');
-				check(Mod.rooms[room], 'Room <strong>' + room + '</strong> does not exists in this list.');
+				check(Mod.rooms[room], 'Room <strong>' + Text.escapeHTML(room) + '</strong> does not exists in this list.');
 			} catch (err) {
 				error = err.message;
 			}
@@ -65,7 +65,7 @@ exports.setup = function (App) {
 				Mod.removeAuction(room);
 				Mod.saveData();
 				App.logServerAction(context.user.id, "Remove Players-Auction Room: " + room);
-				ok = 'Room <strong>' + room + '</strong> removed from players-auction feature.';
+				ok = 'Room <strong>' + Text.escapeHTML(room) + '</strong> removed from players-auction feature.';
 			}
 		}
 
@@ -73,7 +73,7 @@ exports.setup = function (App) {
 
 		let opts = [];
 		for (let room in Mod.rooms) {
-			opts.push('<a class="submenu-option" href="/auction/room/' + room + '/">' + room + '</a>');
+			opts.push('<a class="submenu-option" href="/auction/room/' + Text.escapeHTML(room) + '/">' + Text.escapeHTML(room) + '</a>');
 		}
 		htmlVars.submenu = opts.join(' | ');
 
@@ -108,7 +108,7 @@ exports.setup = function (App) {
 				Mod.createAuction(room);
 				Mod.saveData();
 				App.logServerAction(context.user.id, "Edit Players-Auction Room: " + room);
-				ok = 'Players-Auction data modified sucessfully.';
+				ok = 'Players-Auction data modified successfully.';
 			}
 		}
 
@@ -116,12 +116,12 @@ exports.setup = function (App) {
 
 		let opts = [];
 		for (let k in Mod.rooms) {
-			opts.push('<a class="submenu-option' + (room === k ? '-selected' : '') + '" href="/auction/room/' + k + '/">' + k + '</a>');
+			opts.push('<a class="submenu-option' + (room === k ? '-selected' : '') + '" href="/auction/room/' + Text.escapeHTML(k) + '/">' + Text.escapeHTML(k) + '</a>');
 		}
 		htmlVars.submenu = opts.join(' | ');
 
 		htmlVars.content = JSON.stringify(JSON.stringify(Mod.rooms[room].data));
-		htmlVars.room = room;
+		htmlVars.room = Text.escapeHTML(room);
 		htmlVars.name = Text.escapeHTML(App.parser.getRoomTitle(room));
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));

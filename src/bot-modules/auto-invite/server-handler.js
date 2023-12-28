@@ -47,8 +47,8 @@ exports.setup = function (App) {
 		}
 
 		let htmlVars = Object.create(null);
-		htmlVars.room = (App.config.modules.autoinvite.room || "");
-		htmlVars.publicroom = (App.config.modules.autoinvite.public || "");
+		htmlVars.room = Text.escapeHTML(App.config.modules.autoinvite.room || "");
+		htmlVars.publicroom = Text.escapeHTML(App.config.modules.autoinvite.public || "");
 		htmlVars.rank = getRankSelect('rank', App.config.modules.autoinvite.rank);
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
@@ -64,10 +64,10 @@ exports.setup = function (App) {
 			rank = App.config.parser[rank];
 		}
 		let html = '';
-		html += '<select name="' + name + '">';
+		html += '<select name="' + Text.escapeHTML(name) + '">';
 		for (let j = 0; j < App.config.parser.groups.length; j++) {
-			html += '<option value="' + App.config.parser.groups[j] + '"' +
-			(rank === App.config.parser.groups[j] ? ' selected="selected"' : '') + '>Group ' + App.config.parser.groups[j] + '</option>';
+			html += '<option value="' + Text.escapeHTML(App.config.parser.groups[j]) + '"' +
+			(rank === App.config.parser.groups[j] ? ' selected="selected"' : '') + '>Group ' + Text.escapeHTML(App.config.parser.groups[j]) + '</option>';
 		}
 		html += '</select>';
 		return html;

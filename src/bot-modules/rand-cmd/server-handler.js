@@ -47,7 +47,7 @@ exports.setup = function (App) {
 
 			try {
 				check(cmd, "You must specify a command");
-				check(!Mod.data.commands[cmd], "Command " + cmd + " already exists");
+				check(!Mod.data.commands[cmd], "Command " + Text.escapeHTML(cmd) + " already exists");
 				check(content, "Content cannot be blank");
 			} catch (err) {
 				error = err.message;
@@ -58,7 +58,7 @@ exports.setup = function (App) {
 				Mod.data.commands[cmd] = content;
 				Mod.db.write();
 				App.logServerAction(context.user.id, "Random CMD | Create command: " + cmd);
-				ok = 'Random command "' + cmd + '" was created';
+				ok = 'Random command "' + Text.escapeHTML(cmd) + '" was created';
 			}
 		} else if (context.post.edit) {
 			let cmd = Text.toCmdid(context.post.cmd);
@@ -66,7 +66,7 @@ exports.setup = function (App) {
 
 			try {
 				check(cmd, "You must specify a command");
-				check(Mod.data.commands[cmd], "Command " + cmd + " not found");
+				check(Mod.data.commands[cmd], "Command " + Text.escapeHTML(cmd) + " not found");
 				check(content, "Content cannot be blank");
 			} catch (err) {
 				error = err.message;
@@ -76,14 +76,14 @@ exports.setup = function (App) {
 				Mod.data.commands[cmd] = content;
 				Mod.db.write();
 				App.logServerAction(context.user.id, "Random CMD | Edit command: " + cmd);
-				ok = 'Random command "' + cmd + '" was modified sucessfully';
+				ok = 'Random command "' + Text.escapeHTML(cmd) + '" was modified successfully';
 			}
 		} else if (context.post.delcmd) {
 			let cmd = Text.toCmdid(context.post.cmd);
 
 			try {
 				check(cmd, "You must specify a command");
-				check(Mod.data.commands[cmd], "Command " + cmd + " not found");
+				check(Mod.data.commands[cmd], "Command " + Text.escapeHTML(cmd) + " not found");
 			} catch (err) {
 				error = err.message;
 			}
@@ -92,7 +92,7 @@ exports.setup = function (App) {
 				delete Mod.data.commands[cmd];
 				Mod.db.write();
 				App.logServerAction(context.user.id, "Random CMD | Delete command: " + cmd);
-				ok = 'Random command "' + cmd + '" was deleted';
+				ok = 'Random command "' + Text.escapeHTML(cmd) + '" was deleted';
 			}
 		}
 
@@ -102,7 +102,7 @@ exports.setup = function (App) {
 		let commands = Mod.data.commands;
 		for (let cmd in commands) {
 			htmlVars.cmds += cmdTemplate.make({
-				cmd: cmd,
+				cmd: Text.escapeHTML(cmd),
 				content: Text.escapeHTML(commands[cmd]),
 			});
 		}
@@ -131,7 +131,7 @@ exports.setup = function (App) {
 						App.logServerAction(context.user.id, "Random CMD | Set alias: " + alias + " to the command: " + cmd);
 						ok = 'Command "' + alias + '" is now alias of "' + cmd + '"';
 					} else {
-						error = "The command <strong>" + cmd + "</strong> does not exists.";
+						error = "The command <strong>" + Text.escapeHTML(cmd) + "</strong> does not exists.";
 					}
 				} else {
 					error = "You must specify a command";
@@ -146,9 +146,9 @@ exports.setup = function (App) {
 					delete Mod.data.aliases[alias];
 					Mod.db.write();
 					App.logServerAction(context.user.id, "Random CMD | Delete alias: " + alias);
-					ok = 'Alias <strong>' + alias + '</strong> was deleted sucessfully.';
+					ok = 'Alias <strong>' + Text.escapeHTML(alias) + '</strong> was deleted successfully.';
 				} else {
-					error = 'Alias <strong>' + alias + '</strong> was not found.';
+					error = 'Alias <strong>' + Text.escapeHTML(alias) + '</strong> was not found.';
 				}
 			} else {
 				error = "You must specify an alias id.";
@@ -159,16 +159,16 @@ exports.setup = function (App) {
 
 		htmlVars.aliases = '';
 		for (let alias in Mod.data.aliases) {
-			htmlVars.aliases += '<tr><td>' + alias + '</td><td>' + Mod.data.aliases[alias] +
+			htmlVars.aliases += '<tr><td>' + Text.escapeHTML(alias) + '</td><td>' + Text.escapeHTML(Mod.data.aliases[alias]) +
 			'</td><td><div align="center"><form style="display:inline;" method="post" action="">' +
-			'<input type="hidden" name="alias" value="' + alias +
+			'<input type="hidden" name="alias" value="' + Text.escapeHTML(alias) +
 			'" /><input type="submit" name="remove" value="Remove Alias" /></form></div></td></tr>';
 		}
 
 		htmlVars.cmd_select = '<select name="cmd">';
 		let cmds = Object.keys(Mod.data.commands).sort();
 		for (let i = 0; i < cmds.length; i++) {
-			htmlVars.cmd_select += '<option value="' + cmds[i] + '">' + cmds[i] + '</option>';
+			htmlVars.cmd_select += '<option value="' + Text.escapeHTML(cmds[i]) + '">' + Text.escapeHTML(cmds[i]) + '</option>';
 		}
 		htmlVars.cmd_select += '</select>';
 

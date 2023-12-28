@@ -39,7 +39,7 @@ function setup(App) {
 				App.config.modules.core.pass = pass;
 				App.db.write();
 				App.logServerAction(context.user.id, 'Edit Bot Login details (Core Module)');
-				ok = "Bot login details have been set sucessfully. Restart the bot to make them effective.";
+				ok = "Bot login details have been set successfully. Restart the bot to make them effective.";
 			}
 		}
 

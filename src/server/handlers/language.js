@@ -56,7 +56,7 @@ exports.setup = function (App) {
 				App.config.language['default'] = lang;
 				App.db.write();
 				App.logServerAction(context.user.id, "Set Default language");
-				ok = "Default language set to <strong>" + languages[lang] + "</strong>";
+				ok = "Default language set to <strong>" + Text.escapeHTML(languages[lang]) + "</strong>";
 			}
 		} else if (context.post.addroom) {
 			let lang = Text.toId(context.post.language);
@@ -71,7 +71,7 @@ exports.setup = function (App) {
 				App.config.language.rooms[room] = lang;
 				App.db.write();
 				App.logServerAction(context.user.id, "Set Room language. Room: " + room + ", Lang: " + lang);
-				ok = "Language for room " + room + " set to <strong>" + languages[lang] + "</strong>";
+				ok = "Language for room " + Text.escapeHTML(room) + " set to <strong>" + Text.escapeHTML(languages[lang]) + "</strong>";
 			}
 		} else if (context.post.deleteroom) {
 			let room = Text.toRoomid(context.post.room);
@@ -85,7 +85,7 @@ exports.setup = function (App) {
 				delete App.config.language.rooms[room];
 				App.db.write();
 				App.logServerAction(context.user.id, "Set Room language to default. Room: " + room);
-				ok = "Language for room " + room + " set to default";
+				ok = "Language for room " + Text.escapeHTML(room) + " set to default";
 			}
 		} else if (context.post.addcustomlang) {
 			let customlang = Text.toId(context.post.lang);
@@ -124,15 +124,15 @@ exports.setup = function (App) {
 
 		htmlVars.langchecks = '';
 		for (let lang in languages) {
-			htmlVars.langchecks += '<p><input type="checkbox" name="lang-' + lang + '" value="true" ' +
+			htmlVars.langchecks += '<p><input type="checkbox" name="lang-' + Text.escapeHTML(lang) + '" value="true" ' +
 				(App.config.langfilter[lang] === false ? '' : 'checked="checked"') + ' />&nbsp;' +
 				Text.escapeHTML(languages[lang]) + '</p>';
 		}
 
 		htmlVars.langdefs = '';
 		for (let lang in App.multilang.data.langdefs) {
-			let rmbutton = '<button onclick="showRemoveConfirm(\'' + lang +
-					'\');">Remove</button><span id="confirm-remove-' + lang + '">&nbsp;</span>';
+			let rmbutton = '<button onclick="showRemoveConfirm(\'' + Text.escapeHTML(lang) +
+					'\');">Remove</button><span id="confirm-remove-' + Text.escapeHTML(lang) + '">&nbsp;</span>';
 			htmlVars.langdefs += '<tr><td>' + Text.escapeHTML(languages[lang]) + '</td><td>' + rmbutton + '</td></tr>';
 		}
 
@@ -141,7 +141,7 @@ exports.setup = function (App) {
 
 		htmlVars.rooms = '';
 		for (let room in App.config.language.rooms) {
-			htmlVars.rooms += '<tr><td>' + room + '</td><td>' + App.config.language.rooms[room] +
+			htmlVars.rooms += '<tr><td>' + Text.escapeHTML(room) + '</td><td>' + Text.escapeHTML(App.config.language.rooms[room]) +
 			'</td><td><div align="center"><form method="post" action="" style="display:inline;"><input type="hidden" name="room" value="' +
 			room + '" /><label><input type="submit" name="deleteroom" value="Use Default" /></label></form></div></td></tr>';
 		}
@@ -202,7 +202,7 @@ exports.setup = function (App) {
 		let files = Object.keys(langfiles).sort();
 		for (let tfile of files) {
 			opts.push('<a class="submenu-option' + (tfile === selectedFile ? '-selected' : '') +
-				'" href="/lang/custom/?tfile=' + tfile + '&lang=english">' + Text.escapeHTML(tfile) + '</a>');
+				'" href="/lang/custom/?tfile=' + encodeURIComponent(tfile) + '&lang=english">' + Text.escapeHTML(tfile) + '</a>');
 		}
 		htmlVars.files_menu = opts.join('&nbsp;| ');
 
@@ -212,7 +212,7 @@ exports.setup = function (App) {
 			opts = [];
 			for (let l in languages) {
 				opts.push('<a class="submenu-option' + (l === selectedLang ? '-selected' : '') +
-					'" href="/lang/custom/?tfile=' + selectedFile + '&lang=' + l + '">' + Text.escapeHTML(languages[l]) + '</a>');
+					'" href="/lang/custom/?tfile=' + encodeURIComponent(selectedFile) + '&lang=' + encodeURIComponent(l) + '">' + Text.escapeHTML(languages[l]) + '</a>');
 			}
 			content += "<big><b><u>Current Language:</u></b></big> " + opts.join('&nbsp;| ') + "<hr />";
 
@@ -262,14 +262,14 @@ exports.setup = function (App) {
 				langdata[selectedLang] = importLanguage(context.post.content || "");
 				App.multilang.saveData();
 				App.logServerAction(context.user.id, "Edit Custom Language: " + selectedLang + " (Import)");
-				ok = "Language customization loaded for: " + selectedLang;
+				ok = "Language customization loaded for: " + Text.escapeHTML(selectedLang);
 			}
 		}
 
 		let opts = [];
 		for (let l in languages) {
 			opts.push('<a class="submenu-option' + (l === selectedLang ? '-selected' : '') +
-				'" href="/lang/export/?lang=' + l + '">' + Text.escapeHTML(languages[l]) + '</a>');
+				'" href="/lang/export/?lang=' + encodeURIComponent(l) + '">' + Text.escapeHTML(languages[l]) + '</a>');
 		}
 		htmlVars.menu = "<big><b><u>Current Language:</u></b></big> " + opts.join('&nbsp;| ') + "<hr />";
 
@@ -290,7 +290,7 @@ exports.setup = function (App) {
 		html += '<select name="language">';
 		for (let lang in languages) {
 			if (!App.multilang.isLangEnabled(lang)) continue;
-			html += '<option value="' + lang + '" ' + (lang === selected ? 'selected="selected"' : '') + '>' + languages[lang] + '</option>';
+			html += '<option value="' + Text.escapeHTML(lang) + '" ' + (lang === selected ? 'selected="selected"' : '') + '>' + Text.escapeHTML(languages[lang]) + '</option>';
 		}
 		html += '</select>';
 		return html;

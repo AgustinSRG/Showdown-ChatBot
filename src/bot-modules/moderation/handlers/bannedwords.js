@@ -39,15 +39,15 @@ exports.setup = function (App) {
 			let room = Text.toRoomid(context.post.room);
 			try {
 				check(room, 'You must specify a room');
-				check(!data[room], 'Room <strong>' + room + '</strong> already exists in this list.');
+				check(!data[room], 'Room <strong>' + Text.escapeHTML(room) + '</strong> already exists in this list.');
 			} catch (err) {
 				error = err.message;
 			}
 			if (!error) {
 				data[room] = Object.create(null);
 				App.modules.moderation.system.db.write();
-				App.logServerAction(context.user.id, "Add Banwords Room: " + room);
-				ok = 'Room <strong>' + room + '</strong> added to the banwords feature.';
+				App.logServerAction(context.user.id, "Add Banned words Room: " + room);
+				ok = 'Room <strong>' + Text.escapeHTML(room) + '</strong> added to the banned words feature.';
 			}
 		}
 
@@ -55,7 +55,7 @@ exports.setup = function (App) {
 
 		let opts = [];
 		for (let room in App.modules.moderation.system.data.bannedWords) {
-			opts.push('<a class="submenu-option" href="/banwords/room/' + room + '/">' + room + '</a>');
+			opts.push('<a class="submenu-option" href="/banwords/room/' + Text.escapeHTML(room) + '/">' + Text.escapeHTML(room) + '</a>');
 		}
 		htmlVars.submenu = opts.join(' | ');
 
@@ -105,7 +105,7 @@ exports.setup = function (App) {
 				config.bannedWords[room][word].val = config.punishments.indexOf(punishment) + 1;
 				App.modules.moderation.system.db.write();
 				App.logServerAction(context.user.id, "Add Banword. Room: " + room + " | Word: " + word);
-				ok = "Added Banword: " + Text.escapeHTML(word);
+				ok = "Added Banned word: " + Text.escapeHTML(word);
 			}
 		} else if (context.post.remove) {
 			let word = context.post.word;
@@ -123,7 +123,7 @@ exports.setup = function (App) {
 				}
 				App.modules.moderation.system.db.write();
 				App.logServerAction(context.user.id, "Delete Banword. Room: " + room + " | Word: " + word);
-				ok = "Removed Banword: " + Text.escapeHTML(word);
+				ok = "Removed Banned word: " + Text.escapeHTML(word);
 			}
 		}
 
@@ -142,7 +142,7 @@ exports.setup = function (App) {
 		for (let word in wordsData) {
 			htmlVars.words += '<tr>';
 			htmlVars.words += '<td>' + Text.escapeHTML(word) + '</td>';
-			htmlVars.words += '<td>' + App.modules.moderation.system.modBot.getPunishment(wordsData[word].val) + '</td>';
+			htmlVars.words += '<td>' + Text.escapeHTML(App.modules.moderation.system.modBot.getPunishment(wordsData[word].val)) + '</td>';
 			switch (wordsData[word].type) {
 			case 'i':
 				htmlVars.words += '<td>Inappropriate</td>';
@@ -168,16 +168,16 @@ exports.setup = function (App) {
 				htmlVars.words += '<td>No</td>';
 			}
 			htmlVars.words += '<td><div align="center"><form style="display:inline;" method="post" action="">' +
-			'<input type="hidden" name="word" value=' + JSON.stringify(word) +
-			' /><input type="submit" name="remove" value="Delete" /></form></div></td>';
+			'<input type="hidden" name="word" value="' + Text.escapeHTML(word) +
+			'" /><input type="submit" name="remove" value="Delete" /></form></div></td>';
 			htmlVars.words += '</tr>';
 		}
 
 		htmlVars.punishments = '<select name="punishment">';
 		let punishments = App.modules.moderation.system.data.punishments;
 		for (let i = 0; i < punishments.length; i++) {
-			htmlVars.punishments += ' <option value="' + punishments[i] + '"' + (punishments[i] === 'mute' ? ' selected="selected"' : '') +
-			' >' + punishments[i] + '</option>';
+			htmlVars.punishments += ' <option value="' + Text.escapeHTML(punishments[i]) + '"' + (punishments[i] === 'mute' ? ' selected="selected"' : '') +
+			' >' + Text.escapeHTML(punishments[i]) + '</option>';
 		}
 		htmlVars.punishments += '</select>';
 

@@ -95,25 +95,25 @@ exports.setup = function (App) {
 
 		let htmlVars = Object.create(null);
 
-		htmlVars.format = Config.format;
+		htmlVars.format = Text.escapeHTML(Config.format);
 		htmlVars.elimination = (Config.type === 'elimination' ? ' selected="selected"' : '');
 		htmlVars.roundrobin = (Config.type === 'roundrobin' ? ' selected="selected"' : '');
-		htmlVars.users = Config.maxUsers;
-		htmlVars.time = Math.floor(Config.time / 1000);
-		htmlVars.autodq = Config.autodq;
+		htmlVars.users = Text.escapeHTML(Config.maxUsers);
+		htmlVars.time = Text.escapeHTML(Math.floor(Config.time / 1000));
+		htmlVars.autodq = Text.escapeHTML(Config.autodq);
 		htmlVars.scout_yes = (!Config.scoutProtect ? 'selected="selected"' : '');
 		htmlVars.scout_no = (Config.scoutProtect ? 'selected="selected"' : '');
 		htmlVars.timer_yes = (Config.forcedTimer ? 'selected="selected"' : '');
 		htmlVars.timer_no = (!Config.forcedTimer ? 'selected="selected"' : '');
-		htmlVars.creationmsg = Config.createMessage;
-		htmlVars.finals = Config.finalAnnouncement ? (Object.keys(Config.finalAnnouncement).join(", ")) : "";
-		htmlVars.winnergrats = Config.congratsWinner ? (Object.keys(Config.congratsWinner).join(", ")) : "";
+		htmlVars.creationmsg = Text.escapeHTML(Config.createMessage);
+		htmlVars.finals = Config.finalAnnouncement ? Text.escapeHTML(Object.keys(Config.finalAnnouncement).join(", ")) : "";
+		htmlVars.winnergrats = Config.congratsWinner ? Text.escapeHTML(Object.keys(Config.congratsWinner).join(", ")) : "";
 
 		let aliases = [];
 		for (let format in Config.aliases) {
 			aliases.push(format + ', ' + Config.aliases[format]);
 		}
-		htmlVars.aliases = aliases.join('\n');
+		htmlVars.aliases = Text.escapeHTML(aliases.join('\n'));
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));

@@ -56,10 +56,10 @@ exports.setup = function (App) {
 
 		let htmlVars = Object.create(null);
 
-		htmlVars.rooms = Object.keys(App.config.modules.chatlogger.rooms).join(', ');
+		htmlVars.rooms = Text.escapeHTML(Object.keys(App.config.modules.chatlogger.rooms).join(', '));
 		htmlVars.logpm = (App.config.modules.chatlogger.logpm ? ' checked="checked"' : '');
 		htmlVars.loggroupchats = (App.config.modules.chatlogger.logGroupChats ? ' checked="checked"' : '');
-		htmlVars.age = App.config.modules.chatlogger.maxold;
+		htmlVars.age = Text.escapeHTML(App.config.modules.chatlogger.maxold);
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));

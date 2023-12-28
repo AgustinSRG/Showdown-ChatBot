@@ -36,7 +36,7 @@ function setup(App) {
 			App.config.modules.core.joinall = !!context.post.joinall;
 			App.db.write();
 			App.logServerAction(context.user.id, 'Edit Bot Autojoin details (Core Module)');
-			ok = "Bot Auto-Join details have been set sucessfully. Restart the bot to make them effective.";
+			ok = "Bot Auto-Join details have been set successfully. Restart the bot to make them effective.";
 
 			let cmds = [];
 
@@ -55,11 +55,11 @@ function setup(App) {
 
 		let htmlVars = Object.create(null);
 
-		htmlVars.rooms = (App.config.modules.core.rooms || []).join(', ');
-		htmlVars.privaterooms = (App.config.modules.core.privaterooms || []).join(', ');
+		htmlVars.rooms = Text.escapeHTML((App.config.modules.core.rooms || []).join(', '));
+		htmlVars.privaterooms = Text.escapeHTML((App.config.modules.core.privaterooms || []).join(', '));
 
-		htmlVars.avatar = (App.config.modules.core.avatar || '');
-		htmlVars.status = (App.config.modules.core.status || '');
+		htmlVars.avatar = Text.escapeHTML(App.config.modules.core.avatar || '');
+		htmlVars.status = Text.escapeHTML(App.config.modules.core.status || '');
 
 		htmlVars.joinofficial = App.config.modules.core.joinofficial ? 'checked="checked"' : '';
 		htmlVars.joinall = App.config.modules.core.joinall ? 'checked="checked"' : '';

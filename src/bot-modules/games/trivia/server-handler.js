@@ -7,6 +7,7 @@
 const Path = require('path');
 const check = Tools('check');
 const Template = Tools('html-template');
+const Text = Tools('text');
 
 const mainTemplate = new Template(Path.resolve(__dirname, 'template.html'));
 const questionTemplate = new Template(Path.resolve(__dirname, 'template-question.html'));
@@ -105,9 +106,9 @@ exports.setup = function (App) {
 		htmlVars.questions = '';
 		for (let id in mod.data) {
 			htmlVars.questions += questionTemplate.make({
-				id: id,
-				clue: mod.data[id].clue,
-				answers: mod.data[id].answers.join(', '),
+				id: Text.escapeHTML(id),
+				clue: Text.escapeHTML(mod.data[id].clue),
+				answers: Text.escapeHTML(mod.data[id].answers.join(', ')),
 			});
 		}
 

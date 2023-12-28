@@ -82,7 +82,7 @@ exports.setup = function (App) {
 					App.bot.sendTo(context.post.room || "", context.post.msg.split('\n'));
 					App.logServerAction(context.user.id, "Tool Bot-Send used. Room: " + (context.post.room || '-') +
 						" | Message: " + context.post.msg);
-					result += '<p style="padding:5px;"><span class="ok-msg">Message sucessfully sent.</span></p>';
+					result += '<p style="padding:5px;"><span class="ok-msg">Message successfully sent.</span></p>';
 				} else {
 					result += '<p style="padding:5px;"><span class="error-msg">Error: The bot is not connected.</span></p>';
 				}
@@ -102,7 +102,7 @@ exports.setup = function (App) {
 				if (App.bot.isConnected()) {
 					App.bot.rename(context.post.botuser, context.post.botpass);
 					App.logServerAction(context.user.id, "Tool Bot-Login used. Bot Username: " + context.post.botuser);
-					result += '<p style="padding:5px;"><span class="ok-msg">Login request sucessfully sent.</span></p>';
+					result += '<p style="padding:5px;"><span class="ok-msg">Login request successfully sent.</span></p>';
 				} else {
 					result += '<p style="padding:5px;"><span class="error-msg">Error: The bot is not connected.</span></p>';
 				}
@@ -206,7 +206,7 @@ exports.setup = function (App) {
 				App.logServerAction(context.user.id, 'Hotpatch Commands.');
 				ok = "Commands hotpatched";
 			} catch (err) {
-				error = "Error: " + err.code + " - " + err.message;
+				error = Text.escapeHTML("Error: " + err.code + " - " + err.message);
 			}
 		}
 
@@ -245,7 +245,7 @@ exports.setup = function (App) {
 			}
 			cache.write();
 			App.logServerAction(context.user.id, 'Clear Web Cache');
-			ok = "Web Cache cleared sucessfully.";
+			ok = "Web Cache cleared successfully.";
 		}
 
 		let htmlVars = Object.create(null);
@@ -262,11 +262,11 @@ exports.setup = function (App) {
 		if (context.post.clearusers) {
 			App.userdata.clean();
 			App.logServerAction(context.user.id, 'Clear User-Data');
-			ok = "User-Data cleared sucessfully.";
+			ok = "User-Data cleared successfully.";
 		} else if (context.post.clearalts) {
 			App.userdata.cleanAlts();
 			App.logServerAction(context.user.id, 'Clear Alts Tree');
-			ok = "Alts tree cleared sucessfully.";
+			ok = "Alts tree cleared successfully.";
 		}
 
 		let htmlVars = Object.create(null);
@@ -302,9 +302,9 @@ exports.setup = function (App) {
 
 		let htmlVars = Object.create(null);
 
-		htmlVars.interv = App.config.connmonitor.checktime;
-		htmlVars.room = App.config.connmonitor.room;
-		htmlVars.cmd = App.config.connmonitor.msg;
+		htmlVars.interv = Text.escapeHTML(App.config.connmonitor.checktime);
+		htmlVars.room = Text.escapeHTML(App.config.connmonitor.room);
+		htmlVars.cmd = Text.escapeHTML(App.config.connmonitor.msg);
 		htmlVars.enabled = (App.config.connmonitor.enabled ? ' checked="checked"' : '');
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
@@ -380,7 +380,7 @@ exports.setup = function (App) {
 								App.logServerAction(context.user.id, 'Exit due to backup restore.');
 								let buf = '';
 								buf += '<html><head><title>Process Exited</title></head><body><p>Backup Completed.' +
-									' The application exits sucessfully.</p><a href=""><button>Refresh Page</button></a></body></html>';
+									' The application exits successfully.</p><a href=""><button>Refresh Page</button></a></body></html>';
 								context.response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
 								context.response.end(buf);
 								console.log("Backup Completed | Exit via server, By: " + context.user.id);

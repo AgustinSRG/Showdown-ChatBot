@@ -78,12 +78,12 @@ exports.setup = function (App) {
 		htmlVars.rooms = '';
 		for (let k in App.modules.moderation.system.modBot.filters) {
 			let val = config.values[k] || 0;
-			htmlVars.rooms += '<tr><td>' + k + '</td>';
-			htmlVars.rooms += '<td><select name="' + k + '">';
+			htmlVars.rooms += '<tr><td>' + Text.escapeHTML(k) + '</td>';
+			htmlVars.rooms += '<td><select name="' + Text.escapeHTML(k) + '">';
 			let punishments = config.punishments;
 			for (let i = 0; i < punishments.length; i++) {
-				htmlVars.rooms += '<option value="' + punishments[i] + '"' + (val === (i + 1) ? ' selected="selected"' : '') +
-				' >' + punishments[i] + '</option>';
+				htmlVars.rooms += '<option value="' + Text.escapeHTML(punishments[i]) + '"' + (val === (i + 1) ? ' selected="selected"' : '') +
+				' >' + Text.escapeHTML(punishments[i]) + '</option>';
 			}
 			htmlVars.rooms += '<option value=""' + (val === 0 ? ' selected="selected"' : '') + ' >Default</option>';
 			htmlVars.rooms += '</select></td></tr>';
@@ -100,9 +100,9 @@ exports.setup = function (App) {
 		let opts = [];
 		for (let k in App.modules.moderation.system.modBot.filters) {
 			if (App.modules.moderation.system.modBot.modEnabled(k, room)) {
-				opts.push('<input name="' + k + '" type="checkbox" value="true" checked="checked" />&nbsp;' + k);
+				opts.push('<input name="' + Text.escapeHTML(k) + '" type="checkbox" value="true" checked="checked" />&nbsp;' + Text.escapeHTML(k));
 			} else {
-				opts.push('<input name="' + k + '" type="checkbox" value="true" />&nbsp;' + k);
+				opts.push('<input name="' + Text.escapeHTML(k) + '" type="checkbox" value="true" />&nbsp;' + Text.escapeHTML(k));
 			}
 		}
 		return '<p>' + opts.join(' | ') + '</p>';
@@ -125,7 +125,7 @@ exports.setup = function (App) {
 				config.roomSettings[room] = Object.create(null);
 				App.modules.moderation.system.db.write();
 				App.logServerAction(context.user.id, "Moderation Settings: Add Room: " + room);
-				ok = "Added room: " + room;
+				ok = "Added room: " + Text.escapeHTML(room);
 			}
 		} else if (context.post.delroom) {
 			let room = Text.toRoomid(context.post.room);
@@ -140,7 +140,7 @@ exports.setup = function (App) {
 				delete config.roomSettings[room];
 				App.modules.moderation.system.db.write();
 				App.logServerAction(context.user.id, "Moderation Settings: Delete Room: " + room);
-				ok = "Removed room: " + room;
+				ok = "Removed room: " + Text.escapeHTML(room);
 			}
 		} else if (context.post.edit) {
 			let room = Text.toRoomid(context.post.room);
@@ -163,14 +163,14 @@ exports.setup = function (App) {
 		htmlVars.global = getSettingsForm('');
 		htmlVars.rooms = '';
 		for (let room in config.roomSettings) {
-			htmlVars.rooms += '<h3>Room: ' + room + '</h3>';
+			htmlVars.rooms += '<h3>Room: ' + Text.escapeHTML(room) + '</h3>';
 			htmlVars.rooms += '<form method="post" action="">';
-			htmlVars.rooms += '<input type="hidden" name="room" value="' + room + '" />';
+			htmlVars.rooms += '<input type="hidden" name="room" value="' + Text.escapeHTML(room) + '" />';
 			htmlVars.rooms += getSettingsForm(room);
 			htmlVars.rooms += '<p><input type="submit" name="edit" value="Save Changes" /></p>';
 			htmlVars.rooms += '</form>';
-			htmlVars.rooms += '<p><button onclick="removeRoom(\'' + room +
-			'\');">Use Default Settings</button>&nbsp;<span id="confirm-' + room + '">&nbsp;</span></p>';
+			htmlVars.rooms += '<p><button onclick="removeRoom(\'' + Text.escapeHTML(room) +
+			'\');">Use Default Settings</button>&nbsp;<span id="confirm-' + Text.escapeHTML(room) + '">&nbsp;</span></p>';
 			htmlVars.rooms += '<hr />';
 		}
 
@@ -187,12 +187,12 @@ exports.setup = function (App) {
 			rank = App.config.parser[rank];
 		}
 		let html = '';
-		html += '<select name="' + name + '">';
+		html += '<select name="' + Text.escapeHTML(name) + '">';
 		html += '<option value="user"' + (rank === 'user' ? ' selected="selected"' : '') + '>Regular Users</option>';
 		html += '<option value="excepted"' + (rank === 'excepted' ? ' selected="selected"' : '') + '>Excepted Users</option>';
 		for (let j = 0; j < App.config.parser.groups.length; j++) {
-			html += '<option value="' + App.config.parser.groups[j] + '"' +
-			(rank === App.config.parser.groups[j] ? ' selected="selected"' : '') + '>Group ' + App.config.parser.groups[j] + '</option>';
+			html += '<option value="' + Text.escapeHTML(App.config.parser.groups[j]) + '"' +
+			(rank === App.config.parser.groups[j] ? ' selected="selected"' : '') + '>Group ' + Text.escapeHTML(App.config.parser.groups[j]) + '</option>';
 		}
 		html += '</select>';
 		return html;
@@ -250,7 +250,7 @@ exports.setup = function (App) {
 		htmlVars.dme = getRankSelect('rank', config.modexception.global);
 		htmlVars.rooms = '';
 		for (let room in config.modexception.rooms) {
-			htmlVars.rooms += '<tr><td>' + room + '</td>';
+			htmlVars.rooms += '<tr><td>' + Text.escapeHTML(room) + '</td>';
 			switch (config.modexception.rooms[room]) {
 			case 'user':
 				htmlVars.rooms += '<td>All Users</td>';
@@ -263,7 +263,7 @@ exports.setup = function (App) {
 				break;
 			}
 			htmlVars.rooms += '<td><div align="center"><form style="display:inline;" method="post" action="">' +
-			'<input type="hidden" name="room" value="' + room +
+			'<input type="hidden" name="room" value="' + Text.escapeHTML(room) +
 			'" /><input type="submit" name="delroom" value="Delete" /></form></div></td></tr>';
 		}
 
@@ -311,10 +311,10 @@ exports.setup = function (App) {
 
 		htmlVars.rooms = '';
 		for (let room in config.rulesLink) {
-			htmlVars.rooms += '<tr><td>' + room + '</td>';
-			htmlVars.rooms += '<td><a href="' + config.rulesLink[room] + '">' + Text.escapeHTML(config.rulesLink[room]) + '</a></td>';
+			htmlVars.rooms += '<tr><td>' + Text.escapeHTML(room) + '</td>';
+			htmlVars.rooms += '<td>' + Text.escapeHTML(config.rulesLink[room]) + '</td>';
 			htmlVars.rooms += '<td><div align="center"><form style="display:inline;" method="post" action="">' +
-			'<input type="hidden" name="room" value="' + room +
+			'<input type="hidden" name="room" value="' + Text.escapeHTML(room) +
 			'" /><input type="submit" name="delroom" value="Delete" /></form></div></td></tr>';
 		}
 
@@ -346,7 +346,7 @@ exports.setup = function (App) {
 
 		let htmlVars = Object.create(null);
 
-		htmlVars.wservers = config.serversWhitelist.join(', ');
+		htmlVars.wservers = Text.escapeHTML(config.serversWhitelist.join(', '));
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));

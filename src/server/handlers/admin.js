@@ -8,6 +8,7 @@ const Path = require('path');
 const FileSystem = require('fs');
 const check = Tools('check');
 const Template = Tools('html-template');
+const Text = Tools('text');
 
 const mainTemplate = new Template(Path.resolve(__dirname, 'templates', 'admin.html'));
 
@@ -32,7 +33,7 @@ exports.setup = function (App) {
 				App.reportCrash(err);
 			}
 			let buf = '';
-			buf += '<html><head><title>Process Exited</title></head><body><p>The application exits sucessfully.</p>' +
+			buf += '<html><head><title>Process Exited</title></head><body><p>The application exits successfully.</p>' +
 			'<a href=""><button>Refresh Page</button></a></body></html>';
 			context.response.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
 			context.response.end(buf);
@@ -92,7 +93,7 @@ exports.setup = function (App) {
 				App.bot.sendBufferMaxlength = App.config.bot.buflen;
 				App.bot.chatThrottleDelay = App.config.bot.senddelay;
 				ok = "Changes made successfuly.";
-				App.logServerAction(context.user.id, 'Administration options were editted');
+				App.logServerAction(context.user.id, 'Administration options were edited');
 			}
 		}
 
@@ -100,18 +101,18 @@ exports.setup = function (App) {
 
 		htmlVars.uptime = Math.floor(process.uptime() * 1000);
 		htmlVars.memusage = (Math.floor(((process.memoryUsage().rss / 1024) / 1024) * 1000) / 1000) + ' MB';
-		htmlVars.port = App.config.server.port;
-		htmlVars.sslport = (App.config.server.https ? App.config.server.httpsPort : "");
-		htmlVars.sslcert = (App.config.server.sslcert || "");
-		htmlVars.sslkey = (App.config.server.sslkey || "");
-		htmlVars.bindaddress = (App.config.server.bindaddress || '');
-		htmlVars.appurl = (App.config.server.url || "");
-		htmlVars.apptitle = (App.config.apptitle || 'Showdown ChatBot');
-		htmlVars.loginserv = (App.config.bot.loginserv || 'play.pokemonshowdown.com');
-		htmlVars.maxlines = (App.config.bot.maxlines || '3');
-		htmlVars.buflen = (App.config.bot.buflen || '6');
-		htmlVars.senddelay = (App.config.bot.senddelay || '200');
-		htmlVars.maxmsglen = (App.config.bot.maxMessageLength || '300');
+		htmlVars.port = Text.escapeHTML(App.config.server.port);
+		htmlVars.sslport = Text.escapeHTML(App.config.server.https ? App.config.server.httpsPort : "");
+		htmlVars.sslcert = Text.escapeHTML(App.config.server.sslcert || "");
+		htmlVars.sslkey = Text.escapeHTML(App.config.server.sslkey || "");
+		htmlVars.bindaddress = Text.escapeHTML(App.config.server.bindaddress || '');
+		htmlVars.appurl = Text.escapeHTML(App.config.server.url || "");
+		htmlVars.apptitle = Text.escapeHTML(App.config.apptitle || 'Showdown ChatBot');
+		htmlVars.loginserv = Text.escapeHTML(App.config.bot.loginserv || 'play.pokemonshowdown.com');
+		htmlVars.maxlines = Text.escapeHTML(App.config.bot.maxlines || '3');
+		htmlVars.buflen = Text.escapeHTML(App.config.bot.buflen || '6');
+		htmlVars.senddelay = Text.escapeHTML(App.config.bot.senddelay || '200');
+		htmlVars.maxmsglen = Text.escapeHTML(App.config.bot.maxMessageLength || '300');
 		htmlVars.debugmode = (App.config.debug ? 'checked="checked"' : '');
 		htmlVars.useproxy = (App.config.useproxy ? 'checked="checked"' : '');
 		htmlVars.blockautodownload = (App.config.blockautodownload ? 'checked="checked"' : '');

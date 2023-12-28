@@ -49,7 +49,7 @@ exports.setup = function (App) {
 			let defGroups = ['voice', 'driver', 'mod', 'bot', 'owner', 'admin'];
 			for (let group of defGroups) {
 				if (groups.indexOf(context.post[group]) < 0) {
-					error = 'Group corresponding to defined group <strong>' + group + '</strong> must be defined.';
+					error = 'Group corresponding to defined group <strong>' + Text.escapeHTML(group) + '</strong> must be defined.';
 					break;
 				}
 			}
@@ -72,7 +72,7 @@ exports.setup = function (App) {
 				App.parser.data.lockedUsers = Object.createFromKeys((context.post.locklist || "").split(',').map(Text.toId).filter(u => u));
 				App.saveConfig();
 				App.parser.saveData();
-				ok = 'Command parser configuration editted sucessfully.';
+				ok = 'Command parser configuration edited successfully.';
 				App.logServerAction(context.user.id, "Edit command-parser configuration");
 			}
 		}
@@ -92,11 +92,11 @@ exports.setup = function (App) {
 		htmlVars.infocmds = Text.escapeHTML(App.parser.data.infocmds || "");
 		htmlVars.sleep = Text.escapeHTML(Object.keys(App.parser.data.sleep).join(', '));
 		htmlVars.locklist = Text.escapeHTML(Object.keys(App.parser.data.lockedUsers).join(', '));
-		htmlVars.antispam = Text.escapeHTML(App.parser.data.antispam ? ' checked="checked"' : '');
-		htmlVars.antirepeat = Text.escapeHTML(App.parser.data.antirepeat ? ' checked="checked"' : '');
+		htmlVars.antispam = (App.parser.data.antispam ? ' checked="checked"' : '');
+		htmlVars.antirepeat = (App.parser.data.antirepeat ? ' checked="checked"' : '');
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
-		htmlVars.request_msg = Text.escapeHTML(ok ? ok : (error || ""));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
 		html += configTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Command Parser Configuration - Showdown ChatBot"});
@@ -113,10 +113,10 @@ exports.setup = function (App) {
 						App.parser.data.aliases[alias] = cmd;
 						App.parser.saveData();
 						App.logServerAction(context.user.id, "Set alias: " + alias + " to the command: " + cmd);
-						ok = 'Command "' + alias + '" is now alias of "' + cmd +
+						ok = 'Command "' + Text.escapeHTML(alias) + '" is now alias of "' + Text.escapeHTML(cmd) +
 						'" (Note: If the original command does not exists, the alias will be useless)';
 					} else {
-						error = "The command <strong>" + cmd + "</strong> does not exists.";
+						error = "The command <strong>" + Text.escapeHTML(cmd) + "</strong> does not exists.";
 					}
 				} else {
 					error = "You must specify a command";
@@ -131,9 +131,9 @@ exports.setup = function (App) {
 					delete App.parser.data.aliases[alias];
 					App.parser.saveData();
 					App.logServerAction(context.user.id, "Delete alias: " + alias);
-					ok = 'Alias <strong>' + alias + '</strong> was deleted sucessfully.';
+					ok = 'Alias <strong>' + Text.escapeHTML(alias) + '</strong> was deleted successfully.';
 				} else {
-					error = 'Alias <strong>' + alias + '</strong> was not found.';
+					error = 'Alias <strong>' + Text.escapeHTML(alias) + '</strong> was not found.';
 				}
 			} else {
 				error = "You must specify an alias id.";
@@ -156,8 +156,8 @@ exports.setup = function (App) {
 			htmlVars.cmd_list += '<option value="' + Text.escapeHTML(cmds[i]) + '">' + Text.escapeHTML(cmds[i]) + '</option>';
 		}
 
-		htmlVars.request_result = Text.escapeHTML(ok ? 'ok-msg' : (error ? 'error-msg' : ''));
-		htmlVars.request_msg = Text.escapeHTML(ok ? ok : (error || ""));
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
 		html += aliasesTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Commands Aliases - Showdown ChatBot"});
@@ -174,9 +174,9 @@ exports.setup = function (App) {
 					App.parser.data.roompermissions[room] = Object.create(null);
 					App.parser.saveData();
 					App.logServerAction(context.user.id, "Add custom perrmission room: " + room);
-					ok = 'Room <strong>' + room + '</strong> added to the custom permission configuration list.';
+					ok = 'Room <strong>' + Text.escapeHTML(room) + '</strong> added to the custom permission configuration list.';
 				} else {
-					error = "Room <strong>" + room + "</strong> already has custom configuration.";
+					error = "Room <strong>" + Text.escapeHTML(room) + "</strong> already has custom configuration.";
 				}
 			}
 		} else if (context.post.delroom) {
@@ -191,9 +191,9 @@ exports.setup = function (App) {
 					}
 					App.parser.saveData();
 					App.logServerAction(context.user.id, "Delete custom permission room: " + room);
-					ok = 'Room <strong>' + room + '</strong> removed from the custom permission configuration list.';
+					ok = 'Room <strong>' + Text.escapeHTML(room) + '</strong> removed from the custom permission configuration list.';
 				} else {
-					error = "Room <strong>" + room + "</strong> not found.";
+					error = "Room <strong>" + Text.escapeHTML(room) + "</strong> not found.";
 				}
 			}
 		} else if (context.post.editroom) {
@@ -230,7 +230,7 @@ exports.setup = function (App) {
 				}
 				App.parser.saveData();
 				App.logServerAction(context.user.id, "Edit custom permission room: " + room);
-				ok = 'Configuration for room <strong>' + room + '</strong> was edited successfully.';
+				ok = 'Configuration for room <strong>' + Text.escapeHTML(room) + '</strong> was edited successfully.';
 			}
 		} else if (context.post.editexp) {
 			let expcmds = [];
@@ -269,8 +269,8 @@ exports.setup = function (App) {
 			htmlVars.rooms_charts += getPermissionChart(r, 'Room: ' + r);
 		}
 
-		htmlVars.request_result = Text.escapeHTML(ok ? 'ok-msg' : (error ? 'error-msg' : ''));
-		htmlVars.request_msg = Text.escapeHTML(ok ? ok : (error || ""));
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
 		html += permissionsTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Commands Permissions - Showdown ChatBot"});
@@ -286,7 +286,7 @@ exports.setup = function (App) {
 					App.parser.data.roomctrl[control] = room;
 					App.parser.saveData();
 					App.logServerAction(context.user.id, "Set control room: " + control + " for: " + room);
-					ok = 'Control room "' + control + '" was set for the room "' + room + '.';
+					ok = 'Control room "' + Text.escapeHTML(control) + '" was set for the room "' + Text.escapeHTML(room) + '.';
 				} else {
 					error = "You must specify a control room";
 				}
@@ -300,9 +300,9 @@ exports.setup = function (App) {
 					delete App.parser.data.roomctrl[control];
 					App.parser.saveData();
 					App.logServerAction(context.user.id, "Delete control room: " + control);
-					ok = 'Control room <strong>' + control + '</strong> was deleted sucessfully.';
+					ok = 'Control room <strong>' + Text.escapeHTML(control) + '</strong> was deleted successfully.';
 				} else {
-					error = 'Control room <strong>' + control + '</strong> was not found.';
+					error = 'Control room <strong>' + Text.escapeHTML(control) + '</strong> was not found.';
 				}
 			} else {
 				error = "You must specify a control room.";
@@ -318,8 +318,8 @@ exports.setup = function (App) {
 			control + '" /><input type="submit" name="remove" value="Remove Control Room" /></form></div></td></tr>';
 		}
 
-		htmlVars.request_result = Text.escapeHTML(ok ? 'ok-msg' : (error ? 'error-msg' : ''));
-		htmlVars.request_msg = Text.escapeHTML(ok ? ok : (error || ""));
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
 		html += roomControlTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Control Rooms - Showdown ChatBot"});
@@ -335,7 +335,7 @@ exports.setup = function (App) {
 					App.parser.data.roomaliases[alias] = room;
 					App.parser.saveData();
 					App.logServerAction(context.user.id, "Set room alias: " + alias + " for: " + room);
-					ok = 'Alias "' + alias + '" was set for the room "' + room + '.';
+					ok = 'Alias "' + Text.escapeHTML(alias) + '" was set for the room "' + Text.escapeHTML(room) + '.';
 				} else {
 					error = "You must specify an alias";
 				}
@@ -349,9 +349,9 @@ exports.setup = function (App) {
 					delete App.parser.data.roomaliases[alias];
 					App.parser.saveData();
 					App.logServerAction(context.user.id, "Delete room alias: " + alias);
-					ok = 'Room alias <strong>' + alias + '</strong> was deleted sucessfully.';
+					ok = 'Room alias <strong>' + Text.escapeHTML(alias) + '</strong> was deleted successfully.';
 				} else {
-					error = 'Room alias <strong>' + alias + '</strong> was not found.';
+					error = 'Room alias <strong>' + Text.escapeHTML(alias) + '</strong> was not found.';
 				}
 			} else {
 				error = "You must specify an alias";
@@ -364,7 +364,7 @@ exports.setup = function (App) {
 		for (let alias in App.parser.data.roomaliases) {
 			htmlVars.rooms += '<tr><td>' + Text.escapeHTML(alias) + '</td><td>' + Text.escapeHTML(App.parser.data.roomaliases[alias]) +
 			'</td><td><div align="center"><form style="display:inline;" method="post" action=""><input type="hidden" name="alias" value="' +
-			alias + '" /><input type="submit" name="remove" value="Remove Room Alias" /></form></div></td></tr>';
+			Text.escapeHTML(alias) + '" /><input type="submit" name="remove" value="Remove Room Alias" /></form></div></td></tr>';
 		}
 
 		htmlVars.request_result = Text.escapeHTML(ok ? 'ok-msg' : (error ? 'error-msg' : ''));
@@ -382,7 +382,7 @@ exports.setup = function (App) {
 				if (!App.parser.monitor.isLocked(locked)) {
 					App.parser.monitor.lock(locked, "Locked via control panel");
 					App.logServerAction(context.user.id, "PARSER LOCK: " + locked);
-					ok = "User <strong>" + locked + "<strong> was locked from using commands";
+					ok = "User <strong>" + Text.escapeHTML(locked) + "<strong> was locked from using commands";
 				} else {
 					error = "Error: User already locked";
 				}
@@ -395,7 +395,7 @@ exports.setup = function (App) {
 				if (App.parser.monitor.isLocked(locked)) {
 					App.parser.monitor.unlock(locked);
 					App.logServerAction(context.user.id, "PARSER UNLOCK: " + locked);
-					ok = "User <strong>" + locked + "<strong> was unlocked";
+					ok = "User <strong>" + Text.escapeHTML(locked) + "<strong> was unlocked";
 				} else {
 					error = "Error: User not locked";
 				}
@@ -413,8 +413,8 @@ exports.setup = function (App) {
 			'" /><input type="submit" name="unlock" value="Unlock" /></form></div></td></tr>';
 		}
 
-		htmlVars.request_result = Text.escapeHTML(ok ? 'ok-msg' : (error ? 'error-msg' : ''));
-		htmlVars.request_msg = Text.escapeHTML(ok ? ok : (error || ""));
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
 
 		html += abuseMonitorTemplate.make(htmlVars);
 		context.endWithWebPage(html, {title: "Control Rooms - Showdown ChatBot"});
@@ -423,9 +423,9 @@ exports.setup = function (App) {
 	/* Auxiliar Functions */
 	function getPermissionChart(room, title) {
 		let html = '';
-		html += '<h3>' + title + '</h3>';
+		html += '<h3>' + Text.escapeHTML(title) + '</h3>';
 		html += '<form method="post" action="">';
-		html += '<input type="hidden" name="room" value="' + room + '" />';
+		html += '<input type="hidden" name="room" value="' + Text.escapeHTML(room) + '" />';
 
 		if (room !== 'global-room') {
 			html += '<p><strong>Command Tokens (override)</strong>:&nbsp;<input name="tokens_override" type="text" size="50" value="' + Text.escapeHTML(App.parser.data.roomTokensOverride[room] || '') + '" autocomplete="off" />&nbsp;(Separated by spaces)</p>';
@@ -453,12 +453,12 @@ exports.setup = function (App) {
 				rank = App.config.parser[rank];
 			}
 			html += '<td>';
-			html += '<select name="perm-' + i + '">';
+			html += '<select name="perm-' + Text.escapeHTML(i) + '">';
 			html += '<option value="excepted"' + (rank === 'excepted' ? ' selected="selected"' : '') + '>Excepted Users</option>';
 			html += '<option value="user"' + (rank === 'user' ? ' selected="selected"' : '') + '>Regular Users</option>';
 			for (let j = 0; j < App.config.parser.groups.length; j++) {
-				html += '<option value="' + App.config.parser.groups[j] + '"' +
-				(rank === App.config.parser.groups[j] ? ' selected="selected"' : '') + '>Group ' + App.config.parser.groups[j] + '</option>';
+				html += '<option value="' + Text.escapeHTML(App.config.parser.groups[j]) + '"' +
+				(rank === App.config.parser.groups[j] ? ' selected="selected"' : '') + '>Group ' + Text.escapeHTML(App.config.parser.groups[j]) + '</option>';
 			}
 			html += '</select>';
 			html += '</td>';
@@ -468,8 +468,8 @@ exports.setup = function (App) {
 		html += '<p><label><input type="submit" name="editroom" value="Save Changes" /></label></p>';
 		html += '</form>';
 		if (room !== 'global-room') {
-			html += '<p><button onclick="removeRoom(\'' + room +
-			'\');">Use Default Values</button>&nbsp;<span id="confirm-' + room + '">&nbsp;</span></p>';
+			html += '<p><button onclick="removeRoom(\'' + Text.escapeHTML(room) +
+			'\');">Use Default Values</button>&nbsp;<span id="confirm-' + Text.escapeHTML(room) + '">&nbsp;</span></p>';
 		}
 		return html;
 	}

@@ -49,7 +49,7 @@ exports.setup = function (App) {
 				check(cmd, "You must specify a command.");
 				check(content, "The command content must not be blank.");
 				check(content.length <= 300, "The command content must not be longer than 300 characters.");
-				check(!App.parser.data.dyncmds[cmd], "The command <strong>" + cmd + "</strong> already exists.");
+				check(!App.parser.data.dyncmds[cmd], "The command <strong>" + Text.escapeHTML(cmd) + "</strong> already exists.");
 			} catch (err) {
 				error = err.message;
 				addFail.id = cmd || "";
@@ -60,14 +60,14 @@ exports.setup = function (App) {
 				App.parser.data.dyncmds[cmd] = content;
 				App.parser.saveData();
 				App.logServerAction(context.user.id, 'Add dynamic command (Type: Text) cmd: ' + cmd);
-				ok = "The command <strong>" + cmd + "</strong> was added as a text command.";
+				ok = "The command <strong>" + Text.escapeHTML(cmd) + "</strong> was added as a text command.";
 			}
 		} else if (context.post.addindexcmd) {
 			let cmd = Text.toCmdid(context.post.cmd);
 
 			try {
 				check(cmd, "You must specify a command.");
-				check(!App.parser.data.dyncmds[cmd], "The command <strong>" + cmd + "</strong> already exists.");
+				check(!App.parser.data.dyncmds[cmd], "The command <strong>" + Text.escapeHTML(cmd) + "</strong> already exists.");
 			} catch (err) {
 				error = err.message;
 				addFail.id = cmd || "";
@@ -78,14 +78,14 @@ exports.setup = function (App) {
 				App.parser.data.dyncmds[cmd] = Object.create(null);
 				App.parser.saveData();
 				App.logServerAction(context.user.id, 'Add dynamic command (Type: Index) cmd: ' + cmd);
-				ok = "The command <strong>" + cmd + "</strong> was added as an index command.";
+				ok = "The command <strong>" + Text.escapeHTML(cmd) + "</strong> was added as an index command.";
 			}
 		} else if (context.post.delcmd) {
 			let cmd = Text.toCmdid(context.post.cmd);
 
 			try {
 				check(cmd, "You must specify a command.");
-				check(App.parser.data.dyncmds[cmd], "The command <strong>" + cmd + "</strong> does not exists.");
+				check(App.parser.data.dyncmds[cmd], "The command <strong>" + Text.escapeHTML(cmd) + "</strong> does not exists.");
 			} catch (err) {
 				error = err.message;
 			}
@@ -94,7 +94,7 @@ exports.setup = function (App) {
 				delete App.parser.data.dyncmds[cmd];
 				App.parser.saveData();
 				App.logServerAction(context.user.id, 'Delete dynamic command. cmd: ' + cmd);
-				ok = "The command <strong>" + cmd + "</strong> was deleted sucessfully.";
+				ok = "The command <strong>" + Text.escapeHTML(cmd) + "</strong> was deleted successfully.";
 			}
 		} else if (context.post.delsubcmd) {
 			let cmd = Text.toCmdid(context.post.cmd);
@@ -103,7 +103,7 @@ exports.setup = function (App) {
 			try {
 				check(cmd && sub, "You must specify a subcommand.");
 				check(typeof App.parser.data.dyncmds[cmd] === 'object' && App.parser.data.dyncmds[cmd][sub],
-					"The command <strong>" + cmd + "&nbsp;" + sub + "</strong> does not exists.");
+					"The command <strong>" + Text.escapeHTML(cmd) + "&nbsp;" + Text.escapeHTML(sub) + "</strong> does not exists.");
 			} catch (err) {
 				error = err.message;
 			}
@@ -112,7 +112,7 @@ exports.setup = function (App) {
 				delete App.parser.data.dyncmds[cmd][sub];
 				App.parser.saveData();
 				App.logServerAction(context.user.id, 'Delete dynamic sub-command. cmd: ' + cmd + '. sub: ' + sub);
-				ok = "The command <strong>" + cmd + "&nbsp;" + sub + "</strong> was deleted sucessfully.";
+				ok = "The command <strong>" + Text.escapeHTML(cmd) + "&nbsp;" + Text.escapeHTML(sub) + "</strong> was deleted successfully.";
 			}
 		} else if (context.post.editcmd) {
 			let cmd = Text.toCmdid(context.post.cmd);
@@ -120,7 +120,7 @@ exports.setup = function (App) {
 
 			try {
 				check(cmd, "You must specify a command.");
-				check(typeof App.parser.data.dyncmds[cmd] === 'string', "The command <strong>" + cmd + "</strong> is not a text command.");
+				check(typeof App.parser.data.dyncmds[cmd] === 'string', "The command <strong>" + Text.escapeHTML(cmd) + "</strong> is not a text command.");
 				check(content, "The command content must not be blank.");
 				check(content.length <= 300, "The command content must not be longer than 300 characters.");
 			} catch (err) {
@@ -131,7 +131,7 @@ exports.setup = function (App) {
 				App.parser.data.dyncmds[cmd] = content;
 				App.parser.saveData();
 				App.logServerAction(context.user.id, 'Edit dynamic command. cmd: ' + cmd);
-				ok = "The command <strong>" + cmd + "</strong> was editted sucessfully.";
+				ok = "The command <strong>" + Text.escapeHTML(cmd) + "</strong> was edited successfully.";
 			}
 		} else if (context.post.addsubcmd) {
 			let cmd = Text.toCmdid(context.post.cmd);
@@ -140,10 +140,10 @@ exports.setup = function (App) {
 
 			try {
 				check(cmd && sub, "You must specify a subcommand.");
-				check(typeof App.parser.data.dyncmds[cmd] === 'object', "The command <strong>" + cmd + "</strong> is not an index command.");
+				check(typeof App.parser.data.dyncmds[cmd] === 'object', "The command <strong>" + Text.escapeHTML(cmd) + "</strong> is not an index command.");
 				check(content, "The command content must not be blank.");
 				check(content.length <= 300, "The command content must not be longer than 300 characters.");
-				check(!App.parser.data.dyncmds[cmd][sub], "The command <strong>" + cmd + "&nbsp;" + sub + "</strong> already exists.");
+				check(!App.parser.data.dyncmds[cmd][sub], "The command <strong>" + Text.escapeHTML(cmd) + "&nbsp;" + Text.escapeHTML(sub) + "</strong> already exists.");
 			} catch (err) {
 				error = err.message;
 				addFail.id = sub || "";
@@ -155,7 +155,7 @@ exports.setup = function (App) {
 				App.parser.data.dyncmds[cmd][sub] = content;
 				App.parser.saveData();
 				App.logServerAction(context.user.id, 'Add dynamic sub-command (Type: Text) cmd: ' + cmd + '. sub: ' + sub);
-				ok = "The command <strong>" + cmd + "&nbsp;" + sub + "</strong> was added as a text subcommand.";
+				ok = "The command <strong>" + Text.escapeHTML(cmd) + "&nbsp;" + Text.escapeHTML(sub) + "</strong> was added as a text subcommand.";
 			}
 		} else if (context.post.editsubcmd) {
 			let cmd = Text.toCmdid(context.post.cmd);
@@ -164,10 +164,10 @@ exports.setup = function (App) {
 
 			try {
 				check(cmd && sub, "You must specify a subcommand.");
-				check(typeof App.parser.data.dyncmds[cmd] === 'object', "The command <strong>" + cmd + "</strong> is not an index command.");
+				check(typeof App.parser.data.dyncmds[cmd] === 'object', "The command <strong>" + Text.escapeHTML(cmd) + "</strong> is not an index command.");
 				check(content, "The command content must not be blank.");
 				check(content.length <= 300, "The command content must not be longer than 300 characters.");
-				check(App.parser.data.dyncmds[cmd][sub], "The command <strong>" + cmd + "&nbsp;" + sub + "</strong> does not exists.");
+				check(App.parser.data.dyncmds[cmd][sub], "The command <strong>" + Text.escapeHTML(cmd) + "&nbsp;" + Text.escapeHTML(sub) + "</strong> does not exists.");
 			} catch (err) {
 				error = err.message;
 			}
@@ -176,18 +176,18 @@ exports.setup = function (App) {
 				App.parser.data.dyncmds[cmd][sub] = content;
 				App.parser.saveData();
 				App.logServerAction(context.user.id, 'Edit dynamic sub-command. cmd: ' + cmd + '. sub: ' + sub);
-				ok = "The command <strong>" + cmd + "&nbsp;" + sub + "</strong> was editted sucessfully.";
+				ok = "The command <strong>" + Text.escapeHTML(cmd) + "&nbsp;" + Text.escapeHTML(sub) + "</strong> was edited successfully.";
 			}
 		}
 
 		let htmlVars = Object.create(null);
-		htmlVars.fail_id = ((!addFail.cmd) ? addFail.id : '');
-		htmlVars.fail_text = ((!addFail.cmd) ? addFail.content : '');
-		htmlVars.fail_index_id = (addFail.index ? addFail.id : '');
+		htmlVars.fail_id = Text.escapeHTML((!addFail.cmd) ? addFail.id : '');
+		htmlVars.fail_text = Text.escapeHTML((!addFail.cmd) ? addFail.content : '');
+		htmlVars.fail_index_id = Text.escapeHTML(addFail.index ? addFail.id : '');
 
 		htmlVars.commands = '';
 		for (let cmd in App.parser.data.dyncmds) {
-			htmlVars.commands += '<a id="a" name="Cmd-' + cmd + '"></a>';
+			htmlVars.commands += '<a id="a" name="Cmd-' + Text.escapeHTML(cmd) + '"></a>';
 			htmlVars.commands += getCommandTable(cmd, addFail);
 			htmlVars.commands += '<br />';
 		}
@@ -409,21 +409,21 @@ exports.setup = function (App) {
 	function getCommandTable(cmdid, addFail) {
 		let dynCmds = App.parser.data.dyncmds;
 		let htmlVars = Object.create(null);
-		htmlVars.cmdid = cmdid;
+		htmlVars.cmdid = Text.escapeHTML(cmdid);
 		if (typeof dynCmds[cmdid] === 'string') {
-			htmlVars.text = dynCmds[cmdid];
+			htmlVars.text = Text.escapeHTML(dynCmds[cmdid]);
 			return textCommandTemplate.make(htmlVars);
 		} else if (typeof dynCmds[cmdid] === 'object') {
 			htmlVars.subcmds = '';
 			for (let k in dynCmds[cmdid]) {
 				htmlVars.subcmds += subCommandTemplate.make({
-					cmdid: cmdid,
-					subcmd: k,
-					text: dynCmds[cmdid][k],
+					cmdid: Text.escapeHTML(cmdid),
+					subcmd: Text.escapeHTML(k),
+					text: Text.escapeHTML(dynCmds[cmdid][k]),
 				});
 			}
-			htmlVars.fail_id = (addFail.cmd === cmdid ? addFail.id : '');
-			htmlVars.fail_text = (addFail.cmd === cmdid ? addFail.content : '');
+			htmlVars.fail_id = Text.escapeHTML(addFail.cmd === cmdid ? addFail.id : '');
+			htmlVars.fail_text = Text.escapeHTML(addFail.cmd === cmdid ? addFail.content : '');
 			return indexCommandTemplate.make(htmlVars);
 		}
 		return textCommandTemplate.make(htmlVars);

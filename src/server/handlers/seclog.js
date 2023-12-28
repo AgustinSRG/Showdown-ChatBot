@@ -7,6 +7,7 @@
 const Path = require('path');
 const check = Tools('check');
 const Template = Tools('html-template');
+const Text = Tools('text');
 
 const mainTemplate = new Template(Path.resolve(__dirname, 'templates', 'seclog.html'));
 
@@ -48,12 +49,12 @@ exports.setup = function (App) {
 				App.config.logMaxOld = duration;
 				App.db.write();
 				App.logServerAction(context.user.id, "Set Logger configuration.");
-				ok = "Changes made sucessfully. Restart the application to make them effective.";
+				ok = "Changes made successfully. Restart the application to make them effective.";
 			}
 		}
 
 		let htmlVars = Object.create(null);
-		htmlVars.oldsec = (App.config.logMaxOld || '0');
+		htmlVars.oldsec = Text.escapeHTML(App.config.logMaxOld || '0');
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
@@ -61,8 +62,8 @@ exports.setup = function (App) {
 		htmlVars.log_files = '';
 		let logs = App.logger.getFilesList();
 		for (let i = 0; i < logs.length; i++) {
-			htmlVars.log_files += '<tr><td>' + logs[i].file + '</td><td>' + logs[i].size + ' KB</td><td>' + logs[i].date +
-			'</td><td><a href="/seclog/' + logs[i].file +
+			htmlVars.log_files += '<tr><td>' + Text.escapeHTML(logs[i].file) + '</td><td>' + Text.escapeHTML(logs[i].size) + ' KB</td><td>' + Text.escapeHTML(logs[i].date) +
+			'</td><td><a href="/seclog/' + encodeURIComponent(logs[i].file) +
 			'" target="_blank"><div align="center"><button>View Log</button></div></a></td></tr>';
 		}
 

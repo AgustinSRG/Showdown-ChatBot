@@ -49,7 +49,7 @@ exports.setup = function (App) {
 				}
 				App.modules.blacklist.system.db.write();
 				App.logServerAction(context.user.id, "Edit Blacklist: " + room);
-				ok = "Blacklist saved for room " + room;
+				ok = "Blacklist saved for room " + Text.escapeHTML(room);
 			} else {
 				error = "You must specify a room";
 			}
@@ -60,9 +60,9 @@ exports.setup = function (App) {
 					App.modules.blacklist.system.data[room] = Object.create(null);
 					App.modules.blacklist.system.db.write();
 					App.logServerAction(context.user.id, "Added blacklist: " + room);
-					ok = "Added blacklist for room " + room;
+					ok = "Added blacklist for room " + Text.escapeHTML(room);
 				} else {
-					error = "Room " + room + " already has a blacklist";
+					error = "Room " + Text.escapeHTML(room) + " already has a blacklist";
 				}
 			} else {
 				error = "You must specify a room";
@@ -75,8 +75,8 @@ exports.setup = function (App) {
 		let data = App.modules.blacklist.system.data;
 		for (let room in data) {
 			htmlVars.rooms += roomTemplate.make({
-				room: room,
-				blacklist: Object.keys(data[room]).join(', '),
+				room: Text.escapeHTML(room),
+				blacklist: Text.escapeHTML(Object.keys(data[room]).join(', ')),
 			});
 		}
 

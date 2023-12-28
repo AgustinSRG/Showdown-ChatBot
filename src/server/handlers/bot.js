@@ -101,7 +101,7 @@ exports.setup = function (App) {
 				}
 				App.saveConfig();
 				App.logServerAction(context.user.id, 'Edit Bot configuration');
-				ok = "Bot configuration changed sucessfully. Restart the bot to make the changes effective.";
+				ok = "Bot configuration changed successfully. Restart the bot to make the changes effective.";
 			}
 		}
 
@@ -125,7 +125,7 @@ exports.setup = function (App) {
 			htmlVars.conntime = '<span id="bot-conntime"><i>&nbsp;</i></span>';
 		}
 
-		htmlVars.nick = (App.bot.getBotNick().substr(1) || "-");
+		htmlVars.nick = Text.escapeHTML(App.bot.getBotNick().substr(1) || "-");
 
 		let rooms = [];
 		for (let r in App.bot.rooms) {
@@ -133,20 +133,20 @@ exports.setup = function (App) {
 				rooms.push(App.bot.rooms[r].id);
 			}
 		}
-		htmlVars.rooms = rooms.join(', ');
+		htmlVars.rooms = Text.escapeHTML(rooms.join(', '));
 		let battles = [];
 		for (let r in App.bot.rooms) {
 			if (App.bot.rooms[r].type === 'battle') {
 				battles.push(App.bot.rooms[r].id);
 			}
 		}
-		htmlVars.battles = battles.join(', ');
+		htmlVars.battles = Text.escapeHTML(battles.join(', '));
 
-		htmlVars.server = App.bot.server;
-		htmlVars.port = App.bot.port;
+		htmlVars.server = Text.escapeHTML(App.bot.server);
+		htmlVars.port = Text.escapeHTML(App.bot.port);
 		htmlVars.secure = (App.bot.secure ? 'checked="checked"' : '');
-		htmlVars.serverid = App.bot.loginUrl.serverId;
-		htmlVars.retry = Math.floor(App.config.bot.retrydelay / 1000);
+		htmlVars.serverid = Text.escapeHTML(App.bot.loginUrl.serverId);
+		htmlVars.retry = Text.escapeHTML(Math.floor(App.config.bot.retrydelay / 1000));
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
