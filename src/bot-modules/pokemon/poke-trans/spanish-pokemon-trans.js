@@ -3252,8 +3252,8 @@ exports.translations.pokemon = {
 	"taurospaldeablaze": "Tauros de Paldea (Variedad ardiente)",
 	"taurospaldeaaqua": "Tauros de Paldea (Variedad acuática)",
 	"walkingwake": "Ondulagua",
-	"ironleaves": "Iron Leaves",
-	"saharascal": "Ferroverdor",
+	"ironleaves": "Ferroverdor",
+	"saharascal": "", //CAP
 	"greninjabond": "Greninja (Vínculo)",
 	"ursalunabloodmoon": "Ursaluna (Luna Carmesí)",
 	"dipplin": "Dipplin",
