@@ -277,6 +277,7 @@ class DataManager {
 		wget(Showdown_Data[this.cur].url, function (data, err) {
 			if (err) {
 				this.events.emit('msg', "Error: Failed to download " + Showdown_Data[this.cur].url + " | (" + err.code + ") " + err.messaage);
+				this.nextDownload();
 				return;
 			}
 			FileSystem.writeFile(Path.resolve(this.path, Showdown_Data[this.cur].file), data, function (err2) {
