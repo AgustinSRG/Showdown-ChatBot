@@ -318,7 +318,7 @@ module.exports = {
 			return this.errorReply(this.usage({desc: this.usageTrans('room')}, { desc: this.mlt(10) }));
 		}
 
-		const room = Text.toRoomid(this.args[0]);
+		const room = this.parseRoomAliases(Text.toRoomid(this.args[0]));
 
 		if (!room) {
 			return this.errorReply(this.usage({desc: this.usageTrans('room')}, { desc: this.mlt(10) }));
