@@ -309,6 +309,33 @@ module.exports = {
 		}
 	},
 
+	rmrepeatroom: "clearrepeatroom",
+	clearrepeatroom: function (App) {
+		this.setLangFile(Lang_File);
+		if (!this.can('clearrepeatroom', this.room)) return this.replyAccessDenied('clearrepeatroom');
+
+		if (this.args.length < 2) {
+			return this.errorReply(this.usage({desc: this.usageTrans('room')}, { desc: this.mlt(10) }));
+		}
+
+		const room = Text.toRoomid(this.args[0]);
+
+		if (!room) {
+			return this.errorReply(this.usage({desc: this.usageTrans('room')}, { desc: this.mlt(10) }));
+		}
+
+		if (this.getRoomType(room) !== 'chat') {
+			return this.errorReply(this.mlt('nochat'));
+		}
+
+		const Mod = App.modules.timers.system;
+		if (!Mod.cancelRepeat(room, this.arg.split(",").slice(1).join(",").trim())) {
+			this.errorReply(this.mlt(16));
+		} else {
+			this.reply(this.mlt(11));
+		}
+	},
+
 	clearrepeats: "clearallrepeats",
 	clearallrepeats: function (App) {
 		this.setLangFile(Lang_File);
