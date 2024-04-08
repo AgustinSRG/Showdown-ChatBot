@@ -1,6 +1,6 @@
 {
   "name": "showdown-chatbot",
-  "version": "2.10.2",
+  "version": "2.11.0",
   "author": {
     "name": "Agustin San Roman",
     "email": "agustinsanromanguzman@gmail.com",
@@ -14,7 +14,7 @@
   "main": "showdown-chatbot",
   "bin": "showdown-chatbot",
   "engines": {
-    "node": "> 16.0.0"
+    "node": "> 18.0.0"
   },
   "dependencies": {
     "busboy": "1.6.0",
