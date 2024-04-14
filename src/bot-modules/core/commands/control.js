@@ -15,6 +15,7 @@
  * time: gets the bot time
  * uptime: gets the process uptime
  * contime: gets the connection time
+ * reconnect: Forces the bot to reconnect to the server
  */
 
 'use strict';
@@ -64,6 +65,16 @@ module.exports = {
 			this.parser.bot.leaveRooms(rooms);
 			this.parser.app.logCommandAction(this);
 		}
+	},
+
+	/* Reconnect */
+
+	restart: 'reconnect',
+	reconnect: function (App) {
+		this.setLangFile(Lang_File);
+		if (!this.can('reconnect', this.room)) return this.replyAccessDenied('reconnect');
+		this.addToSecurityLog();
+		App.restartBot();
 	},
 
 	/* Custom send */
