@@ -428,7 +428,7 @@ class Bot {
 				let groupLinesRoom = null;
 
 				for (let i = 0; i < this.maxLinesSend && linesToSend.length > 0; i++) {
-					const roomInLine = linesToSend.indexOf("|") >= 0 ? linesToSend[0].split("|")[0] : "";
+					const roomInLine = linesToSend[0].indexOf("|") >= 0 ? linesToSend[0].split("|")[0] : "";
 
 					if (groupLinesRoom === null) {
 						groupLinesRoom = roomInLine;
