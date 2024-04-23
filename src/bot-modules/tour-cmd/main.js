@@ -11,6 +11,8 @@ const Tournament = require(Path.resolve(__dirname, 'tournament.js'));
 const Lang_File = Path.resolve(__dirname, 'tournaments.translations');
 const Lang_File_Err = Path.resolve(__dirname, 'errors.translations');
 
+const MAX_TOUR_LOG_LENGTH = 20;
+
 exports.setup = function (App) {
 	if (!App.config.modules.tourcmd) {
 		App.config.modules.tourcmd = {
@@ -33,6 +35,9 @@ exports.setup = function (App) {
 		constructor() {
 			this.tourData = Object.create(null);
 			this.tournaments = Object.create(null);
+
+			this.tourLogDB = App.dam.getDataBase('tournaments-log.json');
+			this.tourLog = this.tourLogDB.data;
 		}
 
 		newTour(room, details) {
@@ -42,6 +47,46 @@ exports.setup = function (App) {
 			}
 			this.tournaments[room] = new Tournament(App, room, details);
 			this.tournaments[room].create();
+		}
+
+		addToTournamentLog(room, data) {
+			let winner = "-";
+
+			if (data.results && Array.isArray(data.results) && data.results.length > 0) {
+				winner = Array.isArray(data.results[0]) ? data.results[0].join(", ") : (data.results[0] || "-");
+			}
+
+			let generator = data.generator || "-";
+			let format = data.format || "";
+
+			if (App.bot.formats[Text.toId(format)]) {
+				format = App.bot.formats[Text.toId(format)].name;
+			}
+
+			if (!this.tourLog[room]) {
+				this.tourLog[room] = [];
+			}
+
+			if (this.tourLog[room].length >= MAX_TOUR_LOG_LENGTH) {
+				this.tourLog[room].pop();
+			}
+
+			this.tourLog[room].unshift({
+				time: Date.now(),
+				generator: generator,
+				format: format,
+				winner: winner,
+			});
+
+			this.tourLogDB.write();
+		}
+
+		getTournamentLog(room) {
+			if (!this.tourLog[room]) {
+				return [];
+			}
+
+			return this.tourLog[room];
 		}
 	}
 
@@ -188,6 +233,7 @@ exports.setup = function (App) {
 						congratulateTournamentWinner(room, tourData[room].results[0]);
 					}
 				}
+				TourCommandMod.addToTournamentLog(room, tourData[room]);
 				delete tourData[room];
 				if (tournaments[room] && tournaments[room].startTimer) clearTimeout(tournaments[room].startTimer);
 				if (tournaments[room]) delete tournaments[room];

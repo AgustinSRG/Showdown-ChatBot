@@ -9,12 +9,17 @@
     "server-handler.js"
   ],
   "permissions": {
-	"tour": {"group": "mod"}
+    "tour": {
+      "group": "mod"
+    },
+    "tourlog": {
+      "group": "driver"
+    }
   },
   "langfiles": [
     "./commands.translations",
     "./tournaments.translations",
-	"./errors.translations"
+    "./errors.translations"
   ],
   "description": "A single command to make a tour, start it and set the autodq"
 }

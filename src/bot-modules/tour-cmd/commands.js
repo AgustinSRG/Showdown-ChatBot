@@ -34,6 +34,12 @@ function parseAliases(format, App) {
 	return Text.toFormatStandard(format);
 }
 
+function botCanHtml(room, App) {
+	let roomData = App.bot.rooms[room];
+	let botid = Text.toId(App.bot.getBotNick());
+	return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'bot'));
+}
+
 module.exports = {
 	newtour: 'tour',
 	tour: function (App) {
@@ -288,5 +294,114 @@ module.exports = {
 			}
 		}
 		Mod.newTour(this.room, details);
+	},
+
+	recentrours: "tourlog",
+	tourlog: function (App) {
+		this.setLangFile(Lang_File);
+
+		const room = Text.toRoomid(this.arg) || this.room;
+
+		if (!room) {
+			return this.errorReply(this.usage({ desc: this.usageTrans('room') }));
+		}
+
+		if (!App.bot.rooms[room] || App.bot.rooms[room].type !== 'chat') {
+			if (this.arg) {
+				return this.errorReply(this.usage({ desc: this.usageTrans('room') }));
+			} else {
+				return this.errorReply(this.mlt("room") + " '" + room + "' " + this.mlt("nf"));
+			}
+		}
+
+		let privates = (App.config.modules.core.privaterooms || []);
+
+		if (room !== this.room && privates.indexOf(room) >= 0) {
+			// Private room
+			return this.errorReply(this.mlt("room") + " '" + room + "' " + this.mlt("nf"));
+		}
+
+		const Mod = App.modules.tourcmd.system;
+		const log = Mod.getTournamentLog(room);
+
+		if (log.length === 0) {
+			return this.errorReply(this.mlt("logempty"));
+		}
+
+		const parsedLog = [];
+
+		for (let l of log) {
+			let time = Math.max(1, Math.round((Date.now() - l.time) / 1000));
+
+			let times = [];
+			let aux;
+			/* Get Time difference */
+			aux = time % 60; // Seconds
+			if (aux > 0 || time === 0) times.unshift(aux + ' ' + (aux === 1 ? this.mlt(2) : this.mlt(3)));
+			time = Math.floor(time / 60);
+			aux = time % 60; // Minutes
+			if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? this.mlt(4) : this.mlt(5)));
+			time = Math.floor(time / 60);
+			aux = time % 24; // Hours
+			if (aux > 0) times.unshift(aux + ' ' + (aux === 1 ? this.mlt(6) : this.mlt(7)));
+			time = Math.floor(time / 24); // Days
+			if (time > 0) times.unshift(time + ' ' + (time === 1 ? this.mlt(8) : this.mlt(9)));
+
+			parsedLog.push({
+				timeStr: (this.mlt("agob") + " " + times.join(', ') + " " + this.mlt("ago")).trim(),
+				winner: l.winner,
+				generator: l.generator,
+				format: l.format,
+			});
+		}
+
+		if (this.can('tourlog', this.room) && botCanHtml(this.room, App)) {
+			// HTML
+
+			let html = '';
+
+			html += '<h3 style="text-align:center;">' + Text.escapeHTML(this.mlt('rtours') + " " + this.parser.getRoomTitle(room)) + '</h3>';
+
+			html += '<div style="overflow: auto; height: 120px; width: 100%;">';
+
+			html += '<table border="1" cellspacing="0" cellpadding="3" style="min-width:100%;">';
+
+			html += '<tr>';
+			html += '<th>' + Text.escapeHTML(this.mlt("format")) + '</th>';
+			html += '<th>' + Text.escapeHTML(this.mlt("type")) + '</th>';
+			html += '<th>' + Text.escapeHTML(this.mlt("winner")) + '</th>';
+			html += '<th>' + Text.escapeHTML(this.mlt("finish")) + '</th>';
+			html += '</tr>';
+
+			for (let l of parsedLog) {
+				html += '<tr>';
+
+				html += '<td><b>' + Text.escapeHTML(l.format) + '</b></td>';
+
+				html += '<td>' + Text.escapeHTML(l.generator) + '</td>';
+
+				html += '<td>' + Text.escapeHTML(l.winner) + '</td>';
+
+				html += '<td>' + Text.escapeHTML(l.timeStr) + '</td>';
+
+				html += '</tr>';
+			}
+
+			html += '</table>';
+
+			html += '</div>';
+
+			this.send("/addhtmlbox " + html, this.room);
+		} else {
+			// !code
+
+			let txt = this.mlt('rtours') + " " + this.parser.getRoomTitle(room) + ":\n\n";
+
+			for (let l of parsedLog) {
+				txt += "  - " + l.timeStr + " / " + this.mlt("format") + ": " + l.format + " / " + this.mlt("type") + ": " + l.generator + " / " + this.mlt("winner") + ": " + l.winner + "\n";
+			}
+
+			this.restrictReply("!code " + txt, 'tourlog');
+		}
 	},
 };

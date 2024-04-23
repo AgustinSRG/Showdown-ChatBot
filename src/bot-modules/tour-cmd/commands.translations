@@ -18,12 +18,37 @@ $notstarted = Error: the tournament did not start, probably because I do not hav
 $param = Parameter
 $paramhelp = not found, valid parameters are
 
+$room = Room
+$nf = not found
+
+$logempty = No registered tournaments for this room yet
+
 $autostart = Auto start time (mins)
 $autodq = Autodq (mins)
 $maxusers = Max users
 $rounds = Rounds
 $name = Name
 $rules = Rules (Split by commas)
+
+$agob = 
+$ago = ago
+
+$2 = second
+$3 = seconds
+$4 = minute
+$5 = minutes
+$6 = hour
+$7 = hours
+$8 = day
+$9 = days
+
+$rtours = Recent tournaments for room
+
+$format = Format
+$type = Type
+$winner = Winner
+
+$finish = Finished
 
 %spanish
 
@@ -47,3 +72,26 @@ $maxusers = Usuarios máximos
 $rounds = Rondas
 $name = Nombre
 $rules = Reglas (separadas por comas)
+
+$room = Sala
+$nf = no encontrada
+
+$logempty = No se han registrado torneos para esta sala todavía
+
+$agob = Hace
+$ago = 
+
+$2 = segundo
+$3 = segundos
+$4 = minuto
+$5 = minutos
+$6 = hora
+$7 = horas
+$8 = día
+$9 = días
+
+$rtours = Torneos recientes en la sala
+$format = Formato
+$type = Tipo
+$winner = Ganado por
+$finish = Finalización
