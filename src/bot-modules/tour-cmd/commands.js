@@ -300,14 +300,14 @@ module.exports = {
 	tourlog: function (App) {
 		this.setLangFile(Lang_File);
 
-		const room = Text.toRoomid(this.arg) || this.room;
+		const room = this.parseRoomAliases(Text.toRoomid(this.arg)) || this.room;
 
 		if (!room) {
 			return this.errorReply(this.usage({ desc: this.usageTrans('room') }));
 		}
 
 		if (!App.bot.rooms[room] || App.bot.rooms[room].type !== 'chat') {
-			if (this.arg) {
+			if (!this.arg) {
 				return this.errorReply(this.usage({ desc: this.usageTrans('room') }));
 			} else {
 				return this.errorReply(this.mlt("room") + " '" + room + "' " + this.mlt("nf"));
