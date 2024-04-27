@@ -89,8 +89,9 @@ exports.setup = function (App) {
 			htmlVars.log_files += '<tr>';
 			htmlVars.log_files += '<td>' + Text.escapeHTML(logs[i].file) + '</td>';
 			htmlVars.log_files += '<td style="text-align: center; white-space: nowrap;"><a href="/battlelog/' + Text.escapeHTML(logs[i].file) +
-				'" target="_blank" rel="noopener noreferrer"><button>View Log</button></a>&nbsp;|&nbsp;<a href="/battlelog/' + Text.escapeHTML((logs[i].file + "").split(".")[0]) +
-				'" target="_blank" rel="noopener noreferrer"><button>View Replay</button></a></td>';
+				'" target="_blank" rel="noopener noreferrer"><button>Log</button></a>&nbsp;|&nbsp;<a href="/battlelog/' + Text.escapeHTML((logs[i].file + "").split(".")[0]) +
+				'" target="_blank" rel="noopener noreferrer"><button>Replay</button></a>&nbsp;|&nbsp;<a href="' + Text.escapeHTML(logs[i].psim) +
+				'" target="_blank" rel="noopener noreferrer"><button>Recreate</button></a></td>';
 			htmlVars.log_files += '<td>' + Text.escapeHTML(logs[i].title) + '</td>';
 			htmlVars.log_files += '<td>' + Text.escapeHTML(logs[i].date) + '</td>';
 			htmlVars.log_files += '<td>' + Text.escapeHTML(logs[i].size) + ' KB</td>';
