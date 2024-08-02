@@ -31,7 +31,7 @@ exports.generate = function (body, loginData, menu, options) {
 		}
 	}
 
-	buf += '<script type="text/javascript" src="/static/csrf-protect.js"></script>';
+	buf += '<script type="text/javascript" src="/static/csrf-protect-v2.js"></script>';
 
 	if (options.scripts) {
 		for (let i = 0; i < options.scripts.length; i++) {
