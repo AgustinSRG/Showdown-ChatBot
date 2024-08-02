@@ -5,7 +5,7 @@
 'use strict';
 
 const Url = require('url');
-const Http = require('http');
+const Http = require('https');
 
 /**
  * Gets the server, port and serverid of a pokemon showdown client
@@ -19,10 +19,18 @@ exports.getShowdownServer = function (url, callback) {
 	if (url.slice(-1) === '/') {
 		url = url.slice(0, -1);
 	}
+	if (url === "play.pokemonshowdown.com") {
+		return callback(null, {
+			host: 'sim3.psim.us',
+			port: 443,
+			id: 'showdown',
+			https: true,
+		});
+	}
 	let requestOptions = {
 		hostname: 'play.pokemonshowdown.com',
-		port: 80,
-		path: '/crossdomain.php?host=' + url + '&path=',
+		port: 443,
+		path: '/crossdomain.php?host=' + url + '&path=&protocol=https:',
 		method: 'GET',
 	};
 	let request = Http.request(requestOptions, response => {

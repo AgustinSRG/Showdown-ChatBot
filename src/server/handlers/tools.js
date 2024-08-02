@@ -64,6 +64,7 @@ exports.setup = function (App) {
 					result += '<p style="padding:5px;"><strong>Server</strong>:&nbsp;' + data.host + '</p>';
 					result += '<p style="padding:5px;"><strong>Port</strong>:&nbsp;' + data.port + '</p>';
 					result += '<p style="padding:5px;"><strong>Server-ID</strong>:&nbsp;' + data.id + '</p>';
+					result += '<p style="padding:5px;"><strong>Secure connection (TLS)</strong>:&nbsp;' + (data.https ? "YES" : "NO") + '</p>';
 				}
 				context.endWithText(result);
 			});
