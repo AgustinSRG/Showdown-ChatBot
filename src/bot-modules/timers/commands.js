@@ -197,7 +197,7 @@ module.exports = {
 			return this.errorReply(this.mlt(20));
 		}
 
-		if (!Mod.createTimer(this.room, time, name)) {
+		if (!Mod.createTimer(this.room, time, name, this.byIdent.name)) {
 			this.errorReply(this.mlt(19));
 		}
 	},

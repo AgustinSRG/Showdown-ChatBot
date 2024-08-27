@@ -17,6 +17,7 @@ $0 =
 $1 = left!
 $2 = Time is up!
 $3 = 
+$4 = Time is up, $USER!
 
 %spanish
 
@@ -29,6 +30,7 @@ $0 = Quedan
 $1 = 
 $2 = ¡El tiempo ha terminado!
 $3 = Queda
+$4 = ¡El tiempo ha terminado, $USER!
 $hour = hora
 $hours = horas
 $instants = 0 segundos

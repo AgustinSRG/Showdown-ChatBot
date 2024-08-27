@@ -114,7 +114,8 @@ exports.setup = function (App) {
 
 		checkTimer(timer) {
 			if (Date.now() >= timer.ends) {
-				App.bot.sendTo(timer.room, this.getTimerPrefix(timer) + " " + Chat.bold(trans(timer.room, 2)));
+				App.bot.sendTo(timer.room, this.getTimerPrefix(timer) + " " +
+					Chat.bold(timer.user ? trans(timer.room, 4).replace("$USER", timer.user) : trans(timer.room, 2)));
 				this.deleteTimer(timer);
 			} else if (!timer.midAnnounced && Date.now() >= timer.mid) {
 				let diff = this.getDiff(timer);
@@ -171,7 +172,7 @@ exports.setup = function (App) {
 			return dates.join(', ') || trans(timer.room, 'instants');
 		}
 
-		createTimer(room, time, name) {
+		createTimer(room, time, name, user) {
 			if (!this.timers[room]) {
 				this.timers[room] = [];
 			} else if (!Array.isArray(this.timers[room])) {
@@ -191,6 +192,7 @@ exports.setup = function (App) {
 			const timer = {
 				room: room,
 				name: name,
+				user: user,
 				ends: Date.now() + time,
 				mid: Date.now() + (time / 2),
 				midAnnounced: false,
