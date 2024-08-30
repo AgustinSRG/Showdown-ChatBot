@@ -215,10 +215,10 @@ exports.setup = function (App, CustomModules) {
 			}
 			if (!this.leaveInterval) {
 				this.leaveInterval = setInterval(function () {
-					this.send("/leave");
+					App.bot.sendTo("", "/noreply /leave " + this.id);
 				}.bind(this), 5000);
 			}
-			this.send('/leave');
+			App.bot.sendTo("", "/noreply /leave " + this.id);
 		}
 
 		leaveBattle() {
