@@ -8,8 +8,9 @@
 </head>
 <body>
 <div align="center">
-<div align="left" style="width:90%;" class="main-div" id="log-div"></div>
 <div style="width:90%;" class="status-div" id="loading-div"><em>Loading... (this may take several seconds)</em></div>
+<div align="left" style="width:90%;" class="main-div" id="log-div"></div>
+<div style="width:90%;" class="status-div" id="bottom-div">&nbsp;</div>
 </div>
 <script type="text/javascript">
 	function addLeftZero(num, nz) {
@@ -49,11 +50,12 @@
 		}
 	}
 
-	$.get("#LOGURL#", function (data) {
-		var lines = data.split('\n');
+	function nextRender(lines, i, batchSize) {
+		var start = i;
+		var startTime = Date.now();
 		var line, b, timestamp, isIntro, spl, roomMark, spaceI;
-		for (var i = 0; i < lines.length; i++) {
-			line = lines[i];
+		while (i < start + batchSize && i < lines.length) {
+			line = lines[i++];
 			if (line.indexOf("[groupchat-") === 0) {
 				spaceI = line.indexOf(" ");
 				roomMark = line.substr(0, spaceI);
@@ -151,7 +153,23 @@
 					}
 			}
 		}
-		document.getElementById('loading-div').innerHTML = '&nbsp;';
+
+		var duration = Date.now() - startTime;
+		batchSize = Math.max(1, (batchSize * 30) / (duration || 1));
+
+		if (i >= lines.length) {
+			document.getElementById('loading-div').innerHTML = '&nbsp;';
+		} else {
+			var progress = Math.floor(i * 100 / (lines.length || 1));
+			document.getElementById('loading-div').innerHTML = '<em>Loading... (' + progress + '%)</em>';
+			requestAnimationFrame(nextRender.bind(null, lines, i, batchSize));
+		}
+	}
+
+	$.get("#LOGURL#", function (data) {
+		var lines = data.split('\n');
+		
+		nextRender(lines, 0, 10);
 	});
 </script>
 </body>
