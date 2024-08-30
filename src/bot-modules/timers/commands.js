@@ -168,7 +168,7 @@ module.exports = {
 
 		if (this.args[1] && isValidInt(this.args[1].trim())) {
 			seconds = parseInt((this.args[1] || "0").trim().split(" ")[0]) || 0;
-			name = "";
+			name = this.args.slice(2).join(", ").trim();
 		}
 
 		let existingTimer = Mod.findTimer(this.room, name);
@@ -298,12 +298,23 @@ module.exports = {
 		}
 
 		if (this.getRoomType(this.room) !== 'chat') {
-			return this.errorReply(this.mlt('nochat'));
+			if (this.args.length > 1 && this.can('clearrepeatroom', this.room)) {
+				this.cmd = "clearrepeatroom";
+				this.parser.exec(this);
+				return;
+			} else {
+				return this.errorReply(this.mlt('nochat'));
+			}
 		}
 
 		const Mod = App.modules.timers.system;
 		if (!Mod.cancelRepeat(this.room, this.arg)) {
-			this.errorReply(this.mlt(16));
+			if (this.args.length > 1 && this.can('clearrepeatroom', this.room)) {
+				this.cmd = "clearrepeatroom";
+				this.parser.exec(this);
+			} else {
+				this.errorReply(this.mlt(16));
+			}
 		} else {
 			this.reply(this.mlt(11));
 		}
