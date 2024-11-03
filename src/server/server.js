@@ -27,7 +27,6 @@ const Https = require('https');
 const WebSocketServer = require('websocket').server;
 const FileSystem = require('fs');
 const Crypto = require('crypto');
-const Stream = require('stream');
 const Busboy = require('busboy');
 
 const Static = Tools('server-static');
@@ -790,14 +789,14 @@ class RequestContext {
 			}.bind(this));
 			this.request.on('end', function () {
 				let busboy = null;
-				try {
-					busboy = Busboy({ headers: this.request.headers });
-				} catch (ex) {
-					this.server.app.debug("Error: " + ex.message);
+				if (this.trusted) {
+					try {
+						busboy = Busboy({ headers: this.request.headers });
+					} catch (ex) {
+						this.server.app.debug("Error: " + ex.message);
+					}
 				}
 				if (busboy) {
-					let stream = new Stream.PassThrough();
-					stream.on("error", function () {}); // Ignore errors from this stream
 					let files = this.files = Object.create(null);
 					let post = this.post = Object.create(null);
 					busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
@@ -811,19 +810,16 @@ class RequestContext {
 							files[fieldname].data += data;
 						});
 					});
-					busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
+					busboy.on('field', function (fieldname, val) {
 						post[fieldname] = "" + val;
 					});
 					busboy.on('finish', function () {
 						if (typeof callback === "function") return callback();
 					});
 					busboy.on('error', function () {
-						stream.unpipe(busboy);
 						if (typeof callback === "function") return callback();
 					});
-					stream.write(body);
-					stream.pipe(busboy);
-					stream.end();
+					busboy.end(body);
 				} else {
 					try {
 						this.post = searchParamsToObject(new URLSearchParams(body));
