@@ -689,7 +689,7 @@ exports.setup = function (Data) {
 					else res.unviable.push(decisions[i]);
 					continue;
 				case "shedtail":
-					if (pokeA.hp >= 60) res.viable.push(decisions[i]);
+					if (!conditionsA.volatiles["substitute"] && pokeA.hp >= 60) res.viable.push(decisions[i]);
 					else res.unviable.push(decisions[i]);
 					continue;
 				case "geomancy":

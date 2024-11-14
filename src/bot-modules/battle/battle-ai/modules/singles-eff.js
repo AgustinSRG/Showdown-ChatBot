@@ -497,7 +497,7 @@ exports.setup = function (Data) {
 					else res.unviable.push(decisions[i]);
 					continue;
 				case "shedtail":
-					if (pokeA.hp >= 60) {
+					if (!conditionsA.volatiles["substitute"] && pokeA.hp >= 60) {
 						res.viable.push(decisions[i]);
 						res.batonPass = decisions[i];
 					} else {
