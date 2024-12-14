@@ -458,11 +458,10 @@ module.exports = {
 		}
 	},
 
-
 	tourpollset: function (App) {
 		this.setLangFile(Lang_File);
 
-		if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
+		if (!this.can('tourpollset', this.room)) return this.replyAccessDenied('tourpollset');
 
 		const Config = App.config.modules.tourcmd;
 
