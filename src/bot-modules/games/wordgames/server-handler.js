@@ -104,7 +104,7 @@ exports.setup = function (App) {
 		for (let group in mod.data) {
 			htmlVars.groups += groupTemplate.make({
 				group: Text.escapeHTML(group),
-				words: Text.escapeHTM(mod.data[group].join(', ')),
+				words: Text.escapeHTML(mod.data[group].join(', ')),
 			});
 		}
 
