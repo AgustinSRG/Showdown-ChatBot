@@ -25,10 +25,10 @@ exports.setup = function (App) {
 	const Error_Msg = 'There is already a game';
 
 	function parseErrorMessage(room, spl) {
-		let msg = spl.splice(1).join('|');
+		let msg = spl.slice(1).join('|');
 		if (msg.substr(0, Error_Open.length) === Error_Open) {
 			msg = msg.substr(Error_Open.length, msg.length - (Error_Open.length + Error_Close.length));
-			/* Specific error messages, may be updated frecuently */
+			/* Specific error messages, may be updated frequently */
 			if (msg.substr(0, Error_Msg.length) === Error_Msg) {
 				App.bot.sendTo(room, App.multilang.mlt(Lang_File, getLanguage(room), 0));
 			}

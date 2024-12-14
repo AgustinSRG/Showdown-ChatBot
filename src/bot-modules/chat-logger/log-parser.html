@@ -123,11 +123,11 @@
 					break;
 				case 'html':
 				case 'raw':
-					addLine(HtmlSanitizer.SanitizeHtml(spl.splice(1).join('|')));
+					addLine(HtmlSanitizer.SanitizeHtml(spl.slice(1).join('|')));
 					break;
 				case 'uhtml':
 				case 'uhtmlchange':
-					addLine(HtmlSanitizer.SanitizeHtml(spl.splice(2).join('|')));
+					addLine(HtmlSanitizer.SanitizeHtml(spl.slice(2).join('|')));
 					break;
 				case 'unlink':
 				case 'tournament':
