@@ -58,6 +58,21 @@ $winner = Winner
 
 $finish = Finished
 
+$name = Name
+
+$setlist = Sets of formats for tournament polls
+$setlistall = All formats
+$setlistrandom = Random formats
+$setlistteam = Formats with team requirement
+
+$setok1 = The format set
+$setok2 = has been successfully configured
+
+$setnotfound = The specified format set does not exists or cannot be deleted
+
+$delok1 = The format set
+$delok2 = has been successfully deleted
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
@@ -111,3 +126,18 @@ $format = Formato
 $type = Tipo
 $winner = Ganado por
 $finish = Finalización
+
+$name = Nombre
+
+$setlist = Conjuntos de formatos para encuestas de torneos
+$setlistall = Todos los formatos
+$setlistrandom = Formatos aleatorios
+$setlistteam = Formatos con equipo
+
+$setok1 = El conjunto de formatos
+$setok2 = ha sido configurado correctamente
+
+$setnotfound = El conjunto de formatos especificado no existe o no puede ser eliminado
+
+$delok1 = El conjunto de formatos
+$delok2 = ha sido eliminado correctamente

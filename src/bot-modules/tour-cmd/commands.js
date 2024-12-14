@@ -3,6 +3,7 @@
  *
  * tour: creates a tournament easier than using Showdown commands
  * tourlog: Gets a register of the must recent tournaments
+ * tourpollset: Configures the sets for the tournament polls
  */
 
 'use strict';
@@ -187,6 +188,7 @@ module.exports = {
 						case "polltime":
 							params.pollTime = valueArg;
 							break;
+						case "options":
 						case "polloptions":
 						case "pollmaxoptions":
 							params.pollMaxOptions = valueArg;
@@ -200,7 +202,7 @@ module.exports = {
 								}
 							} else {
 								return this.reply(this.mlt('param') + ' ' + idArg + ' ' +
-									this.mlt('paramhelp') + ": tier, autostart, dq, users, rounds, type, scout, timer, name, rules, poll-time");
+									this.mlt('paramhelp') + ": tier, autostart, dq, users, rounds, type, scout, timer, name, rules, poll-options, poll-time");
 							}
 					}
 				}
@@ -455,4 +457,106 @@ module.exports = {
 			this.restrictReply("!code " + txt, 'tourlog');
 		}
 	},
+
+
+	tourpollset: function (App) {
+		this.setLangFile(Lang_File);
+
+		if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
+
+		const Mod = App.modules.tourcmd.system;
+
+		const subCommand = Text.toId(this.args[0] || "");
+
+		switch (subCommand) {
+			case "list":
+				{
+					const sets = Object.values(Mod.tourPollSets);
+
+					let text = "" + this.mlt("setlist") + ":\n\n";
+
+					for (let s of sets) {
+						text += s.name + ": " + (s.formats || []).join(", ") + "\n";
+					}
+
+					text += "All: [" + this.mlt("setlistall") + "]\n";
+					text += "Random: [" + this.mlt("setlistrandom") + "]\n";
+					text += "Team: [" + this.mlt("setlistteam") + "]\n";
+
+					this.replyCommand("!code " + text);
+				}
+				break;
+			case "add":
+			case "set":
+				{
+					if (this.args.length < 4) {
+						return this.errorReply(this.usage({ desc: 'list' }, { desc: this.mlt('name') }, { desc: this.mlt('format') }, { desc: this.mlt('format') }, { desc: "...", optional: true }));
+					}
+
+					const name = (this.args[1] + "").trim();
+					const id = Text.toId(name);
+
+					if (!id) {
+						return this.errorReply(this.usage({ desc: 'list' }, { desc: this.mlt('name') }, { desc: this.mlt('format') }, { desc: this.mlt('format') }, { desc: "...", optional: true }));
+					}
+
+					const formats = [];
+
+					for (let i = 2; i < this.args.length; i++) {
+						const format = parseAliases(Text.toId(this.args[i]), App);
+						const formatData = App.bot.formats[format];
+
+						if (!formatData) {
+							return this.errorReply(this.mlt('e31') + ' ' + Chat.italics(format) +
+									' ' + this.mlt('e32'));
+						}
+
+						if (!formatData.chall || formatData.disableTournaments) {
+							return this.errorReply(this.mlt('e31') + ' ' + Chat.italics(formatData.name) +
+									' ' + this.mlt('e32'));
+						}
+
+						formats.push(formatData.name);
+					}
+
+					Mod.tourPollSets[id] = {
+						name: name,
+						formats: formats,
+					};
+
+					Mod.tourPollSetsDB.write();
+
+					this.reply(this.mlt('setok1') + " " + Chat.italics(name) + " " +  this.mlt("setok2"));
+				}
+				break;
+			case "delete":
+			case "del":
+			case "remove":
+			case "rm":
+				{
+					if (this.args.length < 2) {
+						return this.errorReply(this.usage({ desc: 'delete' }, { desc: this.mlt('name') }));
+					}
+
+					const name = (this.args[1] + "").trim();
+					const id = Text.toId(name);
+
+					if (!id) {
+						return this.errorReply(this.usage({ desc: 'delete' }, { desc: this.mlt('name') }));
+					}
+
+					if (!Mod.tourPollSets[id]) {
+						return this.errorReply(this.mlt('setnotfound'));
+					}
+
+					delete Mod.tourPollSets[id];
+					Mod.tourPollSetsDB.write();
+
+					this.reply(this.mlt('delok1') + " " + Chat.italics(name) + " " + this.mlt("delok2"));
+				}
+				break;
+			default:
+				return this.errorReply(this.usage({ desc: 'list | add | delete' }));
+		}
+	}
 };
