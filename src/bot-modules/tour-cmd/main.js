@@ -27,11 +27,15 @@ exports.setup = function (App) {
 			aliases: Object.create(null),
 			finalAnnouncement: Object.create(null),
 			congratsWinner: Object.create(null),
+			pollSets: Object.create(null),
 		};
 	}
 
 	const Config = App.config.modules.tourcmd;
 
+	if (!Config.pollSets) {
+		Config.pollSets = Object.create(null);
+	}
 	class TourCommandModule {
 		constructor() {
 			this.tourData = Object.create(null);
@@ -43,9 +47,6 @@ exports.setup = function (App) {
 			this.tourPollDB = App.dam.getDataBase('tournaments-poll.json');
 			this.tourPoll = this.tourPollDB.data;
 			this.tourPollWait = Object.create(null);
-
-			this.tourPollSetsDB = App.dam.getDataBase('tournaments-poll-sets.json');
-			this.tourPollSets = this.tourPollSetsDB.data;
 		}
 
 		newTour(room, details) {
@@ -62,7 +63,7 @@ exports.setup = function (App) {
 				setId = "default";
 			}
 
-			if (!this.tourPollSets[setId]) {
+			if (!Config.pollSets[setId]) {
 				if (setId === "default" || setId === "rand" || setId === "random") {
 					// All formats
 					return randomize(Object.values(App.bot.formats).filter(f => !f.team && !f.disableTournaments && f.chall).map(f => f.name));
@@ -81,7 +82,7 @@ exports.setup = function (App) {
 				return [];
 			}
 
-			return randomize((this.tourPollSets[setId].formats || []).map(f => {
+			return randomize((Config.pollSets[setId].formats || []).map(f => {
 				const formatData = App.bot.formats[Text.toId(f)];
 
 				if (!formatData || formatData.disableTournaments || !formatData.chall) {

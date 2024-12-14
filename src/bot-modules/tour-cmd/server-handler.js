@@ -40,6 +40,7 @@ exports.setup = function (App) {
 			let timer = Text.toId(context.post.timer);
 			let msg = (context.post.creationmsg || "").trim();
 			let aliases = (context.post.aliases || "").split('\n');
+			let pollSets = (context.post.pollsets || "").split('\n');
 			let finals = (context.post.finals || "").split(',');
 			let winnergrats = (context.post.winnergrats || "").split(',');
 
@@ -79,6 +80,26 @@ exports.setup = function (App) {
 					}
 				}
 				Config.aliases = aux;
+				aux = Object.create(null);
+				for (let i = 0; i < pollSets.length; i++) {
+					let colonIndex = pollSets[i].indexOf(":");
+
+					if (colonIndex === -1) {
+						continue;
+					}
+
+					const setName = pollSets[i].substring(0, colonIndex);
+					const setId = Text.toId(setName);
+					const setFormats = pollSets[i].substring(colonIndex + 1).split(",").map(f => f.trim()).filter(f => !!f);
+
+					if (setId && setFormats.length > 0) {
+						aux[setId] = {
+							name: setName,
+							formats: setFormats,
+						};
+					}
+				}
+				Config.pollSets = aux;
 				Config.finalAnnouncement = Object.create(null);
 				for (let i = 0; i < finals.length; i++) {
 					let roomid = Text.toRoomid(finals[i]);
@@ -122,6 +143,12 @@ exports.setup = function (App) {
 			aliases.push(format + ', ' + Config.aliases[format]);
 		}
 		htmlVars.aliases = Text.escapeHTML(aliases.join('\n'));
+
+		let pollSets = [];
+		for (let s in Config.pollSets) {
+			pollSets.push((Config.pollSets[s].name || s) + ': ' + Config.pollSets[s].formats.join(", "));
+		}
+		htmlVars.pollsets = Text.escapeHTML(pollSets.join('\n'));
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));

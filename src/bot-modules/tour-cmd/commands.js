@@ -464,14 +464,14 @@ module.exports = {
 
 		if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
 
-		const Mod = App.modules.tourcmd.system;
+		const Config = App.config.modules.tourcmd;
 
 		const subCommand = Text.toId(this.args[0] || "");
 
 		switch (subCommand) {
 			case "list":
 				{
-					const sets = Object.values(Mod.tourPollSets);
+					const sets = Object.values(Config.pollSets);
 
 					let text = "" + this.mlt("setlist") + ":\n\n";
 
@@ -519,14 +519,16 @@ module.exports = {
 						formats.push(formatData.name);
 					}
 
-					Mod.tourPollSets[id] = {
+					Config.pollSets[id] = {
 						name: name,
 						formats: formats,
 					};
 
-					Mod.tourPollSetsDB.write();
+					App.db.write();
 
-					this.reply(this.mlt('setok1') + " " + Chat.italics(name) + " " +  this.mlt("setok2"));
+					this.addToSecurityLog();
+
+					this.reply(this.mlt('setok1') + " " + Chat.italics(name) + " " + this.mlt("setok2"));
 				}
 				break;
 			case "delete":
@@ -545,12 +547,15 @@ module.exports = {
 						return this.errorReply(this.usage({ desc: 'delete' }, { desc: this.mlt('name') }));
 					}
 
-					if (!Mod.tourPollSets[id]) {
+					if (!Config.pollSets[id]) {
 						return this.errorReply(this.mlt('setnotfound'));
 					}
 
-					delete Mod.tourPollSets[id];
-					Mod.tourPollSetsDB.write();
+					delete Config.pollSets[id];
+
+					App.db.write();
+
+					this.addToSecurityLog();
 
 					this.reply(this.mlt('delok1') + " " + Chat.italics(name) + " " + this.mlt("delok2"));
 				}
