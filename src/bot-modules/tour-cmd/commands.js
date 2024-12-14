@@ -2,6 +2,7 @@
  * Commands File
  *
  * tour: creates a tournament easier than using Showdown commands
+ * tourlog: Gets a register of the must recent tournaments
  */
 
 'use strict';
@@ -40,6 +41,8 @@ function botCanHtml(room, App) {
 	return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'bot'));
 }
 
+const MAX_POOL_OPTIONS = 10;
+
 module.exports = {
 	newtour: 'tour',
 	tour: function (App) {
@@ -47,14 +50,16 @@ module.exports = {
 		if (!this.can('tour', this.room)) return this.replyAccessDenied('tour');
 		if (!this.arg) {
 			return this.errorReply(this.usage(
-				{ desc: this.usageTrans('format') },
+				{ desc: this.mlt('formatorpoll') },
 				{ desc: 'type=' + 'elim|rr|double-elim|double-rr', optional: true },
 				{ desc: 'auto-start=' + this.mlt('autostart'), optional: true },
 				{ desc: 'dq=' + this.mlt('autodq'), optional: true },
 				{ desc: 'users=' + this.mlt('maxusers'), optional: true },
 				{ desc: 'rounds=' + this.mlt('rounds'), optional: true },
 				{ desc: 'name=' + this.mlt('name'), optional: true },
-				{ desc: 'rules=' + this.mlt('rules'), optional: true }
+				{ desc: 'rules=' + this.mlt('rules'), optional: true },
+				{ desc: 'poll-options=' + this.mlt('polloptions'), optional: true },
+				{ desc: 'poll-time=' + this.mlt('polltime'), optional: true }
 			));
 		}
 		const Mod = App.modules.tourcmd.system;
@@ -79,6 +84,10 @@ module.exports = {
 			rounds: null,
 			rules: null,
 			name: null,
+			isPoll: false,
+			pollSet: "",
+			pollTime: Config.pollTime || 3,
+			pollMaxOptions: Config.pollMaxOptions || 4,
 		};
 		if (this.arg && this.arg.length) {
 			let args = this.args;
@@ -92,6 +101,8 @@ module.exports = {
 				timer: null,
 				rules: "",
 				name: null,
+				pollTime: null,
+				pollMaxOptions: null,
 			};
 			let splArg;
 			let isRules = false;
@@ -173,6 +184,13 @@ module.exports = {
 							}
 							isRules = true;
 							break;
+						case "polltime":
+							params.pollTime = valueArg;
+							break;
+						case "polloptions":
+						case "pollmaxoptions":
+							params.pollMaxOptions = valueArg;
+							break;
 						default:
 							if (isRules) {
 								if (params.rules) {
@@ -182,33 +200,41 @@ module.exports = {
 								}
 							} else {
 								return this.reply(this.mlt('param') + ' ' + idArg + ' ' +
-									this.mlt('paramhelp') + ": tier, autostart, dq, users, rounds, type, scout, timer");
+									this.mlt('paramhelp') + ": tier, autostart, dq, users, rounds, type, scout, timer, name, rules, poll-time");
 							}
 					}
 				}
 			}
 			if (params.format) {
-				let formatOptions = (params.format + "").split("|").filter(a => {
-					return !!(a.trim());
-				});
-				if (formatOptions.length > 0) {
-					const parsedFormats = [];
-					for (let formatOption of formatOptions) {
-						let format = parseAliases(formatOption, App);
-						if (!App.bot.formats[format]) {
-							let inexact = Inexact.safeResolve(App, format, { formats: 1, others: 0 });
-							return this.reply(this.mlt('e31') + ' "' + format + '" ' + this.mlt('e33') +
-								(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
-						}
-						if (App.bot.formats[format].disableTournaments) {
-							return this.reply(this.mlt('e31') + ' ' + Chat.italics(App.bot.formats[format].name) +
-								' ' + this.mlt('e32'));
+				const formatTrim = (params.format + "").trim().toLowerCase().replace(/\s/g, "");
+
+				if (formatTrim === "poll" || formatTrim.startsWith("poll(")) {
+					// Is a pool
+					details.isPoll = true;
+					details.pollSet = Text.toId(formatTrim.substring("poll(".length));
+				} else {
+					let formatOptions = (params.format + "").split("|").filter(a => {
+						return !!(a.trim());
+					});
+					if (formatOptions.length > 0) {
+						const parsedFormats = [];
+						for (let formatOption of formatOptions) {
+							let format = parseAliases(formatOption, App);
+							if (!App.bot.formats[format]) {
+								let inexact = Inexact.safeResolve(App, format, { formats: 1, others: 0 });
+								return this.reply(this.mlt('e31') + ' "' + format + '" ' + this.mlt('e33') +
+									(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
+							}
+							if (App.bot.formats[format].disableTournaments) {
+								return this.reply(this.mlt('e31') + ' ' + Chat.italics(App.bot.formats[format].name) +
+									' ' + this.mlt('e32'));
+							}
+
+							parsedFormats.push(format);
 						}
 
-						parsedFormats.push(format);
+						details.format = parsedFormats[Math.floor(Math.random() * parsedFormats.length)];
 					}
-
-					details.format = parsedFormats[Math.floor(Math.random() * parsedFormats.length)];
 				}
 			}
 			if (params.timeToStart) {
@@ -228,6 +254,16 @@ module.exports = {
 					if (!dq || dq < 0) return this.reply(this.mlt('e5'));
 					details.autodq = dq;
 				}
+			}
+			if (params.pollTime) {
+				let pollTime = parseFloat(params.pollTime);
+				if (!pollTime || pollTime < 0) return this.reply(this.mlt('e9'));
+				details.pollTime = pollTime;
+			}
+			if (params.pollMaxOptions) {
+				let maxOptions = parseInt(params.pollMaxOptions);
+				if (!maxOptions || maxOptions < 2 || maxOptions > MAX_POOL_OPTIONS) return this.reply(this.mlt('e10'));
+				details.pollMaxOptions = maxOptions;
 			}
 			if (params.maxUsers) {
 				if (Text.toId(params.maxUsers) === 'off' || Text.toId(params.maxUsers) === 'infinite') {
@@ -293,6 +329,21 @@ module.exports = {
 				details.rules = params.rules;
 			}
 		}
+
+		if (details.isPoll) {
+			const pollSet = details.pollSet;
+			const formatOptions = Mod.getPollSet(pollSet).slice(0, Math.min(details.pollMaxOptions, MAX_POOL_OPTIONS));
+
+			if (formatOptions.length > 0) {
+				Mod.setupPoolWait(this.room, details);
+
+				// Prepare command
+				return this.send('/poll create ' + this.mlt('polltitle') + "," + formatOptions.join(","), this.room);
+			} else {
+				return this.reply(this.mlt('e5'));
+			}
+		}
+
 		Mod.newTour(this.room, details);
 	},
 

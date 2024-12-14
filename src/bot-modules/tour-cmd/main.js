@@ -6,6 +6,7 @@
 
 const Text = Tools('text');
 const Path = require('path');
+const randomize = Tools('randomize');
 const Tournament = require(Path.resolve(__dirname, 'tournament.js'));
 
 const Lang_File = Path.resolve(__dirname, 'tournaments.translations');
@@ -38,6 +39,13 @@ exports.setup = function (App) {
 
 			this.tourLogDB = App.dam.getDataBase('tournaments-log.json');
 			this.tourLog = this.tourLogDB.data;
+
+			this.tourPollDB = App.dam.getDataBase('tournaments-poll.json');
+			this.tourPoll = this.tourPollDB.data;
+			this.tourPollWait = Object.create(null);
+
+			this.tourPollSetsDB = App.dam.getDataBase('tournaments-poll-sets.json');
+			this.tourPollSets = this.tourPollSetsDB.data;
 		}
 
 		newTour(room, details) {
@@ -47,6 +55,47 @@ exports.setup = function (App) {
 			}
 			this.tournaments[room] = new Tournament(App, room, details);
 			this.tournaments[room].create();
+		}
+
+		getPollSet(setId) {
+			if (!setId) {
+				setId = "default";
+			}
+
+			if (!this.tourPollSets[setId]) {
+				if (setId === "default" || setId === "rand" || setId === "random") {
+					// All formats
+					return randomize(Object.values(App.bot.formats).filter(f => !f.team && !f.disableTournaments && f.chall).map(f => f.name));
+				}
+
+				if (setId === "all") {
+					// Random formats
+					return randomize(Object.values(App.bot.formats).filter(f => !f.disableTournaments && f.chall).map(f => f.name));
+				}
+
+				if (setId === "team" || setId === "build") {
+					// Team formats
+					return randomize(Object.values(App.bot.formats).filter(f => f.team && !f.disableTournaments && f.chall).map(f => f.name));
+				}
+
+				return [];
+			}
+
+			return randomize((this.tourPollSets[setId].formats || []).map(f => {
+				const formatData = App.bot.formats[Text.toId(f)];
+
+				if (!formatData || formatData.disableTournaments || !formatData.chall) {
+					return "";
+				}
+
+				return App.bot.formats[Text.toId(f)].name;
+			}).filter(f => !!f));
+		}
+
+		setupPoolWait(room, details) {
+			this.tourPollWait[room] = {
+				details: details,
+			};
 		}
 
 		addToTournamentLog(room, data) {
@@ -100,13 +149,20 @@ exports.setup = function (App) {
 
 	function parseErrorMessage(room, spl) {
 		let msg = spl.slice(1).join('|');
+
+		if (TourCommandMod.tourPollWait[room]) {
+			delete TourCommandMod.tourPollWait[room];
+			App.bot.sendTo(room, App.multilang.mlt(Lang_File_Err, getLanguage(room), 4) + ": " + msg);
+			return;
+		}
+
 		if (!tournaments[room] || tourData[room]) {
 			if (tourData[room] && msg.startsWith("Custom rule error:")) {
 				App.bot.sendTo(room, App.multilang.mlt(Lang_File_Err, getLanguage(room), 3) + " / " + msg.substr("Custom rule error:".length));
 			}
 			return;
 		}
-		/* Specific error messages, may be updated frecuently */
+		/* Specific error messages, may be updated frequently */
 		if (msg.indexOf("Tournaments are disabled in this room") === 0) {
 			App.bot.sendTo(room, App.multilang.mlt(Lang_File_Err, getLanguage(room), 0));
 		} else if (msg === "/tournament - Access denied." || msg === "/tournament create - Access denied.") {
@@ -119,6 +175,115 @@ exports.setup = function (App) {
 		if (tournaments[room].startTimer) clearTimeout(tournaments[room].startTimer);
 		delete tournaments[room];
 		delete tourData[room];
+	}
+
+	function onPollStarted(room) {
+		if (TourCommandMod.tourPollWait[room]) {
+			TourCommandMod.tourPoll[room] = {
+				details: TourCommandMod.tourPollWait[room].details,
+			};
+
+			TourCommandMod.tourPollDB.write();
+
+			delete TourCommandMod.tourPollWait[room];
+
+			// Set timer
+			App.bot.sendTo(room, "/poll timer " + TourCommandMod.tourPoll[room].details.pollTime);
+
+			return;
+		}
+	}
+
+	function parsePollResults(html) {
+		const results = [];
+		for (let i = 0; i < 10; i++) {
+			const optionPrefix = (i + 1) + '. <strong>';
+
+			const optionHtmlIndex = html.indexOf(optionPrefix);
+
+			if (optionHtmlIndex === -1) {
+				continue;
+			}
+
+			let htmlPart = html.substring(optionHtmlIndex + optionPrefix.length);
+
+			const endTagIndex = htmlPart.indexOf("</strong>");
+
+			if (endTagIndex === -1) {
+				return;
+			}
+
+			const format = htmlPart.substring(0, endTagIndex);
+
+			const smallTagIndex = htmlPart.indexOf("<small>(");
+
+			if (smallTagIndex === -1) {
+				return;
+			}
+
+			htmlPart = htmlPart.substring(smallTagIndex + "<small>(".length);
+
+			const votes = parseInt(htmlPart.split(" ")[0]);
+
+			if (!votes) {
+				continue;
+			}
+
+			results.push({
+				format: format,
+				votes: votes,
+			});
+		}
+
+		return results;
+	}
+
+	function onPollEnded(room, spl) {
+		if (!room) {
+			return;
+		}
+
+		if (!TourCommandMod.tourPoll[room]) {
+			return;
+		}
+
+		const details = TourCommandMod.tourPoll[room].details;
+		const html = spl.slice(1).join('|');
+
+		if (!html.startsWith('<div class="infobox">') || html.indexOf('<i class="fa fa-bar-chart"></i>') === -1) {
+			return; // No poll
+		}
+
+		delete TourCommandMod.tourPoll[room];
+		TourCommandMod.tourPollDB.write();
+
+		const pollResults = parsePollResults(html);
+
+		if (pollResults.length === 0) {
+			return;
+		}
+
+		let mostVotesFormat = "";
+		let mostVotes = 0;
+
+		for (let result of pollResults) {
+			if (result.votes <= mostVotes) {
+				continue;
+			}
+
+			mostVotesFormat = Text.toId(result.format);
+			mostVotes = result.votes;
+		}
+
+		if (!mostVotesFormat || !App.bot.formats[mostVotesFormat]) {
+			// Format not found
+			return;
+		}
+
+		details.format = mostVotesFormat;
+
+		// Start the tournament
+		TourCommandMod.newTour(room, details);
 	}
 
 	function botCanWall(room) {
@@ -157,6 +322,8 @@ exports.setup = function (App) {
 	App.bot.on('line', (room, line, spl, isIntro) => {
 		if (isIntro) return;
 		if (spl[0] === 'error') return parseErrorMessage(room, spl);
+		if (spl[0] === 'uhtml' && (spl[1] + "").startsWith("poll")) return onPollStarted(room);
+		if (spl[0] === 'html') return onPollEnded(room, spl);
 		if (spl[0] !== 'tournament') return;
 		if (!tourData[room]) tourData[room] = Object.create(null);
 		switch (spl[1]) {
@@ -254,6 +421,7 @@ exports.setup = function (App) {
 			if (tournaments[room].startTimer) clearTimeout(tournaments[room].startTimer);
 			delete tournaments[room];
 		}
+		TourCommandMod.tourPollWait = Object.create(null);
 	});
 
 	return TourCommandMod;

@@ -14,6 +14,9 @@ $e4 = Time to start is not a valid time
 $e5 = Autodq is not a valid time
 $e6 = Max users number is not valid
 $e7 = Tour type is not valid. Valid types are: elimination, roundrobin, double-elimination, double-roundrobin
+$e8 = The list of format for the poll is empty
+$e9 = The poll time is invalid
+$e10 = The poll options limit is not valid
 $notstarted = Error: the tournament did not start, probably because I do not have permission to create tournaments or commands were changed.
 $param = Parameter
 $paramhelp = not found, valid parameters are
@@ -29,6 +32,11 @@ $maxusers = Max users
 $rounds = Rounds
 $name = Name
 $rules = Rules (Split by commas)
+$formatorpoll = Format or Poll (group)
+$polloptions = Number of options for the poll
+$polltime = Poll time (mins)
+
+$polltitle = Which format do you prefer for the next tournament?
 
 $agob = 
 $ago = ago
@@ -62,6 +70,9 @@ $e4 = El tiempo para iniciar no es válido
 $e5 = El AutoDq no es válido
 $e6 = El máximo numero de users no es válido
 $e7 = El tipo de torneo no es válido. Usa alguno de estos: elimination, roundrobin, double-elimination, double-roundrobin
+$e8 = La lista de formatos para la encuesta se encuentra vacía
+$e9 = El tiempo de encuesta no es válido
+$e10 = La cantidad de opciones de la encuesta no es válida
 $notstarted = Error: El torneo no ha empezado, probablemente por un cambio en los permisos o en los comandos
 $param = Parámetro
 $paramhelp = no encontrado, Los parámetros correctos son
@@ -72,6 +83,11 @@ $maxusers = Usuarios máximos
 $rounds = Rondas
 $name = Nombre
 $rules = Reglas (separadas por comas)
+$formatorpoll = Formato o Poll (grupo)
+$polloptions = Cantidad de opciones de la encuesta
+$polltime = Tiempo de la encuesta (mins)
+
+$polltitle = ¿Qué formato prefieres para el siguiente torneo?
 
 $room = Sala
 $nf = no encontrada

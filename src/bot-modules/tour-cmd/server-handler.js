@@ -34,6 +34,8 @@ exports.setup = function (App) {
 			let users = parseInt(context.post.users);
 			let time = parseInt(context.post.time);
 			let autodq = parseFloat(context.post.autodq);
+			let pollMaxOptions = parseInt(context.post.users);
+			let pollTime = parseFloat(context.post.polltime);
 			let scout = Text.toId(context.post.scout);
 			let timer = Text.toId(context.post.timer);
 			let msg = (context.post.creationmsg || "").trim();
@@ -47,6 +49,8 @@ exports.setup = function (App) {
 				check(!isNaN(users) && users >= 0, "Invalid users limit.");
 				check(!isNaN(time) && time >= 0, "Invalid signups time.");
 				check(!isNaN(autodq) && autodq >= 0, "Invalid autodq time.");
+				check(!isNaN(pollMaxOptions) && pollMaxOptions >= 0, "Invalid poll options limit.");
+				check(!isNaN(pollTime) && pollTime >= 0, "Invalid poll time.");
 				check(scout in {'yes': 1, 'no': 1}, "Invalid scout mode.");
 				check(timer in {'yes': 1, 'no': 1}, "Invalid timer mode.");
 				check(msg.length <= 300, "Messages cannot be longer than 300 characters.");
@@ -60,6 +64,8 @@ exports.setup = function (App) {
 				Config.maxUsers = users;
 				Config.time = time * 1000;
 				Config.autodq = autodq;
+				Config.pollTime = pollTime;
+				Config.pollMaxOptions = pollMaxOptions;
 				Config.scoutProtect = (scout === 'no');
 				Config.forcedTimer = (timer === 'yes');
 				Config.createMessage = msg;
@@ -101,6 +107,8 @@ exports.setup = function (App) {
 		htmlVars.users = Text.escapeHTML(Config.maxUsers);
 		htmlVars.time = Text.escapeHTML(Math.floor(Config.time / 1000));
 		htmlVars.autodq = Text.escapeHTML(Config.autodq);
+		htmlVars.pollmaxoptions = Text.escapeHTML(Config.pollMaxOptions || 4);
+		htmlVars.polltime = Text.escapeHTML(Config.pollTime || 3);
 		htmlVars.scout_yes = (!Config.scoutProtect ? 'selected="selected"' : '');
 		htmlVars.scout_no = (Config.scoutProtect ? 'selected="selected"' : '');
 		htmlVars.timer_yes = (Config.forcedTimer ? 'selected="selected"' : '');
