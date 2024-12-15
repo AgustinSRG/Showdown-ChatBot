@@ -17,6 +17,9 @@
     },
     "tourpollset": {
       "excepted": true
+    },
+    "tourcustomformat": {
+      "excepted": true
     }
   },
   "langfiles": [

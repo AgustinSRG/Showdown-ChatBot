@@ -4,6 +4,7 @@
  * tour: creates a tournament easier than using Showdown commands
  * tourlog: Gets a register of the must recent tournaments
  * tourpollset: Configures the sets for the tournament polls
+ * tourcustomformat: Configures custom formats for tournaments
  */
 
 'use strict';
@@ -221,21 +222,42 @@ module.exports = {
 					if (formatOptions.length > 0) {
 						const parsedFormats = [];
 						for (let formatOption of formatOptions) {
-							let format = parseAliases(formatOption, App);
-							if (!App.bot.formats[format]) {
-								let inexact = Inexact.safeResolve(App, format, { formats: 1, others: 0 });
-								return this.reply(this.mlt('e31') + ' "' + format + '" ' + this.mlt('e33') +
-									(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
-							}
-							if (App.bot.formats[format].disableTournaments) {
-								return this.reply(this.mlt('e31') + ' ' + Chat.italics(App.bot.formats[format].name) +
-									' ' + this.mlt('e32'));
-							}
+							const customFormat = Mod.findCustomFormat(formatOption);
 
-							parsedFormats.push(format);
+							if (customFormat) {
+								if (!App.bot.formats[customFormat.format] || App.bot.formats[customFormat.format].disableTournaments) {
+									return this.reply(this.mlt('e31') + ' ' + Chat.italics(customFormat.format) +
+										' ' + this.mlt('e32'));
+								}
+
+								parsedFormats.push({name: customFormat.name, format: customFormat.format, rules: customFormat.rules});
+							} else {
+								let format = parseAliases(formatOption, App);
+								if (!App.bot.formats[format]) {
+									let inexact = Inexact.safeResolve(App, format, { formats: 1, others: 0 }, Mod.getExtraFormats());
+									return this.reply(this.mlt('e31') + ' "' + format + '" ' + this.mlt('e33') +
+										(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
+								}
+								if (App.bot.formats[format].disableTournaments) {
+									return this.reply(this.mlt('e31') + ' ' + Chat.italics(App.bot.formats[format].name) +
+										' ' + this.mlt('e32'));
+								}
+
+								parsedFormats.push({format: format});
+							}
 						}
 
-						details.format = parsedFormats[Math.floor(Math.random() * parsedFormats.length)];
+						const chosenFormat = parsedFormats[Math.floor(Math.random() * parsedFormats.length)];
+
+						details.format = chosenFormat.format;
+
+						if (chosenFormat.name) {
+							details.name = chosenFormat.name;
+						}
+
+						if (chosenFormat.rules && chosenFormat.rules.length > 0) {
+							details.rules = chosenFormat.rules.join(",");
+						}
 					}
 				}
 			}
@@ -464,6 +486,7 @@ module.exports = {
 		if (!this.can('tourpollset', this.room)) return this.replyAccessDenied('tourpollset');
 
 		const Config = App.config.modules.tourcmd;
+		const Mod = App.modules.tourcmd.system;
 
 		const subCommand = Text.toId(this.args[0] || "");
 
@@ -489,33 +512,44 @@ module.exports = {
 			case "set":
 				{
 					if (this.args.length < 4) {
-						return this.errorReply(this.usage({ desc: 'list' }, { desc: this.mlt('name') }, { desc: this.mlt('format') }, { desc: this.mlt('format') }, { desc: "...", optional: true }));
+						return this.errorReply(this.usage({ desc: 'add' }, { desc: this.mlt('name') }, { desc: this.mlt('format') }, { desc: this.mlt('format') }, { desc: "...", optional: true }));
 					}
 
 					const name = (this.args[1] + "").trim();
 					const id = Text.toId(name);
 
 					if (!id) {
-						return this.errorReply(this.usage({ desc: 'list' }, { desc: this.mlt('name') }, { desc: this.mlt('format') }, { desc: this.mlt('format') }, { desc: "...", optional: true }));
+						return this.errorReply(this.usage({ desc: 'add' }, { desc: this.mlt('name') }, { desc: this.mlt('format') }, { desc: this.mlt('format') }, { desc: "...", optional: true }));
 					}
 
 					const formats = [];
 
 					for (let i = 2; i < this.args.length; i++) {
-						const format = parseAliases(Text.toId(this.args[i]), App);
-						const formatData = App.bot.formats[format];
+						let format = Text.toId(this.args[i]);
 
-						if (!formatData) {
-							return this.errorReply(this.mlt('e31') + ' ' + Chat.italics(format) +
+						const customFormat = Mod.findCustomFormat(format);
+
+						if (customFormat) {
+							format = customFormat.name || format;
+						} else {
+							format = parseAliases(Text.toId(format), App);
+
+							const formatData = App.bot.formats[format];
+
+							if (!formatData) {
+								return this.errorReply(this.mlt('e31') + ' ' + Chat.italics(format) +
 									' ' + this.mlt('e32'));
+							}
+
+							if (!formatData.chall || formatData.disableTournaments) {
+								return this.errorReply(this.mlt('e31') + ' ' + Chat.italics(formatData.name) +
+									' ' + this.mlt('e32'));
+							}
+
+							format = formatData.name;
 						}
 
-						if (!formatData.chall || formatData.disableTournaments) {
-							return this.errorReply(this.mlt('e31') + ' ' + Chat.italics(formatData.name) +
-									' ' + this.mlt('e32'));
-						}
-
-						formats.push(formatData.name);
+						formats.push(format);
 					}
 
 					Config.pollSets[id] = {
@@ -557,6 +591,122 @@ module.exports = {
 					this.addToSecurityLog();
 
 					this.reply(this.mlt('delok1') + " " + Chat.italics(name) + " " + this.mlt("delok2"));
+				}
+				break;
+			default:
+				return this.errorReply(this.usage({ desc: 'list | add | delete' }));
+		}
+	},
+
+	tourcustomformat: function (App) {
+		this.setLangFile(Lang_File);
+
+		if (!this.can('tourcustomformat', this.room)) return this.replyAccessDenied('tourcustomformat');
+
+		const Config = App.config.modules.tourcmd;
+
+		const subCommand = Text.toId(this.args[0] || "");
+
+		switch (subCommand) {
+			case "list":
+				{
+					const formats = Object.values(Config.customFormats);
+
+					if (formats.length === 0) {
+						return this.errorReply(this.mlt("customformatlistempty"));
+					}
+
+					let text = "" + this.mlt("customformatlist") + ":\n\n";
+
+					for (let f of formats) {
+						const formatName = App.bot.formats[f.format] ? App.bot.formats[f.format].name : f.format;
+
+						text += f.name + " = " + formatName + " {" + (f.rules || []).join(", ") + "}\n";
+					}
+
+					this.replyCommand("!code " + text);
+				}
+				break;
+			case "add":
+			case "set":
+				{
+					if (this.args.length < 3) {
+						return this.errorReply(this.usage({ desc: 'add' }, { desc: this.mlt('name') }, { desc: this.mlt('format') }, { desc: this.mlt('rule'), optional: true }, { desc: "...", optional: true }));
+					}
+
+					const name = (this.args[1] + "").trim();
+					const id = Text.toId(name);
+
+					if (!id) {
+						return this.errorReply(this.usage({ desc: 'add' }, { desc: this.mlt('name') }, { desc: this.mlt('format') }, { desc: this.mlt('rule'), optional: true }, { desc: "...", optional: true }));
+					}
+
+					if (App.bot.formats[id]) {
+						return this.errorReply(this.mlt('e31') + ' ' + Chat.italics(id) +
+							' ' + this.mlt('e34'));
+					}
+
+					const format = Text.toId(parseAliases(Text.toId(this.args[2]), App));
+
+					const formatData = App.bot.formats[format];
+
+					if (!formatData) {
+						return this.errorReply(this.mlt('e31') + ' ' + Chat.italics(format) +
+							' ' + this.mlt('e32'));
+					}
+
+					if (!formatData.chall || formatData.disableTournaments) {
+						return this.errorReply(this.mlt('e31') + ' ' + Chat.italics(formatData.name) +
+							' ' + this.mlt('e32'));
+					}
+
+					const rules = [];
+
+					for (let i = 3; i < this.args.length; i++) {
+						const rule = (this.args[i] + "").trim();
+						rules.push(rule);
+					}
+
+					Config.customFormats[id] = {
+						name: name,
+						format: format,
+						rules: rules,
+					};
+
+					App.db.write();
+
+					this.addToSecurityLog();
+
+					this.reply(this.mlt('formatsetok1') + " " + Chat.italics(name) + " " + this.mlt("formatsetok2"));
+				}
+				break;
+			case "delete":
+			case "del":
+			case "remove":
+			case "rm":
+				{
+					if (this.args.length < 2) {
+						return this.errorReply(this.usage({ desc: 'delete' }, { desc: this.mlt('name') }));
+					}
+
+					const name = (this.args[1] + "").trim();
+					const id = Text.toId(name);
+
+					if (!id) {
+						return this.errorReply(this.usage({ desc: 'delete' }, { desc: this.mlt('name') }));
+					}
+
+					if (!Config.customFormats[id]) {
+						return this.errorReply(this.mlt('formatnotfound'));
+					}
+
+					delete Config.customFormats[id];
+
+					App.db.write();
+
+					this.addToSecurityLog();
+
+					this.reply(this.mlt('formatdelok1') + " " + Chat.italics(name) + " " + this.mlt("formatdelok2"));
 				}
 				break;
 			default:

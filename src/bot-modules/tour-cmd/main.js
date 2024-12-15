@@ -28,6 +28,7 @@ exports.setup = function (App) {
 			finalAnnouncement: Object.create(null),
 			congratsWinner: Object.create(null),
 			pollSets: Object.create(null),
+			customFormats: Object.create(null),
 		};
 	}
 
@@ -36,6 +37,11 @@ exports.setup = function (App) {
 	if (!Config.pollSets) {
 		Config.pollSets = Object.create(null);
 	}
+
+	if (!Config.customFormats) {
+		Config.customFormats = Object.create(null);
+	}
+
 	class TourCommandModule {
 		constructor() {
 			this.tourData = Object.create(null);
@@ -56,6 +62,50 @@ exports.setup = function (App) {
 			}
 			this.tournaments[room] = new Tournament(App, room, details);
 			this.tournaments[room].create();
+		}
+
+		getExtraFormats() {
+			return Object.keys(Config.aliases || {}).concat(Object.values(Config.customFormats || {}).map(f => f.name));
+		}
+
+		findCustomFormat(name) {
+			return Config.customFormats[Text.toId(name)] || null;
+		}
+
+		formatIsAvailable(name) {
+			const customFormat = this.findCustomFormat(name);
+
+			let format = "";
+
+			if (customFormat) {
+				format = customFormat.format;
+			} else {
+				format = name;
+			}
+
+			if (!format) {
+				return false;
+			}
+
+			const formatData = App.bot.formats[Text.toId(format)];
+
+			if (!formatData) {
+				return false;
+			}
+
+			return !formatData.disableTournaments && formatData.chall;
+		}
+
+		getFormatName(name) {
+			const customFormat = this.findCustomFormat(name);
+
+			if (customFormat) {
+				return customFormat.name;
+			}
+
+			const formatData = App.bot.formats[Text.toId(name)];
+
+			return formatData ? formatData.name : Text.toId(name);
 		}
 
 		getPollSet(setId) {
@@ -83,13 +133,11 @@ exports.setup = function (App) {
 			}
 
 			return randomize((Config.pollSets[setId].formats || []).map(f => {
-				const formatData = App.bot.formats[Text.toId(f)];
-
-				if (!formatData || formatData.disableTournaments || !formatData.chall) {
-					return "";
+				if (!this.formatIsAvailable(f)) {
+					return null;
 				}
 
-				return App.bot.formats[Text.toId(f)].name;
+				return this.getFormatName(f);
 			}).filter(f => !!f));
 		}
 
@@ -107,11 +155,7 @@ exports.setup = function (App) {
 			}
 
 			let generator = data.generator || "-";
-			let format = data.format || "";
-
-			if (App.bot.formats[Text.toId(format)]) {
-				format = App.bot.formats[Text.toId(format)].name;
-			}
+			let format = this.getFormatName(data.format || "");
 
 			if (!this.tourLog[room]) {
 				this.tourLog[room] = [];
@@ -276,12 +320,22 @@ exports.setup = function (App) {
 			mostVotes = result.votes;
 		}
 
-		if (!mostVotesFormat || !App.bot.formats[mostVotesFormat]) {
+		if (!mostVotesFormat || !TourCommandMod.formatIsAvailable(mostVotesFormat)) {
 			// Format not found
 			return;
 		}
 
-		details.format = mostVotesFormat;
+		const customFormat = TourCommandMod.findCustomFormat(mostVotesFormat);
+
+		if (customFormat) {
+			details.name = customFormat.name;
+			details.format = customFormat.format;
+			if (customFormat.rules && customFormat.rules.length > 0) {
+				details.rules = customFormat.rules.join(",");
+			}
+		} else {
+			details.format = mostVotesFormat;
+		}
 
 		// Start the tournament
 		TourCommandMod.newTour(room, details);

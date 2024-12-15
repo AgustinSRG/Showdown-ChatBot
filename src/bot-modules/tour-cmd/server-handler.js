@@ -41,6 +41,7 @@ exports.setup = function (App) {
 			let msg = (context.post.creationmsg || "").trim();
 			let aliases = (context.post.aliases || "").split('\n');
 			let pollSets = (context.post.pollsets || "").split('\n');
+			let customFormats = (context.post.customformats || "").split('\n');
 			let finals = (context.post.finals || "").split(',');
 			let winnergrats = (context.post.winnergrats || "").split(',');
 
@@ -100,6 +101,27 @@ exports.setup = function (App) {
 					}
 				}
 				Config.pollSets = aux;
+				aux = Object.create(null);
+				for (let i = 0; i < customFormats.length; i++) {
+					let colonIndex = customFormats[i].indexOf(":");
+
+					if (colonIndex === -1) {
+						continue;
+					}
+
+					const fName = customFormats[i].substring(0, colonIndex);
+					const fId = Text.toId(fName);
+					const fArgs = customFormats[i].substring(colonIndex + 1).split(",").map(f => f.trim()).filter(f => !!f);
+
+					if (fId && fArgs.length > 0) {
+						aux[fId] = {
+							name: fName,
+							format: fArgs[0],
+							rules: fArgs.slice(1),
+						};
+					}
+				}
+				Config.customFormats = aux;
 				Config.finalAnnouncement = Object.create(null);
 				for (let i = 0; i < finals.length; i++) {
 					let roomid = Text.toRoomid(finals[i]);
@@ -149,6 +171,12 @@ exports.setup = function (App) {
 			pollSets.push((Config.pollSets[s].name || s) + ': ' + Config.pollSets[s].formats.join(", "));
 		}
 		htmlVars.pollsets = Text.escapeHTML(pollSets.join('\n'));
+
+		let customFormats = [];
+		for (let s in Config.customFormats) {
+			customFormats.push((Config.customFormats[s].name || s) + ': ' + Config.customFormats[s].format + ", " + Config.customFormats[s].rules.join(", "));
+		}
+		htmlVars.customformats = Text.escapeHTML(customFormats.join('\n'));
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));

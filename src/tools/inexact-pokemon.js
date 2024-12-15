@@ -34,7 +34,7 @@ const Natures = exports.Natures = {
 	"timid": "Timid",
 };
 
-exports.resolve = function (App, word, flags) {
+exports.resolve = function (App, word, flags, otherWords) {
 	let searchList = {
 		pokemon: 1,
 		moves: 1,
@@ -70,6 +70,16 @@ exports.resolve = function (App, word, flags) {
 		maxLd = 1;
 	} else if (word.length <= 6) {
 		maxLd = 2;
+	}
+
+	if (otherWords && Array.isArray(otherWords)) {
+		for (let ow of otherWords) {
+			ld = Text.levenshtein(word, Text.toId(ow), maxLd);
+			if (ld < cld) {
+				cld = ld;
+				currWord = ow;
+			}
+		}
 	}
 
 	if (searchList.pokemon) {
@@ -143,9 +153,9 @@ exports.resolve = function (App, word, flags) {
 	}
 };
 
-exports.safeResolve = function (App, word, flags) {
+exports.safeResolve = function (App, word, flags, otherWords) {
 	try {
-		return exports.resolve(App, word, flags);
+		return exports.resolve(App, word, flags, otherWords);
 	} catch (err) {
 		App.reportCrash(err);
 		return null;

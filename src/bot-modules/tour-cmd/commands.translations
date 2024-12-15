@@ -9,6 +9,7 @@ $e2 = There is already a tournament in this room
 $e31 = Format
 $e32 = is not valid for tournaments
 $e33 = not found
+$e34 = already exists
 $inexact = Maybe you mean
 $e4 = Time to start is not a valid time
 $e5 = Autodq is not a valid time
@@ -73,6 +74,19 @@ $setnotfound = The specified format set does not exists or cannot be deleted
 $delok1 = The format set
 $delok2 = has been successfully deleted
 
+$customformatlist = Custom formats for tournaments
+$customformatlistempty = There are not any custom format in the list yet
+
+$rule = Rule
+
+$formatsetok1 = The custom format
+$formatsetok2 = has been successfully configured
+
+$formatnotfound = The specified custom format does not exists or cannot be deleted
+
+$formatdelok1 = The custom format
+$formatdelok2 = has been successfully deleted
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
@@ -80,6 +94,7 @@ $e2 = Ya hay un torneo en esta sala
 $e31 = El formato
 $e32 = no es válido para torneos
 $e33 = no existe o no está disponible
+$e34 = ya existe
 $inexact = ¿Quizás quisiste decir
 $e4 = El tiempo para iniciar no es válido
 $e5 = El AutoDq no es válido
@@ -141,3 +156,16 @@ $setnotfound = El conjunto de formatos especificado no existe o no puede ser eli
 
 $delok1 = El conjunto de formatos
 $delok2 = ha sido eliminado correctamente
+
+$customformatlist = Formatos personalizados para torneos
+$customformatlistempty = No hay ningún formato personalizado para torneos en la lista
+
+$rule = Regla
+
+$formatsetok1 = El formato personalizado
+$formatsetok2 = ha sido configurado correctamente
+
+$formatnotfound = El formato personalizado especificado no existe
+
+$formatdelok1 = El formato personalizado
+$formatdelok2 = ha sido eliminado correctamente
