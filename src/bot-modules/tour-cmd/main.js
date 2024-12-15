@@ -258,7 +258,7 @@ exports.setup = function (App) {
 		delete TourCommandMod.tourPoll[room];
 		TourCommandMod.tourPollDB.write();
 
-		const pollResults = parsePollResults(html);
+		const pollResults = randomize(parsePollResults(html));
 
 		if (pollResults.length === 0) {
 			return;
