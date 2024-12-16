@@ -69,7 +69,21 @@ exports.setup = function (App) {
 		}
 
 		findCustomFormat(name) {
-			return Config.customFormats[Text.toId(name)] || null;
+			const id = Text.toId(name);
+
+			const format = Config.customFormats[id];
+
+			if (format) {
+				return format;
+			}
+
+			const alias = Config.aliases ? Config.aliases[id] : null;
+
+			if (!alias) {
+				return null;
+			}
+
+			return Config.customFormats[Text.toId(alias)] || null;
 		}
 
 		formatIsAvailable(name) {
