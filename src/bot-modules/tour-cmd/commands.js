@@ -230,12 +230,20 @@ module.exports = {
 										' ' + this.mlt('e32'));
 								}
 
-								parsedFormats.push({name: customFormat.name, format: customFormat.format, rules: customFormat.rules});
+								parsedFormats.push({ name: customFormat.name, format: customFormat.format, rules: customFormat.rules });
 							} else {
 								let format = parseAliases(formatOption, App);
 								if (!App.bot.formats[format]) {
 									let inexact = Inexact.safeResolve(App, format, { formats: 1, others: 0 }, Mod.getExtraFormats());
-									return this.reply(this.mlt('e31') + ' "' + format + '" ' + this.mlt('e33') +
+
+									if (inexact) {
+										return this.reply(this.mlt('e31') + ' "' + format + '" ' + this.mlt('e33') +
+											(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
+									}
+
+									inexact = Inexact.safeResolve(App, Text.toId(formatOption), { formats: 1, others: 0 }, Mod.getExtraFormats());
+
+									return this.reply(this.mlt('e31') + ' "' + Text.toId(formatOption) + '" ' + this.mlt('e33') +
 										(inexact ? (". " + this.mlt('inexact') + " " + Chat.italics(inexact) + "?") : ""));
 								}
 								if (App.bot.formats[format].disableTournaments) {
@@ -243,7 +251,7 @@ module.exports = {
 										' ' + this.mlt('e32'));
 								}
 
-								parsedFormats.push({format: format});
+								parsedFormats.push({ format: format });
 							}
 						}
 
