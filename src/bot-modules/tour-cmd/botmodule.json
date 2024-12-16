@@ -20,6 +20,9 @@
     },
     "tourcustomformat": {
       "excepted": true
+    },
+    "tourformatalias": {
+      "excepted": true
     }
   },
   "langfiles": [

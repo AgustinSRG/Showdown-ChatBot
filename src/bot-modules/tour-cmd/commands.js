@@ -5,6 +5,7 @@
  * tourlog: Gets a register of the must recent tournaments
  * tourpollset: Configures the sets for the tournament polls
  * tourcustomformat: Configures custom formats for tournaments
+ * tourformatalias: Configures format aliases
  */
 
 'use strict';
@@ -577,7 +578,7 @@ module.exports = {
 			case "remove":
 			case "rm":
 				{
-					if (this.args.length < 2) {
+					if (this.args.length !== 2) {
 						return this.errorReply(this.usage({ desc: 'delete' }, { desc: this.mlt('name') }));
 					}
 
@@ -693,7 +694,7 @@ module.exports = {
 			case "remove":
 			case "rm":
 				{
-					if (this.args.length < 2) {
+					if (this.args.length !== 2) {
 						return this.errorReply(this.usage({ desc: 'delete' }, { desc: this.mlt('name') }));
 					}
 
@@ -715,6 +716,117 @@ module.exports = {
 					this.addToSecurityLog();
 
 					this.reply(this.mlt('formatdelok1') + " " + Chat.italics(name) + " " + this.mlt("formatdelok2"));
+				}
+				break;
+			default:
+				return this.errorReply(this.usage({ desc: 'list | add | delete' }));
+		}
+	},
+
+	tourformatalias: function (App) {
+		this.setLangFile(Lang_File);
+
+		if (!this.can('tourformatalias', this.room)) return this.replyAccessDenied('tourformatalias');
+
+		const Config = App.config.modules.tourcmd;
+		const Mod = App.modules.tourcmd.system;
+
+		const subCommand = Text.toId(this.args[0] || "");
+
+		switch (subCommand) {
+			case "list":
+				{
+					const aliases = Object.keys(Config.aliases);
+
+					if (aliases.length === 0) {
+						return this.errorReply(this.mlt("aliaseslistempty"));
+					}
+
+					let text = "" + this.mlt("aliaseslist") + ":\n\n";
+
+					for (let alias of aliases) {
+						const formatName = Mod.getFormatName(Config.aliases[alias]);
+
+						text += alias + " = " + formatName + "\n";
+					}
+
+					this.replyCommand("!code " + text);
+				}
+				break;
+			case "add":
+			case "set":
+				{
+					if (this.args.length !== 3) {
+						return this.errorReply(this.usage({ desc: 'add' }, { desc: this.mlt('alias') }, { desc: this.mlt('format') }));
+					}
+
+					const name = (this.args[1] + "").trim();
+					const id = Text.toId(name);
+
+					if (!id) {
+						return this.errorReply(this.usage({ desc: 'add' }, { desc: this.mlt('alias') }, { desc: this.mlt('format') }));
+					}
+
+					let format = Text.toId(this.args[2]);
+
+					const customFormat = Mod.findCustomFormat(format);
+
+					if (customFormat) {
+						format = customFormat.name || format;
+					} else {
+						format = parseAliases(Text.toId(format), App);
+
+						const formatData = App.bot.formats[format];
+
+						if (!formatData) {
+							return this.errorReply(this.mlt('e31') + ' ' + Chat.italics(format) +
+								' ' + this.mlt('e32'));
+						}
+
+						if (!formatData.chall || formatData.disableTournaments) {
+							return this.errorReply(this.mlt('e31') + ' ' + Chat.italics(formatData.name) +
+								' ' + this.mlt('e32'));
+						}
+
+						format = formatData.name;
+					}
+
+					Config.aliases[id] = Text.toId(format);
+
+					App.db.write();
+
+					this.addToSecurityLog();
+
+					this.reply(this.mlt('aliassetok1') + " " + Chat.italics(name) + " " + this.mlt("aliassetok2"));
+				}
+				break;
+			case "delete":
+			case "del":
+			case "remove":
+			case "rm":
+				{
+					if (this.args.length !== 2) {
+						return this.errorReply(this.usage({ desc: 'delete' }, { desc: this.mlt('name') }));
+					}
+
+					const name = (this.args[1] + "").trim();
+					const id = Text.toId(name);
+
+					if (!id) {
+						return this.errorReply(this.usage({ desc: 'delete' }, { desc: this.mlt('name') }));
+					}
+
+					if (!Config.aliases[id]) {
+						return this.errorReply(this.mlt('aliasnotfound'));
+					}
+
+					delete Config.aliases[id];
+
+					App.db.write();
+
+					this.addToSecurityLog();
+
+					this.reply(this.mlt('aliasdelok1') + " " + Chat.italics(name) + " " + this.mlt("aliasdelok2"));
 				}
 				break;
 			default:

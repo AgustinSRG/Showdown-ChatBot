@@ -82,10 +82,22 @@ $rule = Rule
 $formatsetok1 = The custom format
 $formatsetok2 = has been successfully configured
 
-$formatnotfound = The specified custom format does not exists or cannot be deleted
+$formatnotfound = The specified custom format does not exist
 
 $formatdelok1 = The custom format
 $formatdelok2 = has been successfully deleted
+
+$aliaseslist = List of format aliases for tournaments
+
+$aliaseslistempty = There are not any format aliases in the list yet
+
+$aliassetok1 = The format alias
+$aliassetok2 = has been successfully configured
+
+$aliasnotfound = The specified format alias does not exist
+
+$aliasdelok1 = The format alias
+$aliasdelok2 = has been successfully deleted
 
 %spanish
 
@@ -169,3 +181,15 @@ $formatnotfound = El formato personalizado especificado no existe
 
 $formatdelok1 = El formato personalizado
 $formatdelok2 = ha sido eliminado correctamente
+
+$aliaseslist = Lista de alias de formatos para torneos
+
+$aliaseslistempty = La lista de alias de formatos para torneos se encuentra vacía
+
+$aliassetok1 = El alias de formato
+$aliassetok2 = ha sido configurado correctamente
+
+$aliasnotfound = El alias de formato especificado no existe
+
+$aliasdelok1 = El alias de formato
+$aliasdelok2 = ha sido eliminado correctamente

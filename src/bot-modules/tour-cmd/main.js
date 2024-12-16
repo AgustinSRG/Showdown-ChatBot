@@ -34,6 +34,10 @@ exports.setup = function (App) {
 
 	const Config = App.config.modules.tourcmd;
 
+	if (!Config.aliases) {
+		Config.aliases = Object.create(null);
+	}
+
 	if (!Config.pollSets) {
 		Config.pollSets = Object.create(null);
 	}
@@ -87,7 +91,7 @@ exports.setup = function (App) {
 		}
 
 		formatIsAvailable(name) {
-			const customFormat = this.findCustomFormat(name);
+			const customFormat = Config.customFormats[Text.toId(name)];
 
 			let format = "";
 
@@ -111,7 +115,7 @@ exports.setup = function (App) {
 		}
 
 		getFormatName(name) {
-			const customFormat = this.findCustomFormat(name);
+			const customFormat = Config.customFormats[Text.toId(name)];
 
 			if (customFormat) {
 				return customFormat.name;
