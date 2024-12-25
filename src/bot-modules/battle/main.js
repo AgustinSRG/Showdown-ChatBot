@@ -17,6 +17,7 @@ exports.setup = function (App) {
 			ladderBattles: 1,
 			joinTours: Object.create(null),
 			ignoreAbandonedbattles: false,
+			turnTimerOn: true,
 			maxTurns: 0,
 		};
 	}

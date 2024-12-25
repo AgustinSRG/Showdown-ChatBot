@@ -30,6 +30,8 @@ exports.setup = function (App, BattleData) {
 			if (this.waitingForRequestToMove) {
 				this.waitingForRequestToMove = false;
 				this.makeDecision();
+			} else {
+				this.decisionTimeout = setTimeout(this.onDecisionTimeout.bind(this), 1000);
 			}
 		},
 
@@ -41,6 +43,13 @@ exports.setup = function (App, BattleData) {
 
 		turn: function (args, kwargs) {
 			this.turn = parseInt(args[1]) || 0;
+			this.checkTimer();
+			this.makeDecision();
+		},
+
+		upkeep: function () {
+			if (this.timer) return;
+
 			this.checkTimer();
 			this.makeDecision();
 		},
@@ -122,6 +131,10 @@ exports.setup = function (App, BattleData) {
 
 		inactiveoff: function (args, kwargs) {
 			this.timer = false;
+
+			if (this.turn > 0) {
+				this.timerExplicitlyTurnedOff = true;
+			}
 		},
 
 		j: "join",

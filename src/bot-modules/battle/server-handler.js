@@ -59,6 +59,7 @@ exports.setup = function (App) {
 			if (!error) {
 				Config.maxBattles = maxBattles;
 				Config.ignoreAbandonedbattles = !context.post.joinabandoned;
+				Config.turnTimerOn = !!context.post.timeron;
 				Config.maxTurns = maxTurns;
 				Config.ladderBattles = ladderBattles;
 				let joinTours = (context.post.jointours || "").split(',');
@@ -89,6 +90,7 @@ exports.setup = function (App) {
 		htmlVars.maxturns = Text.escapeHTML(Config.maxTurns || 0);
 		htmlVars.jointours = Object.keys(Config.joinTours).join(', ');
 		htmlVars.join_abandoned = (!Config.ignoreAbandonedbattles ? "checked=\"checked\"" : "");
+		htmlVars.timer_on = (Config.turnTimerOn === false ? "" : "checked=\"checked\"");
 		htmlVars.initmsg = Text.escapeHTML(Config.initBattleMsg.join('\n'));
 		htmlVars.winmsg = Text.escapeHTML(Config.winmsg.join('\n'));
 		htmlVars.losemsg = Text.escapeHTML(Config.losemsg.join('\n'));

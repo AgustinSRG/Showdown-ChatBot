@@ -174,6 +174,7 @@ exports.setup = function (App, CustomModules) {
 
 		checkTimer() {
 			if (!this.self || !this.request) return; // Not playing
+			if (Config.turnTimerOn === false || this.timerExplicitlyTurnedOff) return; // Configured to be turned off
 			if (!this.timer) {
 				if (this.sentTimerReq && Date.now() - this.sentTimerReq < MIN_TIME_LOCK) return; // Do not spam timer commands
 				this.sentTimerReq = Date.now();
@@ -304,7 +305,16 @@ exports.setup = function (App, CustomModules) {
 			return DecisionMaker.getDecisions(this, BattleData);
 		}
 
+		onDecisionTimeout() {
+			this.decisionTimeout = null;
+			this.makeDecision();
+		}
+
 		makeDecision(forced) {
+			if (this.decisionTimeout) {
+				clearTimeout(this.decisionTimeout);
+				this.decisionTimeout = null;
+			}
 			if (!this.self) return; // Not playing
 			this.debug(this.id + "->MakeDecision");
 			if (Config.maxTurns && this.turn > Config.maxTurns) {
@@ -839,6 +849,10 @@ exports.setup = function (App, CustomModules) {
 		}
 
 		destroy() {
+			if (this.decisionTimeout) {
+				clearTimeout(this.decisionTimeout);
+				this.decisionTimeout = null;
+			}
 			if (this.leaveInterval) {
 				clearInterval(this.leaveInterval);
 				this.leaveInterval = null;
