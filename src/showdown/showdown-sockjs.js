@@ -127,8 +127,8 @@ class Bot {
 	getUserGroup(user, room) {
 		user = Text.toId(user);
 		if (!this.rooms[room]) return null;
-		if (!this.rooms[room].users[user]) return {offline: true};
-		return {group: this.rooms[room].users[user]};
+		if (!this.rooms[room].users[user]) return { offline: true };
+		return { group: this.rooms[room].users[user] };
 	}
 
 	/**
@@ -223,7 +223,7 @@ class Bot {
 			if (!this.closed) this.socket = null;
 			this.connecting = false;
 			this.reset();
-			this.events.emit('disconnect', {code: e.code, message: e.reason});
+			this.events.emit('disconnect', { code: e.code, message: e.reason });
 		}.bind(this);
 		this.socket.onmessage = function (e) {
 			let data = e.data;
@@ -263,7 +263,7 @@ class Bot {
 		this.reset();
 		if (this.socket) {
 			this.socket.onclose = function (e) {
-				this.events.emit('disconnect', {code: e.code, message: e.reason});
+				this.events.emit('disconnect', { code: e.code, message: e.reason });
 			}.bind(this);
 			this.socket.close();
 			this.socket = null;
@@ -335,7 +335,7 @@ class Bot {
 						this.events.emit('renamefailure', 'unknown', nick, pass, JSON.stringify(str));
 						return;
 					}
-				} catch (e) {}
+				} catch (e) { }
 				if (callback) callback.call(this, str);
 			}.bind(this));
 		}.bind(this));
@@ -394,7 +394,6 @@ class Bot {
 
 	addToMsgQueue(msg) {
 		this.msgQueue.push(msg);
-		this.processMessageQueue();
 	}
 
 	processMessageQueue() {
@@ -424,31 +423,15 @@ class Bot {
 			}
 
 			while (linesToSend.length > 0) {
-				const groupLines = [];
-				let groupLinesRoom = null;
+				const lineToSend = linesToSend.shift();
 
-				for (let i = 0; i < this.maxLinesSend && linesToSend.length > 0; i++) {
-					const roomInLine = linesToSend[0].indexOf("|") >= 0 ? linesToSend[0].split("|")[0] : "";
+				this.socket.send(lineToSend);
+				this.events.emit('send', lineToSend);
 
-					if (groupLinesRoom === null) {
-						groupLinesRoom = roomInLine;
-					} else if (groupLinesRoom !== roomInLine) {
-						break;
-					}
-
-					groupLines.push(linesToSend.shift());
-				}
-
-				const multiLineMsg = groupLines.join("\n");
-				this.socket.send(multiLineMsg);
-				this.events.emit('send', multiLineMsg);
-
-				for (let i = 0; i < groupLines.length; i++) {
-					timeEx += this.chatThrottleDelay;
-					this.sendingQueue.push({
-						et: timeEx,
-					});
-				}
+				timeEx += this.chatThrottleDelay;
+				this.sendingQueue.push({
+					et: timeEx,
+				});
 			}
 		}
 
@@ -483,6 +466,8 @@ class Bot {
 		for (let msg of data) {
 			this.addToMsgQueue(msg);
 		}
+
+		this.processMessageQueue();
 	}
 
 	/**
@@ -608,113 +593,113 @@ class Bot {
 		let userid, time;
 		this.events.emit('line', room, line, splittedLine, initialMsg);
 		switch (splittedLine[0]) {
-		case 'formats':
-			let formats = line.substr(splittedLine[0].length + 2);
-			this.updateFormats(formats);
-			this.events.emit('formats', formats);
-			break;
-		case 'challstr':
-			this.status.onChallstr(splittedLine[1], splittedLine[2]);
-			this.events.emit('challstr', this.status.challstr);
-			break;
-		case 'updateuser':
-			this.status.onRename(splittedLine[1], !!parseInt(splittedLine[2]));
-			this.status.avatar = splittedLine[3];
-			this.events.emit('updateuser', this.status.nick,
-				this.status.named, this.status.avatar, this.status.away);
-			break;
-		case 'queryresponse':
-			this.events.emit('queryresponse', line.substr(15));
-			break;
-		case 'popup':
-			this.events.emit('popup', line.substr(7));
-			break;
-		case 'init':
-			this.rooms[room] = new BotRoom(room, splittedLine[1]);
-			this.events.emit('roomjoin', room, splittedLine[1]);
-			break;
-		case 'deinit':
-			delete this.rooms[room];
-			this.events.emit('roomleave', room);
-			break;
-		case 'noinit':
-			switch (splittedLine[1]) {
-				case "rename":
-					this.rooms[room].id = Text.toRoomid(splittedLine[2]);
-					this.rooms[room].title = splittedLine[3] || "";
-					this.rooms[this.rooms[room].id] = this.rooms[room];
-					delete this.rooms[room];
-					this.events.emit('roomrename', room, Text.toRoomid(splittedLine[2]));
-					break;
-				default:
-					this.events.emit('roomjoinfailure', room, splittedLine[1], splittedLine[2]);
-			}
-			break;
-		case 'title':
-			if (this.rooms[room]) {
-				this.rooms[room].setTitle(splittedLine[1]);
-			}
-			break;
-		case 'users':
-			if (!this.rooms[room]) break;
-			this.rooms[room].users = Object.create(null);
-			let userArr = line.substr(7).split(",");
-			for (let k = 1; k < userArr.length; k++) {
-				this.rooms[room].userJoin(userArr[k]);
-			}
-			break;
-		case 'c':
-			if (initialMsg) break;
-			userid = Text.toId(splittedLine[1]);
-			time = Date.now();
-			if (userid === this.status.userid) {
-				this.events.emit('chat', room, time, splittedLine.slice(2).join('|'));
-			} else {
-				this.events.emit('userchat', room, time, splittedLine[1], splittedLine.slice(2).join('|'));
-			}
-			break;
-		case 'c:':
-			if (initialMsg) break;
-			userid = Text.toId(splittedLine[2]);
-			time = parseInt(splittedLine[1]) * 1000;
-			if (userid === this.status.userid) {
-				this.events.emit('chat', room, time, splittedLine.slice(3).join('|'));
-			} else {
-				this.events.emit('userchat', room, time, splittedLine[2], splittedLine.slice(3).join('|'));
-			}
-			break;
-		case 'pm':
-			userid = Text.toId(splittedLine[1]);
-			if (userid === this.status.userid) {
-				this.events.emit('pmsent', splittedLine[2], splittedLine.slice(3).join('|'));
-			} else {
-				this.events.emit('pm', splittedLine[1], splittedLine.slice(3).join('|'));
-			}
-			break;
-		case 'n':
-		case 'N':
-			if (initialMsg) break;
-			if (this.rooms[room]) {
-				this.rooms[room].userRename(splittedLine[2], splittedLine[1]);
-			}
-			this.events.emit('userrename', room, splittedLine[2], splittedLine[1]);
-			break;
-		case 'J':
-		case 'j':
-			if (initialMsg) break;
-			if (this.rooms[room]) {
-				this.rooms[room].userJoin(splittedLine[1]);
-			}
-			this.events.emit('userjoin', room, splittedLine[1]);
-			break;
-		case 'l':
-		case 'L':
-			if (initialMsg) break;
-			if (this.rooms[room]) {
-				this.rooms[room].userLeave(splittedLine[1]);
-			}
-			this.events.emit('userleave', room, splittedLine[1]);
-			break;
+			case 'formats':
+				let formats = line.substr(splittedLine[0].length + 2);
+				this.updateFormats(formats);
+				this.events.emit('formats', formats);
+				break;
+			case 'challstr':
+				this.status.onChallstr(splittedLine[1], splittedLine[2]);
+				this.events.emit('challstr', this.status.challstr);
+				break;
+			case 'updateuser':
+				this.status.onRename(splittedLine[1], !!parseInt(splittedLine[2]));
+				this.status.avatar = splittedLine[3];
+				this.events.emit('updateuser', this.status.nick,
+					this.status.named, this.status.avatar, this.status.away);
+				break;
+			case 'queryresponse':
+				this.events.emit('queryresponse', line.substr(15));
+				break;
+			case 'popup':
+				this.events.emit('popup', line.substr(7));
+				break;
+			case 'init':
+				this.rooms[room] = new BotRoom(room, splittedLine[1]);
+				this.events.emit('roomjoin', room, splittedLine[1]);
+				break;
+			case 'deinit':
+				delete this.rooms[room];
+				this.events.emit('roomleave', room);
+				break;
+			case 'noinit':
+				switch (splittedLine[1]) {
+					case "rename":
+						this.rooms[room].id = Text.toRoomid(splittedLine[2]);
+						this.rooms[room].title = splittedLine[3] || "";
+						this.rooms[this.rooms[room].id] = this.rooms[room];
+						delete this.rooms[room];
+						this.events.emit('roomrename', room, Text.toRoomid(splittedLine[2]));
+						break;
+					default:
+						this.events.emit('roomjoinfailure', room, splittedLine[1], splittedLine[2]);
+				}
+				break;
+			case 'title':
+				if (this.rooms[room]) {
+					this.rooms[room].setTitle(splittedLine[1]);
+				}
+				break;
+			case 'users':
+				if (!this.rooms[room]) break;
+				this.rooms[room].users = Object.create(null);
+				let userArr = line.substr(7).split(",");
+				for (let k = 1; k < userArr.length; k++) {
+					this.rooms[room].userJoin(userArr[k]);
+				}
+				break;
+			case 'c':
+				if (initialMsg) break;
+				userid = Text.toId(splittedLine[1]);
+				time = Date.now();
+				if (userid === this.status.userid) {
+					this.events.emit('chat', room, time, splittedLine.slice(2).join('|'));
+				} else {
+					this.events.emit('userchat', room, time, splittedLine[1], splittedLine.slice(2).join('|'));
+				}
+				break;
+			case 'c:':
+				if (initialMsg) break;
+				userid = Text.toId(splittedLine[2]);
+				time = parseInt(splittedLine[1]) * 1000;
+				if (userid === this.status.userid) {
+					this.events.emit('chat', room, time, splittedLine.slice(3).join('|'));
+				} else {
+					this.events.emit('userchat', room, time, splittedLine[2], splittedLine.slice(3).join('|'));
+				}
+				break;
+			case 'pm':
+				userid = Text.toId(splittedLine[1]);
+				if (userid === this.status.userid) {
+					this.events.emit('pmsent', splittedLine[2], splittedLine.slice(3).join('|'));
+				} else {
+					this.events.emit('pm', splittedLine[1], splittedLine.slice(3).join('|'));
+				}
+				break;
+			case 'n':
+			case 'N':
+				if (initialMsg) break;
+				if (this.rooms[room]) {
+					this.rooms[room].userRename(splittedLine[2], splittedLine[1]);
+				}
+				this.events.emit('userrename', room, splittedLine[2], splittedLine[1]);
+				break;
+			case 'J':
+			case 'j':
+				if (initialMsg) break;
+				if (this.rooms[room]) {
+					this.rooms[room].userJoin(splittedLine[1]);
+				}
+				this.events.emit('userjoin', room, splittedLine[1]);
+				break;
+			case 'l':
+			case 'L':
+				if (initialMsg) break;
+				if (this.rooms[room]) {
+					this.rooms[room].userLeave(splittedLine[1]);
+				}
+				this.events.emit('userleave', room, splittedLine[1]);
+				break;
 		}
 		this.events.emit('parsedline', room, line, splittedLine, initialMsg);
 	}
@@ -729,14 +714,16 @@ class Bot {
 		for (let i = 0; i < formatsArr.length; i++) {
 			commaIndex = formatsArr[i].indexOf(',');
 			if (commaIndex === -1) {
-				this.formats[Text.toId(formatsArr[i])] = {name: formatsArr[i],
-					team: true, ladder: true, chall: true};
+				this.formats[Text.toId(formatsArr[i])] = {
+					name: formatsArr[i],
+					team: true, ladder: true, chall: true
+				};
 			} else if (commaIndex === 0) {
 				i++;
 				continue;
 			} else {
 				name = formatsArr[i];
-				formatData = {name: name, team: true, ladder: true, chall: true};
+				formatData = { name: name, team: true, ladder: true, chall: true };
 				code = commaIndex >= 0 ? parseInt(name.substr(commaIndex + 1), 16) : NaN;
 				if (!isNaN(code)) {
 					name = name.substr(0, commaIndex);
