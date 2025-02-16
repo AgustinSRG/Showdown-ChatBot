@@ -1,0 +1,67 @@
+# Translations file
+
+@ battle-teams-commands
+
+%english
+
+$0 = Team name
+$1 = Format
+$2 = PokePast Link
+
+$3 = The format
+$4 = does not exist or is not available
+
+$5 = I already have a team with the same name, please choose another one.
+
+$6 = The link to PokePast is invalid
+
+$7 = Could not obtain the team from the link. Error:
+
+$8 = The team was downloaded, but had an invalid format.
+
+$9 = Team
+$10 = added for the format
+
+$11 = Could not find a team with the name:
+
+$12 = Team deleted:
+
+$13 = I do not have any team to play on any format.
+
+$14 = Teams for format:
+
+$15 = Teams available for the bot:
+
+$16 = No available teams for format:
+
+%spanish
+
+$0 = Nombre del equipo
+$1 = Formato
+$2 = Link a PokePast
+
+$3 = El formato
+$4 = no existe o no está disponible
+
+$5 = Ya tengo un equipo con el mismo nombre, por favor elija otro.
+
+$6 = El enlace a PokePast no es correcto
+
+$7 = No se pudo obtener el equipo desde el enlace. Error:
+
+$8 = El equipo se pudo descargar, pero tenía un formato incorrecto.
+
+$9 = Equipo
+$10 = añadido para el formato
+
+$11 = No existe ningún equipo con el nombre:
+
+$12 = Equipo eliminado:
+
+$13 = No poseo equipos para jugar en ningún formato.
+
+$14 = Equipos para el formato:
+
+$15 = Equipos disponibles del bot:
+
+$16 = No poseo equipos para jugar en el formato:
