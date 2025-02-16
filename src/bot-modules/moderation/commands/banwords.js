@@ -14,6 +14,7 @@ const Path = require('path');
 const Text = Tools('text');
 const Chat = Tools('chat');
 const Hastebin = Tools('hastebin');
+const HtmlMaker = Tools('html-maker');
 
 const Lang_File = Path.resolve(__dirname, 'banwords.translations');
 
@@ -102,9 +103,6 @@ module.exports = {
 		let words = config.bannedWords[room];
 		if (!words) return this.pmReply(this.mlt(6) + " " + Chat.italics(this.parser.getRoomTitle(room)));
 		let html = '';
-		html += '<html>';
-		html += '<head><title>Banned Words of ' + Text.escapeHTML(App.parser.getRoomTitle(room)) + '</title></head>';
-		html += '<body>';
 		html += '<h3>Banned Words in ' + Text.escapeHTML(App.parser.getRoomTitle(room)) + '</h3>';
 		html += '<ul>';
 		words = Object.keys(words).sort();
@@ -140,9 +138,7 @@ module.exports = {
 			html += '</li>';
 		}
 		html += '</ul>';
-		html += '</body>';
-		html += '</html>';
-		let key = App.data.temp.createTempFile(html);
+		let key = App.data.temp.createTempFile(HtmlMaker.wrapHTML(html, 'Banned Words of ' + Text.escapeHTML(App.parser.getRoomTitle(room))));
 		if (server.charAt(server.length - 1) === '/') {
 			return this.pmReply(App.config.server.url + 'temp/' + key);
 		} else {

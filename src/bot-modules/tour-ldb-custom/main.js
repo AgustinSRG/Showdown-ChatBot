@@ -216,10 +216,10 @@ exports.setup = function (App) {
 			html += '<html>';
 			if (config.customTitle) {
 				html += '<head><title>' + Text.escapeHTML(config.customTitle) + '</title>' +
-					'<style>td {padding:5px;}</style></head>';
+					'<style>td {padding:5px;}</style><link rel="stylesheet" href="/static/style.css" /></head>';
 			} else {
 				html += '<head><title>Leaderboards of ' + Text.escapeHTML(config.name || leaderboardsId) + '</title>' +
-					'<style>td {padding:5px;}</style></head>';
+					'<style>td {padding:5px;}</style><link rel="stylesheet" href="/static/style.css" /></head>';
 			}
 
 			html += '<body>';

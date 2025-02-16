@@ -15,6 +15,7 @@ const Path = require('path');
 const Text = Tools('text');
 const Chat = Tools('chat');
 const Hastebin = Tools('hastebin');
+const HtmlMaker = Tools('html-maker');
 
 const Lang_File = Path.resolve(__dirname, 'zerotolerance.translations');
 
@@ -84,9 +85,6 @@ module.exports = {
 				" " + this.mlt(9));
 		}
 		let html = '';
-		html += '<html>';
-		html += '<head><title>Zero tolerance configuration of ' + Text.escapeHTML(App.parser.getRoomTitle(room)) + '</title></head>';
-		html += '<body>';
 		html += '<h3>Zero tolerance configuration of ' + Text.escapeHTML(App.parser.getRoomTitle(room)) + '</h3>';
 		html += '<ul>';
 		let users = Object.keys(zt).sort();
@@ -98,9 +96,7 @@ module.exports = {
 			html += '</li>';
 		}
 		html += '</ul>';
-		html += '</body>';
-		html += '</html>';
-		let key = App.data.temp.createTempFile(html);
+		let key = App.data.temp.createTempFile(HtmlMaker.wrapHTML(html, 'Zero tolerance configuration of ' + Text.escapeHTML(App.parser.getRoomTitle(room))));
 		if (server.charAt(server.length - 1) === '/') {
 			return this.pmReply(App.config.server.url + 'temp/' + key);
 		} else {

@@ -12,6 +12,8 @@ const Path = require('path');
 const Text = Tools('text');
 const Chat = Tools('chat');
 
+const HtmlMaker = Tools('html-maker');
+
 const Lang_File = Path.resolve(__dirname, 'seen.translations');
 const Max_Alts_No_Full = 7;
 
@@ -102,13 +104,13 @@ module.exports = {
 
 				if (canFull) {
 					let key = App.data.temp.createTempFile(
-						"<html>" +
-						"<body><p>" +
-						this.mlt(17) + ' <b>' +
-						Text.escapeHTML(name) + '</b>:</p><p> ' +
-						Text.escapeHTML(alts.join(", ")) +
-						"</p></body>" +
-						"</html>"
+						HtmlMaker.wrapHTML(
+							"<p>" +
+							this.mlt(17) + ' <b>' +
+							Text.escapeHTML(name) + '</b>:</p><p> ' +
+							Text.escapeHTML(alts.join(", ")) +
+							"</p>"
+						)
 					);
 
 					fullLink = this.mlt("seelist") + ": " + App.server.getControlPanelLink('/temp/' + key);

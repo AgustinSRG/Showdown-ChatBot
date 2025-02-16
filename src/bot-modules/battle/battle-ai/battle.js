@@ -11,6 +11,7 @@ const MIN_TIME_LOCK = 3 * 1000; // 3 seconds to avoid send spam
 const Path = require('path');
 const Util = require('util');
 const Text = Tools('text');
+const HtmlMaker = Tools('html-maker');
 
 exports.setup = function (App, CustomModules) {
 	const BattleData = require(Path.resolve(__dirname, "battle-data.js")).setup(App);
@@ -255,8 +256,7 @@ exports.setup = function (App, CustomModules) {
 			let txt = '';
 			let server = App.config.server.url;
 			if (server && App.config.debug) {
-				let html = '<html><head><title>' + this.id + '</title></head><body>' +
-					this.buffer.map(line => ('<p>' + Text.escapeHTML(line) + '</p>')).join('') + '</body></html>';
+				let html = HtmlMaker.wrapHTML(this.buffer.map(line => ('<p>' + Text.escapeHTML(line) + '</p>')).join(''), this.id);
 				let key = App.data.temp.createTempFile(html);
 				App.log("Generated battle log: " + this.id + " - " + key);
 				if (server.charAt(server.length - 1) === '/') {

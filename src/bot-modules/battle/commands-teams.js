@@ -13,6 +13,7 @@
 const Path = require('path');
 const Text = Tools('text');
 const Chat = Tools('chat');
+const HtmlMaker = Tools('html-maker');
 const HTTPS = require('https');
 
 const Lang_File = Path.resolve(__dirname, 'commands-teams.translations');
@@ -193,18 +194,16 @@ module.exports = {
         }
 
         let key = App.data.temp.createTempFile(
-            "<html>" +
-            "<body>" +
-            teams.map(t => {
-                return "<h1> " + Text.escapeHTML(this.mlt(14)) + " " + Text.escapeHTML(t.name) + "</h1>" +
-                    t.teams.map(function (a) {
-                        return "<p><b>" +
-                            Text.escapeHTML(a.name) + '</b>:</p><p> ' +
-                            Text.escapeHTML(Teams.exportTeam(a.packed)).replace(/\n/g, "<br>") + "</p>";
-                    }).join("<hr>");
-            }).join("<hr>") +
-            "</body>" +
-            "</html>"
+            HtmlMaker.wrapHTML(
+                teams.map(t => {
+                    return "<h1> " + Text.escapeHTML(this.mlt(14)) + " " + Text.escapeHTML(t.name) + "</h1>" +
+                        t.teams.map(function (a) {
+                            return "<p><b>" +
+                                Text.escapeHTML(a.name) + '</b>:</p><p> ' +
+                                Text.escapeHTML(Teams.exportTeam(a.packed)).replace(/\n/g, "<br>") + "</p>";
+                        }).join("<hr>");
+                }).join("<hr>")
+            )
         );
 
         this.reply(this.mlt(15) + ' ' + App.server.getControlPanelLink('/temp/' + key));

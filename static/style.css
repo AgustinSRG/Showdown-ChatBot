@@ -117,3 +117,54 @@ p {
 	height: 500px;
 	border: none;
 }
+
+@media (prefers-color-scheme: dark) {
+	body {
+		background-color:#181818;
+		color: white;
+	}
+
+	.maindiv {
+		background-color:#212121;
+		border: 1px solid black;
+	}
+
+	.home-link {
+		color:white;
+	}
+
+	a {
+		color: lightblue;
+	}
+	
+	.home-link:hover {
+		color:white;
+	}
+	
+	.home-link:visited {
+		color:white;
+	}
+
+	a:visited {
+		color: #edccff;
+	}
+	
+	.menu-option,
+	.menu-option:visited,
+	.submenu-option,
+	.submenu-option:visited {
+		color:lightblue
+	}
+	
+	.menu-option:hover,
+	.submenu-option:hover {
+		color:#f9f9f9;
+	}
+	
+	.menu-option-selected,
+	.menu-option-selected:visited,
+	.submenu-option-selected,
+	.submenu-option-selected:visited {
+		color:white;
+	}
+}

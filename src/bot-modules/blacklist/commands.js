@@ -13,6 +13,7 @@ const Path = require('path');
 const Text = Tools('text');
 const Chat = Tools('chat');
 const Hastebin = Tools('hastebin');
+const HtmlMaker = Tools('html-maker');
 
 const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
@@ -90,9 +91,6 @@ module.exports = {
 			return this.pmReply(this.mlt(5) + " " + Chat.italics(this.parser.getRoomTitle(room)));
 		}
 		let html = '';
-		html += '<html>';
-		html += '<head><title>Blacklist of ' + Text.escapeHTML(this.parser.getRoomTitle(room)) + '</title></head>';
-		html += '<body>';
 		html += '<h3>Users blacklisted in ' + Text.escapeHTML(this.parser.getRoomTitle(room)) + '</h3>';
 		html += '<ul>';
 		let blUsers = Object.keys(bl).sort();
@@ -100,9 +98,7 @@ module.exports = {
 			html += '<li>' + Text.escapeHTML(blUsers[i]) + '</li>';
 		}
 		html += '</ul>';
-		html += '</body>';
-		html += '</html>';
-		let key = App.data.temp.createTempFile(html);
+		let key = App.data.temp.createTempFile(HtmlMaker.wrapHTML(html, 'Blacklist of ' + Text.escapeHTML(this.parser.getRoomTitle(room))));
 		if (server.charAt(server.length - 1) === '/') {
 			return this.pmReply(App.config.server.url + 'temp/' + key);
 		} else {

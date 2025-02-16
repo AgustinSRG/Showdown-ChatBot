@@ -33,7 +33,7 @@ const Static = Tools('server-static');
 const AbuseMonitor = Tools('abuse-monitor');
 const Text = Tools('text');
 
-const PageMaker = require(Path.resolve(__dirname, 'html-maker.js'));
+const PageMaker = Tools('html-maker');
 
 /**
  * Time-safe string compare
@@ -603,7 +603,7 @@ class Server {
 	serve(context) {
 		if (context.url.pathname in { '/favicon.ico': 1, 'favicon.ico': 1 }) {
 			/* Favicon.ico */
-			context.endWithStaticFile(Path.resolve(__dirname, '../../favicon.ico'));
+			context.endWithStaticFile(Path.resolve(__dirname, '../../favicon.ico'), 31536000);
 		} else if (context.url.pathname === "/showdown/info" || context.url.pathname === "/info") {
 			context.headers["Access-Control-Allow-Origin"] = context.request.headers['Origin'] || context.request.headers['origin'] || "*";
 			context.headers["Access-Control-Allow-Credentials"] = "true";
@@ -945,8 +945,9 @@ class RequestContext {
 	/**
 	 * Sends an static file to the client
 	 * @param {Path} file - Complete path of the requested file
+	 * @param {Number} cacheAge - Cache age (seconds)
 	 */
-	endWithStaticFile(file) {
+	endWithStaticFile(file, cacheAge) {
 		Static.serveFile(file, this.request, this.response);
 	}
 

@@ -149,7 +149,7 @@ exports.setup = function (App) {
 			html += '<html>';
 
 			html += '<head><title>' + Text.escapeHTML(TradTableMessages[langTo].title) + '</title>' +
-				'<style>td {padding:5px;}</style></head>';
+				'<style>td {padding:5px;}</style><link rel="stylesheet" href="/static/style.css" /></head>';
 
 			html += '<body>';
 

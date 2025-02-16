@@ -32,56 +32,67 @@ function getErrHtml(errcode, title, msg) {
  * @param {Path} file
  * @param {ClientRequest} request
  * @param {ServerResponse} response
+ * @param {number} cacheAge
  */
-exports.serveFile = function (file, request, response) {
+exports.serveFile = function (file, request, response, cacheAge) {
 	let ext = Path.extname(file);
 	let contentType = 'text/html; charset=utf-8';
 	let binary = false;
 	switch (ext) {
-	case '.txt':
-	case '.log':
-		contentType = 'text/plain; charset=utf-8';
-		break;
-	case '.js':
-		contentType = 'text/javascript; charset=utf-8';
-		break;
-	case '.css':
-		contentType = 'text/css; charset=utf-8';
-		break;
-	case '.json':
-		contentType = 'application/json; charset=utf-8';
-		break;
-	case '.png':
-		contentType = 'image/png';
-		binary = true;
-		break;
-	case '.jpg':
-		contentType = 'image/jpg';
-		binary = true;
-		break;
-	case '.ico':
-		contentType = 'image/ico';
-		binary = true;
-		break;
-	case '.wav':
-		contentType = 'audio/wav';
-		binary = true;
-		break;
+		case '.txt':
+		case '.log':
+			contentType = 'text/plain; charset=utf-8';
+			break;
+		case '.js':
+			contentType = 'text/javascript; charset=utf-8';
+			break;
+		case '.css':
+			contentType = 'text/css; charset=utf-8';
+			break;
+		case '.json':
+			contentType = 'application/json; charset=utf-8';
+			break;
+		case '.png':
+			contentType = 'image/png';
+			binary = true;
+			break;
+		case '.jpg':
+			contentType = 'image/jpg';
+			binary = true;
+			break;
+		case '.ico':
+			contentType = 'image/ico';
+			binary = true;
+			break;
+		case '.wav':
+			contentType = 'audio/wav';
+			binary = true;
+			break;
 	}
 
 	FileSystem.readFile(file, (error, content) => {
 		if (error) {
 			if (error.code === 'ENOENT') {
-				response.writeHead(404, {'Content-Type': 'text/html; charset=utf-8'});
+				response.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
 				response.write(getErrHtml(404, 'File not found', 'The file you requested was not found!'));
 				response.end();
 			} else {
-				response.writeHead(500, {'Content-Type': 'text/html; charset=utf-8'});
+				response.writeHead(500, { 'Content-Type': 'text/html; charset=utf-8' });
 				response.write(getErrHtml(500, 'Internal server error', 'Internal server error. Error Code: ' + error.code));
 				response.end();
 			}
 		} else {
-			response.writeHead(200, {'Content-Type': contentType});
+			if (typeof cacheAge === "number") {
+				response.writeHead(200, {
+					'Content-Type': contentType,
+					'Cache-Control': 'max-age=' + cacheAge,
+				});
+			} else {
+				response.writeHead(200, {
+					'Content-Type': contentType,
+				});
+			}
+
 			response.end(content, binary ? 'binary' : 'utf-8');
 		}
 	});

@@ -315,7 +315,7 @@ module.exports = {
 			return this.errorReply(this.mlt(35));
 		}
 		let html = '<html>';
-		html += '<head><title>Players Auction</title><style type="text/css">p {padding:5px;} td {padding:5px;}</style></head>';
+		html += '<head><title>Players Auction</title><style type="text/css">p {padding:5px;} td {padding:5px;}</style><link rel="stylesheet" href="/static/style.css" /></head>';
 		html += '<body>';
 		html += '<h2 align="center">Players Auction</h2>';
 		html += '<h3>Configuration</h3>';

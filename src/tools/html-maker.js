@@ -8,6 +8,33 @@
 const Util = require('util');
 
 /**
+ * Wraps HTML
+ * @param {String} body The HTML body
+ * @param {String} title The HTML title (must be escaped)
+ * @returns The final HTML
+ */
+exports.wrapHTML = function (body, title) {
+	let html = "<html>";
+
+	html += "<head>";
+
+	html += "<html>";
+
+	if (title) {
+		html += '<title>' + title + '</title>';
+	}
+
+	html += '<link rel="stylesheet" href="/static/style.css" />';
+
+	html += "</head>";
+
+	html += "<body>" + body + "</body>";
+
+	html += "</html>";
+	return html;
+};
+
+/**
  * Generates a dynamic webpage for Showdown ChatBot
  * @param {String} body
  * @param {Object} loginData - Options: name {String}, group {String}, invalid {Boolean}

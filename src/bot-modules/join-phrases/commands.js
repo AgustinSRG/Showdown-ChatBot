@@ -12,6 +12,7 @@ const Path = require('path');
 const Text = Tools('text');
 const Chat = Tools('chat');
 const Hastebin = Tools('hastebin');
+const HtmlMaker = Tools('html-maker');
 
 const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
@@ -88,9 +89,6 @@ module.exports = {
 			return this.errorReply(this.mlt(4) + " " + Chat.italics(this.parser.getRoomTitle(room)));
 		}
 		let html = '';
-		html += '<html>';
-		html += '<head><title>Join-Phrases of ' + Text.escapeHTML(this.parser.getRoomTitle(room)) + '</title></head>';
-		html += '<body>';
 		html += '<h3>Join-Phrases in ' + Text.escapeHTML(this.parser.getRoomTitle(room)) + '</h3>';
 		html += '<ul>';
 		for (let user in config.rooms[room]) {
@@ -100,9 +98,7 @@ module.exports = {
 			html += '</li>';
 		}
 		html += '</ul>';
-		html += '</body>';
-		html += '</html>';
-		let key = App.data.temp.createTempFile(html);
+		let key = App.data.temp.createTempFile(HtmlMaker.wrapHTML(html, 'Join-Phrases of ' + Text.escapeHTML(this.parser.getRoomTitle(room))));
 		if (server.charAt(server.length - 1) === '/') {
 			return this.pmReply(App.config.server.url + 'temp/' + key);
 		} else {

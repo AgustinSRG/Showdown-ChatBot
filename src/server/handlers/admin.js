@@ -33,7 +33,7 @@ exports.setup = function (App) {
 				App.reportCrash(err);
 			}
 			let buf = '';
-			buf += '<html><head><title>Process Exited</title></head><body><p>The application exits successfully.</p>' +
+			buf += '<html><head><title>Process Exited</title><link rel="stylesheet" href="/static/style.css" /></head><body><p>The application exits successfully.</p>' +
 			'<a href=""><button>Refresh Page</button></a></body></html>';
 			context.response.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
 			context.response.end(buf);

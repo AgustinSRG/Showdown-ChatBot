@@ -15,6 +15,7 @@ const Path = require('path');
 const Text = Tools('text');
 const Chat = Tools('chat');
 const LineSplitter = Tools('line-splitter');
+const HtmlMaker = Tools('html-maker');
 
 const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
@@ -472,11 +473,11 @@ module.exports = {
 		this.addToSecurityLog();
 
 		let key = App.data.temp.createTempFile(
-			"<html>" +
-			"<body><p>" +
-			JSON.stringify(data) +
-			"</p></body>" +
-			"</html>"
+			HtmlMaker.wrapHTML(
+				"<p>" +
+				JSON.stringify(data) +
+				"</p>"
+			)
 		);
 
 		this.reply(this.mlt(30) + " " + Chat.italics(this.parser.getRoomTitle(room)) + ". " + this.mlt(31) + ": " + App.server.getControlPanelLink('/temp/' + key));

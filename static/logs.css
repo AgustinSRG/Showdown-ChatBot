@@ -67,3 +67,33 @@ body {
     padding: 0 2px;
     tab-size: 4;
 }
+
+@media (prefers-color-scheme: dark) {
+	body {
+		background-color:#181818;
+		color: white;
+	}
+
+	.main-div {
+		background-color:#212121;
+		border: 1px solid black;
+	}
+
+	a {
+		color: lightblue;
+	}
+
+	a:visited {
+		color: #edccff;
+	}
+
+	.pm {
+		color:lightgray;
+	}
+
+	.code {
+		border: 1px solid #555;
+		background: #333;
+		color: #DDD;
+	}
+}

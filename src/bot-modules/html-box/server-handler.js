@@ -188,7 +188,10 @@ exports.setup = function (App) {
 	function listHandler(context) {
 		let html = '';
 		html += '<html>';
-		html += '<head><title>HtmlBox Commands - Showdown ChatBot</title></head>';
+		html += '<head>';
+		html += '<link rel="stylesheet" href="/static/style.css" />';
+		html += '<title>HtmlBox Commands - Showdown ChatBot</title>';
+		html += '</head>';
 		html += '<body>';
 		html += '<div align="center" style="padding:10px;"><h2>HtmlBox Commands List</h2></div>';
 		html += '<div align="left" style="padding:10px;">';

@@ -380,7 +380,7 @@ exports.setup = function (App) {
 									" | " + (new Date(backup.time)).toString());
 								App.logServerAction(context.user.id, 'Exit due to backup restore.');
 								let buf = '';
-								buf += '<html><head><title>Process Exited</title></head><body><p>Backup Completed.' +
+								buf += '<html><head><title>Process Exited</title><link rel="stylesheet" href="/static/style.css" /></head><body><p>Backup Completed.' +
 									' The application exits successfully.</p><a href=""><button>Refresh Page</button></a></body></html>';
 								context.response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
 								context.response.end(buf);
