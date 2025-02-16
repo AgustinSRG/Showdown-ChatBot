@@ -297,6 +297,7 @@ exports.setup = function (App) {
 			let exportable = (context.post.exportable || "");
 			//console.log("EXPORTABLE = " + exportable);
 			let format = Text.toId(context.post.format);
+			let name = (context.post.id || "") + "";
 			let id = Text.toId(context.post.id);
 			let packed = '';
 			try {
@@ -313,6 +314,7 @@ exports.setup = function (App) {
 
 			if (!error) {
 				mod.TeamBuilder.dynTeams[id] = {
+					name: name,
 					format: format,
 					packed: packed,
 				};
@@ -343,6 +345,7 @@ exports.setup = function (App) {
 			if (selectedFormat && selectedFormat !== teams[id].format) continue;
 			htmlVars.teams += teamsItemTemplate.make({
 				id: Text.escapeHTML(id),
+				name: Text.escapeHTML(teams[id].name || id),
 				format: Text.escapeHTML(formatName),
 				pokemon: Text.escapeHTML(Teams.teamOverview(teams[id].packed)),
 			});

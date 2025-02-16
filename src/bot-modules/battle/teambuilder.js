@@ -34,8 +34,10 @@ exports.setup = function (App) {
 		},
 
 		addTeam: function (name, format, packed) {
-			if (this.dynTeams[name]) return false;
-			this.dynTeams[name] = {
+			const id = Text.toId(name);
+			if (this.dynTeams[id]) return false;
+			this.dynTeams[id] = {
+				name: name,
 				format: format,
 				packed: packed,
 			};
@@ -45,8 +47,9 @@ exports.setup = function (App) {
 		},
 
 		removeTeam: function (name) {
-			if (!this.dynTeams[name]) return false;
-			delete this.dynTeams[name];
+			const id = Text.toId(name);
+			if (!this.dynTeams[id]) return false;
+			delete this.dynTeams[id];
 			this.mergeTeams();
 			this.saveTeams();
 			return true;
