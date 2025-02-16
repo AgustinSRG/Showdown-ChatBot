@@ -545,14 +545,14 @@ class Server {
 	 */
 	getControlPanelLink(path) {
 		if (!this.app.config.server.url) {
-			return "#";
+			return "[Error: Please set 'Current Server Url' option in the 'Admin' section of the control panel]";
 		}
 		try {
 			let url = new URL(path, this.app.config.server.url);
 			return url.toString();
 		} catch (ex) {
 			this.app.reportCrash(ex);
-			return "#";
+			return "[Error: Invalid 'Current Server Url']";
 		}
 	}
 
