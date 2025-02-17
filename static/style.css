@@ -1,92 +1,92 @@
 /* Css File */
 
 body {
-	background-color:#FFFFFF;
+	background-color: #FFFFFF;
 }
 
 td {
-	padding:5px;
-	vertical-align:middle;
+	padding: 5px;
+	vertical-align: middle;
 }
 
 p {
-	padding:5px;
+	padding: 5px;
 }
 
 .maindiv {
-	width:90%;
-	background-color:#F8FBFD;
-	margin-bottom:10px;
+	width: 90%;
+	background-color: #F8FBFD;
+	margin-bottom: 10px;
 	border: 1px solid #BBCCDD;
 }
 
 .home-link {
-	color:#000000;
-	text-decoration:none;
+	color: #000000;
+	text-decoration: none;
 }
 
 .home-link:hover {
-	color:#000000;
-	text-decoration:none;
+	color: #000000;
+	text-decoration: none;
 }
 
 .home-link:visited {
-	color:#000000;
-	text-decoration:none;
+	color: #000000;
+	text-decoration: none;
 }
 
 .page-content {
-	padding:10px;
+	padding: 10px;
 }
 
 .header {
-	margin:8px;
+	margin: 8px;
 }
 
 .invalid-login {
-	color:#FF0000;
-	font-style:italic;
-	font-size:9px;
+	color: #FF0000;
+	font-style: italic;
+	font-size: 9px;
 }
 
 .copyright {
-	padding:8px;
+	padding: 8px;
 }
 
 .menu-option {
-	font-size:24px;
-	color:#0000FF;
-	text-decoration:none;
-	padding:8px;
+	font-size: 24px;
+	color: #0000FF;
+	text-decoration: none;
+	padding: 8px;
 }
 
 .menu-option:hover {
-	color:#000033;
+	color: #000033;
 }
 
 .menu-option-selected {
-	font-size:24px;
-	color:#000000;
-	font-weight:bold;
-	padding:8px;
-	text-decoration:none;
+	font-size: 24px;
+	color: #000000;
+	font-weight: bold;
+	padding: 8px;
+	text-decoration: none;
 }
 
 .menu-separator {
-	font-size:24px;
+	font-size: 24px;
 }
 
 .menu {
-	padding:8px;
-	text-align:center;
+	padding: 8px;
+	text-align: center;
 }
 
 .error-msg {
-	color:#FF0000;
+	color: #FF0000;
 }
 
 .ok-msg {
-	color:#00FF00;
+	color: #00FF00;
 }
 
 .userlist {
@@ -94,22 +94,22 @@ p {
 }
 
 .submenu-option {
-	font-size:16px;
-	color:#0000FF;
-	text-decoration:none;
-	padding:8px;
+	font-size: 16px;
+	color: #0000FF;
+	text-decoration: none;
+	padding: 8px;
 }
 
 .submenu-option:hover {
-	color:#000033;
+	color: #000033;
 }
 
 .submenu-option-selected {
-	font-size:16px;
-	color:#000000;
-	font-weight:bold;
-	padding:8px;
-	text-decoration:none;
+	font-size: 16px;
+	color: #000000;
+	font-weight: bold;
+	padding: 8px;
+	text-decoration: none;
 }
 
 .iframe-result-container iframe {
@@ -120,51 +120,116 @@ p {
 
 @media (prefers-color-scheme: dark) {
 	body {
-		background-color:#181818;
+		background-color: #181818;
 		color: white;
 	}
 
 	.maindiv {
-		background-color:#212121;
+		background-color: #212121;
 		border: 1px solid black;
 	}
 
 	.home-link {
-		color:white;
+		color: white;
 	}
 
 	a {
 		color: lightblue;
 	}
-	
+
 	.home-link:hover {
-		color:white;
+		color: white;
 	}
-	
+
 	.home-link:visited {
-		color:white;
+		color: white;
 	}
 
 	a:visited {
 		color: #edccff;
 	}
-	
+
 	.menu-option,
 	.menu-option:visited,
 	.submenu-option,
 	.submenu-option:visited {
-		color:lightblue
+		color: lightblue
 	}
-	
+
 	.menu-option:hover,
 	.submenu-option:hover {
-		color:#f9f9f9;
+		color: #f9f9f9;
 	}
-	
+
 	.menu-option-selected,
 	.menu-option-selected:visited,
 	.submenu-option-selected,
 	.submenu-option-selected:visited {
-		color:white;
+		color: white;
+	}
+
+	button,
+	input[type=submit] {
+		background: #2b2c31;
+		background: linear-gradient(to bottom, #4e525a, #2b2c31);
+		box-shadow: 0.5px 1px 2px rgba(255, 255, 255, 0.45), inset 0.5px 1px 1px rgba(255, 255, 255, 0.5);
+		border-color: #34373b;
+		text-shadow: none;
+		color: #F9F9F9;
+	}
+
+	button:not(:disabled):hover,
+	input[type=submit]:not(:disabled):hover {
+		background: #3e4149;
+		background: linear-gradient(to bottom, #646877, #3e4149);
+		border-color: #50555b
+	}
+
+	button:active,
+	input[type=submit]:active {
+		background: #2b2c31;
+		border-color: #34373b;
+		box-shadow: 0.5px 1px 2px rgba(255, 255, 255, 0.45);
+	}
+
+	button:disabled,
+	input[type=submit]:disabled {
+		opacity: 0.8;
+		box-shadow: none;
+	}
+
+	input:not([type=submit]),
+	textarea,
+	select {
+		border-color: #6b7178;
+		/* box-shadow: inset 0px -1px 2px #606060, -1px -1px 0 rgba(255,255,255,.2); */
+		box-shadow: inset 0.5px 1px 2px rgba(0, 0, 0, 1), inset -0.5px -1px 1px rgba(255, 255, 255, 0.2), -0.5px -1px 1px rgba(255, 255, 255, 0.1);
+		background: #222527;
+		color: #DDD;
+	}
+
+	input:not([type=submit]):not(:disabled):hover,
+	textarea:not(:disabled):hover,
+	select:not(:disabled):hover {
+		border-color: #8d959f;
+		box-shadow: inset 0.5px 1px 2px rgba(0, 0, 0, 0.8), inset -0.5px -1px 1px rgba(255, 255, 255, 0.5), -0.5px -1px 1px rgba(255, 255, 255, 0.1);
+		background: #111111;
+	}
+
+	input:not([type=submit]):not(:disabled):focus,
+	textarea:not(:disabled):focus,
+	select:not(:disabled):focus {
+		outline: 1px solid #6295bc;
+		border-color: #9199a2;
+		background: #111111;
+	}
+
+	input:not([type=submit]):disabled,
+	textarea:disabled,
+	select:disabled {
+		opacity: 0.7;
+		color: #AAA;
+		border-color: #444;
+		box-shadow: none;
 	}
 }
