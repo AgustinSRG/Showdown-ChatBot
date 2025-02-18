@@ -3,7 +3,9 @@
  *
  * chall: bot sends a challenge to an arbitrary user
  * cancelchallenge: cancels an active challenge
- * searchbattle: searchs a ladder battle and returns the link
+ * searchbattle: searches a ladder battle and returns the link
+ * jointour: joins tournament
+ * leavetour: leaves tournament
  * evalbattle: runs arbitrary javascript in a battle context
  */
 
@@ -125,6 +127,38 @@ module.exports = {
 		this.send(cmds);
 		App.logCommandAction(this);
 		this.reply(this.mlt(12));
+	},
+
+	jointour: function (App) {
+		this.setLangFile(Lang_File);
+		if (!this.can('jointour', this.room)) return this.replyAccessDenied('jointour');
+		let mod = App.modules.battle.system;
+
+		if (!this.room || this.getRoomType(this.room) !== 'chat') {
+			return this.errorReply(this.mlt('nochat'));
+		}
+
+		if (!mod.TourManager.tourData[this.room]) {
+			return this.errorReply(this.mlt('notour'));
+		}
+
+		this.reply("/tour join");
+	},
+
+	leavetour: function (App) {
+		this.setLangFile(Lang_File);
+		if (!this.can('jointour', this.room)) return this.replyAccessDenied('jointour');
+		let mod = App.modules.battle.system;
+
+		if (!this.room || this.getRoomType(this.room) !== 'chat') {
+			return this.errorReply(this.mlt('nochat'));
+		}
+
+		if (!mod.TourManager.tourData[this.room]) {
+			return this.errorReply(this.mlt('notour'));
+		}
+
+		this.reply("/tour leave");
 	},
 
 	evalbattle: function (App) {

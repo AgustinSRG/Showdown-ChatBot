@@ -31,6 +31,10 @@ $customrules = I can't accept the challenge because you specified custom rules f
 $format = format
 $team = team
 
+$nochat = This command is only available for chat rooms
+
+$notour = There is no tournament in this room
+
 %spanish
 
 $0 = El formato
@@ -59,3 +63,7 @@ $customrules = No puedo aceptar el reto porque has especificado reglas personali
 
 $format = formato
 $team = equipo
+
+$nochat = Este comando solo está disponible para las salas de chat
+
+$notour = No hay ningún torneo en esta sala.

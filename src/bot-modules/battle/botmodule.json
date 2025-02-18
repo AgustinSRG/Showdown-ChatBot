@@ -13,6 +13,9 @@
     "searchbattle": {
       "group": "admin"
     },
+    "jointour": {
+      "group": "mod"
+    },
     "teams": {
       "excepted": true
     }
