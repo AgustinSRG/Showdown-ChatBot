@@ -142,6 +142,8 @@ module.exports = {
 			return this.errorReply(this.mlt('notour'));
 		}
 
+		mod.TourManager.tourData[this.room].mustLeave = false;
+
 		this.reply("/tour join");
 	},
 
@@ -157,6 +159,8 @@ module.exports = {
 		if (!mod.TourManager.tourData[this.room]) {
 			return this.errorReply(this.mlt('notour'));
 		}
+
+		mod.TourManager.tourData[this.room].mustLeave = true;
 
 		this.reply("/tour leave");
 	},
