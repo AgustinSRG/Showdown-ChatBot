@@ -19,6 +19,7 @@ function getErrHtml(errcode, title, msg) {
 	html += '<!DOCTYPE html>';
 	html += '<head>';
 	html += '<title>' + title + '</title>';
+	html += '<link rel="stylesheet" href="/static/style.css" />';
 	html += '</head>';
 	html += '<body>';
 	html += '<h1>Error ' + errcode + '</h1>';

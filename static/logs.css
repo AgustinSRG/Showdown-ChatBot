@@ -1,26 +1,149 @@
 /* Html Logs styles */
 
+:root {
+	/* Light theme */
+	--light-theme-background: #FFFFFF;
+	--light-theme-text-color: black;
+
+	--light-theme-link-color: #0000EE;
+	--light-theme-link-visited-color: #551A8B;
+	--light-theme-link-active-color: #FF0000;
+
+	--light-theme-main-div-background: #F8FBFD;
+	--light-theme-main-div-border-color: #BBCCDD;
+
+	--light-theme-secondary-msg-color: #666666;
+
+	--light-theme-code-border-color: silver;
+	--light-theme-code-background: #eee;
+	--light-theme-code-text-color: #000;
+
+	/* Dark theme */
+	--dark-theme-background: #151b23;
+	--dark-theme-text-color: white;
+
+	--dark-theme-link-color: #4493f8;
+	--dark-theme-link-visited-color: #6d4b8d;
+	--dark-theme-link-active-color: #ff4040;
+
+	--dark-theme-main-div-background: #0d1117;
+	--dark-theme-main-div-border-color: rgba(255, 255, 255, 0.1);
+
+	--dark-theme-secondary-msg-color: lightgray;
+
+	--dark-theme-code-border-color: #555;
+	--dark-theme-code-background: #333;
+	--dark-theme-code-text-color: #DDD;
+}
+
 body {
-	background-color:#FFFFFF;
+	--theme-background: var(--light-theme-background);
+	--theme-text-color: var(--light-theme-text-color);
+
+	--theme-link-color: var(--light-theme-link-color);
+	--theme-link-visited-color: var(--light-theme-link-visited-color);
+	--theme-link-active-color: var(--light-theme-link-active-color);
+
+	--theme-main-div-background: var(--light-theme-main-div-background);
+	--theme-main-div-border-color: var(--light-theme-main-div-border-color);
+
+	--theme-secondary-msg-color: var(--light-theme-secondary-msg-color);
+
+	--theme-code-border-color: var(--light-theme-code-border-color);
+	--theme-code-background: var(--light-theme-code-background);
+	--theme-code-text-color: var(--light-theme-code-text-color);
+}
+
+@media (prefers-color-scheme: dark) {
+	body {
+		--theme-background: var(--dark-theme-background);
+		--theme-text-color: var(--dark-theme-text-color);
+
+		--theme-link-color: var(--dark-theme-link-color);
+		--theme-link-visited-color: var(--dark-theme-link-visited-color);
+		--theme-link-active-color: var(--dark-theme-link-active-color);
+
+		--theme-main-div-background: var(--dark-theme-main-div-background);
+		--theme-main-div-border-color: var(--dark-theme-main-div-border-color);
+
+		--theme-secondary-msg-color: var(--dark-theme-secondary-msg-color);
+
+		--theme-code-border-color: var(--dark-theme-code-border-color);
+		--theme-code-background: var(--dark-theme-code-background);
+		--theme-code-text-color: var(--dark-theme-code-text-color);
+	}
+}
+
+body.light {
+	--theme-background: var(--light-theme-background);
+	--theme-text-color: var(--light-theme-text-color);
+
+	--theme-link-color: var(--light-theme-link-color);
+	--theme-link-visited-color: var(--light-theme-link-visited-color);
+	--theme-link-active-color: var(--light-theme-link-active-color);
+
+	--theme-main-div-background: var(--light-theme-main-div-background);
+	--theme-main-div-border-color: var(--light-theme-main-div-border-color);
+
+	--theme-secondary-msg-color: var(--light-theme-secondary-msg-color);
+
+	--theme-code-border-color: var(--light-theme-code-border-color);
+	--theme-code-background: var(--light-theme-code-background);
+	--theme-code-text-color: var(--light-theme-code-text-color);
+}
+
+body.dark {
+	--theme-background: var(--dark-theme-background);
+	--theme-text-color: var(--dark-theme-text-color);
+
+	--theme-link-color: var(--dark-theme-link-color);
+	--theme-link-visited-color: var(--dark-theme-link-visited-color);
+	--theme-link-active-color: var(--dark-theme-link-active-color);
+
+	--theme-main-div-background: var(--dark-theme-main-div-background);
+	--theme-main-div-border-color: var(--dark-theme-main-div-border-color);
+
+	--theme-secondary-msg-color: var(--dark-theme-secondary-msg-color);
+
+	--theme-code-border-color: var(--dark-theme-code-border-color);
+	--theme-code-background: var(--dark-theme-code-background);
+	--theme-code-text-color: var(--dark-theme-code-text-color);
+}
+
+body {
+	background-color: var(--theme-background);
+	color: var(--theme-text-color);
+}
+
+a {
+	color: var(--theme-link-color);
+}
+
+a:visited {
+	color: var(--theme-link-visited-color);
+}
+
+a:active {
+	color: var(--theme-link-active-color);
 }
 
 .main-div {
-	padding:5px;
-	background-color:#F8FBFD;
-	border: 1px solid #BBCCDD;
+	padding: 5px;
+	background-color: var(--theme-main-div-background);
+	border: 1px solid var(--theme-main-div-border-color);
 }
 
 .status-div {
-	padding:10px;
+	padding: 10px;
 }
 
 .chat-div {
-	padding:5px;
+	padding: 5px;
 	word-wrap: break-word;
 }
 
 .join-msg {
-	color:#666666;
+	color: var(--theme-secondary-msg-color);
 }
 
 .broadcast-green {
@@ -28,20 +151,24 @@ body {
 	color: white;
 	padding: 2px 4px;
 }
+
 .broadcast-blue {
 	background-color: #6688AA;
 	color: white;
 	padding: 2px 4px;
 }
+
 .infobox {
 	border: 1px solid #6688AA;
 	padding: 2px 4px;
 }
+
 .infobox-limited {
 	max-height: 200px;
 	overflow: auto;
 	overflow-x: hidden;
 }
+
 .broadcast-red {
 	background-color: #AA5544;
 	color: white;
@@ -55,45 +182,15 @@ body {
 }
 
 .pm {
-	color:#666666;
-	font-style:italic;
+	color: var(--theme-secondary-msg-color);
+	font-style: italic;
 }
 
 .code {
 	font-family: monospace;
-    border: 1px solid silver;
-    background: #eee;
-    color: #000;
-    padding: 0 2px;
-    tab-size: 4;
-}
-
-@media (prefers-color-scheme: dark) {
-	body {
-		background-color:#181818;
-		color: white;
-	}
-
-	.main-div {
-		background-color:#212121;
-		border: 1px solid black;
-	}
-
-	a {
-		color: lightblue;
-	}
-
-	a:visited {
-		color: #edccff;
-	}
-
-	.pm {
-		color:lightgray;
-	}
-
-	.code {
-		border: 1px solid #555;
-		background: #333;
-		color: #DDD;
-	}
+	border: 1px solid var(--theme-code-border-color);
+	background: var(--theme-code-background);
+	color: var(--theme-code-text-color);
+	padding: 0 2px;
+	tab-size: 4;
 }

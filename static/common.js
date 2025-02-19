@@ -40,4 +40,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var observer = new MutationObserver(updateForms);
     observer.observe(document.querySelector("body"), { childList: true, subtree: true, attributes: false });
+
+    var initialTheme = localStorage.getItem("theme");
+
+    if (initialTheme === "l" || initialTheme === "d") {
+        var b = document.querySelector("body");
+        if (b) {
+            b.className = initialTheme === "l"  ? "light" : "dark";
+        }
+    } else {
+        initialTheme = "";
+    }
+
+    var themeSelect = document.querySelector(".theme-select");
+
+    if (themeSelect) {
+        themeSelect.value = initialTheme;
+
+        themeSelect.addEventListener("change", function () {
+            var currTheme = themeSelect.value || "";
+            localStorage.setItem("theme", currTheme);
+
+            window.location = window.location.href;
+        });
+    }
 });
+

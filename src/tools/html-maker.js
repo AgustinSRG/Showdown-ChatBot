@@ -58,7 +58,7 @@ exports.generate = function (body, loginData, menu, options) {
 		}
 	}
 
-	buf += '<script type="text/javascript" src="/static/csrf-protect-v2.js"></script>';
+	buf += '<script type="text/javascript" src="/static/common.js"></script>';
 
 	if (options.scripts) {
 		for (let i = 0; i < options.scripts.length; i++) {
@@ -143,7 +143,13 @@ exports.generate = function (body, loginData, menu, options) {
 		buf += '<div align="center" class="copyright">';
 		buf += '<i>This is a Pokemon Showdown Bot for Node JS - ';
 		buf += '<a href="' + options.package.homepage + '" target="_blank">Showdown-ChatBot' + '</a> v' + options.package.version;
-		buf += '</i></div></div>';
+		buf += '</i>';
+		buf += ' - Theme: <select class="theme-select" value="">';
+		buf += '<option value="">Device</option>';
+		buf += '<option value="d">Dark</option>';
+		buf += '<option value="l">Light</option>';
+		buf += '</select>';
+		buf += '</div></div>';
 	}
 	buf += '</div></body>';
 	buf += '</html>';
