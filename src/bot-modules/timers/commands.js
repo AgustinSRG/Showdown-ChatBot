@@ -3,6 +3,13 @@
  *
  * starttimer: starts a new timeout
  * stoptimer: stops the current timeout
+ * stopalltimers: stops all timers
+ * repeat: sets a repeat
+ * repeatcommand: sets a command repeat
+ * clearrepeat: clears repeat
+ * clearrepeatroom: clears repeat for a room
+ * clearallrepeats: clears all repeats of a room
+ * showrepeats: Shows the list of repeats of a room
  */
 
 'use strict';
@@ -282,10 +289,51 @@ module.exports = {
 		if (Mod.hasRepeat(this.room, text)) {
 			return this.errorReply(this.mlt(15));
 		}
-		if (!Mod.createRepeat(this.room, text, time)) {
+		if (!Mod.createRepeat(this.room, text, time, this.by, false)) {
 			this.errorReply(this.mlt(21));
 		} else {
 			this.pmReply(this.mlt(18) + " " + Mod.getRepeatTime(time, this.room));
+		}
+	},
+
+	repeatcmd: "repeatcommand",
+	repeatcommand: function (App) {
+		const Mod = App.modules.timers.system;
+		this.setLangFile(Lang_File);
+		if (!this.can('repeatcmd', this.room)) return this.replyAccessDenied('repeatcmd');
+		if (this.getRoomType(this.room) !== 'chat') {
+			return this.errorReply(this.mlt('nochat'));
+		}
+
+		let minutes = parseMinutes(this.args[0]) || 0;
+		let commaIndex = this.arg.indexOf(",");
+		if (commaIndex === -1) {
+			return this.errorReply(this.usage({ desc: this.mlt("time") }, { desc: this.mlt(23) }));
+		}
+		let text = this.arg.substr(commaIndex + 1).trim();
+		if (!text) {
+			return this.errorReply(this.usage({ desc: this.mlt("time") }, { desc: this.mlt(23) }));
+		}
+		let time = Math.floor(minutes * 60 * 1000);
+		if (isNaN(time) || time <= 0) {
+			return this.errorReply(this.usage({ desc: this.mlt("time") }, { desc: this.mlt(23) }));
+		}
+		if (time < Min_Repeat) {
+			return this.errorReply(this.mlt(8));
+		}
+		if (time > Max_Repeat) {
+			return this.errorReply(this.mlt(9));
+		}
+		if (Mod.countRepeats(this.room) >= 10) {
+			return this.errorReply(this.mlt(13));
+		}
+		if (Mod.hasRepeat(this.room, text)) {
+			return this.errorReply(this.mlt(15));
+		}
+		if (!Mod.createRepeat(this.room, text, time, this.by, true)) {
+			this.errorReply(this.mlt(21));
+		} else {
+			this.pmReply(this.mlt(24) + " " + Mod.getRepeatTime(time, this.room));
 		}
 	},
 

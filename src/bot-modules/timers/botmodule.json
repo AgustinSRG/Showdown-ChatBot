@@ -15,6 +15,9 @@
     "repeat": {
       "group": "driver"
     },
+    "repeatcmd": {
+      "group": "mod"
+    },
     "clearrepeatroom": {
       "group": "admin"
     }

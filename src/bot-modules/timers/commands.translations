@@ -43,6 +43,9 @@ $21 = There are already too many repeating messages in this room
 
 $22 = All active timers for this room have been deleted
 
+$23 = Command to repeat
+$24 = The command will be repeated once each
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
@@ -82,3 +85,6 @@ $20 = El nombre es demasiado largo. No puede ser mayor que 100 caracteres de lar
 $21 = Ya hay demasiados mensajes repitiéndose en esta sala
 
 $22 = Se han borrado todos los timers activos en esta sala
+
+$23 = Comando a repetir
+$24 = El comando se repetirá una vez cada

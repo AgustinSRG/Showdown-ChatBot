@@ -475,6 +475,24 @@ class CommandParser {
 	}
 
 	/**
+	 * Gets list of tokens for a room
+	 * @param {String} room The room
+	 * @returns The list of tokens
+	 */
+	getRoomTokens(room) {
+		let tokens = (this.app.config.parser.tokens || []).slice();
+
+		if (room === null) {
+			// PM specific tokens
+			tokens = tokens.concat(this.data.pmTokens || []);
+		} else if (this.data.roomTokensOverride[room]) {
+			tokens = (this.data.roomTokensOverride[room] + "").split(" ");
+		}
+
+		return tokens;
+	}
+
+	/**
 	 * Returns true if a group is equal or higher than another,
 	 * returns false if not
 	 * @param {Object} ident - An object with "group" attribute

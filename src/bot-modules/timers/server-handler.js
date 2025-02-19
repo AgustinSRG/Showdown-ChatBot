@@ -12,7 +12,7 @@ const mainTemplate = new Template(Path.resolve(__dirname, 'template.html'));
 
 exports.setup = function (App) {
 	/* Permissions */
-	App.server.setPermission('timers', 'Permission for accesing timers/repeats');
+	App.server.setPermission('timers', 'Permission for accessing timers/repeats');
 
 	/* Menu Options */
 	App.server.setMenuOption('timers', 'Timers', '/timers/', 'timers', -2);
@@ -77,6 +77,8 @@ exports.setup = function (App) {
 				for (let activeRepeat of repeat.active) {
 					htmlVars.repeats += '<tr><td class="bold">' + Text.escapeHTML(repeat.room) + '</td><td>' +
 						Text.escapeHTML(Mod.getRepeatTime(activeRepeat.interval, repeat.room)) + '</td><td>' +
+						Text.escapeHTML(activeRepeat.by || "-") + '</td><td>' +
+						Text.escapeHTML(activeRepeat.command ? "Command" : "Text") + '</td><td>' +
 						Text.escapeHTML(activeRepeat.text) +
 						'</td><td><form action="" method="post" style="margin-block-end: 0;">' +
 						'<input name="room" type="hidden" value="' + Text.escapeHTML(repeat.room) + '" />' +

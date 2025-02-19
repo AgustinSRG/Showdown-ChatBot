@@ -238,7 +238,7 @@ exports.setup = function (App) {
 				if (repeat.active) {
 					for (let activeRepeat of repeat.active) {
 						if (Date.now() >= activeRepeat.next) {
-							this.sendRepeat(repeat.room, activeRepeat.text);
+							this.sendRepeat(repeat.room, activeRepeat.text, activeRepeat.command, activeRepeat.by);
 							activeRepeat.next = Date.now() + activeRepeat.interval;
 							this.save();
 						}
@@ -247,7 +247,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		createRepeat(room, text, interval) {
+		createRepeat(room, text, interval, by, command) {
 			if (!this.repeats[room] || !this.repeats[room].active) {
 				this.repeats[room] = {
 					room: room,
@@ -263,9 +263,14 @@ exports.setup = function (App) {
 				text: text,
 				interval: interval,
 				next: Date.now() + interval,
+				by: by || "",
+				command: command || false,
 			});
-			this.sendRepeat(room, text);
+
+			this.sendRepeat(room, text, command || false, by || "");
+
 			this.save();
+
 			return true;
 		}
 
@@ -304,23 +309,40 @@ exports.setup = function (App) {
 			if (!this.repeats[room].active) return [];
 			const res = [];
 			for (let activeRepeat of this.repeats[room].active) {
-				res.push("- [" + this.getRepeatTime(activeRepeat.interval, room) + "] " + activeRepeat.text);
+				res.push(
+					"- " +
+					"[" + trans(room, "by") + ": " + (activeRepeat.by || "-") + "] " +
+					"[" + this.getRepeatTime(activeRepeat.interval, room) + "] " +
+					"[" + (activeRepeat.command ? trans(room, "command") : trans(room, "text")) + "] " +
+					activeRepeat.text
+				);
 			}
 			return res;
 		}
 
-		sendRepeat(room, text) {
-			let repeatText = text + "";
-			if (repeatText.startsWith("/wall ") || repeatText.startsWith("/announce ")) {
-				repeatText = repeatText.split(" ").slice(1).join(" ");
+		sendRepeat(room, text, command, by) {
+			if (command) {
+				let cmd = (text + "").trim();
+				const tokens = App.parser.getRoomTokens(room);
 
-				if (repeatText) {
-					App.bot.sendTo(room, "/announce " + repeatText);
+				if (tokens.indexOf(cmd.charAt(0)) === -1) {
+					cmd = (tokens[0] || "") + cmd;
 				}
-			} else if (repeatText.startsWith("!") || repeatText.startsWith("/addhtmlbox ")) {
-				App.bot.sendTo(room, repeatText);
+
+				App.parser.parse(cmd, room, by);
 			} else {
-				App.bot.sendTo(room, Text.stripCommands(repeatText));
+				let repeatText = text + "";
+				if (repeatText.startsWith("/wall ") || repeatText.startsWith("/announce ")) {
+					repeatText = repeatText.split(" ").slice(1).join(" ");
+
+					if (repeatText) {
+						App.bot.sendTo(room, "/announce " + repeatText);
+					}
+				} else if (repeatText.startsWith("!") || repeatText.startsWith("/addhtmlbox ")) {
+					App.bot.sendTo(room, repeatText);
+				} else {
+					App.bot.sendTo(room, Text.stripCommands(repeatText));
+				}
 			}
 		}
 

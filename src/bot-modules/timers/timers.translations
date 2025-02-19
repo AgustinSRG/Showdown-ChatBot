@@ -19,6 +19,11 @@ $2 = Time is up!
 $3 = 
 $4 = Time is up, $USER!
 
+$command = Command
+$text = Text
+
+$by = Created by
+
 %spanish
 
 $second = segundo
@@ -35,3 +40,8 @@ $hour = hora
 $hours = horas
 $instants = 0 segundos
 $timer = Timer
+
+$command = Comando
+$text = Texto
+
+$by = Creado por
