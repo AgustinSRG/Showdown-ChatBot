@@ -92,6 +92,7 @@ exports.setup = function (App) {
 		let file = parts[2] || "";
 		html = html.replace('#TITLE#', file + ' - Showdown ChatBot Logs');
 		html = html.replace('#LOGURL#', '/logs/raw/' + room + '/' + file);
+		html = html.replace('#THEME-CLASS#', context.theme === "l" ? "light" : (context.theme === "d" ? "dark" : ""));
 		context.endWithHtml(html);
 	}
 

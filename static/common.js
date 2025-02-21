@@ -6,6 +6,12 @@ function getCookie(name) {
     if (parts.length == 2) return parts.pop().split(";").shift();
 }
 
+function setCookie(name, value) {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() + 10);
+    document.cookie = name + "=" + value + ";expires=" + date.toString() + ";path=/";
+}
+
 function updateForms() {
     var forms = document.getElementsByTagName("form");
     for (var i = 0; i < forms.length; i++) {
@@ -41,14 +47,9 @@ document.addEventListener("DOMContentLoaded", function () {
     var observer = new MutationObserver(updateForms);
     observer.observe(document.querySelector("body"), { childList: true, subtree: true, attributes: false });
 
-    var initialTheme = localStorage.getItem("theme");
+    var initialTheme = getCookie("theme");
 
-    if (initialTheme === "l" || initialTheme === "d") {
-        var b = document.querySelector("body");
-        if (b) {
-            b.className = initialTheme === "l"  ? "light" : "dark";
-        }
-    } else {
+    if (initialTheme !== "l" && initialTheme !== "d") {
         initialTheme = "";
     }
 
@@ -59,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         themeSelect.addEventListener("change", function () {
             var currTheme = themeSelect.value || "";
-            localStorage.setItem("theme", currTheme);
+            setCookie("theme", currTheme);
 
             window.location = window.location.href;
         });

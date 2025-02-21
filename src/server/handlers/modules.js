@@ -91,7 +91,7 @@ exports.setup = function (App) {
 				level = App.config.menuOrder[opt];
 			}
 			htmlVars.opts += '<tr>';
-			htmlVars.opts += '<td><strong>' + Text.escapeHTML(App.server.menu[opt].name) + '</strong></td>';
+			htmlVars.opts += '<td><strong>' + App.server.menu[opt].name + '</strong></td>';
 			htmlVars.opts += '<td><input name="' + Text.escapeHTML(opt) + '" type="text" value="' +
 			Text.escapeHTML(level) + '" size="15" placeholder="default" autocomplete="off" /></td>';
 			htmlVars.opts += '<tr>';

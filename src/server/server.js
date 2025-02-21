@@ -752,6 +752,7 @@ class RequestContext {
 		this.get = Object.create(null);
 		this.post = Object.create(null);
 		this.cookies = parseCookies(this.request);
+		this.theme = this.cookies.theme || "";
 		/* Transform COOKIES to string */
 		for (let key in this.cookies) {
 			if (typeof this.cookies[key] !== 'string') {
@@ -916,6 +917,7 @@ class RequestContext {
 		if (!options.package) {
 			options.package = this.server.app.env.package;
 		}
+		options.theme = this.theme;
 		let html = PageMaker.generate(body, loginData, this.menu, options);
 		this.headers['Content-Type'] = 'text/html; charset=utf-8';
 		this.response.writeHead(code || 200, this.headers);
@@ -948,7 +950,7 @@ class RequestContext {
 	 * @param {Number} cacheAge - Cache age (seconds)
 	 */
 	endWithStaticFile(file, cacheAge) {
-		Static.serveFile(file, this.request, this.response);
+		Static.serveFile(file, this.request, this.response, cacheAge);
 	}
 
 	/**

@@ -14,7 +14,7 @@ const Util = require('util');
  * @returns The final HTML
  */
 exports.wrapHTML = function (body, title) {
-	let html = "<html>";
+	let html = "<!DOCTYPE html><html>";
 
 	html += "<head>";
 
@@ -43,11 +43,11 @@ exports.wrapHTML = function (body, title) {
  * @returns {String} html source of the webpage
  */
 exports.generate = function (body, loginData, menu, options) {
-	let buf = '';
+	let buf = '<!DOCTYPE html>';
 	if (!loginData) loginData = Object.create(null);
 	if (!options) options = Object.create(null);
 
-	buf += '<html>';
+	buf += '<html lang="en">';
 	buf += '<head>';
 	buf += '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
 
@@ -73,7 +73,16 @@ exports.generate = function (body, loginData, menu, options) {
 	}
 
 	buf += '</head>';
-	buf += '<body><div align="center">';
+
+	if (options.theme === "l") {
+		buf += '<body class="light">';
+	} else if (options.theme === "d") {
+		buf += '<body class="dark">';
+	} else {
+		buf += '<body>';
+	}
+
+	buf += '<div align="center">';
 
 	buf += '<div align="center" class="maindiv">';
 
