@@ -37,7 +37,7 @@ $formatorpoll = Format or Poll (group)
 $polloptions = Number of options for the poll
 $polltime = Poll time (mins)
 
-$polltitle = Which format do you prefer for the next tournament?
+$polltitle = Which format would you like to play?
 
 $agob = 
 $ago = ago
