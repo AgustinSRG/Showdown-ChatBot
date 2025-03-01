@@ -1,0 +1,14 @@
+﻿# Translations File
+
+@ games-uno-cmd
+
+%english
+
+$nochat = This command is only available for chat rooms
+$nobot = I do not have the permission required to create a game of UNO
+
+%spanish
+
+$nochat = Este comando solo está disponible para las salas de chat
+$nobot = No poseo los permisos necesarios para crear un juego de UNO
+

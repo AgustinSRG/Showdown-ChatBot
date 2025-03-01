@@ -1,42 +1,46 @@
 {
-  "id": "games",
-  "name": "Games",
-  "main": "main.js",
-  "commands": [
-     "commands.js",
-	 "ambush/commands.js",
-	 "blackjack/commands.js",
-	 "kunc/commands.js",
-	 "pass-the-bomb/commands.js",
-	 "poke-games/commands.js",
-	 "trivia/commands.js",
-	 "wordgames/commands.js"
-  ],
-  "permissions": {
-	"games": {"group": "owner"}
-  },
-  "handlers": [
-    "trivia/server-handler.js",
-	"wordgames/server-handler.js"
-  ],
-  "langfiles": [
-    "./commands.translations",
-	"./ambush/ambush.translations",
-	"./ambush/commands.translations",
-	"./blackjack/blackjack.translations",
-	"./blackjack/commands.translations",
-	"./kunc/kunc.translations",
-	"./kunc/commands.translations",
-	"./pass-the-bomb/passbomb.translations",
-	"./pass-the-bomb/commands.translations",
-	"./poke-games/poke-anagrams.translations",
-	"./poke-games/poke-hangman.translations",
-	"./poke-games/commands.translations",
-	"./trivia/trivia.translations",
-	"./trivia/commands.translations",
-	"./wordgames/anagrams.translations",
-	"./wordgames/hangman.translations",
-	"./wordgames/commands.translations"
-  ],
-  "description": "A collection of chat games for a PS bot"
+	"id": "games",
+	"name": "Games",
+	"main": "main.js",
+	"commands": [
+		"commands.js",
+		"ambush/commands.js",
+		"blackjack/commands.js",
+		"kunc/commands.js",
+		"pass-the-bomb/commands.js",
+		"poke-games/commands.js",
+		"trivia/commands.js",
+		"uno/commands.js",
+		"wordgames/commands.js"
+	],
+	"permissions": {
+		"games": {
+			"group": "driver"
+		}
+	},
+	"handlers": [
+		"trivia/server-handler.js",
+		"wordgames/server-handler.js"
+	],
+	"langfiles": [
+		"./commands.translations",
+		"./ambush/ambush.translations",
+		"./ambush/commands.translations",
+		"./blackjack/blackjack.translations",
+		"./blackjack/commands.translations",
+		"./kunc/kunc.translations",
+		"./kunc/commands.translations",
+		"./pass-the-bomb/passbomb.translations",
+		"./pass-the-bomb/commands.translations",
+		"./poke-games/poke-anagrams.translations",
+		"./poke-games/poke-hangman.translations",
+		"./poke-games/commands.translations",
+		"./trivia/trivia.translations",
+		"./trivia/commands.translations",
+		"./uno/commands.translations",
+		"./wordgames/anagrams.translations",
+		"./wordgames/hangman.translations",
+		"./wordgames/commands.translations"
+	],
+	"description": "A collection of chat games for a PS bot"
 }
