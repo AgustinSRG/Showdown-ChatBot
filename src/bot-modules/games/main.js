@@ -19,25 +19,18 @@ exports.setup = function (App) {
 		return App.config.language.rooms[room] || App.config.language['default'];
 	}
 
-	const Error_Open = '<div class="message-error">';
-	const Error_Close = '</div>';
-
 	const Error_Msg = 'There is already a game';
 
 	function parseErrorMessage(room, spl) {
 		let msg = spl.slice(1).join('|');
-		if (msg.substr(0, Error_Open.length) === Error_Open) {
-			msg = msg.substr(Error_Open.length, msg.length - (Error_Open.length + Error_Close.length));
-			/* Specific error messages, may be updated frequently */
-			if (msg.substr(0, Error_Msg.length) === Error_Msg) {
-				App.bot.sendTo(room, App.multilang.mlt(Lang_File, getLanguage(room), 0));
-			}
+		if (msg.substr(0, Error_Msg.length) === Error_Msg) {
+			App.bot.sendTo(room, App.multilang.mlt(Lang_File, getLanguage(room), 0));
 		}
 	}
 
 	App.bot.on('line', (room, line, spl, isIntro) => {
 		if (isIntro) return;
-		if (spl[0] === 'html') return parseErrorMessage(room, spl);
+		if (spl[0] === 'error') return parseErrorMessage(room, spl);
 	});
 
 	GamesModule.createGame = function (room, system, commands) {
