@@ -6,10 +6,10 @@ WORKDIR $DIR
 # Directories for persistent data and configuration
 RUN mkdir -p ./data ./config ./logs ./instances
 
-# Install dependencies
+# Copy dependency list files
 COPY package*.json .
 
-# Omit dev dependencies
+# Install dependencies
 RUN npm install --production
 
 # Copy source files
