@@ -89,6 +89,7 @@ services:
       - ./data:/bot/data
       - ./logs:/bot/logs
       - ./instances:/bot/instances
+    restart: unless-stopped
     command: -p 8080 -b 0.0.0.0
 ```
 
