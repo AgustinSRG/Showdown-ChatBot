@@ -15,7 +15,7 @@ RUN npm install --production
 # Copy source files
 COPY . .
 
-ENV NODE_ENV=production
+ENV NODE_ENV production
 
 # Application entry point
 ENTRYPOINT ["node", "run-forever"]
