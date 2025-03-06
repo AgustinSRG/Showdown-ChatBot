@@ -7,7 +7,7 @@ WORKDIR $DIR
 RUN mkdir -p ./data ./config ./logs ./instances
 
 # Install dependencies
-COPY package*.json ./package.json
+COPY package*.json .
 
 # Omit dev dependencies
 RUN npm install --production
