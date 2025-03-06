@@ -1,27 +1,21 @@
 FROM node:20-alpine
 
-RUN mkdir /bot
+ENV DIR /bot
+WORKDIR $DIR
 
-RUN mkdir /bot/data
-RUN mkdir /bot/config
-RUN mkdir /bot/logs
-RUN mkdir /bot/instances
-
-WORKDIR /bot
+# Directories for persistent data and configuration
+RUN mkdir -p ./data ./config ./logs ./instances
 
 # Install dependencies
+COPY package*.json ./package.json
 
-ADD package.json /bot/package.json
-ADD package-lock.json /bot/package-lock.json
+# Omit dev dependencies
+RUN npm install --production
 
-RUN npm install
-
-# Add source files
-
-ADD . /bot
+# Copy source files
+COPY . .
 
 ENV NODE_ENV=production
 
-# Entry point
-
+# Application entry point
 ENTRYPOINT ["node", "run-forever"]
