@@ -34,10 +34,11 @@ class ChatBotApp {
 	/**
 	 * @param {DataAccessManager} dam - The data access system
 	 * @param {Path} confDir - A path to store the bot configuration
-	 * @param {Path} dataDir - A path to store the bot data (dowloaded or temporal data)
+	 * @param {Path} dataDir - A path to store the bot data (downloaded or temporal data)
+	 * @param {Path} logsDir - A path to store the bot logs
 	 * @param {Object} env
 	 */
-	constructor(dam, confDir, dataDir, env) {
+	constructor(dam, confDir, dataDir, logsDir, env) {
 		/* Initial Status */
 		this.status = 'stopped';
 		this.env = env;
@@ -197,6 +198,12 @@ class ChatBotApp {
 			this.config.cmdtokens = [];
 		}
 
+		/* Logger */
+		this.createLogger(logsDir);
+
+		/* Data access manager errors */
+		this.dam.logErrorFunction = this.reportDamError.bind(this);
+
 		/* Create the bot */
 		const ShowdownBot = require(Path.resolve(__dirname, 'showdown/showdown-sockjs.js')).Bot;
 
@@ -259,8 +266,6 @@ class ChatBotApp {
 
 		/* Other initial values */
 		this.console = null;
-		this.logger = null;
-		this.logsDir = null;
 		this.modules = Object.create(null);
 
 		/* Add-ons */
@@ -477,6 +482,22 @@ class ChatBotApp {
 		text += err.stack;
 		console.log(text);
 		this.log(text);
+	}
+
+	/**
+	 * Reports DAM error
+	 * @param {Error} err - Error that causes the crash
+	 * @param {Error} errMsg - Additional error message
+	 */
+	reportDamError(err, errMsg) {
+		if (err) {
+			this.reportCrash(err);
+		}
+
+		if (errMsg) {
+			this.log("[ERROR] [DAM] " + errMsg);
+			console.error("[ERROR] [DAM] " + errMsg);
+		}
 	}
 
 	/**

@@ -74,14 +74,13 @@ function setup(env) {
 			console.log("Error: " + err.code + " / " + err.message);
 			console.log(err.stack);
 			console.log("Error: Cannot init data access system. Please change the configuration.");
+			process.exit(1);
 		}
 
 		/* Create Application */
 
 		const ShowdownBotApplication = require(Path.resolve(__dirname, 'app.js'));
-		const App = new ShowdownBotApplication(dam, confDir, dataDir, env || {});
-
-		App.createLogger(logsDir);
+		const App = new ShowdownBotApplication(dam, confDir, dataDir, logsDir, env || {});
 
 		const SourceLoader = Tools('loader');
 		const loader = new SourceLoader(Path.resolve(__dirname, 'server/handlers/'), App);
@@ -91,7 +90,7 @@ function setup(env) {
 
 		App.loadAddons();
 
-		/* Set Crash-Guard */
+		/* Setup Crash-Guard */
 
 		const CrashGuardTemplate = Tools('crashguard');
 

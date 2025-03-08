@@ -58,8 +58,9 @@ class JSONDataBase {
 	 * @param {Path} file
 	 * @param {String} password
 	 * @param {String} algo
+	 * @param {function} loadErrorLogFn
 	 */
-	constructor(file, password, algo) {
+	constructor(file, password, algo, loadErrorLogFn) {
 		this.algo = algo || "aes-256-ctr";
 		this.password = password;
 		this.data = Object.create(null);
@@ -67,7 +68,7 @@ class JSONDataBase {
 		this.writePending = false;
 		this.writing = false;
 		this.events = new EventsManager();
-		this.load();
+		this.load(loadErrorLogFn);
 	}
 
 	write() {
@@ -115,15 +116,43 @@ class JSONDataBase {
 		this.events.removeListener(event, handler);
 	}
 
-	load() {
+	load(loadErrorLogFn) {
 		if (FileSystem.existsSync(this.file)) {
-			let data = FileSystem.readFileSync(this.file).toString();
-			data = decrypt(data, this.algo, this.password);
+			let data;
+
+			try {
+				data = FileSystem.readFileSync(this.file).toString();
+				data = decrypt(data, this.algo, this.password);
+			} catch (err) {
+				data = "{}";
+				if (loadErrorLogFn) {
+					loadErrorLogFn(err, "Could not decrypt data of file: " + this.file);
+				} else {
+					console.error(err);
+					console.error("Could not decrypt data of file: " + this.file);
+				}
+			}
+
 			try {
 				this.data = JSON.parseNoPrototype(data);
 				this.events.emit('load');
 			} catch (err) {
-				this.events.emit('error', err);
+				if (loadErrorLogFn) {
+					loadErrorLogFn(err, "JSON data from " + this.file + " is invalid!");
+				} else {
+					console.error(err);
+					console.error("JSON data from " + this.file + " is invalid!");
+				}
+			}
+
+			if (typeof this.data !== "object" || !this.data || Array.isArray(this.data)) {
+				if (loadErrorLogFn) {
+					loadErrorLogFn(null, "JSON data from " + this.file + " is invalid!");
+				} else {
+					console.error("JSON data from " + this.file + " is invalid!");
+				}
+
+				this.data = Object.create(null);
 			}
 		}
 	}

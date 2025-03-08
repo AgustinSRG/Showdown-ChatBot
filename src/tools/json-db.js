@@ -13,14 +13,15 @@ const EventsManager = Tools('events');
 class JSONDataBase {
 	/**
 	 * @param {Path} file
+	 * @param {function} loadErrorLogFn
 	 */
-	constructor(file) {
+	constructor(file, loadErrorLogFn) {
 		this.data = Object.create(null);
 		this.file = file;
 		this.writePending = false;
 		this.writing = false;
 		this.events = new EventsManager();
-		this.load();
+		this.load(loadErrorLogFn);
 	}
 
 	write() {
@@ -67,14 +68,31 @@ class JSONDataBase {
 		this.events.removeListener(event, handler);
 	}
 
-	load() {
+	/**
+	 * @param {function} loadErrorLogFn
+	 */
+	load(loadErrorLogFn) {
 		if (FileSystem.existsSync(this.file)) {
-			let data = FileSystem.readFileSync(this.file).toString();
 			try {
-				this.data = JSON.parseNoPrototype(data);
+				this.data = JSON.parseNoPrototype(FileSystem.readFileSync(this.file).toString());
 				this.events.emit('load');
 			} catch (err) {
-				this.events.emit('error', err);
+				if (loadErrorLogFn) {
+					loadErrorLogFn(err, "JSON data from " + this.file + " is invalid!");
+				} else {
+					console.error(err);
+					console.error("JSON data from " + this.file + " is invalid!");
+				}
+			}
+
+			if (typeof this.data !== "object" || !this.data || Array.isArray(this.data)) {
+				if (loadErrorLogFn) {
+					loadErrorLogFn(null, "JSON data from " + this.file + " is invalid!");
+				} else {
+					console.error("JSON data from " + this.file + " is invalid!");
+				}
+
+				this.data = Object.create(null);
 			}
 		}
 	}

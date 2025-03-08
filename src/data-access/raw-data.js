@@ -15,6 +15,7 @@ class DataAccessManager {
 	constructor(options) {
 		this.type = "RAW";
 		this.path = options.path || Path.resolve(__dirname, '../../config/');
+		this.logErrorFunction = null;
 	}
 
 	init(callback) {
@@ -36,9 +37,9 @@ class DataAccessManager {
 
 	getDataBase(filename, options) {
 		if (options && options.crypto) {
-			return new CryptoDataBase(Path.resolve(this.path, filename), options.key);
+			return new CryptoDataBase(Path.resolve(this.path, filename), options.key, undefined, this.logErrorFunction);
 		} else {
-			return new DataBase(Path.resolve(this.path, filename));
+			return new DataBase(Path.resolve(this.path, filename), this.logErrorFunction);
 		}
 	}
 
