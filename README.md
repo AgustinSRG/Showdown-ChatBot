@@ -27,8 +27,53 @@ Features
  - **Groupchat Tools**: Automatically maintains groupchats (temporal rooms) and promotes users.
  - **Others**: Quotes and jokes, join-phrases, commands like `helix`, etc.
 
+Run a bot with Docker Compose
+------------
 
-Installation
+The simplest way to run this project is with [Docker compose](https://docs.docker.com/compose/), using the [official Showdown-ChatBot image on Docker Hub](https://hub.docker.com/r/asanrom/showdown-chatbot).
+
+First, make sure to install [Docker](https://www.docker.com/) and [Docker compose](https://docs.docker.com/compose/) in your system. You can also install other runtime, like [https://podman.io/](Podman), but the commands may vary.
+
+Create a file named `docker-compose.yml`, and copy the following content into it:
+
+```yml
+version: '3.9'
+
+services:
+
+  bot:
+    image: asanrom/showdown-chatbot
+    ports:
+      - '8080:8080'
+      - '443:443'
+    volumes:
+      - ./config:/bot/config
+      - ./data:/bot/data
+      - ./logs:/bot/logs
+      - ./instances:/bot/instances
+    restart: unless-stopped
+    command: -p 8080 -b 0.0.0.0
+```
+
+If you want to use a different port for the control panel, make sure to replace `8080` with the port you want.
+
+Once you have the `docker-compose.yml`, in order to start the bot, open a terminal / command prompt in the folder where the file is located, and type the following command:
+
+```sh
+docker compose up -d
+```
+
+Configure your bot using the control panel. You can use the [Basic Configuration Guide](https://github.com/AgustinSRG/Showdown-ChatBot/wiki/Basic-Configuration-Guide) as help.
+
+If you want to keep the image updated to the latest version automatically, you can use a tool like [Watchtower](https://containrrr.dev/watchtower/). You can also pull the image and restart the containers manually:
+
+```sh
+# Update the image and restart the containers
+docker compose pull
+docker compose up --detach
+```
+
+Manual installation
 ------------
 
 Showdown ChatBot requires [node.js](http://nodejs.org/) to run. It is recommended to install the latest stable version to avoid bugs.
@@ -60,46 +105,6 @@ npm start
 Configure your bot using the control panel. You can use the [Basic Configuration Guide](https://github.com/AgustinSRG/Showdown-ChatBot/wiki/Basic-Configuration-Guide) as help.
 
 If you want to stop your bot, use `Ctrl + C` or kill the process by other way.
-
-Docker image
-------------
-
-You can find the docker image for this project available in Docker Hub: [https://hub.docker.com/r/asanrom/showdown-chatbot](https://hub.docker.com/r/asanrom/showdown-chatbot)
-
-To pull it type:
-
-```
-docker pull asanrom/showdown-chatbot
-```
-
-Example compose file:
-
-```yml
-version: '3.9'
-
-services:
-
-  bot:
-    image: asanrom/showdown-chatbot
-    ports:
-      - '8080:8080'
-      - '443:443'
-    volumes:
-      - ./config:/bot/config
-      - ./data:/bot/data
-      - ./logs:/bot/logs
-      - ./instances:/bot/instances
-    restart: unless-stopped
-    command: -p 8080 -b 0.0.0.0
-```
-
-In order to run the bot with Docker:
-
- 1. Install [Docker](https://www.docker.com/) and [Docker compose](https://docs.docker.com/compose/)
- 2. Create a file named `docker-compose.yml` and copy the contents of the [example compose file](./docker-compose.yml). Make any changes to the file in order to customize the ports and any other option.
- 3. To run the bot, just type the command `docker compose up -d`, and it will run forever until you stop the container.
-
-If you want to keep the image updated to the lastes version automatically, you can use a tool like [Watchtower](https://containrrr.dev/watchtower/). You can also pull the image and restart the containers manually.
 
 Useful Documentation
 ------------
