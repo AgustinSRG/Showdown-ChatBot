@@ -93,6 +93,14 @@ services:
     command: -p 8080 -b 0.0.0.0
 ```
 
+In order to run the bot with Docker:
+
+ 1. Install [Docker](https://www.docker.com/) and [Docker compose](https://docs.docker.com/compose/)
+ 2. Create a file named `docker-compose.yml` and copy the contents of the [example compose file](./docker-compose.yml). Make any changes to the file in order to customize the ports and any other option.
+ 3. To run the bot, just type the command `docker compose up -d`, and it will run forever until you stop the container.
+
+If you want to keep the image updated to the lastes version automatically, you can use a tool like [Watchtower](https://containrrr.dev/watchtower/). You can also pull the image and restart the containers manually.
+
 Useful Documentation
 ------------
 
