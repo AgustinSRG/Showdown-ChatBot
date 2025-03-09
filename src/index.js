@@ -95,7 +95,11 @@ function setup(env) {
 		const CrashGuardTemplate = Tools('crashguard');
 
 		global.CrashGuard = new CrashGuardTemplate(err => {
-			App.reportCrash(err);
+			try {
+				App.reportCrash(err);
+			} catch (ex) {
+				console.error(ex);
+			}
 		});
 
 		/* Start Application */
