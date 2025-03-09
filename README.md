@@ -32,7 +32,7 @@ Run a bot with Docker Compose
 
 The simplest way to run this project is with [Docker compose](https://docs.docker.com/compose/), using the [official Showdown-ChatBot image on Docker Hub](https://hub.docker.com/r/asanrom/showdown-chatbot).
 
-First, make sure to install [Docker](https://www.docker.com/) and [Docker compose](https://docs.docker.com/compose/) in your system. You can also install other runtime, like [https://podman.io/](Podman), but the commands may vary.
+First, make sure to install [Docker](https://www.docker.com/) and [Docker compose](https://docs.docker.com/compose/) in your system. You can also install other runtime, like [Podman](https://podman.io/), but the commands may vary.
 
 Create a file named `docker-compose.yml`, and copy the following content into it:
 
@@ -70,7 +70,7 @@ If you want to keep the image updated to the latest version automatically, you c
 ```sh
 # Update the image and restart the containers
 docker compose pull
-docker compose up --detach
+docker compose up -d
 ```
 
 Manual installation
