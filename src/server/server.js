@@ -255,10 +255,14 @@ class Server {
 		this.users = this.userdb.data;
 		if (Object.keys(this.users).length === 0) {
 			console.log('Users Database empty. Creating initial admin account');
+
+			const defaultUsername = process.env.DEFAULT_ADMIN_USERNAME || "Admin";
+			const defaultPassword = process.env.DEFAULT_ADMIN_PASSWORD || "admin";
+
 			this.users['admin'] = {
-				id: 'admin',
-				password: 'admin',
-				name: 'Admin',
+				id: Text.toId(defaultUsername),
+				password: defaultPassword,
+				name: defaultUsername,
 				group: 'Administrator',
 				permissions: { root: true },
 			};

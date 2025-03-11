@@ -51,6 +51,9 @@ services:
       - ./data:/bot/data
       - ./logs:/bot/logs
       - ./instances:/bot/instances
+    environment:
+      - DEFAULT_ADMIN_USERNAME=Admin
+      - DEFAULT_ADMIN_PASSWORD=admin
     restart: unless-stopped
     command: -p 8080 -b 0.0.0.0
 ```
