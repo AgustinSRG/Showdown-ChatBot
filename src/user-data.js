@@ -36,14 +36,26 @@ class UserDataManager {
 		}.bind(this));
 
 		App.bot.on('userjoin', function (room, user) {
+			if (App.config.disableuserdata) {
+				return;
+			}
+
 			this.updateLastSeen(user.substr(1), "J", room);
 		}.bind(this));
 
 		App.bot.on('userleave', function (room, user) {
+			if (App.config.disableuserdata) {
+				return;
+			}
+
 			this.updateLastSeen(user, "L", room, null, true);
 		}.bind(this));
 
 		App.bot.on('userrename', function (room, user, newName) {
+			if (App.config.disableuserdata) {
+				return;
+			}
+
 			if (Text.toId(user) === Text.toId(newName)) {
 				return;
 			}
@@ -53,6 +65,10 @@ class UserDataManager {
 		}.bind(this));
 
 		App.bot.on('userchat', function (room, time, user) {
+			if (App.config.disableuserdata) {
+				return;
+			}
+
 			this.updateLastSeen(user.substr(1), "C", room);
 		}.bind(this));
 	}

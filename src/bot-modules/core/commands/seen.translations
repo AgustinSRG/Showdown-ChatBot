@@ -39,6 +39,8 @@ $18 = No known alts found for user
 
 $inv = Invalid username
 
+$disabled = This feature is disabled
+
 %spanish
 
 $0 = ¿Te has mirado en el espejo últimamente?
@@ -75,3 +77,5 @@ $17 = Cuentas alternas conocidas de
 $18 = No se encontraron cuentas alternas conocidas para el usuario
 
 $inv = Nombre de usuario no válido
+
+$disabled = Esta funcionalidad se encuentra deshabilitada

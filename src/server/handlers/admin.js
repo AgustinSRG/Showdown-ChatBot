@@ -86,6 +86,7 @@ exports.setup = function (App) {
 				App.config.debug = !!context.post.debugmode;
 				App.config.useproxy = !!context.post.useproxy;
 				App.config.blockautodownload = !!context.post.blockautodownload;
+				App.config.disableuserdata = !!context.post.disableuserdata;
 				App.config.autoremoveuserdata = !!context.post.rmuserdata;
 				App.config.mainhtml = (context.post.mainhtml || '').trim();
 				App.saveConfig();
@@ -116,6 +117,7 @@ exports.setup = function (App) {
 		htmlVars.debugmode = (App.config.debug ? 'checked="checked"' : '');
 		htmlVars.useproxy = (App.config.useproxy ? 'checked="checked"' : '');
 		htmlVars.blockautodownload = (App.config.blockautodownload ? 'checked="checked"' : '');
+		htmlVars.disableuserdata = (App.config.disableuserdata ? 'checked="checked"' : '');
 		htmlVars.rmuserdata = (App.config.autoremoveuserdata ? 'checked="checked"' : '');
 		htmlVars.mainhtml = JSON.stringify(App.config.mainhtml || '');
 

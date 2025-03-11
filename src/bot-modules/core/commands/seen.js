@@ -20,6 +20,11 @@ const Max_Alts_No_Full = 7;
 module.exports = {
 	seen: function (App) {
 		this.setLangFile(Lang_File);
+
+		if (App.config.disableuserdata) {
+			return this.pmReply(this.mlt('disabled'));
+		}
+
 		let targetUser = Text.toId(this.arg);
 		if (!targetUser) {
 			this.pmReply(this.usage({ desc: this.usageTrans('user') }));
@@ -88,6 +93,11 @@ module.exports = {
 
 	alts: function (App) {
 		this.setLangFile(Lang_File);
+
+		if (App.config.disableuserdata) {
+			return this.pmReply(this.mlt('disabled'));
+		}
+
 		if (!this.can('alts', this.room)) return this.replyAccessDenied('alts');
 		let targetUser = Text.toId(this.arg);
 		let canFull = this.can('fullalts', this.room);
