@@ -99,11 +99,21 @@ class Logger {
 				this.stream.close();
 				this.stream = null;
 			}
-			this.stream = FileSystem.createWriteStream(Path.resolve(this.path, "./" + file), {flags: 'a+'});
+			this.stream = FileSystem.createWriteStream(Path.resolve(this.path, "./" + file), { flags: 'a+' });
 			this.file = file;
 			setImmediate(this.sweep.bind(this)); /* Remove old logs */
 		}
-		this.stream.write(str + "\n");
+		try {
+			this.stream.write(str + "\n");
+		} catch (ex) {
+			// Log system crashed, we assume the stream is destroyed
+			console.error(ex);
+			try {
+				this.stream.close();
+			} catch (e) { }
+			this.stream = null;
+			this.file = "";
+		}
 	}
 
 	/**
@@ -133,7 +143,7 @@ class Logger {
 				if (dateDifference(logDate, date) > this.maxOld) {
 					try {
 						FileSystem.unlinkSync(Path.resolve(this.path, "./" + dir[i]));
-					} catch (e) {}
+					} catch (e) { }
 				}
 			}
 		}
