@@ -56,7 +56,6 @@ exports.setup = function (App) {
 					psim: App.server.getPokeSimLink("/" + a.id + "-" + a.token),
 				};
 			} catch (ex) {
-				App.reportCrash(ex);
 				delete BattleLogMod.data.rooms[a.id]; // This battle is not available
 				return a;
 			}
@@ -91,11 +90,7 @@ exports.setup = function (App) {
 
 			const file = Path.resolve(BattleLogMod.path, id + ".log");
 
-			FileSystem.unlink(file, function (err) {
-				if (err) {
-					App.reportCrash(err);
-				}
-			});
+			FileSystem.unlink(file, function () { });
 		}
 
 		BattleLogMod.saveData();
