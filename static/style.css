@@ -1,492 +1,644 @@
 /* Css File */
 
 :root {
-	/* Light theme */
-	--light-theme-background: #FFFFFF;
-	--light-theme-text-color: black;
+        /* Light theme */
+        --light-theme-background: #FFFFFF;
+        --light-theme-text-color: black;
 
-	--light-theme-link-color: #0000EE;
-	--light-theme-link-visited-color: #551A8B;
-	--light-theme-link-active-color: #FF0000;
+        --light-theme-link-color: #0000EE;
+        --light-theme-link-visited-color: #551A8B;
+        --light-theme-link-active-color: #FF0000;
 
-	--light-theme-menu-option-color-base: #0000FF;
-	--light-theme-menu-option-color-hover: #000033;
-	--light-theme-menu-option-color-selected: #000000;
+        --light-theme-menu-option-color-base: #0000FF;
+        --light-theme-menu-option-color-hover: #000033;
+        --light-theme-menu-option-color-selected: #000000;
 
-	--light-theme-main-div-background: #F8FBFD;
-	--light-theme-main-div-border-color: #BBCCDD;
+        --light-theme-main-div-background: #F8FBFD;
+        --light-theme-main-div-border-color: #BBCCDD;
 
-	--light-theme-error-color: #FF0000;
-	--light-theme-success-color: #00FF00;
+        --light-theme-error-color: #FF0000;
+        --light-theme-success-color: #00FF00;
 
-	--light-theme-user-list-border-color: #BBCCDD;
+        --light-theme-user-list-border-color: #BBCCDD;
 
-	--light-theme-btn-background: #e3e3e3;
-	--light-theme-btn-box-shadow: 0 1px 2px rgba(0,0,0,.2), inset 0 -1px 2px rgba(255,255,255,1);
-	--light-theme-btn-border-color: #AAAAAA;
-	--light-theme-btn-text-shadow: 0 1px 0 white;
-	--light-theme-btn-text-color: #222222;
+        --light-theme-btn-background: #e3e3e3;
+        --light-theme-btn-box-shadow: 0 1px 2px rgba(0,0,0,.2), inset 0 -1px 2px rgba(255,255,255,1);
+        --light-theme-btn-border-color: #AAAAAA;
+        --light-theme-btn-text-shadow: 0 1px 0 white;
+        --light-theme-btn-text-color: #222222;
 
-	--light-theme-btn-hover-background: linear-gradient(to bottom,  #f2f2f2,  #b2b2b2);;
-	--light-theme-btn-hover-border: #606060;
+        --light-theme-btn-hover-background: linear-gradient(to bottom,  #f2f2f2,  #b2b2b2);;
+        --light-theme-btn-hover-border: #606060;
 
-	--light-theme-btn-active-background: linear-gradient(to bottom,  #bfbfbf,  #f2f2f2);
-	--light-theme-btn-active-border: #AAAAAA;
-	--light-theme-btn-active-box-shadow: 0 1px 2px rgba(0,0,0,.2), inset 0 -1px 2px rgba(255,255,255,1);
+        --light-theme-btn-active-background: linear-gradient(to bottom,  #bfbfbf,  #f2f2f2);
+        --light-theme-btn-active-border: #AAAAAA;
+        --light-theme-btn-active-box-shadow: 0 1px 2px rgba(0,0,0,.2), inset 0 -1px 2px rgba(255,255,255,1);
 
-	--light-theme-btn-disabled-opacity: 0.7;
-	--light-theme-btn-disabled-box-shadow: none;
+        --light-theme-btn-disabled-opacity: 0.7;
+        --light-theme-btn-disabled-box-shadow: none;
 
-	--light-theme-input-background: white;
-	--light-theme-input-text-color: black;
-	--light-theme-input-border-color: gray;
-	--light-theme-input-box-shadow: none;
+        --light-theme-input-background: white;
+        --light-theme-input-text-color: black;
+        --light-theme-input-border-color: gray;
+        --light-theme-input-box-shadow: none;
 
-	--light-theme-input-disabled-opacity: 0.7;
-	--light-theme-input-disabled-box-shadow: none;
+        --light-theme-input-disabled-opacity: 0.7;
+        --light-theme-input-disabled-box-shadow: none;
 
-	--light-theme-input-border-color-focus: black;
+        --light-theme-input-border-color-focus: black;
 
-	/* Dark theme */
-	--dark-theme-background: #151b23;
-	--dark-theme-text-color: white;
+        /* Dark theme */
+        --dark-theme-background: #151b23;
+        --dark-theme-text-color: white;
 
-	--dark-theme-link-color: #4493f8;
-	--dark-theme-link-visited-color: #6d4b8d;
-	--dark-theme-link-active-color: #ff4040;
+        --dark-theme-link-color: #4493f8;
+        --dark-theme-link-visited-color: #6d4b8d;
+        --dark-theme-link-active-color: #ff4040;
 
-	--dark-theme-main-div-background: #0d1117;
-	--dark-theme-main-div-border-color: rgba(255, 255, 255, 0.1);
+        --dark-theme-main-div-background: #0d1117;
+        --dark-theme-main-div-border-color: rgba(255, 255, 255, 0.1);
 
-	--dark-theme-error-color: #FF0000;
-	--dark-theme-success-color: #00FF00;
+        --dark-theme-error-color: #FF0000;
+        --dark-theme-success-color: #00FF00;
 
-	--dark-theme-menu-option-color-base: #4493f8;
-	--dark-theme-menu-option-color-hover: #f9f9f9;
-	--dark-theme-menu-option-color-selected: white;
+        --dark-theme-menu-option-color-base: #4493f8;
+        --dark-theme-menu-option-color-hover: #f9f9f9;
+        --dark-theme-menu-option-color-selected: white;
 
-	--dark-theme-user-list-border-color: #BBCCDD;
+        --dark-theme-user-list-border-color: #BBCCDD;
 
-	--dark-theme-btn-background: #2b2c31;
-	--dark-theme-btn-box-shadow: 0.5px 1px 2px rgba(255, 255, 255, 0.45), inset 0.5px 1px 1px rgba(255, 255, 255, 0.5);
-	--dark-theme-btn-border-color: #34373b;
-	--dark-theme-btn-text-shadow: none;
-	--dark-theme-btn-text-color: #F9F9F9;
+        --dark-theme-btn-background: #2b2c31;
+        --dark-theme-btn-box-shadow: 0.5px 1px 2px rgba(255, 255, 255, 0.45), inset 0.5px 1px 1px rgba(255, 255, 255, 0.5);
+        --dark-theme-btn-border-color: #34373b;
+        --dark-theme-btn-text-shadow: none;
+        --dark-theme-btn-text-color: #F9F9F9;
 
-	--dark-theme-btn-hover-background: #3e4149;
-	--dark-theme-btn-hover-border: #50555b;
+        --dark-theme-btn-hover-background: #3e4149;
+        --dark-theme-btn-hover-border: #50555b;
 
-	--dark-theme-btn-active-background: #2b2c31;
-	--dark-theme-btn-active-border: #34373b;
-	--dark-theme-btn-active-box-shadow: 0.5px 1px 2px rgba(255, 255, 255, 0.45);
+        --dark-theme-btn-active-background: #2b2c31;
+        --dark-theme-btn-active-border: #34373b;
+        --dark-theme-btn-active-box-shadow: 0.5px 1px 2px rgba(255, 255, 255, 0.45);
 
-	--dark-theme-btn-disabled-opacity: 0.7;
-	--dark-theme-btn-disabled-box-shadow: none;
+        --dark-theme-btn-disabled-opacity: 0.7;
+        --dark-theme-btn-disabled-box-shadow: none;
 
-	--dark-theme-input-background: #111111;
-	--dark-theme-input-text-color: #DDD;
-	--dark-theme-input-border-color: #9199a2;
-	--dark-theme-input-box-shadow: inset 0.5px 1px 2px rgba(0, 0, 0, 1), inset -0.5px -1px 1px rgba(255, 255, 255, 0.2), -0.5px -1px 1px rgba(255, 255, 255, 0.1);
+        --dark-theme-input-background: #111111;
+        --dark-theme-input-text-color: #DDD;
+        --dark-theme-input-border-color: #9199a2;
+        --dark-theme-input-box-shadow: inset 0.5px 1px 2px rgba(0, 0, 0, 1), inset -0.5px -1px 1px rgba(255, 255, 255, 0.2), -0.5px -1px 1px rgba(255, 255, 255, 0.1);
 
-	--dark-theme-input-disabled-opacity: 0.7;
-	--dark-theme-input-disabled-box-shadow: none;
+        --dark-theme-input-disabled-opacity: 0.7;
+        --dark-theme-input-disabled-box-shadow: none;
 
-	--dark-theme-input-border-color-focus: white;
+        --dark-theme-input-border-color-focus: white;
 }
 
 body {
-	--theme-background: var(--light-theme-background);
-	--theme-text-color: var(--light-theme-text-color);
+        --theme-background: var(--light-theme-background);
+        --theme-text-color: var(--light-theme-text-color);
 
-	--theme-link-color: var(--light-theme-link-color);
-	--theme-link-visited-color: var(--light-theme-link-visited-color);
-	--theme-link-active-color: var(--light-theme-link-active-color);
+        --theme-link-color: var(--light-theme-link-color);
+        --theme-link-visited-color: var(--light-theme-link-visited-color);
+        --theme-link-active-color: var(--light-theme-link-active-color);
 
-	--theme-main-div-background: var(--light-theme-main-div-background);
-	--theme-main-div-border-color: var(--light-theme-main-div-border-color);
+        --theme-main-div-background: var(--light-theme-main-div-background);
+        --theme-main-div-border-color: var(--light-theme-main-div-border-color);
 
-	--theme-error-color: var(--light-theme-error-color);
-	--theme-success-color: var(--light-theme-success-color);
+        --theme-error-color: var(--light-theme-error-color);
+        --theme-success-color: var(--light-theme-success-color);
 
-	--theme-menu-option-color-base: var(--light-theme-menu-option-color-base);
-	--theme-menu-option-color-hover: var(--light-theme-menu-option-color-hover);
-	--theme-menu-option-color-selected: var(--light-theme-menu-option-color-selected);
+        --theme-menu-option-color-base: var(--light-theme-menu-option-color-base);
+        --theme-menu-option-color-hover: var(--light-theme-menu-option-color-hover);
+        --theme-menu-option-color-selected: var(--light-theme-menu-option-color-selected);
 
-	--theme-user-list-border-color: var(--light-theme-user-list-border-color);
+        --theme-user-list-border-color: var(--light-theme-user-list-border-color);
 
-	--theme-btn-background: var(--light-theme-btn-background);
-	--theme-btn-box-shadow: var(--light-theme-btn-box-shadow);
-	--theme-btn-border-color: var(--light-theme-btn-border-color);
-	--theme-btn-text-shadow: var(--light-theme-btn-text-shadow);
-	--theme-btn-text-color: var(--light-theme-btn-text-color);
+        --theme-btn-background: var(--light-theme-btn-background);
+        --theme-btn-box-shadow: var(--light-theme-btn-box-shadow);
+        --theme-btn-border-color: var(--light-theme-btn-border-color);
+        --theme-btn-text-shadow: var(--light-theme-btn-text-shadow);
+        --theme-btn-text-color: var(--light-theme-btn-text-color);
 
-	--theme-btn-hover-background: var(--light-theme-btn-hover-background);
-	--theme-btn-hover-border: var(--light-theme-btn-hover-border);
+        --theme-btn-hover-background: var(--light-theme-btn-hover-background);
+        --theme-btn-hover-border: var(--light-theme-btn-hover-border);
 
-	--theme-btn-active-background: var(--light-theme-btn-active-background);
-	--theme-btn-active-border: var(--light-theme-btn-active-border);
-	--theme-btn-active-box-shadow: var(--light-theme-btn-active-box-shadow);
+        --theme-btn-active-background: var(--light-theme-btn-active-background);
+        --theme-btn-active-border: var(--light-theme-btn-active-border);
+        --theme-btn-active-box-shadow: var(--light-theme-btn-active-box-shadow);
 
-	--theme-btn-disabled-opacity: var(--light-theme-btn-disabled-opacity);
-	--theme-btn-disabled-box-shadow: var(--light-theme-btn-disabled-box-shadow);
+        --theme-btn-disabled-opacity: var(--light-theme-btn-disabled-opacity);
+        --theme-btn-disabled-box-shadow: var(--light-theme-btn-disabled-box-shadow);
 
-	--theme-input-background: var(--light-theme-input-background);
-	--theme-input-text-color: var(--light-theme-input-text-color);
-	--theme-input-border-color: var(--light-theme-input-border-color);
-	--theme-input-box-shadow: var(--light-theme-input-box-shadow);
+        --theme-input-background: var(--light-theme-input-background);
+        --theme-input-text-color: var(--light-theme-input-text-color);
+        --theme-input-border-color: var(--light-theme-input-border-color);
+        --theme-input-box-shadow: var(--light-theme-input-box-shadow);
 
-	--theme-input-disabled-opacity: var(--light-theme-input-disabled-opacity);
-	--theme-input-disabled-box-shadow: var(--light-theme-input-disabled-box-shadow);
+        --theme-input-disabled-opacity: var(--light-theme-input-disabled-opacity);
+        --theme-input-disabled-box-shadow: var(--light-theme-input-disabled-box-shadow);
 
-	--theme-input-border-color-focus: var(--light-theme-input-border-color-focus);
+        --theme-input-border-color-focus: var(--light-theme-input-border-color-focus);
 }
 
 @media (prefers-color-scheme: dark) {
-	body {
-		--theme-background: var(--dark-theme-background);
-		--theme-text-color: var(--dark-theme-text-color);
+        body {
+                --theme-background: var(--dark-theme-background);
+                --theme-text-color: var(--dark-theme-text-color);
 
-		--theme-link-color: var(--dark-theme-link-color);
-		--theme-link-visited-color: var(--dark-theme-link-visited-color);
-		--theme-link-active-color: var(--dark-theme-link-active-color);
+                --theme-link-color: var(--dark-theme-link-color);
+                --theme-link-visited-color: var(--dark-theme-link-visited-color);
+                --theme-link-active-color: var(--dark-theme-link-active-color);
 
-		--theme-main-div-background: var(--dark-theme-main-div-background);
-		--theme-main-div-border-color: var(--dark-theme-main-div-border-color);
+                --theme-main-div-background: var(--dark-theme-main-div-background);
+                --theme-main-div-border-color: var(--dark-theme-main-div-border-color);
 
-		--theme-error-color: var(--dark-theme-error-color);
-		--theme-success-color: var(--dark-theme-success-color);
+                --theme-error-color: var(--dark-theme-error-color);
+                --theme-success-color: var(--dark-theme-success-color);
 
-		--theme-menu-option-color-base: var(--dark-theme-menu-option-color-base);
-		--theme-menu-option-color-hover: var(--dark-theme-menu-option-color-hover);
-		--theme-menu-option-color-selected: var(--dark-theme-menu-option-color-selected);
+                --theme-menu-option-color-base: var(--dark-theme-menu-option-color-base);
+                --theme-menu-option-color-hover: var(--dark-theme-menu-option-color-hover);
+                --theme-menu-option-color-selected: var(--dark-theme-menu-option-color-selected);
 
-		--theme-user-list-border-color: var(--dark-theme-user-list-border-color);
+                --theme-user-list-border-color: var(--dark-theme-user-list-border-color);
 
-		--theme-btn-background: var(--dark-theme-btn-background);
-		--theme-btn-box-shadow: var(--dark-theme-btn-box-shadow);
-		--theme-btn-border-color: var(--dark-theme-btn-border-color);
-		--theme-btn-text-shadow: var(--dark-theme-btn-text-shadow);
-		--theme-btn-text-color: var(--dark-theme-btn-text-color);
+                --theme-btn-background: var(--dark-theme-btn-background);
+                --theme-btn-box-shadow: var(--dark-theme-btn-box-shadow);
+                --theme-btn-border-color: var(--dark-theme-btn-border-color);
+                --theme-btn-text-shadow: var(--dark-theme-btn-text-shadow);
+                --theme-btn-text-color: var(--dark-theme-btn-text-color);
 
-		--theme-btn-hover-background: var(--dark-theme-btn-hover-background);
-		--theme-btn-hover-border: var(--dark-theme-btn-hover-border);
+                --theme-btn-hover-background: var(--dark-theme-btn-hover-background);
+                --theme-btn-hover-border: var(--dark-theme-btn-hover-border);
 
-		--theme-btn-active-background: var(--dark-theme-btn-active-background);
-		--theme-btn-active-border: var(--dark-theme-btn-active-border);
-		--theme-btn-active-box-shadow: var(--dark-theme-btn-active-box-shadow);
+                --theme-btn-active-background: var(--dark-theme-btn-active-background);
+                --theme-btn-active-border: var(--dark-theme-btn-active-border);
+                --theme-btn-active-box-shadow: var(--dark-theme-btn-active-box-shadow);
 
-		--theme-btn-disabled-opacity: var(--dark-theme-btn-disabled-opacity);
-		--theme-btn-disabled-box-shadow: var(--dark-theme-btn-disabled-box-shadow);
+                --theme-btn-disabled-opacity: var(--dark-theme-btn-disabled-opacity);
+                --theme-btn-disabled-box-shadow: var(--dark-theme-btn-disabled-box-shadow);
 
-		--theme-input-background: var(--dark-theme-input-background);
-		--theme-input-text-color: var(--dark-theme-input-text-color);
-		--theme-input-border-color: var(--dark-theme-input-border-color);
-		--theme-input-box-shadow: var(--dark-theme-input-box-shadow);
+                --theme-input-background: var(--dark-theme-input-background);
+                --theme-input-text-color: var(--dark-theme-input-text-color);
+                --theme-input-border-color: var(--dark-theme-input-border-color);
+                --theme-input-box-shadow: var(--dark-theme-input-box-shadow);
 
-		--theme-input-disabled-opacity: var(--dark-theme-input-disabled-opacity);
-		--theme-input-disabled-box-shadow: var(--dark-theme-input-disabled-box-shadow);
+                --theme-input-disabled-opacity: var(--dark-theme-input-disabled-opacity);
+                --theme-input-disabled-box-shadow: var(--dark-theme-input-disabled-box-shadow);
 
-		--theme-input-border-color-focus: var(--dark-theme-input-border-color-focus);
-	}
+                --theme-input-border-color-focus: var(--dark-theme-input-border-color-focus);
+        }
 }
 
 body.light {
-	--theme-background: var(--light-theme-background);
-	--theme-text-color: var(--light-theme-text-color);
+        --theme-background: var(--light-theme-background);
+        --theme-text-color: var(--light-theme-text-color);
 
-	--theme-link-color: var(--light-theme-link-color);
-	--theme-link-visited-color: var(--light-theme-link-visited-color);
-	--theme-link-active-color: var(--light-theme-link-active-color);
+        --theme-link-color: var(--light-theme-link-color);
+        --theme-link-visited-color: var(--light-theme-link-visited-color);
+        --theme-link-active-color: var(--light-theme-link-active-color);
 
-	--theme-main-div-background: var(--light-theme-main-div-background);
-	--theme-main-div-border-color: var(--light-theme-main-div-border-color);
+        --theme-main-div-background: var(--light-theme-main-div-background);
+        --theme-main-div-border-color: var(--light-theme-main-div-border-color);
 
-	--theme-error-color: var(--light-theme-error-color);
-	--theme-success-color: var(--light-theme-success-color);
+        --theme-error-color: var(--light-theme-error-color);
+        --theme-success-color: var(--light-theme-success-color);
 
-	--theme-menu-option-color-base: var(--light-theme-menu-option-color-base);
-	--theme-menu-option-color-hover: var(--light-theme-menu-option-color-hover);
-	--theme-menu-option-color-selected: var(--light-theme-menu-option-color-selected);
+        --theme-menu-option-color-base: var(--light-theme-menu-option-color-base);
+        --theme-menu-option-color-hover: var(--light-theme-menu-option-color-hover);
+        --theme-menu-option-color-selected: var(--light-theme-menu-option-color-selected);
 
-	--theme-user-list-border-color: var(--light-theme-user-list-border-color);
+        --theme-user-list-border-color: var(--light-theme-user-list-border-color);
 
-	--theme-btn-background: var(--light-theme-btn-background);
-	--theme-btn-box-shadow: var(--light-theme-btn-box-shadow);
-	--theme-btn-border-color: var(--light-theme-btn-border-color);
-	--theme-btn-text-shadow: var(--light-theme-btn-text-shadow);
-	--theme-btn-text-color: var(--light-theme-btn-text-color);
+        --theme-btn-background: var(--light-theme-btn-background);
+        --theme-btn-box-shadow: var(--light-theme-btn-box-shadow);
+        --theme-btn-border-color: var(--light-theme-btn-border-color);
+        --theme-btn-text-shadow: var(--light-theme-btn-text-shadow);
+        --theme-btn-text-color: var(--light-theme-btn-text-color);
 
-	--theme-btn-hover-background: var(--light-theme-btn-hover-background);
-	--theme-btn-hover-border: var(--light-theme-btn-hover-border);
+        --theme-btn-hover-background: var(--light-theme-btn-hover-background);
+        --theme-btn-hover-border: var(--light-theme-btn-hover-border);
 
-	--theme-btn-active-background: var(--light-theme-btn-active-background);
-	--theme-btn-active-border: var(--light-theme-btn-active-border);
-	--theme-btn-active-box-shadow: var(--light-theme-btn-active-box-shadow);
+        --theme-btn-active-background: var(--light-theme-btn-active-background);
+        --theme-btn-active-border: var(--light-theme-btn-active-border);
+        --theme-btn-active-box-shadow: var(--light-theme-btn-active-box-shadow);
 
-	--theme-btn-disabled-opacity: var(--light-theme-btn-disabled-opacity);
-	--theme-btn-disabled-box-shadow: var(--light-theme-btn-disabled-box-shadow);
+        --theme-btn-disabled-opacity: var(--light-theme-btn-disabled-opacity);
+        --theme-btn-disabled-box-shadow: var(--light-theme-btn-disabled-box-shadow);
 
-	--theme-input-background: var(--light-theme-input-background);
-	--theme-input-text-color: var(--light-theme-input-text-color);
-	--theme-input-border-color: var(--light-theme-input-border-color);
-	--theme-input-box-shadow: var(--light-theme-input-box-shadow);
+        --theme-input-background: var(--light-theme-input-background);
+        --theme-input-text-color: var(--light-theme-input-text-color);
+        --theme-input-border-color: var(--light-theme-input-border-color);
+        --theme-input-box-shadow: var(--light-theme-input-box-shadow);
 
-	--theme-input-disabled-opacity: var(--light-theme-input-disabled-opacity);
-	--theme-input-disabled-box-shadow: var(--light-theme-input-disabled-box-shadow);
+        --theme-input-disabled-opacity: var(--light-theme-input-disabled-opacity);
+        --theme-input-disabled-box-shadow: var(--light-theme-input-disabled-box-shadow);
 
-	--theme-input-border-color-focus: var(--light-theme-input-border-color-focus);
+        --theme-input-border-color-focus: var(--light-theme-input-border-color-focus);
 }
 
 body.dark {
-	--theme-background: var(--dark-theme-background);
-	--theme-text-color: var(--dark-theme-text-color);
+        --theme-background: var(--dark-theme-background);
+        --theme-text-color: var(--dark-theme-text-color);
 
-	--theme-link-color: var(--dark-theme-link-color);
-	--theme-link-visited-color: var(--dark-theme-link-visited-color);
-	--theme-link-active-color: var(--dark-theme-link-active-color);
+        --theme-link-color: var(--dark-theme-link-color);
+        --theme-link-visited-color: var(--dark-theme-link-visited-color);
+        --theme-link-active-color: var(--dark-theme-link-active-color);
 
-	--theme-main-div-background: var(--dark-theme-main-div-background);
-	--theme-main-div-border-color: var(--dark-theme-main-div-border-color);
+        --theme-main-div-background: var(--dark-theme-main-div-background);
+        --theme-main-div-border-color: var(--dark-theme-main-div-border-color);
 
-	--theme-error-color: var(--dark-theme-error-color);
-	--theme-success-color: var(--dark-theme-success-color);
+        --theme-error-color: var(--dark-theme-error-color);
+        --theme-success-color: var(--dark-theme-success-color);
 
-	--theme-menu-option-color-base: var(--dark-theme-menu-option-color-base);
-	--theme-menu-option-color-hover: var(--dark-theme-menu-option-color-hover);
-	--theme-menu-option-color-selected: var(--dark-theme-menu-option-color-selected);
+        --theme-menu-option-color-base: var(--dark-theme-menu-option-color-base);
+        --theme-menu-option-color-hover: var(--dark-theme-menu-option-color-hover);
+        --theme-menu-option-color-selected: var(--dark-theme-menu-option-color-selected);
 
-	--theme-user-list-border-color: var(--dark-theme-user-list-border-color);
+        --theme-user-list-border-color: var(--dark-theme-user-list-border-color);
 
-	--theme-btn-background: var(--dark-theme-btn-background);
-	--theme-btn-box-shadow: var(--dark-theme-btn-box-shadow);
-	--theme-btn-border-color: var(--dark-theme-btn-border-color);
-	--theme-btn-text-shadow: var(--dark-theme-btn-text-shadow);
-	--theme-btn-text-color: var(--dark-theme-btn-text-color);
+        --theme-btn-background: var(--dark-theme-btn-background);
+        --theme-btn-box-shadow: var(--dark-theme-btn-box-shadow);
+        --theme-btn-border-color: var(--dark-theme-btn-border-color);
+        --theme-btn-text-shadow: var(--dark-theme-btn-text-shadow);
+        --theme-btn-text-color: var(--dark-theme-btn-text-color);
 
-	--theme-btn-hover-background: var(--dark-theme-btn-hover-background);
-	--theme-btn-hover-border: var(--dark-theme-btn-hover-border);
+        --theme-btn-hover-background: var(--dark-theme-btn-hover-background);
+        --theme-btn-hover-border: var(--dark-theme-btn-hover-border);
 
-	--theme-btn-active-background: var(--dark-theme-btn-active-background);
-	--theme-btn-active-border: var(--dark-theme-btn-active-border);
-	--theme-btn-active-box-shadow: var(--dark-theme-btn-active-box-shadow);
+        --theme-btn-active-background: var(--dark-theme-btn-active-background);
+        --theme-btn-active-border: var(--dark-theme-btn-active-border);
+        --theme-btn-active-box-shadow: var(--dark-theme-btn-active-box-shadow);
 
-	--theme-btn-disabled-opacity: var(--dark-theme-btn-disabled-opacity);
-	--theme-btn-disabled-box-shadow: var(--dark-theme-btn-disabled-box-shadow);
+        --theme-btn-disabled-opacity: var(--dark-theme-btn-disabled-opacity);
+        --theme-btn-disabled-box-shadow: var(--dark-theme-btn-disabled-box-shadow);
 
-	--theme-input-background: var(--dark-theme-input-background);
-	--theme-input-text-color: var(--dark-theme-input-text-color);
-	--theme-input-border-color: var(--dark-theme-input-border-color);
-	--theme-input-box-shadow: var(--dark-theme-input-box-shadow);
+        --theme-input-background: var(--dark-theme-input-background);
+        --theme-input-text-color: var(--dark-theme-input-text-color);
+        --theme-input-border-color: var(--dark-theme-input-border-color);
+        --theme-input-box-shadow: var(--dark-theme-input-box-shadow);
 
-	--theme-input-disabled-opacity: var(--dark-theme-input-disabled-opacity);
-	--theme-input-disabled-box-shadow: var(--dark-theme-input-disabled-box-shadow);
+        --theme-input-disabled-opacity: var(--dark-theme-input-disabled-opacity);
+        --theme-input-disabled-box-shadow: var(--dark-theme-input-disabled-box-shadow);
 
-	--theme-input-border-color-focus: var(--dark-theme-input-border-color-focus);
+        --theme-input-border-color-focus: var(--dark-theme-input-border-color-focus);
 }
 
 body {
-	background-color: var(--theme-background);
-	color: var(--theme-text-color);
+        background-color: var(--theme-background);
+        color: var(--theme-text-color);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        -webkit-text-size-adjust: 100%;
+}
+
+/* Add viewport meta tag with JavaScript */
+:root::before {
+        content: "";
+        display: none;
+}
+
+/* JavaScript to inject the viewport meta tag */
+@supports (content: "hack") {
+        head {
+                display: none;
+        }
+}
+
+/* If JavaScript fails, add a basic viewport meta rule */
+@viewport {
+        width: device-width;
+        initial-scale: 1;
+        maximum-scale: 5;
 }
 
 a {
-	color: var(--theme-link-color);
+        color: var(--theme-link-color);
 }
 
 a:visited {
-	color: var(--theme-link-visited-color);
+        color: var(--theme-link-visited-color);
 }
 
 a:active {
-	color: var(--theme-link-active-color);
+        color: var(--theme-link-active-color);
 }
 
 td {
-	padding: 5px;
-	vertical-align: middle;
+        padding: 5px;
+        vertical-align: middle;
+}
+
+@media (max-width: 576px) {
+        table, thead, tbody, th, td, tr {
+                display: block;
+        }
+        
+        table {
+                width: 100%;
+        }
+        
+        tr {
+                margin-bottom: 10px;
+                border-bottom: 1px solid var(--theme-main-div-border-color);
+        }
+        
+        td {
+                border: none;
+                position: relative;
+                padding: 6px 6px 6px 40%;
+                text-align: left;
+                min-height: 20px;
+        }
+        
+        td:before {
+                position: absolute;
+                top: 6px;
+                left: 6px;
+                width: 35%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+                content: attr(data-title);
+        }
 }
 
 p {
-	padding: 5px;
+        padding: 5px;
 }
 
 .maindiv {
-	width: 90%;
-	background-color: var(--theme-main-div-background);
-	margin-bottom: 10px;
-	border: 1px solid var(--theme-main-div-border-color);
+        width: 95%;
+        max-width: 100%;
+        background-color: var(--theme-main-div-background);
+        margin-bottom: 10px;
+        border: 1px solid var(--theme-main-div-border-color);
+        box-sizing: border-box;
 }
 
 .home-link {
-	color: var(--theme-text-color);
-	text-decoration: none;
+        color: var(--theme-text-color);
+        text-decoration: none;
 }
 
 .home-link:hover,
 .home-link:visited,
 .home-link:active {
-	color: var(--theme-text-color);
+        color: var(--theme-text-color);
 }
 
 .page-content {
-	padding: 10px;
+        padding: 10px;
+        overflow-x: hidden;
+}
+
+@media (max-width: 576px) {
+        .page-content {
+                padding: 8px 5px;
+        }
 }
 
 .header {
-	margin: 8px;
+        margin: 8px;
 }
 
 .invalid-login {
-	color: var(--theme-error-color);
-	font-style: italic;
-	font-size: 9px;
+        color: var(--theme-error-color);
+        font-style: italic;
+        font-size: 9px;
 }
 
 .copyright {
-	padding: 8px;
+        padding: 8px;
 }
 
 .menu-option,
 .menu-option:visited,
 .menu-option:active {
-	font-size: 24px;
-	color: var(--theme-menu-option-color-base);
-	text-decoration: none;
-	padding: 8px;
+        font-size: 18px;
+        color: var(--theme-menu-option-color-base);
+        text-decoration: none;
+        padding: 6px;
+        margin: 4px;
+        display: inline-block;
 }
 
 .menu-option:hover {
-	color: var(--theme-menu-option-color-hover);
+        color: var(--theme-menu-option-color-hover);
 }
 
 .menu-option-selected,
 .menu-option-selected:visited {
-	font-size: 24px;
-	color: var(--theme-menu-option-color-selected);
-	font-weight: bold;
-	padding: 8px;
-	text-decoration: none;
+        font-size: 18px;
+        color: var(--theme-menu-option-color-selected);
+        font-weight: bold;
+        padding: 6px;
+        margin: 4px;
+        text-decoration: none;
+        display: inline-block;
 }
 
 .menu-separator {
-	font-size: 24px;
+        font-size: 18px;
+        margin: 0 2px;
+        display: none;
+}
+
+@media (min-width: 768px) {
+        .menu-option,
+        .menu-option:visited,
+        .menu-option:active,
+        .menu-option-selected,
+        .menu-option-selected:visited,
+        .menu-separator {
+                font-size: 24px;
+        }
+        
+        .menu-separator {
+                display: inline;
+        }
 }
 
 .menu {
-	padding: 8px;
-	text-align: center;
+        padding: 8px;
+        text-align: center;
+        flex-wrap: wrap;
+        display: flex;
+        justify-content: center;
 }
 
 .error-msg {
-	color: var(--theme-error-color);
+        color: var(--theme-error-color);
 }
 
 .ok-msg {
-	color: var(--theme-success-color)
+        color: var(--theme-success-color)
 }
 
 .userlist {
-	border: 1px solid var(--theme-user-list-border-color);
+        border: 1px solid var(--theme-user-list-border-color);
 }
 
 .submenu-option,
 .submenu-option:visited,
 .submenu-option:active {
-	font-size: 16px;
-	color: var(--theme-menu-option-color-base);
-	text-decoration: none;
-	padding: 8px;
+        font-size: 14px;
+        color: var(--theme-menu-option-color-base);
+        text-decoration: none;
+        padding: 6px;
+        margin: 2px;
+        display: inline-block;
 }
 
 .submenu-option:hover {
-	color: var(--theme-menu-option-color-hover);
+        color: var(--theme-menu-option-color-hover);
 }
 
 .submenu-option-selected,
 .submenu-option-selected:visited {
-	font-size: 16px;
-	color: var(--theme-menu-option-color-selected);
-	font-weight: bold;
-	padding: 8px;
-	text-decoration: none;
+        font-size: 14px;
+        color: var(--theme-menu-option-color-selected);
+        font-weight: bold;
+        padding: 6px;
+        margin: 2px;
+        text-decoration: none;
+        display: inline-block;
+}
+
+@media (min-width: 768px) {
+        .submenu-option,
+        .submenu-option:visited,
+        .submenu-option:active,
+        .submenu-option-selected,
+        .submenu-option-selected:visited {
+                font-size: 16px;
+                padding: 8px;
+        }
 }
 
 .iframe-result-container iframe {
-	width: 100%;
-	height: 500px;
-	border: none;
+        width: 100%;
+        height: 500px;
+        border: none;
 }
 
 button,
 input[type=submit] {
-	border-radius: 5px;
-	font-family: Verdana, Helvetica, Arial, sans-serif;
-	text-align: center;
-	text-decoration: none;
-	cursor: pointer;
-	font-size: 9pt;
-	padding: 3px 8px;
-	background: var(--theme-btn-background);
-	box-shadow: var(--theme-btn-box-shadow);
-	border-color: var(--theme-btn-border-color);
-	text-shadow: var(--theme-btn-text-shadow);
-	color: var(--theme-btn-text-color);
+        border-radius: 5px;
+        font-family: Verdana, Helvetica, Arial, sans-serif;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 9pt;
+        padding: 8px 12px;
+        background: var(--theme-btn-background);
+        box-shadow: var(--theme-btn-box-shadow);
+        border-color: var(--theme-btn-border-color);
+        text-shadow: var(--theme-btn-text-shadow);
+        color: var(--theme-btn-text-color);
+        margin: 3px;
+}
+
+@media (max-width: 576px) {
+        button,
+        input[type=submit] {
+                font-size: 14px;
+                padding: 10px 16px;
+                min-height: 44px; /* Better touch target */
+                width: 100%;
+                margin-bottom: 8px;
+        }
+}
+
+#quick-login-btn {
+        font-weight: bold;
+        width: 100%;
+        margin-top: 0;
+}
+
+/* Password visibility toggle */
+#toggle-password {
+        color: var(--theme-text-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        outline: none;
+        cursor: pointer;
+        transition: opacity 0.2s;
+}
+
+#toggle-password:hover {
+        opacity: 0.7;
 }
 
 button:not(:disabled):hover,
 input[type=submit]:not(:disabled):hover {
-	background: var(--theme-btn-hover-background);
-	border-color: var(--theme-btn-hover-border);
+        background: var(--theme-btn-hover-background);
+        border-color: var(--theme-btn-hover-border);
 }
 
 button:active,
 input[type=submit]:active {
-	background: var(--theme-btn-active-background);
-	border-color: var(--theme-btn-active-border);
-	box-shadow: var(--theme-btn-active-box-shadow);
+        background: var(--theme-btn-active-background);
+        border-color: var(--theme-btn-active-border);
+        box-shadow: var(--theme-btn-active-box-shadow);
 }
 
 button:disabled,
 input[type=submit]:disabled {
-	opacity: var(--theme-btn-disabled-opacity);
-	box-shadow: var(--theme-btn-disabled-box-shadow);
+        opacity: var(--theme-btn-disabled-opacity);
+        box-shadow: var(--theme-btn-disabled-box-shadow);
 }
 
 input:not([type=submit]),
 textarea,
 select {
-	border-radius: 3px;
-	padding: 3px;
-	border: solid 1px var(--theme-input-border-color);
-	/* box-shadow: inset 0px -1px 2px #606060, -1px -1px 0 rgba(255,255,255,.2); */
-	box-shadow: var(--theme-input-box-shadow);
-	background: var(--theme-input-background);
-	color: var(--theme-input-text-color);
+        border-radius: 3px;
+        padding: 6px;
+        border: solid 1px var(--theme-input-border-color);
+        /* box-shadow: inset 0px -1px 2px #606060, -1px -1px 0 rgba(255,255,255,.2); */
+        box-shadow: var(--theme-input-box-shadow);
+        background: var(--theme-input-background);
+        color: var(--theme-input-text-color);
+        max-width: 100%;
+        box-sizing: border-box;
+}
+
+@media (max-width: 576px) {
+        input:not([type=submit]),
+        textarea,
+        select {
+                font-size: 16px; /* Prevent auto-zoom on mobile */
+                width: 100%;
+        }
 }
 
 input:not([type=submit]):not(:disabled):hover,
 textarea:not(:disabled):hover,
 select:not(:disabled):hover {
-	border: solid 1px var(--theme-input-border-color-focus);
-	box-shadow: var(--theme-input-box-shadow);
-	background: var(--theme-input-background);
+        border: solid 1px var(--theme-input-border-color-focus);
+        box-shadow: var(--theme-input-box-shadow);
+        background: var(--theme-input-background);
 }
 
 input:not([type=submit]):not(:disabled):focus,
 textarea:not(:disabled):focus,
 select:not(:disabled):focus {
-	border-color: var(--theme-input-border-color-focus);
-	background: var(--theme-input-background);
-	outline: solid 1px var(--theme-input-border-color);
+        border-color: var(--theme-input-border-color-focus);
+        background: var(--theme-input-background);
+        outline: solid 1px var(--theme-input-border-color);
 }
 
 input:not([type=submit]):disabled,
 textarea:disabled,
 select:disabled {
-	opacity: var(--theme-input-disabled-opacity);
-	box-shadow: var(--theme-input-disabled-box-shadow);
+        opacity: var(--theme-input-disabled-opacity);
+        box-shadow: var(--theme-input-disabled-box-shadow);
 }
 
 .theme-select {
-	font-size: 9pt;
+        font-size: 9pt;
 }
+
+
