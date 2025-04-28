@@ -85,8 +85,6 @@ exports.generate = function (body, loginData, menu, options) {
                 buf += '<body>';
         }
 
-
-
         buf += '<div align="center">';
 
         buf += '<div align="center" class="maindiv">';
@@ -193,9 +191,7 @@ exports.generate = function (body, loginData, menu, options) {
                 buf += '</select>';
                 buf += '</div></div>';
         }
-        
 
-        
         buf += '</div></body>';
         buf += '</html>';
         return buf;
