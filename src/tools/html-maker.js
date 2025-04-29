@@ -25,7 +25,6 @@ exports.wrapHTML = function (body, title) {
         }
 
         html += '<link rel="stylesheet" href="/static/style.css" />';
-        html += '<script src="/static/admin-login.js"></script>';
 
         html += "</head>";
 
@@ -51,7 +50,6 @@ exports.generate = function (body, loginData, menu, options) {
         buf += '<html lang="en">';
         buf += '<head>';
         buf += '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
-        buf += '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />';
 
         buf += '<link rel="stylesheet" href="/static/style.css" />';
         if (options.styles) {
@@ -61,7 +59,6 @@ exports.generate = function (body, loginData, menu, options) {
         }
 
         buf += '<script type="text/javascript" src="/static/common.js"></script>';
-        buf += '<script type="text/javascript" src="/static/mobile-viewport.js"></script>';
 
         if (options.scripts) {
                 for (let i = 0; i < options.scripts.length; i++) {
@@ -90,11 +87,11 @@ exports.generate = function (body, loginData, menu, options) {
         buf += '<div align="center" class="maindiv">';
 
         buf += '<br /><div class="header">';
-        buf += '<table width="100%" border="0" style="max-width:100%;"><tr>';
-        buf += '<td style="width:60%"><a class="home-link" href="/"><div class="banner" align="center"><h1>' +
+        buf += '<table width="100%" border="0"><tr>';
+        buf += '<td width="60%"><a class="home-link" href="/"><div class="banner" align="center"><h1>' +
                 (options.banner || 'Showdown ChatBot') + '</h1></div></a></td>';
 
-        buf += '<td style="width:40%"><div align="right">';
+        buf += '<td width="30%"><div align="right">';
         if (loginData.name) {
                 /* Logout form */
                 buf += '<div style=" margin-bottom:8px;"><strong><big>' +
@@ -110,25 +107,32 @@ exports.generate = function (body, loginData, menu, options) {
         } else {
                 /* Login form */
                 buf += '<form class="loginform" method="POST" action="">' +
-                        '<div style="margin-bottom:5px;"><strong>User:</strong>&nbsp;' +
+                        '<div style=" margin-bottom:5px;"><strong>User:</strong>&nbsp;' +
                         '<input type="text" name="user" id="login-username" value="' + (loginData.invalid || '') + '" /></div>' +
-                        '<div style="margin-bottom:5px;"><strong>Pass:</strong>&nbsp;' +
+                        '<div style=" margin-bottom:5px;"><strong>Pass:</strong>&nbsp;' +
                         '<div style="position:relative; display:inline-block;">' +
-                        '<input type="password" name="password" id="login-password" style="padding-right:30px;" />' +
-                        '<button type="button" id="toggle-password" style="position:absolute; right:0px; top:3px; padding:0; height:25px; width:30px; display:flex; align-items:center; justify-content:center; background:none; border:none; box-shadow:none;" onclick="togglePasswordVisibility()">' +
+                        '<input type="password" name="password" id="login-password" style="width:auto;" />' +
+                        '<span id="toggle-password" style="position:absolute; right:5px; top:2px; cursor:pointer;" onclick="togglePasswordVisibility()">' +
                         '<span id="eye-icon-hidden">' +
-                        '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>' +
+                        '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>' +
                         '</span>' +
                         '<span id="eye-icon-visible" style="display:none;">' +
-                        '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>' +
+                        '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>' +
                         '</span>' +
-                        '</button>' +
+                        '</span>' +
                         '</div></div>' +
                         '<div>' + (loginData.invalid ? '<span class="invalid-login">Invalid Credentials</span>&nbsp;' : '') +
-                        '<div style="margin-bottom:5px;"><input type="submit" name="login" value="Login" /></div>' +
-                        '<div><button type="button" onclick="document.getElementById(\'login-username\').value=\'admin\';document.getElementById(\'login-password\').value=\'admin\';document.querySelector(\'.loginform\').submit();">Quick Login</button></div>' +
+                        '<input type="submit" name="login" value="Login" />' +
                         '</div>' +
+                        '<div style="margin-top:5px;"><button type="button" onclick="quickLogin()">Quick Login</button></div>' +
                         '<script>' +
+                        'function quickLogin() {' +
+                        '  document.getElementById("login-username").value = "admin";' +
+                        '  document.getElementById("login-password").value = "admin";' +
+                        '  var form = document.querySelector(".loginform");' +
+                        '  form.action = "/?quick=1";' +
+                        '  form.submit();' +
+                        '}' +
                         'function togglePasswordVisibility() {' +
                         '  var passwordInput = document.getElementById("login-password");' +
                         '  var hiddenIcon = document.getElementById("eye-icon-hidden");' +
@@ -191,7 +195,6 @@ exports.generate = function (body, loginData, menu, options) {
                 buf += '</select>';
                 buf += '</div></div>';
         }
-
         buf += '</div></body>';
         buf += '</html>';
         return buf;
