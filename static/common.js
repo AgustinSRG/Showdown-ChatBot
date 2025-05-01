@@ -1,4 +1,4 @@
-// CSRF protection for control panel
+// Common script for the control panel
 
 function getCookie(name) {
     var value = "; " + document.cookie;
@@ -67,3 +67,31 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+var loginPasswordVisible = false;
+
+window.toggleLoginPasswordVisibility = function () {
+    var inputEl = document.getElementById("login_password_input");
+    var toggleEl = document.getElementById("password_visibility_toggle");
+
+    if (loginPasswordVisible) {
+        if (inputEl) {
+            inputEl.type = "password";
+            delete inputEl.autocomplete;
+        }
+
+        if (toggleEl) {
+            toggleEl.innerHTML = "Show password";
+        }
+    } else {
+        if (inputEl) {
+            inputEl.type = "text";
+            inputEl.autocomplete = "off";
+        }
+
+        if (toggleEl) {
+            toggleEl.innerHTML = "Hide password";
+        }
+    }
+
+    loginPasswordVisible = !loginPasswordVisible;
+};
