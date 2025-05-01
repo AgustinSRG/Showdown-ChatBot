@@ -28,7 +28,6 @@ exports.setup = function (App) {
 
 	return {
 		battles: Object.create(null),
-		battlesCount: 0,
 		interval: null,
 		customModules: CustomModules,
 
@@ -39,7 +38,6 @@ exports.setup = function (App) {
 				} catch (e) {}
 				delete this.battles[room];
 			}
-			this.battlesCount = 0;
 
 			if (this.interval) {
 				clearInterval(this.interval);
@@ -67,7 +65,6 @@ exports.setup = function (App) {
 					} catch (e) {}
 				}
 				this.battles[room] = new Battle(room);
-				this.battlesCount++;
 			}
 			if (this.battles[room]) {
 				this.battles[room].add(data, isIntro);
@@ -78,7 +75,6 @@ exports.setup = function (App) {
 						this.battles[room].destroy();
 					} catch (e) {}
 					delete this.battles[room];
-					this.battlesCount--;
 				}
 			} else if (spl[0] === 'noinit' && spl[1] === 'rename') {
 				if (this.battles[room]) {
@@ -110,12 +106,21 @@ exports.setup = function (App) {
 					this.battles[room].destroy();
 				} catch (e) {}
 				delete this.battles[room];
-				this.battlesCount--;
 			}
 			if (this.interval) {
 				clearInterval(this.interval);
 				this.interval = null;
 			}
+		},
+
+		countActiveBattles: function () {
+			let count = 0;
+			for (let room in this.battles) {
+				if (this.battles[room].self) {
+					count++;
+				}
+			}
+			return count;
 		},
 	};
 };

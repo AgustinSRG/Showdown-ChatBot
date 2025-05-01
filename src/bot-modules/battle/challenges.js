@@ -114,7 +114,7 @@ exports.setup = function (App) {
 			if (challData) {
 				const format = Text.toId((challData.split("|")[0] + "").split("@@@")[0]);
 				const hasCustomRules = !!((challData.split("|")[0] + "").split("@@@")[1]);
-				let nBattles = Object.keys(mod.BattleBot.battles).length;
+				let nBattles = mod.BattleBot.countActiveBattles();
 
 				let cmds = [];
 

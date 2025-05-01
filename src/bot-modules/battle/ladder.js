@@ -48,7 +48,7 @@ exports.setup = function (App) {
 			let maxBattles = 1;
 			if (Config.ladderBattles && Config.ladderBattles > 0) maxBattles = Config.ladderBattles;
 			for (let i in mod.BattleBot.battles) {
-				if (mod.BattleBot.battles[i].tier && Text.toId(mod.BattleBot.battles[i].tier) === format && mod.BattleBot.battles[i].rated) {
+				if (mod.BattleBot.battles[i].self && mod.BattleBot.battles[i].tier && Text.toId(mod.BattleBot.battles[i].tier) === format && mod.BattleBot.battles[i].rated) {
 					counter++;
 				}
 			}
