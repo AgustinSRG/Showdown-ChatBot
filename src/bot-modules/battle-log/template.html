@@ -1,9 +1,23 @@
-<h3>Battle Log</h3>
+<h3>Battle Log - Configuration</h3>
 <form method="post" action="">
 	<table border="0">
-		<tr><td>Max number of battles to keep logs: </td><td><input type="text" name="maxbattles" value="${MAXBATTLES}" /></td></tr>
+		<tr>
+			<td>Max number of battles to keep logs: </td>
+			<td><input type="text" size="40" name="maxbattles" value="${MAXBATTLES}" /></td>
+			<td>Specify <em>0</em> to keep the logs indefinitely</td>
+		</tr>
+		<tr>
+			<td>Spectate tournaments in rooms: </td>
+			<td><input type="text" size="40" name="jointourbattles" value="${JOIN_TOUR_BATTLES}" /></td>
+			<td>(separated by commas)</td>
+		</tr>
+		<tr>
+			<td colspan="3"><input type="checkbox" name="jointourbattlesall" ${JOIN_TOUR_BATTLES_ALL} />&nbsp;Spectate tournament battles in all rooms.</td>
+		</tr>
+		<tr>
+			<td colspan="3"><input type="checkbox" name="joinlobbybattles" ${JOIN_LOBBY_BATTLES} />&nbsp;Spectate battles announced in the lobby.</td>
+		</tr>
 	</table>
-	<p>Specify <em>0</em> to keep the logs indefinitely</p>
 	<p><input type="submit" name="editlogconfig" value="Save Changes" /></p>
 </form>
 <p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

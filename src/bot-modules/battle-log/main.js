@@ -13,8 +13,13 @@ exports.setup = function (App) {
 	if (!App.config.modules.battlelog) {
 		App.config.modules.battlelog = {
 			maxbattles: 64,
+			joinLobbyBattles: false,
+			joinTournamentBattlesRooms: [],
+			joinAllTournamentBattles: false,
 		};
 	}
+
+	const Config = App.config.modules.battlelog;
 
 	const BattleLogMod = Object.create(null);
 
@@ -65,7 +70,7 @@ exports.setup = function (App) {
 	};
 
 	BattleLogMod.sweep = function () {
-		const maxBattles = App.config.modules.battlelog.maxbattles;
+		const maxBattles = Config.maxbattles;
 		if (!maxBattles || maxBattles < 0) return;
 		const battles = Object.values(BattleLogMod.data.rooms).sort(function (a, b) {
 			if (a.time > b.time) {
@@ -96,8 +101,43 @@ exports.setup = function (App) {
 		BattleLogMod.saveData();
 	};
 
+	function shouldSpectateTournament(room) {
+		if (!App.bot.rooms[room] || App.bot.rooms[room].type !== 'chat') {
+			return false;
+		}
+
+		if (Config.joinAllTournamentBattles) {
+			return true;
+		}
+
+		if (!Config.joinTournamentBattlesRooms) {
+			return false;
+		}
+
+		return Config.joinTournamentBattlesRooms.indexOf(room) >= 0;
+	}
+
+	function isBattleBotBattle(room) {
+		if (!App.modules.battle || !App.modules.battle.system) {
+			return false;
+		}
+
+		const battleBot = App.modules.battle.system.BattleBot;
+
+		return battleBot.battles[room] && !!battleBot.battles[room].self;
+	}
 
 	App.bot.on('line', (room, line, spl, isIntro) => {
+		if (!isIntro && spl[0] === "b" && Config.joinLobbyBattles && App.bot.rooms[room] && App.bot.rooms[room].type === 'chat') {
+			App.bot.sendTo('', '/noreply /join ' + spl[1]);
+		}
+
+		if (!isIntro && spl[0] === 'tournament' && spl[1] === 'battlestart' && spl[4]) {
+			if (shouldSpectateTournament(room)) {
+				App.bot.sendTo('', '/noreply /join ' + spl[4]);
+			}
+		}
+
 		if (spl[0] === "init" && spl[1] === "battle") {
 			if (BattleLogMod.active[room]) {
 				BattleLogMod.active[room].close();
@@ -118,6 +158,7 @@ exports.setup = function (App) {
 		}
 
 		if (spl[0] === "request") {
+			BattleLogMod.data.rooms[room].playing = true;
 			return; // Ignore requests
 		}
 
@@ -150,7 +191,7 @@ exports.setup = function (App) {
 			BattleLogMod.saveData();
 		}
 
-		if (spl[0] === "win") {
+		if (spl[0] === "win" && BattleLogMod.data.rooms[room].playing) {
 			const winners = (spl[1] + "").split("&").map(Text.toId);
 			let win = false;
 			for (let winner of winners) {
@@ -164,10 +205,17 @@ exports.setup = function (App) {
 			} else {
 				BattleLogMod.data.rooms[room].state = "LOSE";
 			}
+			BattleLogMod.data.rooms[room].playing = false;
 			BattleLogMod.saveData();
 		}
 
 		BattleLogMod.active[room].write(line + "\n");
+
+		if (spl[0] === "win" || spl[0] === "tie" || spl[0] === "prematureend") {
+			if (!isBattleBotBattle(room)) {
+				App.bot.sendTo("", "/noreply /leave " + room);
+			}
+		}
 	});
 
 	App.server.websoketHandlers.push(function (ws, req) {

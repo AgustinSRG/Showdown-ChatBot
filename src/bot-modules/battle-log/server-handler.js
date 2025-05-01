@@ -61,16 +61,24 @@ exports.setup = function (App) {
 			return;
 		}
 
+		const Config = App.config.modules.battlelog;
+
 		let ok = null, error = null;
 		if (context.post.editlogconfig) {
 			let maxbattles = parseInt(context.post.maxbattles);
+			let joinLobbyBattles = !!context.post.joinlobbybattles;
+			let joinTournamentBattlesRooms = (context.post.jointourbattles || "").split(",").map(Text.toRoomid).filter(r => !!r);
+			let joinAllTournamentBattles = !!context.post.jointourbattlesall;
 			try {
 				check(!isNaN(maxbattles) && maxbattles >= 0, "Max number of battles must be a number greater than or equal 0.");
 			} catch (err) {
 				error = err.message;
 			}
 			if (!error) {
-				App.config.modules.battlelog.maxbattles = maxbattles;
+				Config.maxbattles = maxbattles;
+				Config.joinLobbyBattles = joinLobbyBattles;
+				Config.joinTournamentBattlesRooms = joinTournamentBattlesRooms;
+				Config.joinAllTournamentBattles = joinAllTournamentBattles;
 				App.db.write();
 				App.logServerAction(context.user.id, "Set Battle Logger configuration.");
 				ok = "Changes made successfully.";
@@ -78,7 +86,10 @@ exports.setup = function (App) {
 		}
 
 		let htmlVars = Object.create(null);
-		htmlVars.maxbattles = Text.escapeHTML(App.config.modules.battlelog.maxbattles || '0');
+		htmlVars.maxbattles = Text.escapeHTML(Config.maxbattles || '0');
+		htmlVars.join_lobby_battles = (Config.joinLobbyBattles ? "checked=\"checked\"" : "");
+		htmlVars.join_tour_battles = Text.escapeHTML((Config.joinTournamentBattlesRooms || []).join(","));
+		htmlVars.join_tour_battles_all = (Config.joinAllTournamentBattles ? "checked=\"checked\"" : "");
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
