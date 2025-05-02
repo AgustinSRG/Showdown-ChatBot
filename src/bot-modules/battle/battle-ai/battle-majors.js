@@ -471,7 +471,7 @@ exports.setup = function (App, BattleData) {
 		},
 
 		c: function (args) {
-			if (this.leaveForbidden && args[1] === "&" && (args[2] + "").startsWith("/uhtml controls,") && (args[2] + "").includes('name="send"')) {
+			if (this.leaveForbidden && (args[1] === "&" || args[1] === "~") && (args[2] + "").startsWith("/uhtml controls,") && (args[2] + "").includes('name="send"')) {
 				// Controls to confirm
 				// NOTE: This may change in the future. Currently there is not a specific message to indicate this.
 				this.send("/confirmready");
