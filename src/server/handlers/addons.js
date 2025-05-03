@@ -74,7 +74,7 @@ exports.setup = function (App) {
 		let ok = null, error = null;
 
 		if (context.post.add) {
-			let addon = Text.toId(context.post.addon);
+			let addon = Text.toCmdid(context.post.addon);
 			let file = App.addonsDir + '/' + addon + ".js";
 			let content = (context.post.content || "").trim();
 			try {
