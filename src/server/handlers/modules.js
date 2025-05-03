@@ -25,8 +25,8 @@ exports.setup = function (App) {
 		}
 
 		let submenu = new SubMenu("Modules", parts, context, [
-			{id: 'config', title: 'Configuration', url: '/modules/', handler: configurationHandler},
-			{id: 'menu', title: 'Menu&nbsp;Ordering', url: '/modules/menu/', handler: menuHandler},
+			{ id: 'config', title: 'Configuration', url: '/modules/', handler: configurationHandler },
+			{ id: 'menu', title: 'Menu&nbsp;Ordering', url: '/modules/menu/', handler: menuHandler },
 		], 'config');
 
 		return submenu.run();
@@ -42,9 +42,27 @@ exports.setup = function (App) {
 					App.config.loadmodules[id] = true;
 				}
 			}
-			App.saveConfig();
-			ok = "Modules configuration saved successfully.";
-			App.logServerAction(context.user.id, 'Modules configuration was edited');
+
+			App.saveConfig(function () {
+				App.logServerAction(context.user.id, 'Modules configuration was edited');
+
+				try {
+					App.userdata.write(); /* Sync user-data */
+				} catch (err) {
+					App.reportCrash(err);
+				}
+
+				// Exit process
+
+				let buf = '';
+				buf += '<html><head><title>Process Exited</title><link rel="stylesheet" href="/static/style.css" /></head><body><p>The application exits successfully.</p>' +
+					'<a href=""><button>Refresh Page</button></a></body></html>';
+				context.response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+				context.response.end(buf);
+				console.log("Exit via server, By: " + context.user.id);
+				process.exit(0);
+			});
+			return;
 		}
 
 		let htmlVars = Object.create(null);
@@ -65,7 +83,7 @@ exports.setup = function (App) {
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
 		html += mainTemplate.make(htmlVars);
-		context.endWithWebPage(html, {title: "Modules - Showdown ChatBot"});
+		context.endWithWebPage(html, { title: "Modules - Showdown ChatBot" });
 	}
 
 	function menuHandler(context, html) {
@@ -93,7 +111,7 @@ exports.setup = function (App) {
 			htmlVars.opts += '<tr>';
 			htmlVars.opts += '<td><strong>' + App.server.menu[opt].name + '</strong></td>';
 			htmlVars.opts += '<td><input name="' + Text.escapeHTML(opt) + '" type="text" value="' +
-			Text.escapeHTML(level) + '" size="15" placeholder="default" autocomplete="off" /></td>';
+				Text.escapeHTML(level) + '" size="15" placeholder="default" autocomplete="off" /></td>';
 			htmlVars.opts += '<tr>';
 			htmlVars.opts += '</tr>';
 		}
@@ -103,6 +121,6 @@ exports.setup = function (App) {
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
 		html += menuTemplate.make(htmlVars);
-		context.endWithWebPage(html, {title: "Menu Ordering - Showdown ChatBot"});
+		context.endWithWebPage(html, { title: "Menu Ordering - Showdown ChatBot" });
 	}
 };

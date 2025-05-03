@@ -285,9 +285,10 @@ class ChatBotApp {
 	/**
 	 * Asynchronous method to write the configuration
 	 * to persistent storage
+	 * @param {function|undefined} callback
 	 */
-	saveConfig() {
-		this.db.write();
+	saveConfig(callback) {
+		this.db.write(callback);
 	}
 
 	/* Modules */

@@ -1,7 +1,17 @@
+<script type="text/javascript">
+	function confirmExit() {
+		var elem = document.getElementById('confirm-exit');
+		if (elem) {
+			elem.innerHTML = '<form style="display:inline;" method="post" action="">' + 
+			'Are you sure. This action requires a restart?&nbsp;<input type="submit" name="savechanges" value="Confirm (Save changes and restart)" /></form>';
+		}
+		return false;
+	}
+</script>
 <h2>Bot Modules</h2>
 <p>Note: Changes here require an application restart to be effective.</p>
 <form method="post" action="">
 	${MODULES}
-	<p><input type="submit" name="savechanges" value="Save Changes" /></p>
+	<p><button type="button" onclick="confirmExit();">Save Changes</button>&nbsp;<span id="confirm-exit"></span></p>
 </form>
 <p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

@@ -71,7 +71,7 @@ class JSONDataBase {
 		this.load(loadErrorLogFn);
 	}
 
-	write() {
+	write(callback) {
 		let data = JSON.stringify(this.data);
 		data = encrypt(data, this.algo, this.password);
 		let finishWriting = function () {
@@ -80,6 +80,9 @@ class JSONDataBase {
 			if (this.writePending) {
 				this.writePending = false;
 				this.write();
+			}
+			if (callback && typeof callback === "function") {
+				return callback();
 			}
 		}.bind(this);
 		if (this.writing) {

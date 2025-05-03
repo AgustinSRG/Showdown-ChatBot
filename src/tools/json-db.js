@@ -24,7 +24,7 @@ class JSONDataBase {
 		this.load(loadErrorLogFn);
 	}
 
-	write() {
+	write(callback) {
 		let data = JSON.stringify(this.data);
 		let finishWriting = function () {
 			this.writing = false;
@@ -32,6 +32,9 @@ class JSONDataBase {
 			if (this.writePending) {
 				this.writePending = false;
 				this.write();
+			}
+			if (callback && typeof callback === "function") {
+				return callback();
 			}
 		}.bind(this);
 		if (this.writing) {
