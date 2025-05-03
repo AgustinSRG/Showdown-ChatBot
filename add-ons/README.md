@@ -1,5 +1,5 @@
 <!-- omit in toc -->
-# Official add-ons for Showdown-ChatBot
+# Official Add-ons for Showdown-ChatBot
 
 This is a list of official add-ons: developed by the authors of the bot ar accepted by them.
 
