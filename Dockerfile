@@ -1,6 +1,6 @@
 FROM node:20-alpine
 
-ENV DIR /bot
+ENV DIR=/bot
 WORKDIR $DIR
 
 # Directories for persistent data and configuration
@@ -15,7 +15,7 @@ RUN npm install --production
 # Copy source files
 COPY . .
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 # Application entry point
 ENTRYPOINT ["node", "run-forever"]
