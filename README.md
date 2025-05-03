@@ -117,11 +117,14 @@ Useful Documentation
 
 For more guides and documentation, check the [Showdown-ChatBot Wiki](https://github.com/AgustinSRG/Showdown-ChatBot/wiki)
 
-
 Add-ons
 ------------
 
-Add-ons are like optional modules you can install for your bot. They are rather limited and have no translation feature but they can be used to add custom commands and very specific features to your bot. Some public add-ons [here](https://github.com/AgustinSRG/Showdown-ChatBot/wiki#add-ons).
+Add-ons are like optional, single-file modules you can install for your bot. They can be used to add custom commands and specific features to your bot.
+
+You can find some of them in the [Official add-ons list](./add-ons/README.md) in this repository.
+
+If you wish to develop one, start with the [Add-on template](./add-ons/template.js). Also check the [Add-ons development guide](https://github.com/AgustinSRG/Showdown-ChatBot/wiki/Deveopment-of-Add-ons) and the [Basic Development Guide](https://github.com/AgustinSRG/Showdown-ChatBot/wiki/Basic-Development-Guide).
 
 Contributing
 ------------

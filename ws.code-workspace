@@ -8,5 +8,9 @@
 		"files.exclude": {
 			"node_modules/**": true
 		},
+		"cSpell.words": [
+			"pastebin",
+			"Pastebin"
+		],
 	}
 }
