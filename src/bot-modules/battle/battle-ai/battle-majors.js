@@ -321,6 +321,11 @@ exports.setup = function (App, BattleData) {
 			let moveTemplate = BattleData.getMove(args[2], this.gen);
 			let fromeffect = null;
 			let noDeductPP = false;
+			this.lastMove = {
+				move: args[2],
+				source: poke,
+				target: poke2,
+			};
 			if (kwargs.from) fromeffect = BattleData.getEffect(kwargs.from, this.gen);
 			if (fromeffect) {
 				switch (fromeffect.id) {

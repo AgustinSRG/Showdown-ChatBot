@@ -77,6 +77,16 @@ exports.setup = function (App) {
 				Config.initBattleMsg = (context.post.initmsg || "").split('\n').filter(msgFilter);
 				Config.winmsg = (context.post.winmsg || "").split('\n').filter(msgFilter);
 				Config.losemsg = (context.post.losemsg || "").split('\n').filter(msgFilter);
+
+				Config.otherMessages["crit-self"] = (context.post.critmsg || "").split('\n').filter(msgFilter);
+				Config.otherMessages["crit-foe"] = (context.post.critfoemsg || "").split('\n').filter(msgFilter);
+
+				Config.otherMessages["miss-self"] = (context.post.missmsg || "").split('\n').filter(msgFilter);
+				Config.otherMessages["miss-foe"] = (context.post.missfoemsg || "").split('\n').filter(msgFilter);
+
+				Config.otherMessages["faint-self"] = (context.post.faintmsg || "").split('\n').filter(msgFilter);
+				Config.otherMessages["faint-foe"] = (context.post.faintfoemsg || "").split('\n').filter(msgFilter);
+
 				App.db.write();
 				App.logServerAction(context.user.id, "Edit battle bot configuration");
 				ok = 'Battle bot configuration saved';
@@ -94,6 +104,15 @@ exports.setup = function (App) {
 		htmlVars.initmsg = Text.escapeHTML(Config.initBattleMsg.join('\n'));
 		htmlVars.winmsg = Text.escapeHTML(Config.winmsg.join('\n'));
 		htmlVars.losemsg = Text.escapeHTML(Config.losemsg.join('\n'));
+
+		htmlVars.critmsg = Text.escapeHTML((Config.otherMessages["crit-self"] || []).join('\n'));
+		htmlVars.critfoemsg = Text.escapeHTML((Config.otherMessages["crit-foe"] || []).join('\n'));
+
+		htmlVars.missmsg = Text.escapeHTML((Config.otherMessages["miss-self"] || []).join('\n'));
+		htmlVars.missfoemsg = Text.escapeHTML((Config.otherMessages["miss-foe"] || []).join('\n'));
+
+		htmlVars.faintmsg = Text.escapeHTML((Config.otherMessages["faint-self"] || []).join('\n'));
+		htmlVars.faintfoemsg = Text.escapeHTML((Config.otherMessages["faint-foe"] || []).join('\n'));
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));

@@ -217,14 +217,25 @@ exports.setup = function (App, BattleData) {
 			}
 		},
 
-		"-miss": "-crit",
-		"-supereffective": "-crit",
-		"-resisted": "-crit",
-		"-crit": function (args, kwargs, isIntro) {
-			// Not real information - message minors
+		"-miss": function (args, kwargs, isIntro) {
 			if (isIntro) return;
 			let ident = this.parsePokemonIdent(args[1]);
-			this.message(args[0].substr(1), ident.side, ident.name);
+			let identSource = this.parsePokemonIdent(args[2] || args[1]);
+
+			this.message('miss', ident.side, ident.name, identSource.side, identSource.name);
+		},
+
+		"-crit": function (args, kwargs, isIntro) {
+			if (isIntro) return;
+			let ident = this.parsePokemonIdent(args[1]);
+
+			let source = null;
+
+			if (this.lastMove && this.lastMove.source) {
+				source = this.lastMove.source;
+			}
+
+			this.message('crit', ident.side, ident.name, source ? source.side : null, source ? source.name : null);
 		},
 
 		"-immune": function (args, kwargs) {
@@ -317,8 +328,6 @@ exports.setup = function (App, BattleData) {
 			if (poke.status === "slp") {
 				poke.helpers.sleepCounter = 0;
 			}
-			let det = this.parsePokemonIdent(args[1]);
-			if (!isIntro) this.message("start-" + poke.status, det.side, poke.name); // hax
 		},
 
 		"-curestatus": function (args, kwargs) {

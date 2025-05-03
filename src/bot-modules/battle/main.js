@@ -14,12 +14,17 @@ exports.setup = function (App) {
 			initBattleMsg: ['gl hf'],
 			winmsg: ['GG', 'g_g'],
 			losemsg: ['gg', 'wp'],
+			otherMessages: Object.create(null),
 			ladderBattles: 1,
 			joinTours: Object.create(null),
 			ignoreAbandonedbattles: false,
 			turnTimerOn: true,
 			maxTurns: 0,
 		};
+	}
+
+	if (!App.config.modules.battle.otherMessages) {
+		App.config.modules.battle.otherMessages = Object.create(null);
 	}
 
 	if (!App.config.modules.battle.battlemods) {

@@ -282,23 +282,59 @@ exports.setup = function (App, CustomModules) {
 			}
 		}
 
-		message(type, player, poke) {
+		message(type, targetPlayer, targetPoke, sourcePlayer, sourcePoke) {
 			if (!this.self) return; // Not playing
-			if (!Config.battleMessages || !Config.battleMessages[type]) return;
-			if (!player) {
-				if (Config.battleMessages[type]["self"]) {
-					this.send(Config.battleMessages[type]["self"][Math.floor(Math.random() * Config.battleMessages[type]["self"].length)]);
-					return;
+			if (!Config.otherMessages) return;
+
+			let poke = "???";
+			let player = "???";
+			let pokeFoe = "???";
+
+			if (!targetPlayer || targetPlayer === this.self.id) {
+				// Target is self
+				type = type + "-self";
+
+				poke = targetPoke || "???";
+
+				if (sourcePlayer) {
+					const p = this.players[sourcePlayer];
+
+					if (p) {
+						player = p.name;
+					}
+				} else if (this.foe) {
+					player = this.foe.name;
 				}
-				this.send(Config.battleMessages[type][Math.floor(Math.random() * Config.battleMessages[type].length)]);
-				return;
+
+				pokeFoe = sourcePoke || "???";
+			} else if (!sourcePlayer || sourcePlayer === this.self.id) {
+				// Target is a foe, source is self
+				type = type + "-foe";
+
+				const p = this.players[targetPlayer];
+
+				if (p) {
+					player = p.name;
+				} else if (this.foe) {
+					player = this.foe.name;
+				}
+
+				pokeFoe = targetPoke || "???";
+				poke = sourcePoke || "???";
 			}
-			let side = (player === this.self.id) ? "self" : "foe";
-			if (Config.battleMessages[type][side]) {
-				let msg = Config.battleMessages[type][side][Math.floor(Math.random() * Config.battleMessages[type][side].length)];
-				if (poke) msg = msg.replace(/#poke/g, poke);
-				this.send(msg);
-			}
+
+			if (!Config.otherMessages[type] || !Array.isArray(Config.otherMessages[type])) return;
+
+			const chosenMsg = Config.otherMessages[type][Math.floor(Math.random() * Config.otherMessages[type].length)];
+
+			// Replace
+
+			const finalMsg = chosenMsg
+				.replace(/\$PLAYER/g, player)
+				.replace(/\$POKE_FOE/g, pokeFoe)
+				.replace(/\$POKE/g, poke);
+
+			this.send(finalMsg);
 		}
 
 		getDecisions() {
