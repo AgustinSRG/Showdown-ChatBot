@@ -18,10 +18,13 @@ class JSONDataBase {
 		this.load();
 	}
 
-	write() {
+	write(callback) {
 		let data = JSON.stringify(this.data);
 		this.dam.setFileContent(this.file, data);
 		this.events.emit('write');
+		if (callback && typeof callback === "function") {
+			return callback();
+		}
 	}
 
 	on(event, handler) {
