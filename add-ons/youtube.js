@@ -8,7 +8,7 @@
 'use strict';
 
 const Rooms = ['youtube']; // Here the rooms where this feature is available
-const Youtube_API_Key = "AIzaSyAXXYCNGtYjg4ol8UfkbgVR4laHWWoxS00"; // Use your own key
+const Youtube_API_Key = "-----"; // Use your own API key
 
 const Response_Text = "**%s**'s link: __%s__ by [[%s]]";
 const Response_Text_Allow_Commands = false;
