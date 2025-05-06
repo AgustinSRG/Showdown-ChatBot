@@ -120,7 +120,7 @@ exports.setup = function (App) {
 		}
 		htmlVars.submenu = opts.join(' | ');
 
-		htmlVars.content = JSON.stringify(JSON.stringify(Mod.rooms[room].data));
+		htmlVars.content = Text.escapeHTML(JSON.stringify(Mod.rooms[room].data));
 		htmlVars.room = Text.escapeHTML(room);
 		htmlVars.name = Text.escapeHTML(App.parser.getRoomTitle(room));
 

@@ -24,12 +24,9 @@
 <hr />
 <form method="post" action="">
 	<p><b>Room Intro:</b></p>
-	<p><textarea id="textareaintro" name="intro" cols="150" rows="5"></textarea></p>
+	<p><textarea id="textareaintro" name="intro" cols="150" rows="5">${INTRO}</textarea></p>
 	<p><input type="submit" name="modintro" value="Edit RoomIntro" /></p>
 </form>
-<script type="text/javascript">
-	document.getElementById("textareaintro").value = ${INTRO};
-</script>
 <hr />
 <h3>Static Auth</h3>
 <table border="1">

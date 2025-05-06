@@ -152,7 +152,7 @@ exports.setup = function (App) {
 		}
 
 		let htmlVars = Object.create(null);
-		htmlVars.content = JSON.stringify(addonContent);
+		htmlVars.content = Text.escapeHTML(addonContent);
 		htmlVars.file = Text.escapeHTML(path);
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));

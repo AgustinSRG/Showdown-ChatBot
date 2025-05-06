@@ -162,7 +162,7 @@ exports.setup = function (App) {
 		htmlVars.private = config[room].private ? 'checked="checked"' : '';
 		htmlVars.authfrom = Text.escapeHTML(config[room].authfrom || "");
 
-		htmlVars.intro = JSON.stringify(config[room].intro);
+		htmlVars.intro = Text.escapeHTML(config[room].intro);
 
 		let opts = [];
 		for (let room in App.modules.groupchats.system.config) {

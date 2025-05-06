@@ -228,8 +228,8 @@ exports.setup = function (App) {
 					content += '<tr><td width="200px"><b>Key ID</b></td><td width="500px"><b>' + key + '</b></td></tr>';
 					content += '<tr><td>Default (English)</td><td>' + Text.escapeHTML(dataFile.get(key, "english")) + '</td></tr>';
 					content += '<tr><td>Custom (' + Text.escapeHTML(languages[selectedLang]) + ')</td><td>' +
-						'<input type="text" name="custom-' + key + '" value=' + JSON.stringify(dataFileMod[key] || "") +
-						' placeholder=' + JSON.stringify(dataFile.get(key, selectedLang) || "") + ' size="100" />' + '</td></tr>';
+						'<input type="text" name="custom-' + key + '" value="' + Text.escapeHTML(dataFileMod[key] || "") +
+						'" placeholder="' + Text.escapeHTML(dataFile.get(key, selectedLang) || "") + '" size="100" />' + '</td></tr>';
 					content += '</table>';
 				}
 			}
@@ -274,7 +274,7 @@ exports.setup = function (App) {
 		htmlVars.menu = "<big><b><u>Current Language:</u></b></big> " + opts.join('&nbsp;| ') + "<hr />";
 
 		if (selectedLang in languages) {
-			htmlVars.content = JSON.stringify(exportLanguage(langdata, selectedLang));
+			htmlVars.content = Text.escapeHTML(exportLanguage(langdata, selectedLang));
 		}
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
