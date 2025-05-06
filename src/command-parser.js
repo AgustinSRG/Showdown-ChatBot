@@ -4,7 +4,7 @@
  * (https://github.com/AgustinSRG/Showdown-ChatBot/blob/master/LICENSE)
  *
  * This file handles with bot commands, the main
- * ineteraction system between the bot and
+ * interaction system between the bot and
  * Pokemon Showdown users
  */
 
@@ -378,11 +378,14 @@ class CommandParser {
 	 * @param {String} by - User name
 	 */
 	parse(msg, room, by, isShortcut) {
-		if (!room && msg.substr(0, 8) === '/invite ') {
+		if (!room && msg.substring(0, 8) === '/invite ') {
 			return this.parse((this.app.config.parser.tokens[0] || '') + 'joinroom ' + msg.substr(8), room, by, isShortcut);
 		}
-		if (msg.substr(0, 6) === '/html ') {
-			return this.parse(msg.substr(6), room, by, isShortcut);
+		if (msg.substring(0, 8) === '/botmsg ') {
+			return this.parse(msg.substring('/botmsg '.length), room, by, isShortcut);
+		}
+		if (msg.substring(0, 6) === '/html ') {
+			return this.parse(msg.substring(6), room, by, isShortcut);
 		}
 		let userid = Text.toId(by);
 		if (room && this.data.sleep[room]) return; /* Sleeping room */
