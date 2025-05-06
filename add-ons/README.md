@@ -9,6 +9,7 @@ Index:
 - [Automated promotion to voice](#automated-promotion-to-voice)
 - [Automated response add-on](#automated-response-add-on)
 - [Battle spectate add-on](#battle-spectate-add-on)
+- [Commands guide add-on](#commands-guide-add-on)
 - [HashPoke command exceptions](#hashpoke-command-exceptions)
 - [Pastebin add-on](#pastebin-add-on)
 - [YouTube link recognition add-on](#youtube-link-recognition-add-on)
@@ -43,6 +44,25 @@ You can optionally change the value of `Promotion_Command`, in order to change t
 
  - `SPECTATE_TOURNAMENT_BATTLES`: True to spectate tournament battles
  - `SPECTATE_SERVER_BATTLES`: True to spectate server battles announced in the `Lobby` room.
+
+## Commands guide add-on
+
+**Description**: This add-on turns the `.help` command into an interactive guide, making used of the `/sendhtmlpage` server command. The guide is divided in sections and the sections in pages. You can download the official guide from the Wiki (default), or configure your own guide via the control panel (new section: `Commands Guide`).
+
+**Add-on files**:
+
+ - English version: [commands-guide](./commands-guide.js)
+ - Spanish version: [commands-guide-es](./commands-guide-es.js)
+
+**Restrictions**:
+
+ - The bot requires the rank of **global bot** in order to be able to use the `/sendhtmlpage` server command.
+ - The bot must be present in the `Lobby` room of the server.
+ - Showdown-ChatBot version must be equal or greater than `2.16.1`.
+
+**Configuration**: You can configure the commands guide by accessing the `Commands Guide` section of the control panel.
+
+Also, you can change the `MAX_COMMANDS_PER_PAGE` constant in order to change the number of commands per page.
 
 ## HashPoke command exceptions
 
