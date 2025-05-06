@@ -1,4 +1,5 @@
 // Interactive commands guide add-on for for Showdown-ChatBot
+// Spanish version
 // ------------------------------------
 // WARNING: Version 2.16.1 or greater required!
 // ------------------------------------
@@ -16,13 +17,23 @@ const MAX_COMMANDS_PER_PAGE = 10;
 const LOBBY_ROOM = "lobby";
 
 // URL to download the official guide
-const COMMANDS_GUIDE_DEFAULT_SOURCE = "https://raw.githubusercontent.com/wiki/AgustinSRG/Showdown-ChatBot/Commands-List.md";
+const COMMANDS_GUIDE_DEFAULT_SOURCE = "https://raw.githubusercontent.com/wiki/AgustinSRG/Showdown-ChatBot/Commands-List-(Spanish)---Lista-de-Comandos.md";
 
 const Path = require('path');
 const HTTPS = require('https');
 const Text = Tools('text');
 const Chat = Tools('chat');
 const DataBase = Tools('json-db');
+
+function prepareModuleName(txt) {
+	txt = txt.charAt(0).toUpperCase() + txt.substring(1);
+
+	if (txt.substring(0, 4) === "Del ") {
+		txt = txt.substring(4);
+	}
+
+	return txt;
+}
 
 function wget(url, callback) {
 	HTTPS.get(url, response => {
@@ -170,7 +181,7 @@ class CommandsGuide {
 					}
 
 					section = {
-						name: prevLine.replace(/\sModule$/i, ""),
+						name: prepareModuleName(prevLine.replace(/^Módulo\sde\s/i, "").replace(/^Módulo\s/i, "")),
 						commands: [],
 					};
 				} else if (line.charAt(0) === "`" && section) {
@@ -179,7 +190,7 @@ class CommandsGuide {
 					const description = Chat.parseMessage(Text.escapeHTML(parts[1] || ""));
 					const permission = (parts[2] || "").split("\\")[0].trim();
 					const permissionIsBroadcast = (parts[2] || "").trim().split("\\")[1] === "*";
-					const permissionDescLine = Chat.parseMessage(Text.escapeHTML(permission === "-" ? "" : ("Required permission: " + Chat.italics(permission) + (permissionIsBroadcast ? " (for broadcasting)" : ""))));
+					const permissionDescLine = Chat.parseMessage(Text.escapeHTML(permission === "-" ? "" : ("Permiso requerido: " + Chat.italics(permission) + (permissionIsBroadcast ? " (para anunciarse)" : ""))));
 
 					section.commands.push({
 						syntax: syntax,
@@ -223,9 +234,9 @@ class CommandsGuide {
 
 		html += '<div style="text-align: center; padding-bottom: 0.5rem;">'
 
-		html += '<b>' + Text.escapeHTML(this.app.bot.getBotNick().substring(1)) + ' - Commands Guide</b>&nbsp;';
+		html += '<b>' + Text.escapeHTML(this.app.bot.getBotNick().substring(1)) + ' - Guía de comandos</b>&nbsp;';
 
-		html += '<button class="button" name="send" value="' + Text.escapeHTML(this.getBotMessageCommand("help close")) + '">Close page</button>';
+		html += '<button class="button" name="send" value="' + Text.escapeHTML(this.getBotMessageCommand("help close")) + '">Cerrar guía</button>';
 
 		html += '</div>';
 
@@ -271,7 +282,7 @@ class CommandsGuide {
 			let pageStart = (pageIndex * MAX_COMMANDS_PER_PAGE) + 1;
 			let pageEnd = Math.min(((pageIndex + 1) * MAX_COMMANDS_PER_PAGE), totalCommands);
 
-			html += '<span>Commands (' +  pageStart + ' - ' + pageEnd + ' / ' + totalCommands + '):</span>&nbsp;';
+			html += '<span>Comandos (' +  pageStart + ' - ' + pageEnd + ' / ' + totalCommands + '):</span>&nbsp;';
 
 			for (let i = 0; i < totalPages; i++) {
 				if (i > 0) {
@@ -285,7 +296,7 @@ class CommandsGuide {
 
 		// Info
 
-		html += '<p>Note: Arguments with <code>&lt;&gt;</code> means they are obligatory. Arguments with <code>[]</code> means they are optional.</p>';
+		html += '<p>Nota: Los argumentos con <code>&lt;&gt;</code> implica que son obligatorios. Los argumentos con <code>[]</code> son opcionales.</p>';
 
 		html += '<hr />';
 
@@ -437,7 +448,7 @@ exports.setup = function (App) {
 				if (html) {
 					this.send('/sendhtmlpage ' + this.byIdent.id + ', ' + pageId + ', ' + html, LOBBY_ROOM);
 				} else {
-					this.pmReply("The current commands guide is empty. Please contact the bot's administrador in order to configure it.")
+					this.pmReply("La guía de comandos se encuentra vacía. Por favor, contacte con un administrador del bot para que la configure.")
 				}
 			},
 		},
