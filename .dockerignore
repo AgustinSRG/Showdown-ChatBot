@@ -8,6 +8,7 @@ config.js
 data
 instances
 addons
+add-ons
 !src/bot-modules/battle/data
 
 # Logs
