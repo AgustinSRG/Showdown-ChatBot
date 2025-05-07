@@ -4,6 +4,7 @@
 
 'use strict';
 
+const Crypto = require("crypto");
 const Text = Tools('text');
 
 /**
@@ -174,4 +175,97 @@ exports.parseMessage = function (str, isShowdown) {
 	// Line breaks
 	str = str.replace(/\|\|/g, '<br />');
 	return str;
+};
+
+function HSLToRGB(H, S, L) {
+	let C = (100 - Math.abs(2 * L - 100)) * S / 100 / 100;
+	let X = C * (1 - Math.abs((H / 60) % 2 - 1));
+	let m = L / 100 - C / 2;
+
+	let R1;
+	let G1;
+	let B1;
+	switch (Math.floor(H / 60)) {
+		case 1:
+			R1 = X;
+			G1 = C;
+			B1 = 0;
+			break;
+		case 2:
+			R1 = 0;
+			G1 = C;
+			B1 = X;
+			break;
+		case 3:
+			R1 = 0;
+			G1 = X;
+			B1 = C;
+			break;
+		case 4:
+			R1 = X;
+			G1 = 0;
+			B1 = C;
+			break;
+		case 5:
+			R1 = C;
+			G1 = 0;
+			B1 = X;
+			break;
+		default:
+			R1 = C;
+			G1 = X;
+			B1 = 0;
+			break;
+	}
+	let R = R1 + m;
+	let G = G1 + m;
+	let B = B1 + m;
+	return { R: R, G: G, B: B };
+}
+
+function hexByte(x) {
+	const hex = Math.round(x * 255).toString(16);
+	return hex.length === 1 ? '0' + hex : hex;
+}
+
+/**
+ * Calculates the color of an username
+ * @param {string} name The username
+ */
+exports.usernameColor = function (name) {
+	name = Text.toId(name);
+
+	const hash = Crypto.createHash("md5").update(Buffer.from(name, 'utf-8')).digest().toString("hex");
+
+	let H = parseInt(hash.substring(4, 8), 16) % 360;
+	let S = parseInt(hash.substring(0, 4), 16) % 50 + 40;
+	let L = Math.floor(parseInt(hash.substring(8, 12), 16) % 20 + 30);
+
+	let rgb = HSLToRGB(H, S, L);
+	let R = rgb.R;
+	let G = rgb.G;
+	let B = rgb.B;
+
+	let lum = R * R * R * 0.2126 + G * G * G * 0.7152 + B * B * B * 0.0722;
+
+	let HLmod = (lum - 0.2) * -150;
+
+	if (HLmod > 18) {
+		HLmod = (HLmod - 18) * 2.5;
+	} else if (HLmod < 0) {
+		HLmod /= 3;
+	} else {
+		HLmod = 0;
+	}
+
+	let Hdist = Math.min(Math.abs(180 - H), Math.abs(240 - H));
+	if (Hdist < 15) {
+		HLmod += (15 - Hdist) / 3;
+	}
+
+	L += HLmod;
+
+	let rgbFinal = HSLToRGB(H, S, L);
+
+	return "#" + hexByte(rgbFinal.R) + hexByte(rgbFinal.G) + hexByte(rgbFinal.B);
 };

@@ -8,6 +8,9 @@
     "regdate": {
       "group": "voice"
     },
+    "usernamecolor": {
+      "group": "voice"
+    },
     "randomanswer": {
       "group": "voice"
     },

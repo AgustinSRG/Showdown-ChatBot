@@ -1,0 +1,25 @@
+﻿# Translations file
+
+@ misc-usercolor
+
+%english
+
+$inv = Invalid username
+
+$1 = Username color for
+
+$2 = Username
+$3 = Color code
+
+$4 = View in color picker
+
+%spanish
+
+$inv = Nombre de usuario no válido
+
+$1 = Color para el nombre de usuario
+
+$2 = Nombre de usuario
+$3 = Código de color
+
+$4 = Ver en el selector de color
