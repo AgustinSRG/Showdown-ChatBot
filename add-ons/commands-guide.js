@@ -223,7 +223,11 @@ class CommandsGuide {
 
 		html += '<div style="text-align: center; padding-bottom: 0.5rem;">'
 
-		html += '<b>' + Text.escapeHTML(this.app.bot.getBotNick().substring(1)) + ' - Commands Guide</b>&nbsp;';
+		if (Chat.usernameColor) {
+			html += '<b><span style="color:' + Chat.usernameColor(this.app.bot.getBotNick()) + ';">' + Text.escapeHTML(this.app.bot.getBotNick().substring(1)) + '</span> - Commands Guide</b>&nbsp;';
+		} else {
+			html += '<b>' + Text.escapeHTML(this.app.bot.getBotNick().substring(1)) + ' - Commands Guide</b>&nbsp;';
+		}
 
 		html += '<button class="button" name="send" value="' + Text.escapeHTML(this.getBotMessageCommand("help close")) + '">Close page</button>';
 
