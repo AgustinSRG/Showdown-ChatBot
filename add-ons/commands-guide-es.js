@@ -19,6 +19,9 @@ const LOBBY_ROOM = "lobby";
 // URL to download the official guide
 const COMMANDS_GUIDE_DEFAULT_SOURCE = "https://raw.githubusercontent.com/wiki/AgustinSRG/Showdown-ChatBot/Commands-List-(Spanish)---Lista-de-Comandos.md";
 
+// Auto update sync interval, in milliseconds
+const AUTO_UPDATE_SYNC_INTERVAL = 24 * 60 * 60 * 1000;
+
 const Path = require('path');
 const HTTPS = require('https');
 const Text = Tools('text');
@@ -67,6 +70,36 @@ class CommandsGuide {
 		if (!this.data.sections || !Array.isArray(this.data.sections)) {
 			// Default guide
 			this.data.sections = [];
+		}
+		this.autoUpdateTimer = null;
+	}
+
+	autoUpdate() {
+		if (!this.data.autoUpdate) {
+			return;
+		}
+		this.fetchDefaultCommandsGuide(true, (ok, error) => {
+			if (ok) {
+				this.app.log("[CommandsGuide] Auto-synced with the latest official commands guide.");
+			} else if (error) {
+				this.app.log("[CommandsGuide] Auto-sync failed: " + error);
+			}
+		});
+	}
+
+	startAutoUpdateTimer() {
+		if (this.autoUpdateTimer) {
+			clearInterval(this.autoUpdateTimer);
+			this.autoUpdateTimer = null;
+		}
+
+		this.autoUpdateTimer = setInterval(this.autoUpdate.bind(this), AUTO_UPDATE_SYNC_INTERVAL);
+	}
+
+	stopAutoUpdateTimer() {
+		if (this.autoUpdateTimer) {
+			clearInterval(this.autoUpdateTimer);
+			this.autoUpdateTimer = null;
 		}
 	}
 
@@ -286,7 +319,7 @@ class CommandsGuide {
 			let pageStart = (pageIndex * MAX_COMMANDS_PER_PAGE) + 1;
 			let pageEnd = Math.min(((pageIndex + 1) * MAX_COMMANDS_PER_PAGE), totalCommands);
 
-			html += '<span>Comandos (' +  pageStart + ' - ' + pageEnd + ' / ' + totalCommands + '):</span>&nbsp;';
+			html += '<span>Comandos (' + pageStart + ' - ' + pageEnd + ' / ' + totalCommands + '):</span>&nbsp;';
 
 			for (let i = 0; i < totalPages; i++) {
 				if (i > 0) {
@@ -415,6 +448,7 @@ exports.setup = function (App) {
 		html += '<textarea name="data" cols="100" rows="30">';
 		html += Text.escapeHTML(commandsGuide.serializeCommandGuideConfig());
 		html += '</textarea>';
+		html += '<p><input type="checkbox" name="autoupdate"' + (commandsGuide.data.autoUpdate ? ' checked="checked"' : '') + ' />&nbsp;Automatically update guide every 24 hours (note: this will overwrite your previously guide, keep disabled for a custom guide).</p>';
 		html += '<p><input type="submit" name="save" value="Save Changes" /></p>';
 		html += '</form>';
 
@@ -477,8 +511,11 @@ exports.setup = function (App) {
 						error = err.message;
 					}
 
+					const autoUpdate = !!context.post.autoupdate;
+
 					if (!error) {
 						commandsGuide.data.sections = sections;
+						commandsGuide.data.autoUpdate = autoUpdate;
 						commandsGuide.save();
 						App.logServerAction(context.user.id, "Updated Command Guide configuration");
 						ok = "Command Guide configuration successfully saved.";
@@ -506,6 +543,14 @@ exports.setup = function (App) {
 		serverMenuOptionsOverwrite: false,
 		serverMenuOptions: {
 			"cmdguide": { name: "Commands Guide", url: "/cmdguide/", permission: "cmdguide", level: -3 },
+		},
+
+		customInstall: function () {
+			commandsGuide.startAutoUpdateTimer();
+		},
+
+		customUninstall: function () {
+			commandsGuide.stopAutoUpdateTimer();
 		},
 	});
 };
