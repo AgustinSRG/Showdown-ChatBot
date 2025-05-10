@@ -189,7 +189,7 @@ class CommandsGuide {
 		wget(COMMANDS_GUIDE_DEFAULT_SOURCE, (text, err) => {
 			if (err) {
 				if (callback) {
-					callback(null, "Error: " + err.message);
+					return callback(null, "Error: " + err.message);
 				} else {
 					this.app.reportCrash(err);
 					return;
@@ -265,7 +265,7 @@ class CommandsGuide {
 
 		// Title
 
-		html += '<div style="text-align: center; padding-bottom: 0.5rem;">'
+		html += '<div style="text-align: center; padding-bottom: 0.5rem;">';
 
 		if (Chat.usernameColor) {
 			html += '<b><span style="color:' + Chat.usernameColor(this.app.bot.getBotNick()) + ';">' + Text.escapeHTML(this.app.bot.getBotNick().substring(1)) + '</span> - Guía de comandos</b>&nbsp;';
@@ -285,7 +285,7 @@ class CommandsGuide {
 			return "";
 		}
 
-		html += '<div style="text-align: center; line-height: 2rem;">'
+		html += '<div style="text-align: center; line-height: 2rem;">';
 
 		for (let i = 0; i < sections.length; i++) {
 			if (i > 0) {
@@ -314,7 +314,7 @@ class CommandsGuide {
 		// Page menu
 
 		if (totalPages > 1) {
-			html += '<p>'
+			html += '<p>';
 
 			let pageStart = (pageIndex * MAX_COMMANDS_PER_PAGE) + 1;
 			let pageEnd = Math.min(((pageIndex + 1) * MAX_COMMANDS_PER_PAGE), totalCommands);
@@ -388,11 +388,11 @@ exports.setup = function (App) {
 		html += '<summary><string>Click here for help on how to edit the guide</strong></summary>';
 
 		html += '<p>Each section starts with [Section name]. Then, each command has the format:</p>';
-		html += '<ol>'
+		html += '<ol>';
 		html += '<li>First line: Command syntax</li>';
 		html += '<li>Following lines: Command description (HTML allowed)</li>';
 		html += '<li>Command are separated from each other by empty lines</li>';
-		html += '</ol>'
+		html += '</ol>';
 
 		html += '<p>Example:</p>';
 
@@ -436,7 +436,7 @@ exports.setup = function (App) {
 			'randomdata',
 			'Shows a random !dt (Pokemon, moves, items, abilities)',
 			'',
-		].map(Text.escapeHTML).join("\n")
+		].map(Text.escapeHTML).join("\n");
 
 		html += '</pre></code>';
 
@@ -486,7 +486,7 @@ exports.setup = function (App) {
 				if (html) {
 					this.send('/sendhtmlpage ' + this.byIdent.id + ', ' + pageId + ', ' + html, LOBBY_ROOM);
 				} else {
-					this.pmReply("La guía de comandos se encuentra vacía. Por favor, contacte con un administrador del bot para que la configure.")
+					this.pmReply("La guía de comandos se encuentra vacía. Por favor, contacte con un administrador del bot para que la configure.");
 				}
 			},
 		},

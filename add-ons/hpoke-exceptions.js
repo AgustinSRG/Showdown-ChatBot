@@ -17,7 +17,7 @@ exports.setup = function (App) {
 					context.endWith403();
 					return;
 				}
-				
+
 				if (!App.config.addons) App.config.addons = {};
 				if (!App.config.addons.hpoke) App.config.addons.hpoke = {};
 

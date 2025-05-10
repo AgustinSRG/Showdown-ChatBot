@@ -4,7 +4,7 @@
 // Note: The GET commands require you to set up the 'Control panel Url' option (Admin section of the control panel)
 // ----------------
 //
-// - setrand: Sets all the options for a random command. 
+// - setrand: Sets all the options for a random command.
 //            The pastebin link must have each option in each line.
 //
 // -----------------------------------------------------------------
@@ -15,7 +15,7 @@
 // The Kunc data has the following format (one each line):
 //     - Species||move1,move2...
 // Example:
-//     - Pikachu||Thunderbolt,Fake Out,Iron Tail,Extreme Speed      
+//     - Pikachu||Thunderbolt,Fake Out,Iron Tail,Extreme Speed
 //
 // -----------------------------------------------------------------
 //
@@ -25,7 +25,7 @@
 // The Trivia data has the following format (one each line):
 //     - Clue||answer,answer...
 // Example:
-//     - Which is the fastest Pokemon?||Regieleki     
+//     - Which is the fastest Pokemon?||Regieleki
 //
 // -----------------------------------------------------------------
 //
@@ -35,7 +35,7 @@
 // The Hangman data has the following format (one each line):
 //     - Clue||word,word...
 // Example:
-//     - Fruit||Apple,Orange,Strawberry,Pear     
+//     - Fruit||Apple,Orange,Strawberry,Pear
 //
 // -----------------------------------------------------------------
 //
@@ -45,7 +45,7 @@
 // The Anagrams data has the following format (one each line):
 //     - Clue||word,word...
 // Example:
-//     - Fruit||Apple,Orange,Strawberry,Pear     
+//     - Fruit||Apple,Orange,Strawberry,Pear
 //
 // ------------------------------------------------------------------
 
@@ -53,7 +53,7 @@
 'use strict';
 
 // Name of the permission required for the commands
-const PERMISSION_REQUIRED = 'randadmin'; 
+const PERMISSION_REQUIRED = 'randadmin';
 
 const Text = Tools('text');
 const Chat = Tools('chat');

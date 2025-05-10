@@ -7,7 +7,7 @@
 'use strict';
 
 /* Add here all tools you need (https://github.com/AgustinSRG/Showdown-ChatBot/wiki/Basic-Development-Guide#tools) */
-const Text = Tools('text');
+const Text = Tools('text'); // eslint-disable-line no-unused-vars
 
 /* Setup function: Called on add-on installation */
 exports.setup = function (App) {

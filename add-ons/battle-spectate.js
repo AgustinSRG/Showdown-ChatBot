@@ -32,7 +32,7 @@ exports.setup = function (App) {
 				if (!isIntro && spl[0] === "b" && SPECTATE_SERVER_BATTLES && App.bot.rooms[room] && App.bot.rooms[room].type === 'chat') {
 					App.bot.sendTo('', '/noreply /join ' + spl[1]);
 				}
-		
+
 				// Join tournament battles
 				if (!isIntro && spl[0] === 'tournament' && spl[1] === 'battlestart' && spl[4]) {
 					if (shouldSpectateTournament(room)) {
