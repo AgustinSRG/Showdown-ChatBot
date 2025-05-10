@@ -1,0 +1,25 @@
+# Translations file
+
+@ pokebattle-main
+
+%english
+
+$win = The Pokemon battle has ended. The winner is [WINNER]!
+$turn = Turn
+
+$evmove = [POKE] used [MOVE]!
+$evmiss = [POKE] avoided the attack!
+$evdmg = [POKE] lost [DMG]!
+$evfaint = [POKE] fainted!
+$evwin = [POKE] won the battle!
+
+%spanish
+
+$win = La batalla Pokemon ha terminado. ¡El ganador es [WINNER]!
+$turn = Turno
+
+$evmove = ¡[POKE] usó [MOVE]!
+$evmiss = ¡[POKE] evitó el ataque!
+$evdmg = ¡[POKE] perdió [DMG]!
+$evfaint = ¡[POKE] se desmayó!
+$evwin = ¡[POKE] ganó la batalla!

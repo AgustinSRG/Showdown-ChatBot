@@ -4,7 +4,8 @@
   "main": "main.js",
   "commands": [
     "commands.js",
-    "commands-teams.js"
+    "commands-teams.js",
+    "poke-battle/commands.js"
   ],
   "permissions": {
     "chall": {
@@ -14,6 +15,9 @@
       "group": "admin"
     },
     "jointour": {
+      "group": "mod"
+    },
+    "pokebattle": {
       "group": "mod"
     },
     "teams": {
@@ -26,7 +30,9 @@
   "langfiles": [
     "./commands.translations",
     "./commands-teams.translations",
-    "./ladder.translations"
+    "./ladder.translations",
+    "./poke-battle/poke-battle.translations",
+    "./poke-battle/commands.translations"
   ],
   "description": "Automated battle bot for ladder, challenges and tournaments"
 }

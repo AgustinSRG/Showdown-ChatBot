@@ -9,6 +9,8 @@ const Text = Tools('text');
 
 const BAT_DATA_DIR = Path.resolve(__dirname, '..', 'data');
 
+const Natures = require(Path.resolve(__dirname, "natures.js")).Natures;
+
 exports.setup = function (App) {
 	const BattleDataManager = Object.create(null);
 
@@ -92,7 +94,7 @@ exports.setup = function (App) {
 				species: "Unknown",
 				types: [],
 				baseStats: { hp: 100, atk: 100, def: 100, spa: 100, spd: 100, spe: 100 },
-				abilities: { },
+				abilities: {},
 				heightm: 1.2,
 				weightkg: 58,
 				color: "White",
@@ -295,6 +297,18 @@ exports.setup = function (App) {
 		if (!ability.category) ability.category = 'Effect';
 		if (!ability.effectType) ability.effectType = 'Ability';
 		return ability;
+	};
+
+	BattleDataManager.getNature = function (name) {
+		name = Text.toId(name);
+
+		if (Natures[name]) {
+			return Natures[name];
+		} else {
+			return {
+				name: "Serious",
+			};
+		}
 	};
 
 	class Move {

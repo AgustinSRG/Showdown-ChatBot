@@ -76,7 +76,7 @@ exports.trim = function (str) {
  */
 exports.escapeHTML = function (str) {
 	if (str === undefined || str === null) return '';
-	return ('' + str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;').replace(/\//g, '&#x2f;');
+	return ('' + str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 };
 
 

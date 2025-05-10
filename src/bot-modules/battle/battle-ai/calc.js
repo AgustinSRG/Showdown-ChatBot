@@ -31,6 +31,7 @@ class Pokemon {
 		this.timesHit = 0;
 		this.typechange = null;
 		this.supressedAbility = false;
+		this.moves = [];
 		for (let i in properties) {
 			if (typeof this[i] === "undefined" || typeof this[i] === "function") continue;
 			if (i === "template") continue;
@@ -74,6 +75,17 @@ class Pokemon {
 				res[stats[i]] = this.stats[stats[i]];
 				continue;
 			}
+
+			let natureValue = 1;
+
+			if (this.nature) {
+				if (this.nature.plus === stats[i]) {
+					natureValue = 1.1;
+				} else if (this.nature.minus === stats[i]) {
+					natureValue = 0.9;
+				}
+			}
+
 			if (gen <= 2) {
 				if (stats[i] === 'hp') {
 					res[stats[i]] = Math.floor(((this.getBaseStat(stats[i]) + this.getDV(stats[i])) * 2 + Math.floor((Math.sqrt(65024) + 1) / 4)) * this.level / 100) + 10 + this.level;
@@ -84,7 +96,7 @@ class Pokemon {
 				if (stats[i] === 'hp') {
 					res[stats[i]] = Math.floor((2 * this.getBaseStat(stats[i]) + this.getIV(stats[i]) + this.getEV(stats[i])) * this.level / 100 + this.level + 10);
 				} else {
-					res[stats[i]] = Math.floor(Math.floor((2 * this.getBaseStat(stats[i]) + this.getIV(stats[i]) + this.getEV(stats[i])) * this.level / 100 + 5) * (this.nature ? (this.nature.value || 1) : 1));
+					res[stats[i]] = Math.floor(Math.floor((2 * this.getBaseStat(stats[i]) + this.getIV(stats[i]) + this.getEV(stats[i])) * this.level / 100 + 5) * natureValue);
 				}
 			}
 		}

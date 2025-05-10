@@ -1,0 +1,41 @@
+# Translations file
+
+@ pokebattle-commands
+
+%english
+
+$usage = Usage
+
+$nochat = This command is only available for chat rooms
+$nobot = Bot requires rank of bot or higher to use this feature
+
+$1 = The specified pokemon does not exist or is not available
+
+$2 = Unknown pokemon property
+
+$3 = These is already a pokemon battle in progress in this room
+
+$4 = Currently these is no pokemon battle in progress in this room
+
+$5 = The pokemon battle was cancelled
+
+$6 = Battle start!
+
+%spanish
+
+$usage = Uso del comando
+
+$nochat = Este comando solo está disponible para las salas de chat
+$nobot = Necesito rango de bot o superior para poder usar esta funcionalidad
+
+$1 = El pokemon especificado no existe o no está disponible
+
+$2 = La propiedad no está disponible
+
+$3 = Ya hay una batalla entre pokemon activa en esta sala
+
+$4 = En este momento no hay ninguna batalla entre pokemon activa en esta sala
+
+$5 = La batalla entre pokemon ha sido cancelada
+
+$6 = ¡La batalla ha comenzado!

@@ -41,6 +41,8 @@ exports.setup = function (App) {
 	const TourManager = BattleModule.TourManager = require(Path.resolve(__dirname, 'tournaments.js')).setup(App);
 	const LadderManager = BattleModule.LadderManager = require(Path.resolve(__dirname, 'ladder.js')).setup(App);
 
+	const PokeBattleManager = BattleModule.PokeBattleManager = require(Path.resolve(__dirname, 'poke-battle', 'index.js')).setup(App);
+
 	TeamBuilder.loadTeamList();
 
 	App.bot.on('connect', () => {
@@ -51,6 +53,7 @@ exports.setup = function (App) {
 		BattleBot.init();
 		TourManager.clearData();
 		ChallManager.clean();
+		PokeBattleManager.clean();
 	});
 
 	App.bot.on('pm', (by, msg) => {
