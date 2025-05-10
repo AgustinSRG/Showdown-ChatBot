@@ -302,7 +302,7 @@ module.exports = {
                                     const c = statPart.charAt(j);
 
                                     if (NUMBERS.indexOf(c) >= 0) {
-                                        num += j;
+                                        num += c;
                                     } else {
                                         num = Math.max(0, Math.min(31, parseInt(num) || 0));
                                         statName = Text.toId(statPart.substring(j));
@@ -351,7 +351,7 @@ module.exports = {
                                     const c = statPart.charAt(j);
 
                                     if (NUMBERS.indexOf(c) >= 0) {
-                                        num += j;
+                                        num += c;
                                     } else {
                                         num = Math.max(0, Math.min(255, parseInt(num) || 0));
                                         statName = Text.toId(statPart.substring(j));
