@@ -21,14 +21,14 @@ exports.getEffectiveness = function (typeA, typeB, gen) {
 	if (exports["gen" + gen]) chart = exports["gen" + gen];
 	if (!chart[typeB] || !chart[typeB][typeA]) return 1;
 	switch (chart[typeB][typeA]) {
-	case 1:
-		return 2;
-	case 2:
-		return 0.5;
-	case 3:
-		return 0;
-	default:
-		return 1;
+		case 1:
+			return 2;
+		case 2:
+			return 0.5;
+		case 3:
+			return 0;
+		default:
+			return 1;
 	}
 };
 

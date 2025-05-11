@@ -72,9 +72,9 @@ function toId(text) {
 window.toId = toId;
 
 function escapeHtml(text) {
-    return text.replace(/[\"&<>]/g, function (a) {
-        return { '"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;' }[a];
-    });
+	return text.replace(/[\"&<>]/g, function (a) {
+		return { '"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;' }[a];
+	});
 }
 
 window.escapeHTML = escapeHtml;

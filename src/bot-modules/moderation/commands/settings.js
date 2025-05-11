@@ -55,14 +55,14 @@ module.exports = {
 			App.modules.moderation.system.db.write();
 			App.logCommandAction(this);
 			switch (rank) {
-			case 'user':
-				this.reply(this.mlt(6) + " " + Chat.italics(this.parser.getRoomTitle(room)));
-				break;
-			case 'excepted':
-				this.reply(this.mlt(7) + " " + Chat.italics(this.parser.getRoomTitle(room)));
-				break;
-			default:
-				this.reply(this.mlt(8) + " " + ' ' + Chat.bold(rank) + ' ' + this.mlt(9) +
+				case 'user':
+					this.reply(this.mlt(6) + " " + Chat.italics(this.parser.getRoomTitle(room)));
+					break;
+				case 'excepted':
+					this.reply(this.mlt(7) + " " + Chat.italics(this.parser.getRoomTitle(room)));
+					break;
+				default:
+					this.reply(this.mlt(8) + " " + ' ' + Chat.bold(rank) + ' ' + this.mlt(9) +
 					' ' + this.mlt(10) + ' ' + Chat.italics(this.parser.getRoomTitle(room)));
 			}
 		} else {

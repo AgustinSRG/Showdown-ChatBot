@@ -1,16 +1,19 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {
-		"files.exclude": {
-			"node_modules/**": true
-		},
-		"cSpell.words": [
-			"pastebin",
-			"Pastebin"
-		],
-	}
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "node_modules/**": true
+    },
+    "cSpell.words": ["pastebin", "Pastebin"],
+    "editor.indentSize": "tabSize",
+    "editor.tabSize": 4,
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": false,
+    "editor.formatOnSave": true,
+    "restructuredtext.editor.listEditing.list.indentationSize": "inherit"
+  }
 }

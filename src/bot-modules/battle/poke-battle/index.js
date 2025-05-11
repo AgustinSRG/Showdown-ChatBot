@@ -8,56 +8,56 @@ const Path = require('path');
 const PokeBattle = require(Path.resolve(__dirname, "poke-battle.js")).PokeBattle;
 
 exports.setup = function (App) {
-    const PokeBattleManager = Object.create(null);
+	const PokeBattleManager = Object.create(null);
 
-    PokeBattleManager.battles = Object.create(null);
+	PokeBattleManager.battles = Object.create(null);
 
-    PokeBattleManager.nextBattleId = 0;
+	PokeBattleManager.nextBattleId = 0;
 
-    PokeBattleManager.getBattleId = function () {
-        this.nextBattleId++;
+	PokeBattleManager.getBattleId = function () {
+		this.nextBattleId++;
 
-        const ts = Math.floor(Date.now() / 1000);
+		const ts = Math.floor(Date.now() / 1000);
 
-        return 'pokebattle-' + ts + "-" + this.nextBattleId;
-    };
+		return 'pokebattle-' + ts + "-" + this.nextBattleId;
+	};
 
-    PokeBattleManager.clean = function () {
-        for (let room of Object.keys(this.battles)) {
-            this.battles[room].destroy();
-        }
+	PokeBattleManager.clean = function () {
+		for (let room of Object.keys(this.battles)) {
+			this.battles[room].destroy();
+		}
 
-        this.battles = Object.create(null);
-    };
+		this.battles = Object.create(null);
+	};
 
-    PokeBattleManager.battleEnded = function (room) {
-        delete this.battles[room];
-    };
+	PokeBattleManager.battleEnded = function (room) {
+		delete this.battles[room];
+	};
 
-    PokeBattleManager.createBattle = function (room, pokeA, pokeB) {
-        if (this.battles[room]) {
-            return false;
-        }
+	PokeBattleManager.createBattle = function (room, pokeA, pokeB) {
+		if (this.battles[room]) {
+			return false;
+		}
 
-        const pokeBattle = new PokeBattle(App, room, pokeA, pokeB, this.getBattleId(), this.battleEnded.bind(this));
+		const pokeBattle = new PokeBattle(App, room, pokeA, pokeB, this.getBattleId(), this.battleEnded.bind(this));
 
-        this.battles[room] = pokeBattle;
+		this.battles[room] = pokeBattle;
 
-        pokeBattle.start();
+		pokeBattle.start();
 
-        return true;
-    };
+		return true;
+	};
 
-    PokeBattleManager.stopBattle = function (room) {
-        if (!this.battles[room]) {
-            return false;
-        }
+	PokeBattleManager.stopBattle = function (room) {
+		if (!this.battles[room]) {
+			return false;
+		}
 
-        this.battles[room].destroy();
-        delete this.battles[room];
+		this.battles[room].destroy();
+		delete this.battles[room];
 
-        return true;
-    };
+		return true;
+	};
 
-    return PokeBattleManager;
+	return PokeBattleManager;
 };

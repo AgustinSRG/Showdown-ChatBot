@@ -15,6 +15,7 @@
 		"Tools": false
 	},
 	"rules": {
+		"indent": ["error", "tab", { "SwitchCase": 1 }],
 		"object-curly-spacing": 0,
 		"no-cond-assign": [2, "except-parens"],
 		"no-console": 0,
@@ -149,7 +150,6 @@
 		"no-continue": 0,
 		"no-inline-comments": 0,
 		"no-lonely-if": 0,
-		"no-mixed-spaces-and-tabs": [2, "smart-tabs"],
 		"no-multiple-empty-lines": [2, {"max": 2, "maxEOF": 1}],
 		"no-negated-condition": 0,
 		"no-nested-ternary": 0,

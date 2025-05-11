@@ -107,21 +107,21 @@ exports.setup = function (App) {
 			let minTol = [], lowTol = [], normalTol = [], highTol = [], maxTol = [];
 			for (let user in data[room]) {
 				switch (data[room][user]) {
-				case 'min':
-					minTol.push(user);
-					break;
-				case 'low':
-					lowTol.push(user);
-					break;
-				case 'normal':
-					normalTol.push(user);
-					break;
-				case 'high':
-					highTol.push(user);
-					break;
-				case 'max':
-					maxTol.push(user);
-					break;
+					case 'min':
+						minTol.push(user);
+						break;
+					case 'low':
+						lowTol.push(user);
+						break;
+					case 'normal':
+						normalTol.push(user);
+						break;
+					case 'high':
+						highTol.push(user);
+						break;
+					case 'max':
+						maxTol.push(user);
+						break;
 				}
 			}
 			htmlVars.rooms += roomTemplate.make({

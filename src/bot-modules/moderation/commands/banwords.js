@@ -47,18 +47,18 @@ module.exports = {
 		config.bannedWords[room][word].strict = (strictMode === 'strict');
 		config.bannedWords[room][word].nonicks = (nicks === 'ignorenicks');
 		switch (type) {
-		case 'banned':
-			config.bannedWords[room][word].type = 'b';
-			break;
-		case 'inap':
-			config.bannedWords[room][word].type = 'i';
-			break;
-		case 'insult':
-			config.bannedWords[room][word].type = 'o';
-			break;
-		case 'emote':
-			config.bannedWords[room][word].type = 'e';
-			break;
+			case 'banned':
+				config.bannedWords[room][word].type = 'b';
+				break;
+			case 'inap':
+				config.bannedWords[room][word].type = 'i';
+				break;
+			case 'insult':
+				config.bannedWords[room][word].type = 'o';
+				break;
+			case 'emote':
+				config.bannedWords[room][word].type = 'e';
+				break;
 		}
 		config.bannedWords[room][word].val = config.punishments.indexOf(punishment) + 1;
 		App.modules.moderation.system.db.write();
@@ -112,18 +112,18 @@ module.exports = {
 			html += '<strong>' + Text.escapeHTML(word) + '</strong>';
 			html += '&nbsp;|&nbsp;';
 			switch (config.bannedWords[room][word].type) {
-			case 'b':
-				html += 'Type: Banned';
-				break;
-			case 'i':
-				html += 'Type: Inapropiate';
-				break;
-			case 'o':
-				html += 'Type: Insult / Offensive';
-				break;
-			case 'e':
-				html += 'Type: Emoticon / Character';
-				break;
+				case 'b':
+					html += 'Type: Banned';
+					break;
+				case 'i':
+					html += 'Type: Inapropiate';
+					break;
+				case 'o':
+					html += 'Type: Insult / Offensive';
+					break;
+				case 'e':
+					html += 'Type: Emoticon / Character';
+					break;
 			}
 			html += '&nbsp;|&nbsp;';
 			html += 'Punishment: ' + App.modules.moderation.system.modBot.getPunishment(config.bannedWords[room][word].val);
@@ -161,18 +161,18 @@ module.exports = {
 			let word = words[i];
 			text += word + ' | ';
 			switch (config.bannedWords[room][word].type) {
-			case 'b':
-				text += 'Type: Banned';
-				break;
-			case 'i':
-				text += 'Type: Inapropiate';
-				break;
-			case 'o':
-				text += 'Type: Insult / Offensive';
-				break;
-			case 'e':
-				text += 'Type: Emoticon / Character';
-				break;
+				case 'b':
+					text += 'Type: Banned';
+					break;
+				case 'i':
+					text += 'Type: Inapropiate';
+					break;
+				case 'o':
+					text += 'Type: Insult / Offensive';
+					break;
+				case 'e':
+					text += 'Type: Emoticon / Character';
+					break;
 			}
 			text += ' | ';
 			text += 'Punishment: ' + App.modules.moderation.system.modBot.getPunishment(config.bannedWords[room][word].val);

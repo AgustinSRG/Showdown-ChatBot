@@ -44,49 +44,49 @@ exports.setup = function (App) {
 		let clueType = rand(['type', 'color', 'gen', 'tier']);
 		if (clueType === 'tier' && (!FormatData[pokeId] || !FormatData[pokeId].tier)) clueType = 'type'; //Undefined tier
 		switch (clueType) {
-		case 'type':
-			clue = rand(chosen.types) + ' type';
-			break;
-		case 'color':
-			clue = chosen.color + ' color';
-			break;
-		case 'gen':
-			if (chosen.formeLetter === "M") {
-				clue = 'Mega-Evo';
+			case 'type':
+				clue = rand(chosen.types) + ' type';
 				break;
-			}
-			if (!chosen.gen && chosen.num >= 1) {
-				if (chosen.num >= 906 || ['Paldea'].includes(chosen.forme + "")) {
-					chosen.gen = 9;
-				} else if (chosen.num >= 810 || ['Gmax', 'Galar', 'Galar-Zen'].includes(chosen.forme + "")) {
-					chosen.gen = 8;
-				} else if (chosen.num >= 722 || (chosen.forme + "").startsWith('Alola') || (chosen.forme + "") === 'Starter') {
-					chosen.gen = 7;
-				} else if (chosen.forme === 'Primal') {
-					chosen.gen = 6;
-				} else if (chosen.num >= 650 || chosen.isMega) {
-					chosen.gen = 6;
-				} else if (chosen.num >= 494) {
-					chosen.gen = 5;
-				} else if (chosen.num >= 387) {
-					chosen.gen = 4;
-				} else if (chosen.num >= 252) {
-					chosen.gen = 3;
-				} else if (chosen.num >= 152) {
-					chosen.gen = 2;
-				} else {
-					chosen.gen = 1;
+			case 'color':
+				clue = chosen.color + ' color';
+				break;
+			case 'gen':
+				if (chosen.formeLetter === "M") {
+					clue = 'Mega-Evo';
+					break;
 				}
-				clue = "Gen " + chosen.gen;
-			} else if (chosen.num < 0) {
-				clue = 'CAP';
-			} else {
-				clue = "Gen " + chosen.gen;
-			}
-			break;
-		case 'tier':
-			clue = 'Tier ' + FormatData[pokeId].tier;
-			break;
+				if (!chosen.gen && chosen.num >= 1) {
+					if (chosen.num >= 906 || ['Paldea'].includes(chosen.forme + "")) {
+						chosen.gen = 9;
+					} else if (chosen.num >= 810 || ['Gmax', 'Galar', 'Galar-Zen'].includes(chosen.forme + "")) {
+						chosen.gen = 8;
+					} else if (chosen.num >= 722 || (chosen.forme + "").startsWith('Alola') || (chosen.forme + "") === 'Starter') {
+						chosen.gen = 7;
+					} else if (chosen.forme === 'Primal') {
+						chosen.gen = 6;
+					} else if (chosen.num >= 650 || chosen.isMega) {
+						chosen.gen = 6;
+					} else if (chosen.num >= 494) {
+						chosen.gen = 5;
+					} else if (chosen.num >= 387) {
+						chosen.gen = 4;
+					} else if (chosen.num >= 252) {
+						chosen.gen = 3;
+					} else if (chosen.num >= 152) {
+						chosen.gen = 2;
+					} else {
+						chosen.gen = 1;
+					}
+					clue = "Gen " + chosen.gen;
+				} else if (chosen.num < 0) {
+					clue = 'CAP';
+				} else {
+					clue = "Gen " + chosen.gen;
+				}
+				break;
+			case 'tier':
+				clue = 'Tier ' + FormatData[pokeId].tier;
+				break;
 		}
 		return {
 			word: chosen.name,
@@ -102,12 +102,12 @@ exports.setup = function (App) {
 		let clue = '';
 		let clueType = rand(['type', 'category']);
 		switch (clueType) {
-		case 'type':
-			clue = chosen.type + ' type';
-			break;
-		case 'category':
-			clue = chosen.category + ' category';
-			break;
+			case 'type':
+				clue = chosen.type + ' type';
+				break;
+			case 'category':
+				clue = chosen.category + ' category';
+				break;
 		}
 		return {
 			word: chosen.name,
@@ -123,35 +123,35 @@ exports.setup = function (App) {
 		let clue = '';
 		let clueType = rand(['gen', 'type']);
 		switch (clueType) {
-		case 'gen':
-			if (!chosen.gen) {
-				if (chosen.num >= 689) {
-					chosen.gen = 7;
-				} else if (chosen.num >= 577) {
-					chosen.gen = 6;
-				} else if (chosen.num >= 537) {
-					chosen.gen = 5;
-				} else if (chosen.num >= 377) {
-					chosen.gen = 4;
-				} else {
-					chosen.gen = 3;
-				}
+			case 'gen':
+				if (!chosen.gen) {
+					if (chosen.num >= 689) {
+						chosen.gen = 7;
+					} else if (chosen.num >= 577) {
+						chosen.gen = 6;
+					} else if (chosen.num >= 537) {
+						chosen.gen = 5;
+					} else if (chosen.num >= 377) {
+						chosen.gen = 4;
+					} else {
+						chosen.gen = 3;
+					}
 				// Due to difference in gen 2 item numbering, gen 2 items must be
 				// specified manually
-			}
-			clue = chosen.gen ? ('Gen ' + chosen.gen) : "CAP";
-			break;
-		case 'type':
-			if (chosen.isBerry) {
-				clue = 'Berry';
-			} else if (chosen.megaStone) {
-				clue = 'Mega Stone';
-			} else if (chosen.fling) {
-				clue = chosen.fling.basePower + ' Fling BP';
-			} else {
-				clue = 'Gen ' + chosen.gen;
-			}
-			break;
+				}
+				clue = chosen.gen ? ('Gen ' + chosen.gen) : "CAP";
+				break;
+			case 'type':
+				if (chosen.isBerry) {
+					clue = 'Berry';
+				} else if (chosen.megaStone) {
+					clue = 'Mega Stone';
+				} else if (chosen.fling) {
+					clue = chosen.fling.basePower + ' Fling BP';
+				} else {
+					clue = 'Gen ' + chosen.gen;
+				}
+				break;
 		}
 		return {
 			word: chosen.name,

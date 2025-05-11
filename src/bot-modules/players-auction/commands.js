@@ -31,26 +31,26 @@ module.exports = {
 		let opt = Text.toId(this.args[0]);
 
 		switch (opt) {
-		case 'report':
-			this.cmd = 'auctionreport';
-			return this.parser.exec(this);
-		case 'status':
-			this.cmd = 'auctionstaus';
-			return this.parser.exec(this);
-		case 'teams':
-			this.cmd = 'auctionteams';
-			return this.parser.exec(this);
-		case 'teaminfo':
-			this.cmd = 'auctionteaminfo';
-			this.arg = this.args.slice(1).join(',');
-			this.args = this.arg.split(',');
-			return this.parser.exec(this);
-		case 'players':
-			this.cmd = 'auctionplayers';
-			return this.parser.exec(this);
-		case 'freeplayers':
-			this.cmd = 'auctionfreeplayers';
-			return this.parser.exec(this);
+			case 'report':
+				this.cmd = 'auctionreport';
+				return this.parser.exec(this);
+			case 'status':
+				this.cmd = 'auctionstaus';
+				return this.parser.exec(this);
+			case 'teams':
+				this.cmd = 'auctionteams';
+				return this.parser.exec(this);
+			case 'teaminfo':
+				this.cmd = 'auctionteaminfo';
+				this.arg = this.args.slice(1).join(',');
+				this.args = this.arg.split(',');
+				return this.parser.exec(this);
+			case 'players':
+				this.cmd = 'auctionplayers';
+				return this.parser.exec(this);
+			case 'freeplayers':
+				this.cmd = 'auctionfreeplayers';
+				return this.parser.exec(this);
 		}
 
 		if (!this.can('auction', this.room)) return this.replyAccessDenied('auction');

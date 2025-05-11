@@ -21,17 +21,17 @@ exports.setup = function (App) {
 	function autoResponseChat(room, user, message, response) {
 		// Code here to handle the chat messages responses
 
-        if (App.bot.rooms[room] && App.bot.rooms[room].type === 'battle') {
-            // We are in a battle
+		if (App.bot.rooms[room] && App.bot.rooms[room].type === 'battle') {
+			// We are in a battle
 
-            if (Text.toId(message).indexOf(Text.toId(App.bot.getBotNick())) >= 0 && (/(hi)|(hello)/gi).test(message)) {
-                return response("Hello " + user.name + "!"); // Say hello back
-            }
+			if (Text.toId(message).indexOf(Text.toId(App.bot.getBotNick())) >= 0 && (/(hi)|(hello)/gi).test(message)) {
+				return response("Hello " + user.name + "!"); // Say hello back
+			}
 
-            if (['gl', 'hf', 'good luck', 'have fun'].indexOf(message.toLowerCase().replace(/[^a-z\s]+/g, "")) >= 0) {
-                return response("Have fun!"); // Say have fun back in battle
-            }
-        }
+			if (['gl', 'hf', 'good luck', 'have fun'].indexOf(message.toLowerCase().replace(/[^a-z\s]+/g, "")) >= 0) {
+				return response("Have fun!"); // Say have fun back in battle
+			}
+		}
 	}
 
 	/**

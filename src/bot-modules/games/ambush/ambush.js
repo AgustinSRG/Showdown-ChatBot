@@ -53,17 +53,17 @@ exports.setup = function (App) {
 				let args = msg.substr(4).split(' ');
 				let cmd = args.shift();
 				switch (Text.toId(cmd)) {
-				case 'in':
-					this.userJoin(ident);
-					break;
-				case 'out':
-					this.userLeave(ident);
-					break;
-				case 'fires':
-					let victim = Text.toId(args.join(' '));
-					if (!victim) return;
-					this.fire(ident, victim);
-					break;
+					case 'in':
+						this.userJoin(ident);
+						break;
+					case 'out':
+						this.userLeave(ident);
+						break;
+					case 'fires':
+						let victim = Text.toId(args.join(' '));
+						if (!victim) return;
+						this.fire(ident, victim);
+						break;
 				}
 			}
 		}

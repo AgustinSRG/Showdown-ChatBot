@@ -46,21 +46,21 @@ exports.parse = function (context) {
 		if (context.pointVal < val) {
 			context.pointVal = val;
 			switch (wordType) {
-			case 'b':
-				context.muteMessage = context.mlt(Lang_File, 'banword');
-				break;
-			case 'i':
-				context.muteMessage = context.mlt(Lang_File, 'inap');
-				break;
-			case 'o':
-				context.muteMessage = context.mlt(Lang_File, 'offense');
-				break;
-			case 'e':
-				context.muteMessage = context.mlt(Lang_File, 'emote');
-				break;
-			default:
-				context.muteMessage = context.mlt(Lang_File, 'banword');
-				break;
+				case 'b':
+					context.muteMessage = context.mlt(Lang_File, 'banword');
+					break;
+				case 'i':
+					context.muteMessage = context.mlt(Lang_File, 'inap');
+					break;
+				case 'o':
+					context.muteMessage = context.mlt(Lang_File, 'offense');
+					break;
+				case 'e':
+					context.muteMessage = context.mlt(Lang_File, 'emote');
+					break;
+				default:
+					context.muteMessage = context.mlt(Lang_File, 'banword');
+					break;
 			}
 		}
 	}

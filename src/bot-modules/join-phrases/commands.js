@@ -25,52 +25,52 @@ module.exports = {
 		if (this.getRoomType(room) !== 'chat') return this.errorReply(this.mlt('nochat'));
 		let user;
 		switch (Text.toId(this.args[0])) {
-		case 'add':
-		case 'set':
-			user = Text.toId(this.args[1]);
-			let phrase = Text.trim(this.args.slice(2).join(','));
-			if (!user || !phrase) {
-				return this.errorReply(this.usage({desc: 'get'}, {desc: this.usageTrans('user')},
-					{desc: this.mlt('phrase')}));
-			}
-			if (user.length > 19) return this.errorReply(this.mlt('inv'));
-			if (!config.rooms[room]) config.rooms[room] = Object.create(null);
-			config.rooms[room][user] = phrase;
-			App.modules.joinphrases.system.db.write();
-			App.logCommandAction(this);
-			this.reply(this.mlt(0) + ' ' + Chat.italics(user) + ' ' + this.mlt(1) +
-				' ' + Chat.italics(this.parser.getRoomTitle(room)));
-			break;
-		case 'remove':
-		case 'delete':
-			user = Text.toId(this.args[1]);
-			if (!user) return this.errorReply(this.usage({desc: 'get'}, {desc: this.usageTrans('user')}));
-			if (config.rooms[room] && config.rooms[room][user]) {
-				delete config.rooms[room][user];
-				if (Object.keys(config.rooms[room]).length === 0) {
-					delete config.rooms[room];
+			case 'add':
+			case 'set':
+				user = Text.toId(this.args[1]);
+				let phrase = Text.trim(this.args.slice(2).join(','));
+				if (!user || !phrase) {
+					return this.errorReply(this.usage({desc: 'get'}, {desc: this.usageTrans('user')},
+						{desc: this.mlt('phrase')}));
 				}
+				if (user.length > 19) return this.errorReply(this.mlt('inv'));
+				if (!config.rooms[room]) config.rooms[room] = Object.create(null);
+				config.rooms[room][user] = phrase;
 				App.modules.joinphrases.system.db.write();
 				App.logCommandAction(this);
-				this.reply(this.mlt(2) + '' + Chat.italics(user) + ' ' + this.mlt(1) +
+				this.reply(this.mlt(0) + ' ' + Chat.italics(user) + ' ' + this.mlt(1) +
+				' ' + Chat.italics(this.parser.getRoomTitle(room)));
+				break;
+			case 'remove':
+			case 'delete':
+				user = Text.toId(this.args[1]);
+				if (!user) return this.errorReply(this.usage({desc: 'get'}, {desc: this.usageTrans('user')}));
+				if (config.rooms[room] && config.rooms[room][user]) {
+					delete config.rooms[room][user];
+					if (Object.keys(config.rooms[room]).length === 0) {
+						delete config.rooms[room];
+					}
+					App.modules.joinphrases.system.db.write();
+					App.logCommandAction(this);
+					this.reply(this.mlt(2) + '' + Chat.italics(user) + ' ' + this.mlt(1) +
 					' ' + Chat.italics(this.parser.getRoomTitle(room)));
-			} else {
-				this.errorReply(this.mlt(3) + ' ' + Chat.italics(user) + ' ' +
+				} else {
+					this.errorReply(this.mlt(3) + ' ' + Chat.italics(user) + ' ' +
 					this.mlt(1) + ' ' + Chat.italics(this.parser.getRoomTitle(room)));
-			}
-			break;
-		case 'get':
-			user = Text.toId(this.args[1]);
-			if (!user) return this.errorReply(this.usage({desc: 'get'}, {desc: this.usageTrans('user')}));
-			if (config.rooms[room] && config.rooms[room][user]) {
-				this.reply(Text.stripCommands(config.rooms[room][user]));
-			} else {
-				this.errorReply(this.mlt(3) + ' ' + Chat.italics(user) + ' ' +
+				}
+				break;
+			case 'get':
+				user = Text.toId(this.args[1]);
+				if (!user) return this.errorReply(this.usage({desc: 'get'}, {desc: this.usageTrans('user')}));
+				if (config.rooms[room] && config.rooms[room][user]) {
+					this.reply(Text.stripCommands(config.rooms[room][user]));
+				} else {
+					this.errorReply(this.mlt(3) + ' ' + Chat.italics(user) + ' ' +
 					this.mlt(1) + ' ' + Chat.italics(this.parser.getRoomTitle(room)));
-			}
-			break;
-		default:
-			this.errorReply(this.usage({desc: 'set / delete / get'}));
+				}
+				break;
+			default:
+				this.errorReply(this.usage({desc: 'set / delete / get'}));
 		}
 	},
 

@@ -610,7 +610,7 @@ module.exports = {
 					let server = App.config.server.url;
 
 					if (this.getRoomType(this.room) === 'chat' && botCanHtml(this.room, App) && this.can('ldbcustomrank', this.room)) {
-						// Send html table in chat
+					// Send html table in chat
 						let html = '';
 
 						if (Config[leaderboardsId].customTitle) {
@@ -676,7 +676,7 @@ module.exports = {
 
 						this.send("/addhtmlbox " + html, this.room);
 					} else {
-						// Send text message
+					// Send text message
 						if (!top.length) {
 							return this.restrictReply(this.mlt(26) + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId) + " " + this.mlt(27), "ldbcustomrank");
 						}

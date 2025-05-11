@@ -172,14 +172,14 @@ exports.setup = function (App) {
 			let t = this.parseWinners(winners);
 			let txt = Chat.bold(this.mlt('end')) + " ";
 			switch (t.type) {
-			case 'win':
-				txt += this.mlt('grats1') + " " + t.text + " " + this.mlt('grats2') +
+				case 'win':
+					txt += this.mlt('grats1') + " " + t.text + " " + this.mlt('grats2') +
 					" " + Chat.italics(points + " " + this.mlt('points')) + "!";
-				break;
-			case 'tie':
-				txt += this.mlt('tie1') + " " + Chat.italics(points + " " + this.mlt('points')) +
+					break;
+				case 'tie':
+					txt += this.mlt('tie1') + " " + Chat.italics(points + " " + this.mlt('points')) +
 					" " + this.mlt('tie2') + " " + t.text;
-				break;
+					break;
 			}
 
 			this.send(txt);

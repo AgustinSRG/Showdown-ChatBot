@@ -631,7 +631,7 @@ exports.setup = function (Data) {
 				case "defog":
 				case "tidyup":
 					if (battle.gen < 6) {
-						// Defog does not work before gen 6
+					// Defog does not work before gen 6
 						res.unviable.push(decisions[i]);
 						continue;
 					}

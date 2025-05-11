@@ -329,17 +329,17 @@ exports.setup = function (App) {
 
 		for (let line of lines) {
 			switch (line.charAt(0)) {
-			case '@':
-				currFile = Text.toRoomid(line.substr(1));
-				if (!data[currFile]) data[currFile] = Object.create(null);
-				break;
-			case '$':
-				if (!currFile) continue;
-				aux = line.substr(1).split('=');
-				id = Text.toId(aux.shift());
-				if (!id) continue;
-				data[currFile][id] = aux.join('=').trim();
-				break;
+				case '@':
+					currFile = Text.toRoomid(line.substr(1));
+					if (!data[currFile]) data[currFile] = Object.create(null);
+					break;
+				case '$':
+					if (!currFile) continue;
+					aux = line.substr(1).split('=');
+					id = Text.toId(aux.shift());
+					if (!id) continue;
+					data[currFile][id] = aux.join('=').trim();
+					break;
 			}
 		}
 

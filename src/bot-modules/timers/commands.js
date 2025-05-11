@@ -55,7 +55,7 @@ function parseMinutes(str) {
 			case 0:
 				{
 					if ((/[0-9\.]/i).test(c)) {
-						// Number
+					// Number
 						b += c;
 					} else {
 						let n = parseFloat(b);

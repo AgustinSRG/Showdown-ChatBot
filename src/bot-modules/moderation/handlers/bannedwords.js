@@ -89,18 +89,18 @@ exports.setup = function (App) {
 				config.bannedWords[room][word].strict = strict;
 				config.bannedWords[room][word].nonicks = nonicks;
 				switch (type) {
-				case 'banned':
-					config.bannedWords[room][word].type = 'b';
-					break;
-				case 'inap':
-					config.bannedWords[room][word].type = 'i';
-					break;
-				case 'insult':
-					config.bannedWords[room][word].type = 'o';
-					break;
-				case 'emote':
-					config.bannedWords[room][word].type = 'e';
-					break;
+					case 'banned':
+						config.bannedWords[room][word].type = 'b';
+						break;
+					case 'inap':
+						config.bannedWords[room][word].type = 'i';
+						break;
+					case 'insult':
+						config.bannedWords[room][word].type = 'o';
+						break;
+					case 'emote':
+						config.bannedWords[room][word].type = 'e';
+						break;
 				}
 				config.bannedWords[room][word].val = config.punishments.indexOf(punishment) + 1;
 				App.modules.moderation.system.db.write();
@@ -144,18 +144,18 @@ exports.setup = function (App) {
 			htmlVars.words += '<td>' + Text.escapeHTML(word) + '</td>';
 			htmlVars.words += '<td>' + Text.escapeHTML(App.modules.moderation.system.modBot.getPunishment(wordsData[word].val)) + '</td>';
 			switch (wordsData[word].type) {
-			case 'i':
-				htmlVars.words += '<td>Inappropriate</td>';
-				break;
-			case 'o':
-				htmlVars.words += '<td>Insult</td>';
-				break;
-			case 'e':
-				htmlVars.words += '<td>Banned Emoticon / Character</td>';
-				break;
-			default:
-				htmlVars.words += '<td>Banned Word</td>';
-				break;
+				case 'i':
+					htmlVars.words += '<td>Inappropriate</td>';
+					break;
+				case 'o':
+					htmlVars.words += '<td>Insult</td>';
+					break;
+				case 'e':
+					htmlVars.words += '<td>Banned Emoticon / Character</td>';
+					break;
+				default:
+					htmlVars.words += '<td>Banned Word</td>';
+					break;
 			}
 			if (wordsData[word].strict) {
 				htmlVars.words += '<td>Yes</td>';

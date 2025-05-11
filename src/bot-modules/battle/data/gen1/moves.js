@@ -71,10 +71,10 @@ exports.BattleMovedex = {
 					this.effectData.duration++;
 				} else {
 					switch (status.id) {
-					case 'slp':
-					case 'frz':
-						this.effectData.duration++;
-						break;
+						case 'slp':
+						case 'frz':
+							this.effectData.duration++;
+							break;
 					}
 				}
 			},

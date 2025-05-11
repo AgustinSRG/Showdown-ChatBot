@@ -252,15 +252,15 @@ exports.setup = function (App) {
 		for (let room in config.modexception.rooms) {
 			htmlVars.rooms += '<tr><td>' + Text.escapeHTML(room) + '</td>';
 			switch (config.modexception.rooms[room]) {
-			case 'user':
-				htmlVars.rooms += '<td>All Users</td>';
-				break;
-			case 'excepted':
-				htmlVars.rooms += '<td>Excepted Users</td>';
-				break;
-			default:
-				htmlVars.rooms += '<td>Group ' + Text.escapeHTML(config.modexception.rooms[room]) + '</td>';
-				break;
+				case 'user':
+					htmlVars.rooms += '<td>All Users</td>';
+					break;
+				case 'excepted':
+					htmlVars.rooms += '<td>Excepted Users</td>';
+					break;
+				default:
+					htmlVars.rooms += '<td>Group ' + Text.escapeHTML(config.modexception.rooms[room]) + '</td>';
+					break;
 			}
 			htmlVars.rooms += '<td><div align="center"><form style="display:inline;" method="post" action="">' +
 			'<input type="hidden" name="room" value="' + Text.escapeHTML(room) +

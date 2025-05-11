@@ -81,15 +81,15 @@ exports.setup = function (App) {
 						let group = App.bot.rooms[room].users[user];
 						if (App.parser.equalOrHigherGroup({group: group}, roomConf.users[user])) continue;
 						switch (roomConf.users[user]) {
-						case "voice":
-							toSend.push(room + "|/" + CMD_VOICE + " " + user);
-							break;
-						case "driver":
-							toSend.push(room + "|/" + CMD_DRIVER + " " + user);
-							break;
-						case "mod":
-							toSend.push(room + "|/" + CMD_MOD + " " + user);
-							break;
+							case "voice":
+								toSend.push(room + "|/" + CMD_VOICE + " " + user);
+								break;
+							case "driver":
+								toSend.push(room + "|/" + CMD_DRIVER + " " + user);
+								break;
+							case "mod":
+								toSend.push(room + "|/" + CMD_MOD + " " + user);
+								break;
 						}
 					} else if (authfrom[user]) {
 						let group = App.bot.rooms[room].users[user];
@@ -118,18 +118,18 @@ exports.setup = function (App) {
 			if (!roomConf) return;
 			let roomid = this.getId(roomConf.name);
 			switch (group) {
-			case "voice":
-				App.bot.send(roomid + "|/" + CMD_VOICE + " " + user);
-				break;
-			case "driver":
-				App.bot.send(roomid + "|/" + CMD_DRIVER + " " + user);
-				break;
-			case "mod":
-				App.bot.send(roomid + "|/" + CMD_MOD + " " + user);
-				break;
-			case "deauth":
-				App.bot.send(roomid + "|/" + CMD_DEAUTH + " " + user);
-				break;
+				case "voice":
+					App.bot.send(roomid + "|/" + CMD_VOICE + " " + user);
+					break;
+				case "driver":
+					App.bot.send(roomid + "|/" + CMD_DRIVER + " " + user);
+					break;
+				case "mod":
+					App.bot.send(roomid + "|/" + CMD_MOD + " " + user);
+					break;
+				case "deauth":
+					App.bot.send(roomid + "|/" + CMD_DEAUTH + " " + user);
+					break;
 			}
 		},
 

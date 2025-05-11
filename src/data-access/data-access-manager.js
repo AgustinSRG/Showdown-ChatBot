@@ -14,14 +14,14 @@ const Path = require('path');
 exports.getDataAccessManager = function (access_type, options) {
 	let ObjectConstructor = null;
 	switch (access_type) {
-	case "RAW":
-		ObjectConstructor = require(Path.resolve(__dirname, "raw-data.js"));
-		break;
-	case "MYSQL":
-		ObjectConstructor = require(Path.resolve(__dirname, "mysql.js"));
-		break;
-	default:
-		throw new Error("Invalid access type: " + access_type);
+		case "RAW":
+			ObjectConstructor = require(Path.resolve(__dirname, "raw-data.js"));
+			break;
+		case "MYSQL":
+			ObjectConstructor = require(Path.resolve(__dirname, "mysql.js"));
+			break;
+		default:
+			throw new Error("Invalid access type: " + access_type);
 	}
 	return new ObjectConstructor(options || {});
 };

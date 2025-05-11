@@ -25,27 +25,27 @@ class Translator {
 			lines[i] = lines[i].trim();
 			if (!lines[i]) continue;
 			switch (lines[i].charAt(0)) {
-			case '@':
-				if (this.id === null) {
-					this.id = Text.toRoomid(lines[i].substr(1));
-				}
-				break;
-			case '%':
-				currentLang = Text.toId(lines[i].substr(1));
-				if (!currentLang || loadFilter[currentLang] === false) {
-					currentLang = null;
-					continue;
-				}
-				if (!this.data[currentLang]) this.data[currentLang] = Object.create(null);
-				break;
-			case '$':
-				if (!currentLang) continue;
-				lines[i] = lines[i].substr(1);
-				let spl = lines[i].split('=');
-				let id = Text.toId(spl.shift());
-				if (!id) continue;
-				this.data[currentLang][id] = spl.join('=').trim();
-				break;
+				case '@':
+					if (this.id === null) {
+						this.id = Text.toRoomid(lines[i].substr(1));
+					}
+					break;
+				case '%':
+					currentLang = Text.toId(lines[i].substr(1));
+					if (!currentLang || loadFilter[currentLang] === false) {
+						currentLang = null;
+						continue;
+					}
+					if (!this.data[currentLang]) this.data[currentLang] = Object.create(null);
+					break;
+				case '$':
+					if (!currentLang) continue;
+					lines[i] = lines[i].substr(1);
+					let spl = lines[i].split('=');
+					let id = Text.toId(spl.shift());
+					if (!id) continue;
+					this.data[currentLang][id] = spl.join('=').trim();
+					break;
 			}
 		}
 	}
