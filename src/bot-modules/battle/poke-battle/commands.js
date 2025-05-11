@@ -106,7 +106,7 @@ module.exports = {
         // Parse options
 
         if (!this.arg) {
-            return this.errorReply(this.mlt('usage') + ": " + Chat.italics('<Pokemon> VS <Pokemon>'));
+            return this.errorReply(this.mlt('usage') + ": " + this.token + this.cmd + " " + Chat.italics('<Pokemon>') + " VS " + Chat.italics('<Pokemon>'));
         }
 
         if (Text.toId(this.arg) in { 'stop': 1, 'interrupt': 1, 'cancel': 1 }) {
@@ -124,7 +124,7 @@ module.exports = {
         const argParts = arg.split(" vs ");
 
         if (argParts.length !== 2) {
-            return this.errorReply(this.mlt('usage') + ": " + Chat.italics('<Pokemon> VS <Pokemon>'));
+            return this.errorReply(this.mlt('usage') + ": " + this.token + this.cmd + " " + Chat.italics('<Pokemon>') + " VS " + Chat.italics('<Pokemon>'));
         }
 
         const pokes = [null, null];
@@ -407,10 +407,6 @@ module.exports = {
 
         const pokeA = pokes[0];
         const pokeB = pokes[1];
-
-        if (!pokeA || !pokeB) {
-            return this.errorReply(this.mlt('usage') + ": " + Chat.italics('<Pokemon> VS <Pokemon>'));
-        }
 
         if (PokeBattleManager.battles[this.room]) {
             return this.errorReply(this.mlt(3));
