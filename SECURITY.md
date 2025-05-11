@@ -8,6 +8,4 @@ Security updates are only supported for the latest major version (currently `2.x
 
 This is a small project without any funding or bounty program.
 
-If you find a vulnerability and want to report it, open a bug report [Issue](https://github.com/AgustinSRG/Showdown-ChatBot/issues) on the project. Depending on the severity, it will be dealt with lower or higher priority.
-
-If you find a critical vulnerability (remove, unauthenticated), you can contact the owner of the repository ([AgustinSRG](https://github.com/AgustinSRG)) directly by email if you consider posting the information publicly could be dangerous.
+If you find a vulnerability and want to report it, open an [Advisory](https://github.com/AgustinSRG/Showdown-ChatBot/security/advisories) on the `Security` sections of the repository. Depending on the severity, it will be dealt with lower or higher priority.
