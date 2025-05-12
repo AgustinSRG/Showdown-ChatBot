@@ -58,7 +58,7 @@ exports.generate = function (body, loginData, menu, options) {
 		}
 	}
 
-	buf += '<script type="text/javascript" src="/static/common.js?v2"></script>';
+	buf += '<script type="text/javascript" src="/static/common.js?v3"></script>';
 
 	if (options.scripts) {
 		for (let i = 0; i < options.scripts.length; i++) {
@@ -111,7 +111,7 @@ exports.generate = function (body, loginData, menu, options) {
 			'<input type="text" name="user" value="' + (loginData.invalid || '') + '" /></div>' +
 			'<div style="margin-bottom:2px;"><strong>Pass:</strong>&nbsp;' +
 			'<input id="login_password_input" type="password" name="password" /></div>' +
-			'<div style="margin-bottom:8px;"><a href="javascript:;" style="font-size: small;" id="password_visibility_toggle" onclick="toggleLoginPasswordVisibility()">Show password</a></div>' +
+			'<div style="margin-bottom:8px;"><a href="javascript:;" style="font-size: small;" id="password_visibility_toggle" onclick="togglePasswordVisibility()">Show password</a></div>' +
 			'<div>' + (loginData.invalid ? '<span class="invalid-login">Invalid Credentials</span>&nbsp;' : '') +
 			'<input type="submit" name="login" value="Login" />' +
 			'</div></form>';

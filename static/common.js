@@ -67,13 +67,21 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 });
 
-var loginPasswordVisible = false;
+var passwordVisibility = {};
 
-window.toggleLoginPasswordVisibility = function () {
-	var inputEl = document.getElementById("login_password_input");
-	var toggleEl = document.getElementById("password_visibility_toggle");
+window.togglePasswordVisibility = function (inputId, toggleId) {
+	if (!inputId) {
+		inputId = "login_password_input";
+	}
 
-	if (loginPasswordVisible) {
+	if (!toggleId) {
+		toggleId = "password_visibility_toggle";
+	}
+
+	var inputEl = document.getElementById(inputId);
+	var toggleEl = document.getElementById(toggleId);
+
+	if (passwordVisibility[inputId]) {
 		if (inputEl) {
 			inputEl.type = "password";
 			delete inputEl.autocomplete;
@@ -93,5 +101,5 @@ window.toggleLoginPasswordVisibility = function () {
 		}
 	}
 
-	loginPasswordVisible = !loginPasswordVisible;
+	passwordVisibility[inputId] = !passwordVisibility[inputId];
 };

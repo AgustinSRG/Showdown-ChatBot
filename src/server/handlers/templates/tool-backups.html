@@ -3,14 +3,14 @@
 <p>Note: Backups are encrypted with a password you must provide.</p>
 <p>Note: Restoring a backup will restart the application via exiting the process (if you run the "run-forever" script).</p>
 <form method="post" action="" target="_blank">
-  <p>Password: <input name="cryptopassword" type="password" value="" size="20" /></p>
-  <p>Password (again): <input name="cryptopassword2" type="password" value="" size="20" /></p>
-  <p><input type="submit" name="savebackup" value="Download Backup" /></p>
+	<p>Password: <input id="backup_password" name="cryptopassword" type="password" value="" size="20" />&nbsp;<a href="javascript:;" style="font-size: small;" id="backup_password_toggle" onclick="togglePasswordVisibility('backup_password', 'backup_password_toggle')">Show password</a></p>
+	<p>Password (again): <input id="backup_password_repeat" name="cryptopassword2" type="password" value="" size="20" />&nbsp;<a href="javascript:;" style="font-size: small;" id="backup_password_repeat_toggle" onclick="togglePasswordVisibility('backup_password_repeat', 'backup_password_repeat_toggle')">Show password</a></p>
+	<p><input type="submit" name="savebackup" value="Download Backup" /></p>
 </form>
 <hr />
 <form method="post" action="" enctype="multipart/form-data">
-  <p>Backup File: <input type="file" name="backupfile" /></p>
-  <p>Password: <input name="cryptopassword" type="password" value="" size="20" /></p>
-  <p><input type="submit" name="restorebackup" value="Restore Backup" /></p>
+	<p>Backup File: <input type="file" name="backupfile" /></p>
+	<p>Password: <input id="backup_import_password" name="cryptopassword" type="password" value="" size="20" />&nbsp;<a href="javascript:;" style="font-size: small;" id="backup_import_password_toggle" onclick="togglePasswordVisibility('backup_import_password', 'backup_import_password_toggle')">Show password</a></p>
+	<p><input type="submit" name="restorebackup" value="Restore Backup" /></p>
 </form>
 <p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

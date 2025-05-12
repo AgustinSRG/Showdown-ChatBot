@@ -1,12 +1,18 @@
 <h2>Change password for your account</h2>
 <form id="chpass-form" name="chpass-form" method="post" action="">
 	<table border="0">
-		<tr><td style="padding:5px;">Current password: </td>
-		<td><input type="password" name="password" /></td></tr>
-		<tr><td style="padding:5px;">New password: </td>
-		<td><input type="password" name="newpassword" /></td></tr>
-		<tr><td style="padding:5px;">Confirm new password: </td>
-		<td><input type="password" name="newpasswordconfirm" /></td></tr>
+		<tr>
+			<td style="padding:5px;">Current password: </td>
+			<td><input id="chpass_old_password" type="password" name="password" />&nbsp;<a href="javascript:;" style="font-size: small;" id="chpass_old_password_toggle" onclick="togglePasswordVisibility('chpass_old_password', 'chpass_old_password_toggle')">Show password</a></td>
+		</tr>
+		<tr>
+			<td style="padding:5px;">New password: </td>
+			<td><input id="chpass_new_password" type="password" name="newpassword" />&nbsp;<a href="javascript:;" style="font-size: small;" id="chpass_new_password_toggle" onclick="togglePasswordVisibility('chpass_new_password', 'chpass_new_password_toggle')">Show password</a></td>
+		</tr>
+		<tr>
+			<td style="padding:5px;">Confirm new password: </td>
+			<td><input id="chpass_repeat_password" type="password" name="newpasswordconfirm" />&nbsp;<a href="javascript:;" style="font-size: small;" id="chpass_repeat_password_toggle" onclick="togglePasswordVisibility('chpass_repeat_password', 'chpass_repeat_password_toggle')">Show password</a></td>
+		</tr>
 	</table>
 	<br />
 	<p><input type="submit" name="chpass" value="Change Password" /></p>
