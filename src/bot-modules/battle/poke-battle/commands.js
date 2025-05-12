@@ -22,6 +22,10 @@ function botCanHtml(room, App) {
 	return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'bot'));
 }
 
+function isGroupChat(room) {
+	return room && room.substring(0, 10) === "groupchat-";
+}
+
 function randomItem(App) {
 	let items;
 	try {
@@ -101,6 +105,9 @@ module.exports = {
 		if (!this.can('pokebattle', this.room)) return this.replyAccessDenied('pokebattle');
 		if (!botCanHtml(this.room, App)) {
 			return this.errorReply(this.mlt('nobot'));
+		}
+		if (isGroupChat(this.room)) {
+			return this.errorReply(this.mlt('gchat'));
 		}
 
 		// Parse options

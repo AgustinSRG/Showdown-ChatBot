@@ -8,6 +8,7 @@ $usage = Usage
 
 $nochat = This command is only available for chat rooms
 $nobot = Bot requires rank of bot or higher to use this feature
+$gchat = This command is only available for chat rooms. Images are not allowed in group chats.
 
 $1 = The specified pokemon does not exist or is not available
 
@@ -27,6 +28,7 @@ $usage = Uso del comando
 
 $nochat = Este comando solo está disponible para las salas de chat
 $nobot = Necesito rango de bot o superior para poder usar esta funcionalidad
+$gchat = Este comando solo está disponible para las salas de chat. Las imágenes no están permitidas en grupos de chat.
 
 $1 = El pokemon especificado no existe o no está disponible
 
