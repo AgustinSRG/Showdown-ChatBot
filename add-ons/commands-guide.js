@@ -83,6 +83,7 @@ class CommandsGuide {
 		}
 
 		this.autoUpdateTimer = setInterval(this.autoUpdate.bind(this), AUTO_UPDATE_SYNC_INTERVAL);
+		this.autoUpdate(); // Call autoUpdate on startup
 	}
 
 	stopAutoUpdateTimer() {
