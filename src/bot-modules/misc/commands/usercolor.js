@@ -26,24 +26,39 @@ module.exports = {
 		let target = Text.toId(this.arg) || Text.toId(this.by);
 		if (!target || target.length > 18) return this.pmReply(this.mlt('inv'));
 
+		const Mod = App.modules.misc.system;
+
 		const targetName = (this.arg || this.byIdent.name).trim();
 
 		const color = Chat.usernameColor(target);
-		const link = 'https://www.w3schools.com/colors/colors_picker.asp?color=' + color.substring(1);
+		const linkColor = 'https://www.w3schools.com/colors/colors_picker.asp?color=' + color.substring(1);
+
+		const customColor = Mod.getCustomColor(target);
+		const linkCustomColor = customColor ? ('https://www.w3schools.com/colors/colors_picker.asp?color=' + customColor.substring(1)) : null;
 
 		if ((this.room && botCanHtml(this.room, App) && this.can("usernamecolor", this.room)) || botCanHtml('lobby', App)) {
 			// HTML response
 			let html = '';
 
+			const effectiveColor = customColor || color;
+			const effectiveColorLink = linkCustomColor || linkColor;
+
 			html += '<strong>' +
-				Text.escapeHTML(this.mlt(2)) + ': </strong><strong style="color: ' + color + ';">' +
+				Text.escapeHTML(this.mlt(2)) + ': </strong><strong style="color: ' + effectiveColor + ';">' +
 				Text.escapeHTML(targetName) + '</strong>';
 
 			html += '<br>';
 
 			html += '<strong>' +
-				Text.escapeHTML(this.mlt(3)) + ': </strong><strong style="color: ' + color + ';">' +
-				Text.escapeHTML(color) + '</strong> - <a href="' + Text.escapeHTML(link) + '" target="_blank">' + Text.escapeHTML(this.mlt(4)) + '</a>';
+				Text.escapeHTML(this.mlt(3)) + ': </strong><strong style="color: ' + effectiveColor + ';">' +
+				Text.escapeHTML(effectiveColor) + '</strong> - <a href="' + Text.escapeHTML(effectiveColorLink) + '" target="_blank">' + Text.escapeHTML(this.mlt(4)) + '</a>';
+
+			if (customColor) {
+				html += '<br>';
+				html += '<strong>' +
+					Text.escapeHTML(this.mlt(5)) + ': </strong><strong style="color: ' + color + ';">' +
+					Text.escapeHTML(color) + '</strong> - <a href="' + Text.escapeHTML(linkColor) + '" target="_blank">' + Text.escapeHTML(this.mlt(4)) + '</a>';
+			}
 
 			if (this.room && botCanHtml(this.room, App) && this.can("usernamecolor", this.room)) {
 				this.send("/addhtmlbox " + html, this.room);
@@ -52,7 +67,11 @@ module.exports = {
 			}
 		} else {
 			// Text response
-			this.restrictReply(this.mlt(1) + " " + Chat.bold(targetName) + ": " + Chat.code(color) + " - " + link, "usernamecolor");
+			if (customColor) {
+				this.restrictReply(this.mlt(1) + " " + Chat.bold(targetName) + ": " + Chat.code(customColor) + " - " + linkCustomColor + " | " + this.mlt(5) + ": " + Chat.code(color) + " - " + linkColor, "usernamecolor");
+			} else {
+				this.restrictReply(this.mlt(1) + " " + Chat.bold(targetName) + ": " + Chat.code(color) + " - " + linkColor, "usernamecolor");
+			}
 		}
 	},
 };

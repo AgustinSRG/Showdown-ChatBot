@@ -1,33 +1,34 @@
 {
-  "id": "misc",
-  "name": "Misc",
-  "commands": [
-    "misc.js"
-  ],
-  "permissions": {
-    "regdate": {
-      "group": "voice"
-    },
-    "usernamecolor": {
-      "group": "voice"
-    },
-    "randomanswer": {
-      "group": "voice"
-    },
-    "random": {
-      "group": "voice"
-    },
-    "randpoke": {
-      "group": "voice"
-    },
-    "link": {
-      "group": "mod"
-    }
-  },
-  "langfiles": [
-    "./commands/fun.translations",
-    "./commands/randomanswer.translations",
-    "./commands/regdate.translations"
-  ],
-  "description": "Misc Commands Plugins"
+	"id": "misc",
+	"name": "Misc",
+	"main": "main.js",
+	"commands": [
+		"commands.js"
+	],
+	"permissions": {
+		"regdate": {
+			"group": "voice"
+		},
+		"usernamecolor": {
+			"group": "voice"
+		},
+		"randomanswer": {
+			"group": "voice"
+		},
+		"random": {
+			"group": "voice"
+		},
+		"randpoke": {
+			"group": "voice"
+		},
+		"link": {
+			"group": "mod"
+		}
+	},
+	"langfiles": [
+		"./commands/fun.translations",
+		"./commands/randomanswer.translations",
+		"./commands/regdate.translations"
+	],
+	"description": "Misc Commands Plugins"
 }

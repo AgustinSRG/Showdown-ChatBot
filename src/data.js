@@ -218,8 +218,10 @@ class DataManager {
 	 * download it if it is not in the cache
 	 * @param {String} url - The requested url
 	 * @param {function(String, Error)} callback
+	 * @param {Map} customCache
+	 * @param {boolean} strictError
 	 */
-	wget(url, callback, customCache) {
+	wget(url, callback, customCache, strictError) {
 		this.cache.sweep();
 		if (customCache && customCache.has(url)) {
 			return callback(customCache.get(url));
@@ -228,10 +230,10 @@ class DataManager {
 			if (cache) {
 				return callback(cache.data);
 			} else {
-				wget(url, callback);
+				wget(url, callback, strictError);
 			}
 		} else {
-			wget(url, callback);
+			wget(url, callback, strictError);
 		}
 	}
 

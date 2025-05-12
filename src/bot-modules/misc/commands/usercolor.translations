@@ -13,6 +13,8 @@ $3 = Color code
 
 $4 = View in color picker
 
+$5 = Original color
+
 %spanish
 
 $inv = Nombre de usuario no válido
@@ -23,3 +25,5 @@ $2 = Nombre de usuario
 $3 = Código de color
 
 $4 = Ver en el selector de color
+
+$5 = Color original
