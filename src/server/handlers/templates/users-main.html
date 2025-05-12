@@ -8,28 +8,45 @@
 	}
 </script>
 <h2>Users List</h2>
-<table class="userlist" width="900" border="1">
+<table class="userlist" style="width: 100%;" border="1">
 	<tr>
-		<td width="150"><div align="center"><strong>ID</strong></div></td>
-		<td width="200"><div align="center"><strong>Name</strong></div></td>
-		<td width="200"><div align="center"><strong>Group</strong></div></td>
-		<td width="350"><div align="center"><strong>Options</strong></div></td>
+		<td style="text-align: center;"><strong>ID</strong></td>
+		<td style="text-align: center;"><strong>Name</strong></td>
+		<td style="text-align: center;"><strong>Group</strong></td>
+		<td style="text-align: center;"><strong>Options</strong></td>
 	</tr>
 	${USERS_LIST}
 </table>
-<br /><hr /><br />
+<br />
+<hr /><br />
 <div class="newuser">
 	<form id="new-user-form" name="new-user-form" method="post" action="">
 		<table border="0">
-			<tr><td><strong>ID</strong>: </td><td><input name="user" type="text" size="50" value="${ID}"/></td></tr>
-			<tr><td><strong>Password</strong>: </td><td><input name="password" type="password" size="50" /></td></tr>
-			<tr><td><strong>Password (confirm)</strong>: </td><td><input name="passwordconfirm" type="password" size="50" /></td></tr>
-			<tr><td><strong>Name</strong>: </td><td><input name="username" type="text" size="50" value="${NAME}" /></td></tr>
-			<tr><td><strong>Group</strong>: </td><td><input name="usergroup" type="text" size="50" value="${GROUP}" /></td></tr>
-			<tr><td colspan="2"><input type="checkbox" name="makeadmin" value="true" />&nbsp;Create with administrator permissions</td></tr>
+			<tr>
+				<td><strong>ID</strong>: </td>
+				<td><input name="user" type="text" size="50" value="${ID}" /></td>
+			</tr>
+			<tr>
+				<td><strong>Password</strong>: </td>
+				<td><input name="password" type="password" size="50" /></td>
+			</tr>
+			<tr>
+				<td><strong>Password (confirm)</strong>: </td>
+				<td><input name="passwordconfirm" type="password" size="50" /></td>
+			</tr>
+			<tr>
+				<td><strong>Name</strong>: </td>
+				<td><input name="username" type="text" size="50" value="${NAME}" /></td>
+			</tr>
+			<tr>
+				<td><strong>Group</strong>: </td>
+				<td><input name="usergroup" type="text" size="50" value="${GROUP}" /></td>
+			</tr>
+			<tr>
+				<td colspan="2"><input type="checkbox" name="makeadmin" value="true" />&nbsp;Create with administrator permissions</td>
+			</tr>
 		</table>
 		<p><input type="submit" name="adduser" value="Create New User" /></p>
 	</form>
 </div>
 <p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
-			
