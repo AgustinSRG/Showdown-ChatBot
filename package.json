@@ -1,40 +1,40 @@
 {
-  "name": "showdown-chatbot",
-  "version": "2.17.0",
-  "author": {
-    "name": "Agustin San Roman",
-    "email": "agustinsanromanguzman@gmail.com",
-    "url": "https://github.com/AgustinSRG"
-  },
-  "scripts": {
-    "start": "node run-forever",
-    "test": "eslint --cache showdown-chatbot config-example.js src/ add-ons/",
-    "fix-test": "eslint --fix --cache showdown-chatbot config-example.js src/ add-ons/"
-  },
-  "main": "showdown-chatbot",
-  "bin": "showdown-chatbot",
-  "engines": {
-    "node": "> 18.0.0"
-  },
-  "dependencies": {
-    "busboy": "1.6.0",
-    "json5": "2.2.3",
-    "sockjs-client": "1.6.1",
-    "websocket": "1.0.34"
-  },
-  "optionalDependencies": {
-    "githubhook": "1.9.3",
-    "mysql": "2.18.1"
-  },
-  "description": "Bot for Pokemon Showdown",
-  "homepage": "https://github.com/AgustinSRG/Showdown-ChatBot",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/AgustinSRG/Showdown-ChatBot.git"
-  },
-  "private": true,
-  "license": "MIT",
-  "devDependencies": {
-    "eslint": "8.57.0"
-  }
+	"name": "showdown-chatbot",
+	"version": "2.17.1",
+	"author": {
+		"name": "Agustin San Roman",
+		"email": "agustinsanromanguzman@gmail.com",
+		"url": "https://github.com/AgustinSRG"
+	},
+	"scripts": {
+		"start": "node run-forever",
+		"test": "eslint --cache showdown-chatbot config-example.js src/ add-ons/",
+		"fix-test": "eslint --fix --cache showdown-chatbot config-example.js src/ add-ons/"
+	},
+	"main": "showdown-chatbot",
+	"bin": "showdown-chatbot",
+	"engines": {
+		"node": "> 18.0.0"
+	},
+	"dependencies": {
+		"busboy": "1.6.0",
+		"json5": "2.2.3",
+		"sockjs-client": "1.6.1",
+		"websocket": "1.0.34"
+	},
+	"optionalDependencies": {
+		"githubhook": "1.9.3",
+		"mysql": "2.18.1"
+	},
+	"description": "Bot for Pokemon Showdown",
+	"homepage": "https://github.com/AgustinSRG/Showdown-ChatBot",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/AgustinSRG/Showdown-ChatBot.git"
+	},
+	"private": true,
+	"license": "MIT",
+	"devDependencies": {
+		"eslint": "8.57.0"
+	}
 }
