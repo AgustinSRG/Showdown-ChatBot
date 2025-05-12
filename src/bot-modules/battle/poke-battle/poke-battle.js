@@ -478,7 +478,7 @@ class PokeBattle {
 		const pokeALoser = this.winner && this.winner !== this.pokeA;
 		const pokeBLoser = this.winner && this.winner !== this.pokeB;
 
-		html += '<div style="width: 60%; height: ' + displayHeight + 'px; overflow: auto;">';
+		html += '<div style="width: 60%; min-width: 280px; height: ' + displayHeight + 'px; overflow: auto;">';
 
 		html += '<table style="width: 100%;">';
 
@@ -517,7 +517,7 @@ class PokeBattle {
 			'" height="100" width="100" alt="' + Text.escapeHTML(this.pokeA.name) + '">';
 		html += '</td>';
 
-		html += '<td style="font-size: 24px; text-align: center; padding: 6px;">';
+		html += '<td style="font-size: 24px; text-align: center; padding: 0;">';
 		html += '<b>VS</b>';
 		html += '</td>';
 
