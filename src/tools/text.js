@@ -35,6 +35,16 @@ exports.toCmdid = exports.toCmdId = function (str) {
 };
 
 /**
+ * Transforms string to add-on ID
+ * @param {String} str
+ * @returns {String} add-on id
+ */
+exports.toAddonid = exports.toAddOnId = function (str) {
+	if (!str) return '';
+	return ('' + str).replace(/[^_a-zA-Z0-9-]+/g, '').toLowerCase();
+};
+
+/**
  * Transforms string to Command Token ID
  * @param {String} str
  * @returns {String} command token id

@@ -67,14 +67,14 @@ exports.setup = function (App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(listTemplate.make(htmlVars), {title: "Add-ons - Showdown ChatBot"});
+		context.endWithWebPage(listTemplate.make(htmlVars), { title: "Add-ons - Showdown ChatBot" });
 	});
 
 	function newAddonHandler(context, parts) {
 		let ok = null, error = null;
 
 		if (context.post.add) {
-			let addon = Text.toCmdid(context.post.addon);
+			let addon = Text.toAddOnId(context.post.addon);
 			let file = App.addonsDir + '/' + addon + ".js";
 			let content = (context.post.content || "").trim();
 			try {
@@ -94,7 +94,7 @@ exports.setup = function (App) {
 					error = "Failed to install the add-on";
 				} else {
 					App.logServerAction(context.user.id, 'Add-on installed: ' + file);
-					context.response.writeHead(302, {'Location': '/addons/'});
+					context.response.writeHead(302, { 'Location': '/addons/' });
 					context.response.end();
 					return;
 				}
@@ -106,7 +106,7 @@ exports.setup = function (App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(addingTemplate.make(htmlVars), {title: "New Add-on - Showdown ChatBot"});
+		context.endWithWebPage(addingTemplate.make(htmlVars), { title: "New Add-on - Showdown ChatBot" });
 	}
 
 	function editAddonHandler(context, parts) {
@@ -157,6 +157,6 @@ exports.setup = function (App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(editTemplate.make(htmlVars), {title: "Add-ons - Showdown ChatBot"});
+		context.endWithWebPage(editTemplate.make(htmlVars), { title: "Add-ons - Showdown ChatBot" });
 	}
 };
