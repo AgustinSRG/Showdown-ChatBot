@@ -31,12 +31,12 @@ exports.setup = function (App) {
 		}
 
 		let submenu = new SubMenu("Command&nbsp;Parser", parts, context, [
-			{id: 'config', title: 'Configuration', url: '/parser/', handler: parserConfigurationHandler},
-			{id: 'aliases', title: 'Aliases', url: '/parser/aliases/', handler: parserAliasesHandler},
-			{id: 'permissions', title: 'Permissions', url: '/parser/permissions/', handler: parserPermissionsHandler},
-			{id: 'roomctrl', title: 'Control&nbsp;Rooms', url: '/parser/roomctrl/', handler: parserRoomControlHandler},
-			{id: 'roomalias', title: 'Rooms&nbsp;Aliases', url: '/parser/roomalias/', handler: parserRoomAliasHandler},
-			{id: 'monitor', title: 'Abuse&nbsp;Monitor', url: '/parser/monitor/', handler: parserAbuseMonitorHandler},
+			{ id: 'config', title: 'Configuration', url: '/parser/', handler: parserConfigurationHandler },
+			{ id: 'aliases', title: 'Aliases', url: '/parser/aliases/', handler: parserAliasesHandler },
+			{ id: 'permissions', title: 'Permissions', url: '/parser/permissions/', handler: parserPermissionsHandler },
+			{ id: 'roomctrl', title: 'Control&nbsp;Rooms', url: '/parser/roomctrl/', handler: parserRoomControlHandler },
+			{ id: 'roomalias', title: 'Rooms&nbsp;Aliases', url: '/parser/roomalias/', handler: parserRoomAliasHandler },
+			{ id: 'monitor', title: 'Abuse&nbsp;Monitor', url: '/parser/monitor/', handler: parserAbuseMonitorHandler },
 		], 'config');
 
 		return submenu.run();
@@ -68,6 +68,7 @@ exports.setup = function (App) {
 				App.parser.data.antispam = !!context.post.antispam;
 				App.parser.data.antirepeat = !!context.post.antirepeat;
 				App.parser.data.antimixtoken = !!context.post.antimixtoken;
+				App.parser.data.antimultitoken = !!context.post.antimultitoken;
 				App.parser.data.pmTokens = (context.post.pmtokens || "").split(' ').map(Text.toCmdTokenid).filter(id => id);
 				App.parser.data.sleep = Object.createFromKeys((context.post.sleep || "").split(',').map(Text.toRoomid).filter(room => room));
 				App.parser.data.lockedUsers = Object.createFromKeys((context.post.locklist || "").split(',').map(Text.toId).filter(u => u));
@@ -96,12 +97,13 @@ exports.setup = function (App) {
 		htmlVars.antispam = (App.parser.data.antispam ? ' checked="checked"' : '');
 		htmlVars.antirepeat = (App.parser.data.antirepeat ? ' checked="checked"' : '');
 		htmlVars.antimixtoken = (App.parser.data.antimixtoken ? ' checked="checked"' : '');
+		htmlVars.antimultitoken = (App.parser.data.antimultitoken ? ' checked="checked"' : '');
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
 		html += configTemplate.make(htmlVars);
-		context.endWithWebPage(html, {title: "Command Parser Configuration - Showdown ChatBot"});
+		context.endWithWebPage(html, { title: "Command Parser Configuration - Showdown ChatBot" });
 	}
 
 	function parserAliasesHandler(context, html) {
@@ -116,7 +118,7 @@ exports.setup = function (App) {
 						App.parser.saveData();
 						App.logServerAction(context.user.id, "Set alias: " + alias + " to the command: " + cmd);
 						ok = 'Command "' + Text.escapeHTML(alias) + '" is now alias of "' + Text.escapeHTML(cmd) +
-						'" (Note: If the original command does not exists, the alias will be useless)';
+							'" (Note: If the original command does not exists, the alias will be useless)';
 					} else {
 						error = "The command <strong>" + Text.escapeHTML(cmd) + "</strong> does not exists.";
 					}
@@ -147,9 +149,9 @@ exports.setup = function (App) {
 		htmlVars.aliases = '';
 		for (let alias in App.parser.data.aliases) {
 			htmlVars.aliases += '<tr><td>' + Text.escapeHTML(alias) + '</td><td>' + Text.escapeHTML(App.parser.data.aliases[alias]) +
-			'</td><td><div align="center"><form style="display:inline;" method="post" action="">' +
-			'<input type="hidden" name="alias" value="' + Text.escapeHTML(alias) +
-			'" /><input type="submit" name="remove" value="Remove Alias" /></form></div></td></tr>';
+				'</td><td><div align="center"><form style="display:inline;" method="post" action="">' +
+				'<input type="hidden" name="alias" value="' + Text.escapeHTML(alias) +
+				'" /><input type="submit" name="remove" value="Remove Alias" /></form></div></td></tr>';
 		}
 
 		htmlVars.cmd_list = '';
@@ -162,7 +164,7 @@ exports.setup = function (App) {
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
 		html += aliasesTemplate.make(htmlVars);
-		context.endWithWebPage(html, {title: "Commands Aliases - Showdown ChatBot"});
+		context.endWithWebPage(html, { title: "Commands Aliases - Showdown ChatBot" });
 	}
 
 	function parserPermissionsHandler(context, html) {
@@ -244,7 +246,7 @@ exports.setup = function (App) {
 				let user = Text.toId(line[1]);
 				let room = Text.toRoomid(line[2]);
 				if (!perm || !user || !App.parser.modPermissions[perm]) continue;
-				expcmds.push({perm: perm, room: (room || null), user: user});
+				expcmds.push({ perm: perm, room: (room || null), user: user });
 			}
 			App.parser.data.exceptions = expusers;
 			App.parser.data.canExceptions = expcmds;
@@ -259,7 +261,7 @@ exports.setup = function (App) {
 		let exceptions = [];
 		for (let i = 0; i < App.parser.data.canExceptions.length; i++) {
 			exceptions.push(App.parser.data.canExceptions[i].perm + ", " +
-			App.parser.data.canExceptions[i].user +
+				App.parser.data.canExceptions[i].user +
 				(App.parser.data.canExceptions[i].room ? (", " + App.parser.data.canExceptions[i].room) : ""));
 		}
 		htmlVars.canexp = Text.escapeHTML(exceptions.join('\n'));
@@ -275,7 +277,7 @@ exports.setup = function (App) {
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
 		html += permissionsTemplate.make(htmlVars);
-		context.endWithWebPage(html, {title: "Commands Permissions - Showdown ChatBot"});
+		context.endWithWebPage(html, { title: "Commands Permissions - Showdown ChatBot" });
 	}
 
 	function parserRoomControlHandler(context, html) {
@@ -316,15 +318,15 @@ exports.setup = function (App) {
 		htmlVars.rooms = '';
 		for (let control in App.parser.data.roomctrl) {
 			htmlVars.rooms += '<tr><td>' + Text.escapeHTML(control) + '</td><td>' + Text.escapeHTML(App.parser.data.roomctrl[control]) +
-			'</td><td><div align="center"><form style="display:inline;" method="post" action=""><input type="hidden" name="control" value="' +
-			control + '" /><input type="submit" name="remove" value="Remove Control Room" /></form></div></td></tr>';
+				'</td><td><div align="center"><form style="display:inline;" method="post" action=""><input type="hidden" name="control" value="' +
+				control + '" /><input type="submit" name="remove" value="Remove Control Room" /></form></div></td></tr>';
 		}
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
 		html += roomControlTemplate.make(htmlVars);
-		context.endWithWebPage(html, {title: "Control Rooms - Showdown ChatBot"});
+		context.endWithWebPage(html, { title: "Control Rooms - Showdown ChatBot" });
 	}
 
 	function parserRoomAliasHandler(context, html) {
@@ -365,15 +367,15 @@ exports.setup = function (App) {
 		htmlVars.rooms = '';
 		for (let alias in App.parser.data.roomaliases) {
 			htmlVars.rooms += '<tr><td>' + Text.escapeHTML(alias) + '</td><td>' + Text.escapeHTML(App.parser.data.roomaliases[alias]) +
-			'</td><td><div align="center"><form style="display:inline;" method="post" action=""><input type="hidden" name="alias" value="' +
-			Text.escapeHTML(alias) + '" /><input type="submit" name="remove" value="Remove Room Alias" /></form></div></td></tr>';
+				'</td><td><div align="center"><form style="display:inline;" method="post" action=""><input type="hidden" name="alias" value="' +
+				Text.escapeHTML(alias) + '" /><input type="submit" name="remove" value="Remove Room Alias" /></form></div></td></tr>';
 		}
 
 		htmlVars.request_result = Text.escapeHTML(ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = Text.escapeHTML(ok ? ok : (error || ""));
 
 		html += roomAliasesTemplate.make(htmlVars);
-		context.endWithWebPage(html, {title: "Rooms Aliases - Showdown ChatBot"});
+		context.endWithWebPage(html, { title: "Rooms Aliases - Showdown ChatBot" });
 	}
 
 	function parserAbuseMonitorHandler(context, html) {
@@ -411,15 +413,15 @@ exports.setup = function (App) {
 		htmlVars.locklist = '';
 		for (let locked in App.parser.monitor.locked) {
 			htmlVars.locklist += '<tr><td>' + Text.escapeHTML(locked) + '</td>' + '<td><div align="center"><form style="display:inline;" method="post" action="">' +
-			'<input type="hidden" name="locked" value="' + Text.escapeHTML(locked) +
-			'" /><input type="submit" name="unlock" value="Unlock" /></form></div></td></tr>';
+				'<input type="hidden" name="locked" value="' + Text.escapeHTML(locked) +
+				'" /><input type="submit" name="unlock" value="Unlock" /></form></div></td></tr>';
 		}
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
 		html += abuseMonitorTemplate.make(htmlVars);
-		context.endWithWebPage(html, {title: "Control Rooms - Showdown ChatBot"});
+		context.endWithWebPage(html, { title: "Control Rooms - Showdown ChatBot" });
 	}
 
 	/* Auxiliar Functions */
@@ -435,7 +437,7 @@ exports.setup = function (App) {
 
 		html += '<table border="1">';
 		html += '<tr><td width="200px"><div align="center"><strong>Permission</strong></div></td> ' +
-		'<td width="200px"><div align="center"><strong>Min Rank Required </strong></div></td></tr>';
+			'<td width="200px"><div align="center"><strong>Min Rank Required </strong></div></td></tr>';
 		for (let i in App.parser.modPermissions) {
 			html += '<tr>';
 			html += '<td>' + i + '</td>';
@@ -460,7 +462,7 @@ exports.setup = function (App) {
 			html += '<option value="user"' + (rank === 'user' ? ' selected="selected"' : '') + '>Regular Users</option>';
 			for (let j = 0; j < App.config.parser.groups.length; j++) {
 				html += '<option value="' + Text.escapeHTML(App.config.parser.groups[j]) + '"' +
-				(rank === App.config.parser.groups[j] ? ' selected="selected"' : '') + '>Group ' + Text.escapeHTML(App.config.parser.groups[j]) + '</option>';
+					(rank === App.config.parser.groups[j] ? ' selected="selected"' : '') + '>Group ' + Text.escapeHTML(App.config.parser.groups[j]) + '</option>';
 			}
 			html += '</select>';
 			html += '</td>';
@@ -471,7 +473,7 @@ exports.setup = function (App) {
 		html += '</form>';
 		if (room !== 'global-room') {
 			html += '<p><button onclick="removeRoom(\'' + Text.escapeHTML(room) +
-			'\');">Use Default Values</button>&nbsp;<span id="confirm-' + Text.escapeHTML(room) + '">&nbsp;</span></p>';
+				'\');">Use Default Values</button>&nbsp;<span id="confirm-' + Text.escapeHTML(room) + '">&nbsp;</span></p>';
 		}
 		return html;
 	}

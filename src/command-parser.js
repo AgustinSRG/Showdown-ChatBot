@@ -67,6 +67,7 @@ class CommandParser {
 		if (!this.data.antispam) this.data.antispam = false; /* Anti-Spam System */
 		if (!this.data.antirepeat) this.data.antirepeat = false; /* Anti-Repeat System */
 		if (!this.data.antimixtoken) this.data.antimixtoken = false; /* Anti-Repeat System */
+		if (!this.data.antimultitoken) this.data.antimultitoken = false; /* Anti Multi-Token */
 		if (!this.data.pmTokens || !(this.data.pmTokens instanceof Array)) this.data.pmTokens = []; /* Command Aliases */
 
 		/* Dynamic Commands */
@@ -453,8 +454,14 @@ class CommandParser {
 		if (this.execTriggers('before', context)) return; /* Trigger interrupted the command */
 
 		if (this.data.antimixtoken) {
-			if (context.originalMessage.charAt(1) in {"/": 1, "!": 1}) {
+			if (context.originalMessage.charAt(1) in { "/": 1, "!": 1 }) {
 				return; // Avoid mixing server and bot command tokens
+			}
+		}
+
+		if (this.data.antimultitoken) {
+			if ((/[^_a-z0-9-]/i).test(context.originalMessage.charAt(context.token.length))) {
+				return; // Avoid running commands with multiple tokens
 			}
 		}
 
