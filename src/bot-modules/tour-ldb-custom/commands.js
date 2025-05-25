@@ -96,8 +96,6 @@ module.exports = {
 				break;
 			case "title":
 				{
-					if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
-
 					if (this.args.length < 3) {
 						return this.errorReply(this.usage({ desc: "title" }, { desc: this.mlt('table') }, { desc: this.mlt("title") }));
 					}
@@ -111,6 +109,16 @@ module.exports = {
 
 					if (!Config[leaderboardsId]) {
 						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
+					}
+
+					if (!Config[leaderboardsId].room) {
+						if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
+					} else {
+						if (Config[leaderboardsId].room === this.room) {
+							if (!this.can('ldbcustommanage', this.room) && !this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustommanage');
+						} else {
+							if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
+						}
 					}
 
 					Config[leaderboardsId].customTitle = title;
@@ -185,6 +193,16 @@ module.exports = {
 
 					if (!Config[leaderboardsId]) {
 						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
+					}
+
+					if (!Config[leaderboardsId].room) {
+						if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
+					} else {
+						if (Config[leaderboardsId].room === this.room) {
+							if (!this.can('ldbcustommanage', this.room) && !this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustommanage');
+						} else {
+							if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
+						}
 					}
 
 					Config[leaderboardsId].description = description;
@@ -430,8 +448,6 @@ module.exports = {
 				break;
 			case "reset":
 				{
-					if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
-
 					let leaderboardsId = Mod.findAlias(Text.toId(this.args[1]));
 					if (!leaderboardsId) {
 						return this.errorReply(this.usage({ desc: "reset" }, { desc: this.mlt('table') }));
@@ -439,6 +455,16 @@ module.exports = {
 
 					if (!Config[leaderboardsId]) {
 						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
+					}
+
+					if (!Config[leaderboardsId].room) {
+						if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
+					} else {
+						if (Config[leaderboardsId].room === this.room) {
+							if (!this.can('ldbcustommanage', this.room) && !this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustommanage');
+						} else {
+							if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
+						}
 					}
 
 					let key = App.data.temp.createTempFile(Mod.makeTableHTML(leaderboardsId));
@@ -497,6 +523,10 @@ module.exports = {
 
 					if (!Config[leaderboardsId]) {
 						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
+					}
+
+					if (!Config[leaderboardsId].room) {
+						if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
 					}
 
 					if (Config[leaderboardsId].room && Config[leaderboardsId].room !== room) {
@@ -610,7 +640,7 @@ module.exports = {
 					let server = App.config.server.url;
 
 					if (this.getRoomType(this.room) === 'chat' && botCanHtml(this.room, App) && this.can('ldbcustomrank', this.room)) {
-					// Send html table in chat
+						// Send html table in chat
 						let html = '';
 
 						if (Config[leaderboardsId].customTitle) {
@@ -676,7 +706,7 @@ module.exports = {
 
 						this.send("/addhtmlbox " + html, this.room);
 					} else {
-					// Send text message
+						// Send text message
 						if (!top.length) {
 							return this.restrictReply(this.mlt(26) + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId) + " " + this.mlt(27), "ldbcustomrank");
 						}
@@ -790,6 +820,10 @@ module.exports = {
 
 					if (!Config[leaderboardsId]) {
 						return this.errorReply(this.mlt(3) + ": " + Chat.italics(leaderboardsId));
+					}
+
+					if (!Config[leaderboardsId].room) {
+						if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
 					}
 
 					if (Config[leaderboardsId].room && Config[leaderboardsId].room !== room) {
