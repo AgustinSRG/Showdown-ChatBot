@@ -74,6 +74,9 @@ module.exports = {
 			if (Text.toId(this.arg) === 'start' && !Mod.tourData[this.room].isStarted) {
 				return this.send('/tournament start', this.room);
 			}
+			if (Text.toId(this.arg) === 'end' && !Mod.tourData[this.room].isStarted) {
+				return this.send('/tournament end', this.room);
+			}
 			return this.errorReply(this.mlt('e2'));
 		}
 		let details = {
