@@ -7,6 +7,7 @@
 const Path = require('path');
 const Text = Tools('text');
 const Template = Tools('html-template');
+const check = Tools('check');
 
 const mainTemplate = new Template(Path.resolve(__dirname, 'template-main.html'));
 const roomTemplate = new Template(Path.resolve(__dirname, 'template-room.html'));
@@ -67,6 +68,21 @@ exports.setup = function (App) {
 			} else {
 				error = "You must specify a room";
 			}
+		} else if (context.post.del) {
+			let data = App.modules.blacklist.system.data;
+			let room = Text.toRoomid(context.post.room);
+			try {
+				check(room, 'You must specify a room');
+				check(data[room], 'Room <strong>' + Text.escapeHTML(room) + '</strong> does not exist.');
+			} catch (err) {
+				error = err.message;
+			}
+			if (!error) {
+				delete data[room];
+				App.modules.blacklist.system.db.write();
+				App.logServerAction(context.user.id, "Removed Blacklist. Room: " + room);
+				ok = 'Room <strong>' + Text.escapeHTML(room) + '</strong> removed from the blacklist feature.';
+			}
 		}
 
 		let htmlVars = Object.create(null);
@@ -83,6 +99,6 @@ exports.setup = function (App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Blacklist - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), { title: "Blacklist - Showdown ChatBot" });
 	});
 };
