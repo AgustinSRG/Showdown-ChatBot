@@ -62,7 +62,7 @@ exports.setup = function (App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Banned Words - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), { title: "Banned Words - Showdown ChatBot" });
 	});
 
 	function roomHandler(context, room) {
@@ -77,7 +77,7 @@ exports.setup = function (App) {
 			let nonicks = !!context.post.nonicks;
 			try {
 				check(word, "You must specify a word");
-				check(type in {'banned': 1, 'inap': 1, 'insult': 1, 'emote': 1}, "Invalid Type");
+				check(type in { 'banned': 1, 'inap': 1, 'insult': 1, 'emote': 1 }, "Invalid Type");
 				check(config.punishments.indexOf(punishment) >= 0, "Invalid punishment");
 			} catch (err) {
 				error = err.message;
@@ -125,6 +125,11 @@ exports.setup = function (App) {
 				App.logServerAction(context.user.id, "Delete Banword. Room: " + room + " | Word: " + word);
 				ok = "Removed Banned word: " + Text.escapeHTML(word);
 			}
+		} else if (context.post.del) {
+			delete config.bannedWords[room];
+			App.modules.moderation.system.db.write();
+			App.logServerAction(context.user.id, "Deleted all banned words. Room: " + room);
+			ok = "Deleted all banned words from room: " + Text.escapeHTML(room);
 		}
 
 		let htmlVars = Object.create(null);
@@ -132,9 +137,12 @@ exports.setup = function (App) {
 		htmlVars.name = Text.escapeHTML(App.parser.getRoomTitle(room));
 
 		let opts = [];
+
 		for (let k in App.modules.moderation.system.data.bannedWords) {
 			opts.push('<a class="submenu-option' + (room === k ? '-selected' : '') + '" href="/banwords/room/' + k + '/">' + k + '</a>');
 		}
+		opts.push('<a class="submenu-option" href="/banwords/">(new room)</a>');
+
 		htmlVars.submenu = opts.join(' | ');
 
 		htmlVars.words = '';
@@ -168,8 +176,8 @@ exports.setup = function (App) {
 				htmlVars.words += '<td>No</td>';
 			}
 			htmlVars.words += '<td><div align="center"><form style="display:inline;" method="post" action="">' +
-			'<input type="hidden" name="word" value="' + Text.escapeHTML(word) +
-			'" /><input type="submit" name="remove" value="Delete" /></form></div></td>';
+				'<input type="hidden" name="word" value="' + Text.escapeHTML(word) +
+				'" /><input type="submit" name="remove" value="Delete" /></form></div></td>';
 			htmlVars.words += '</tr>';
 		}
 
@@ -177,13 +185,13 @@ exports.setup = function (App) {
 		let punishments = App.modules.moderation.system.data.punishments;
 		for (let i = 0; i < punishments.length; i++) {
 			htmlVars.punishments += ' <option value="' + Text.escapeHTML(punishments[i]) + '"' + (punishments[i] === 'mute' ? ' selected="selected"' : '') +
-			' >' + Text.escapeHTML(punishments[i]) + '</option>';
+				' >' + Text.escapeHTML(punishments[i]) + '</option>';
 		}
 		htmlVars.punishments += '</select>';
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(roomTemplate.make(htmlVars), {title: "Banned Words - Showdown ChatBot"});
+		context.endWithWebPage(roomTemplate.make(htmlVars), { title: "Banned Words - Showdown ChatBot" });
 	}
 };

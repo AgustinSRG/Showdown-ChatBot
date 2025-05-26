@@ -1,3 +1,12 @@
+<script type="text/javascript">
+	function deleteRoomConfig() {
+		var elem = document.getElementById('confirm-delete-room-config');
+		if (elem) {
+			elem.innerHTML = '<form style="display:inline;" id="confirm-delete-form" method="post" action="">Are you sure?&nbsp;<input type="submit" name="del" value="Delete Configuration" /></form>';
+		}
+		return false;
+	}
+</script>
 <div align="center">
 	<h2>Join-Phrases</h2>
 	${SUBMENU}
@@ -6,16 +15,24 @@
 <h3>Join-phrases of ${NAME}</h3>
 <table border="1">
 	<tr>
-		<td width="150"><div align="center"><strong>User</strong></div></td>
-		<td width="400"><div align="center"><strong>Phrase</strong></div></td>
-		<td width="100"><div align="center"><strong>Options</strong></div></td>
+		<td width="150">
+			<div align="center"><strong>User</strong></div>
+		</td>
+		<td width="400">
+			<div align="center"><strong>Phrase</strong></div>
+		</td>
+		<td width="100">
+			<div align="center"><strong>Options</strong></div>
+		</td>
 	</tr>
 	${PHRASES}
 </table>
-<br /><hr /><br />
+<br />
+<hr /><br />
 <form method="post" action="">
 	<p><strong>User</strong>: <input name="user" type="text" size="30" maxlength="19" /></p>
 	<p><strong>Phrase</strong>: <input name="phrase" type="text" size="80" maxlength="300" /></p>
 	<p><input type="submit" name="add" value="Set Join-Phrase" /></p>
 </form>
+<p><button onclick="deleteRoomConfig();">Delete room configuration</button>&nbsp;<span id="confirm-delete-room-config">&nbsp;</span></p>
 <p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

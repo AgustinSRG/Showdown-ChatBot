@@ -65,7 +65,7 @@ exports.setup = function (App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Join-Phrases - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), { title: "Join-Phrases - Showdown ChatBot" });
 	});
 
 	function roomHandler(context, room) {
@@ -108,6 +108,11 @@ exports.setup = function (App) {
 				App.logServerAction(context.user.id, "Delete Join-phrase. Room: " + room + ", User: " + user);
 				ok = 'Join-Phrase successfully deleted for user <strong>' + Text.escapeHTML(user) + '</strong>.';
 			}
+		} else if (context.post.del) {
+			delete config.rooms[room];
+			App.modules.joinphrases.system.db.write();
+			App.logServerAction(context.user.id, "Deleted all join-phases. Room: " + room);
+			ok = "Deleted all join-phases from room: " + Text.escapeHTML(room);
 		}
 
 		let htmlVars = Object.create(null);
@@ -119,6 +124,8 @@ exports.setup = function (App) {
 		for (let k in config.rooms) {
 			opts.push('<a class="submenu-option' + (room === k ? '-selected' : '') + '" href="/joinphrases/room/' + Text.escapeHTML(k) + '/">' + Text.escapeHTML(k) + '</a>');
 		}
+		opts.push('<a class="submenu-option" href="/joinphrases/">(new room)</a>');
+
 		htmlVars.submenu = opts.join(' | ');
 
 		htmlVars.phrases = '';
@@ -137,6 +144,6 @@ exports.setup = function (App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(roomTemplate.make(htmlVars), {title: "Join-Phrases - Showdown ChatBot"});
+		context.endWithWebPage(roomTemplate.make(htmlVars), { title: "Join-Phrases - Showdown ChatBot" });
 	}
 };
