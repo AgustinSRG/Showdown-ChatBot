@@ -97,6 +97,21 @@ exports.setup = function (App) {
 				App.logServerAction(context.user.id, "Add Zero Tolerance Room: " + room);
 				ok = 'Room <strong>' + Text.escapeHTML(room) + '</strong> added to the zero tolerance feature.';
 			}
+		} else if (context.post.del) {
+			let data = App.modules.moderation.system.data.zeroTolerance;
+			let room = Text.toRoomid(context.post.room);
+			try {
+				check(room, 'You must specify a room');
+				check(data[room], 'Room <strong>' + Text.escapeHTML(room) + '</strong> does not exist.');
+			} catch (err) {
+				error = err.message;
+			}
+			if (!error) {
+				delete data[room];
+				App.modules.moderation.system.db.write();
+				App.logServerAction(context.user.id, "Removed Zero Tolerance Room: " + room);
+				ok = 'Room <strong>' + Text.escapeHTML(room) + '</strong> removed from the zero tolerance feature.';
+			}
 		}
 
 		let htmlVars = Object.create(null);
@@ -139,6 +154,6 @@ exports.setup = function (App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Zero Tolerance - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), { title: "Zero Tolerance - Showdown ChatBot" });
 	});
 };
