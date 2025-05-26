@@ -842,8 +842,8 @@ module.exports = {
 						const uid = Text.toId(argParts[0]);
 						const name = (argParts[0] + "").trim();
 
-						if (uid.length > 19) {
-							return this.errorReply(this.mlt(17) + ": " + uid);
+						if (!uid || uid.length > 19) {
+							return this.errorReply(this.mlt(17) + ": " + (uid || "''"));
 						}
 
 						const points = parseInt((argParts[1] + "").trim());
