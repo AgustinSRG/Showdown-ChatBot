@@ -118,7 +118,7 @@ class ChatBotApp {
 				retrydelay: (10 * 1000),
 				maxlines: 3,
 				buflen: 6,
-				senddelay: 600,
+				senddelay: 150,
 			};
 		}
 
