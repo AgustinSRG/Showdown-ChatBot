@@ -174,7 +174,7 @@ exports.setup = function (App, CustomModules) {
 		}
 
 		checkTimer() {
-			if (!this.self || !this.request) return; // Not playing
+			if (!this.self) return; // Not playing
 			if (Config.turnTimerOn === false || this.timerExplicitlyTurnedOff) return; // Configured to be turned off
 			if (!this.timer) {
 				if (this.sentTimerReq && Date.now() - this.sentTimerReq < MIN_TIME_LOCK) return; // Do not spam timer commands
@@ -231,7 +231,7 @@ exports.setup = function (App, CustomModules) {
 		}
 
 		start() {
-			if (!this.self || !this.request) return; // Not playing
+			if (!this.self) return; // Not playing
 			let wmsg = Config.initBattleMsg;
 			if (wmsg && wmsg.length) this.send(wmsg[Math.floor(Math.random() * wmsg.length)]);
 		}

@@ -35,33 +35,38 @@ exports.setup = function (App, BattleData) {
 			}
 		},
 
-		start: function (args, kwargs) {
+		start: function (args, kwargs, isIntro) {
 			this.battleReadyToStart = true;
 			this.started = true;
-			this.checkTimer();
+			if (!isIntro) {
+				this.checkTimer();
+			}
 		},
 
-		turn: function (args, kwargs) {
+		turn: function (args, kwargs, isIntro) {
 			this.turn = parseInt(args[1]) || 0;
-			this.checkTimer();
-			this.makeDecision();
+			if (!isIntro) {
+				this.checkTimer();
+			}
 		},
 
-		upkeep: function () {
+		upkeep: function (args, kwargs, isIntro) {
 			if (this.timer) return;
-
-			this.checkTimer();
-			this.makeDecision();
+			if (!isIntro) {
+				this.checkTimer();
+			}
 		},
 
-		tier: function (args, kwargs) {
+		tier: function (args, kwargs, isIntro) {
 			if (!args[1]) args[1] = '';
 			for (let i in kwargs) args[1] += '[' + i + '] ' + kwargs[i];
 			this.tier = args[1];
 			if (Text.toId(this.tier) === "inversebattle") {
 				this.conditions["inversebattle"] = true;
 			}
-			this.start();
+			if (!isIntro) {
+				this.start();
+			}
 		},
 
 		gametype: function (args, kwargs) {
@@ -209,11 +214,12 @@ exports.setup = function (App, BattleData) {
 			poke.template = BattleData.getPokemon(details.species, this.gen);
 		},
 
-		teampreview: function (args, kwargs) {
+		teampreview: function (args, kwargs, isIntro) {
 			if (args[1]) this.teamPreview = parseInt(args[1]) || 1;
 			this.battleReadyToStart = true;
-			this.makeDecision();
-			this.checkTimer();
+			if (!isIntro) {
+				this.checkTimer();
+			}
 		},
 
 		drag: "switch",
