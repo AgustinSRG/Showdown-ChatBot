@@ -34,6 +34,7 @@ module.exports = {
 		const linkColor = 'https://www.w3schools.com/colors/colors_picker.asp?color=' + color.substring(1);
 
 		const customColor = Mod.getCustomColor(target);
+		const customColorName = Mod.getCustomColorUsername(target);
 		const linkCustomColor = customColor ? ('https://www.w3schools.com/colors/colors_picker.asp?color=' + customColor.substring(1)) : null;
 
 		if ((this.room && botCanHtml(this.room, App) && this.can("usernamecolor", this.room)) || botCanHtml('lobby', App)) {
@@ -51,7 +52,13 @@ module.exports = {
 
 			html += '<strong>' +
 				Text.escapeHTML(this.mlt(3)) + ': </strong><strong style="color: ' + effectiveColor + ';">' +
-				Text.escapeHTML(effectiveColor) + '</strong> - <a href="' + Text.escapeHTML(effectiveColorLink) + '" target="_blank">' + Text.escapeHTML(this.mlt(4)) + '</a>';
+				Text.escapeHTML(effectiveColor) + '</strong>';
+
+			if (customColorName) {
+				html += ' (' + this.mlt(6) + ", " + '<i>' + Text.escapeHTML(customColorName) + '</i>)';
+			}
+
+			html += ' - <a href="' + Text.escapeHTML(effectiveColorLink) + '" target="_blank">' + Text.escapeHTML(this.mlt(4)) + '</a>';
 
 			if (customColor) {
 				html += '<br>';
@@ -68,7 +75,12 @@ module.exports = {
 		} else {
 			// Text response
 			if (customColor) {
-				this.restrictReply(this.mlt(1) + " " + Chat.bold(targetName) + ": " + Chat.code(customColor) + " - " + linkCustomColor + " | " + this.mlt(5) + ": " + Chat.code(color) + " - " + linkColor, "usernamecolor");
+				this.restrictReply(this.mlt(1) +
+					" " + Chat.bold(targetName) + ": " + Chat.code(customColor) +
+					" (" + this.mlt(6) + ", " + Chat.code(customColorName) + ")" +
+					" - " +
+					linkCustomColor + " | " +
+					this.mlt(5) + ": " + Chat.code(color) + " - " + linkColor, "usernamecolor");
 			} else {
 				this.restrictReply(this.mlt(1) + " " + Chat.bold(targetName) + ": " + Chat.code(color) + " - " + linkColor, "usernamecolor");
 			}

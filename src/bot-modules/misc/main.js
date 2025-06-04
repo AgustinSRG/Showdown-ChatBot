@@ -5,9 +5,34 @@
 
 const Chat = Tools('chat');
 const Text = Tools('text');
+const Https = require('https');
+const Http = require('http');
 
 const USER_COLOR_GLOBAL_CONFIG_1 = 'https://play.pokemonshowdown.com/config/config.js';
 const USER_COLOR_GLOBAL_CONFIG_2 = 'https://play.pokemonshowdown.com/config/colors.json';
+
+function getUrlReferer(url, referer, callback) {
+	url = new URL(url);
+	let mod = url.protocol === 'https:' ? Https : Http;
+	mod.request(url.toString(), { headers: { 'Referer': referer } }, response => {
+		let data = '';
+		if (response.statusCode !== 200) {
+			callback(null, new Error("Server responded with status code " + response.statusCode));
+			return;
+		}
+		response.on('data', chunk => {
+			data += chunk;
+		});
+		response.on('end', () => {
+			callback(data);
+		});
+		response.on('error', err => {
+			callback(null, err);
+		});
+	}).on('error', err => {
+		callback(null, err);
+	}).end();
+}
 
 function parseColorsFromJs(jsText) {
 	const colors = Object.create(null);
@@ -63,6 +88,15 @@ exports.setup = function (App) {
 		}
 	};
 
+	MiscModule.getCustomColorUsername = function (name) {
+		name = Text.toId(name);
+		if (this.customColors[name]) {
+			return this.customColors[name];
+		} else {
+			return null;
+		}
+	};
+
 	MiscModule.getLocalCustomColorsUrl = function () {
 		const serverId = App.config.bot.serverid;
 
@@ -71,6 +105,16 @@ exports.setup = function (App) {
 		}
 
 		return 'https://' + encodeURIComponent(serverId) + '.psim.us/config/colors.json';
+	};
+
+	MiscModule.getClientUrl = function () {
+		const serverId = App.config.bot.serverid;
+
+		if (!serverId || serverId === 'showdown') {
+			return "https://play.pokemonshowdown.com/";
+		}
+
+		return 'https://' + encodeURIComponent(serverId) + '.psim.us';
 	};
 
 	MiscModule.globalColors1 = Object.create(null);
@@ -86,7 +130,7 @@ exports.setup = function (App) {
 
 		this.downloadingCustomColors = true;
 
-		App.data.wget(USER_COLOR_GLOBAL_CONFIG_1, (res1, err1) => {
+		getUrlReferer(USER_COLOR_GLOBAL_CONFIG_1, this.getClientUrl(), (res1, err1) => {
 			if (res1 && !err1) {
 				this.globalColors1 = parseColorsFromJs(res1);
 			} else if (err1) {
