@@ -64,7 +64,8 @@ module.exports = {
 				html += '<br>';
 				html += '<strong>' +
 					Text.escapeHTML(this.mlt(5)) + ': </strong><strong style="color: ' + color + ';">' +
-					Text.escapeHTML(color) + '</strong> - <a href="' + Text.escapeHTML(linkColor) + '" target="_blank">' + Text.escapeHTML(this.mlt(4)) + '</a>';
+					Text.escapeHTML(color) + '</strong> (<strong style="color: ' + color + ';">' +
+					Text.escapeHTML(targetName) + '</strong>) - <a href="' + Text.escapeHTML(linkColor) + '" target="_blank">' + Text.escapeHTML(this.mlt(4)) + '</a>';
 			}
 
 			if (this.room && botCanHtml(this.room, App) && this.can("usernamecolor", this.room)) {
