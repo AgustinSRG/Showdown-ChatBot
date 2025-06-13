@@ -55,7 +55,7 @@ module.exports = {
 				Text.escapeHTML(effectiveColor) + '</strong>';
 
 			if (customColorName) {
-				html += ' (' + this.mlt(6) + ", " + '<i>' + Text.escapeHTML(customColorName) + '</i>)';
+				html += ' (' + this.mlt(6) + " " + '<strong style="color: ' + effectiveColor + ';">' + Text.escapeHTML(customColorName) + '</strong>)';
 			}
 
 			html += ' - <a href="' + Text.escapeHTML(effectiveColorLink) + '" target="_blank">' + Text.escapeHTML(this.mlt(4)) + '</a>';
@@ -77,7 +77,7 @@ module.exports = {
 			if (customColor) {
 				this.restrictReply(this.mlt(1) +
 					" " + Chat.bold(targetName) + ": " + Chat.code(customColor) +
-					" (" + this.mlt(6) + ", " + Chat.code(customColorName) + ")" +
+					" (" + this.mlt(6) + " " + Chat.code(customColorName) + ")" +
 					" - " +
 					linkCustomColor + " | " +
 					this.mlt(5) + ": " + Chat.code(color) + " - " + linkColor, "usernamecolor");
