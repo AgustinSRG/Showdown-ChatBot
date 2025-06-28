@@ -92,6 +92,14 @@ exports.setup = function (App) {
 			}
 		}
 
+		getTimerPrefixCode(timer) {
+			if (timer.name) {
+				return (timer.name + "").replace(/\*\*/g, "") + ":";
+			} else {
+				return trans(timer.room, "timer") + ":";
+			}
+		}
+
 		deleteTimer(timer) {
 			const timers = this.timers[timer.room];
 
@@ -144,6 +152,13 @@ exports.setup = function (App) {
 		getAnnounce(timer) {
 			let diff = this.getDiff(timer);
 			let str = this.getTimerPrefix(timer) + " " + trans(timer.room, (diff.substr(0, 2) === '1 ' ? 3 : 0)) +
+				' ' + diff + ' ' + trans(timer.room, 1);
+			return str;
+		}
+
+		getAnnounceCode(timer) {
+			let diff = this.getDiff(timer);
+			let str = this.getTimerPrefixCode(timer) + " " + trans(timer.room, (diff.substr(0, 2) === '1 ' ? 3 : 0)) +
 				' ' + diff + ' ' + trans(timer.room, 1);
 			return str;
 		}

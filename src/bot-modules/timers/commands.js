@@ -4,12 +4,13 @@
  * starttimer: starts a new timeout
  * stoptimer: stops the current timeout
  * stopalltimers: stops all timers
+ * showtimers: shows the list of all timers of a room
  * repeat: sets a repeat
  * repeatcommand: sets a command repeat
  * clearrepeat: clears repeat
  * clearrepeatroom: clears repeat for a room
  * clearallrepeats: clears all repeats of a room
- * showrepeats: Shows the list of repeats of a room
+ * showrepeats: shows the list of repeats of a room
  */
 
 'use strict';
@@ -55,7 +56,7 @@ function parseMinutes(str) {
 			case 0:
 				{
 					if ((/[0-9\.]/i).test(c)) {
-					// Number
+						// Number
 						b += c;
 					} else {
 						let n = parseFloat(b);
@@ -256,6 +257,40 @@ module.exports = {
 		this.reply(this.mlt(22));
 	},
 
+	seetimers: "showtimers",
+	showtimers: function (App) {
+		this.setLangFile(Lang_File);
+		if (this.getRoomType(this.room) !== 'chat' && !this.arg) {
+			return this.errorReply(this.usage({ desc: this.usageTrans('room') }));
+		}
+
+		const room = this.parseRoomAliases(Text.toRoomid(this.arg)) || this.room;
+
+		if (!App.bot.rooms[room]) {
+			return this.errorReply(this.mlt(4));
+		}
+
+		if (!App.bot.rooms[room].users[this.byIdent.id]) {
+			return this.replyAccessDenied('timer');
+		}
+
+		const group = App.bot.rooms[room].users[this.byIdent.id];
+
+		if (!App.parser.can({ group: group, id: this.byIdent.id }, "timer", room)) {
+			return this.replyAccessDenied('timer');
+		}
+
+		const Mod = App.modules.timers.system;
+
+		const timers = Mod.getTimers(room);
+
+		if (timers.length === 0) {
+			return this.errorReply(this.mlt(4));
+		}
+
+		this.replyCommand("!code " + this.mlt(25) + ":\n\n" + timers.map(timer => Mod.getAnnounceCode(timer)).join("\n"));
+	},
+
 	repeat: function (App) {
 		const Mod = App.modules.timers.system;
 		this.setLangFile(Lang_File);
@@ -374,13 +409,13 @@ module.exports = {
 		if (!this.can('clearrepeatroom', this.room)) return this.replyAccessDenied('clearrepeatroom');
 
 		if (this.args.length < 2) {
-			return this.errorReply(this.usage({desc: this.usageTrans('room')}, { desc: this.mlt(10) }));
+			return this.errorReply(this.usage({ desc: this.usageTrans('room') }, { desc: this.mlt(10) }));
 		}
 
 		const room = this.parseRoomAliases(Text.toRoomid(this.args[0]));
 
 		if (!room) {
-			return this.errorReply(this.usage({desc: this.usageTrans('room')}, { desc: this.mlt(10) }));
+			return this.errorReply(this.usage({ desc: this.usageTrans('room') }, { desc: this.mlt(10) }));
 		}
 
 		if (this.getRoomType(room) !== 'chat') {
