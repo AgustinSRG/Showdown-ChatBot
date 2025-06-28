@@ -1,13 +1,13 @@
 <script type="text/javascript">
 	function escapeHtml(text) {
-		return text.replace(/[\"&<>]/g,function (a) {return {'"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;'}[a];});
+		return text.replace(/[\"&<>]/g, function (a) { return { '"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;' }[a]; });
 	}
 	var req = null;
 	function updateBotStatus() {
-		if (req) {try {req.abort()} catch (err) {} req = null;}
+		if (req) { try { req.abort() } catch (err) { } req = null; }
 		var rp = document.getElementById('refresh-progress');
 		rp.innerHTML = "&nbsp;";
-		req = $.get('/bot/?getbotstatus=' + Date.now(), function(data) {
+		req = $.get('/bot/?getbotstatus=' + Date.now(), function (data) {
 			try {
 				data = JSON.parse(data);
 				document.getElementById('bot-connection').innerHTML = data.con;
@@ -23,14 +23,43 @@
 			rp.innerHTML = '<small><span class="error-msg">Refresh failure</span></small>';
 		});
 	}
+	function loadServerDetails() {
+		var server = document.getElementById("clienturl").value;
+		if (!server) {
+			return;
+		}
+		if (req) { try { req.abort() } catch (err) { } req = null; }
+		document.getElementById("resultdiv").innerHTML = "<i>Getting server configuration for " + escapeHtml(server) + "...</i>";
+		req = $.get('/bot/?server=' + encodeURI(server) + "&t=" + Date.now(), function (data) {
+			try {
+				data = JSON.parse(data);
+
+				if (data.error) {
+					document.getElementById("resultdiv").innerHTML = '<span class="error-msg">Error: ' + escapeHtml(data.error) + '</span>';
+					return;
+				}
+
+				document.getElementById("resultdiv").innerHTML = '<span class="ok-msg">Got details for: ' + escapeHtml(server) + '</span>';
+
+				document.getElementById('text-server').value = data.host || "";
+				document.getElementById('text-port').value = data.port || "";
+				document.getElementById('text-serverid').value = data.id || "";
+				document.getElementById("check-tls").checked = !!data.https;
+			} catch (err) {
+				document.getElementById("resultdiv").innerHTML = '<span class="error-msg">Request error. Try again later or refresh the page.</span>';
+			}
+		}).fail(function () {
+			document.getElementById("resultdiv").innerHTML = '<span class="error-msg">Request error. Try again later or refresh the page.</span>';
+		});
+	}
 </script>
 <script type="text/javascript">
 	function showRestartConfirm() {
-			var elem = document.getElementById('confirm-restart');
-			if (elem) {
-				elem.innerHTML = '<form style="display:inline;" method="post" action="">&nbsp;Are you sure?&nbsp;<input type="submit" name="restart" value="Restart Bot" /></form>';
-			}
+		var elem = document.getElementById('confirm-restart');
+		if (elem) {
+			elem.innerHTML = '<form style="display:inline;" method="post" action="">&nbsp;Are you sure?&nbsp;<input type="submit" name="restart" value="Restart Bot" /></form>';
 		}
+	}
 </script>
 <script type="text/javascript">
 	function showStopConfirm() {
@@ -41,32 +70,71 @@
 	}
 </script>
 <table border="0">
-	<tr><td>
-		<table border="1">
-			<tr><td colspan="2"><div align="center"><strong>Bot Status </strong></div></td></tr>
-			<tr><td width="150"><strong>Connection</strong></td><td width="150">${CONNECTION}</td></tr>
-			<tr><td width="150"><strong>Connection Date</strong></td><td width="150">${CONNTIME}</td></tr>
-			<tr><td><strong>Nickname</strong></td><td><span id="bot-nick">${NICK}</span></td></tr>
-			<tr><td><strong>Rooms</strong></td><td><span id="bot-rooms">${ROOMS}</span></td></tr>
-			<tr><td><strong>Battles</strong></td><td><span id="bot-battles">${BATTLES}</span></td></tr>
-		</table>
-	</td><td>
-		<p><button onclick="updateBotStatus();">Refresh</button>&nbsp;<span id="refresh-progress">&nbsp;</span></p>
-		<p><button onclick="showRestartConfirm();">Restart Bot</button><span id="confirm-restart">&nbsp;</span></p>
-		${STOP_BUTTON}
-	</td></tr>
+	<tr>
+		<td>
+			<table border="1">
+				<tr>
+					<td colspan="2">
+						<div align="center"><strong>Bot Status </strong></div>
+					</td>
+				</tr>
+				<tr>
+					<td width="150"><strong>Connection</strong></td>
+					<td width="150">${CONNECTION}</td>
+				</tr>
+				<tr>
+					<td width="150"><strong>Connection Date</strong></td>
+					<td width="150">${CONNTIME}</td>
+				</tr>
+				<tr>
+					<td><strong>Nickname</strong></td>
+					<td><span id="bot-nick">${NICK}</span></td>
+				</tr>
+				<tr>
+					<td><strong>Rooms</strong></td>
+					<td><span id="bot-rooms">${ROOMS}</span></td>
+				</tr>
+				<tr>
+					<td><strong>Battles</strong></td>
+					<td><span id="bot-battles">${BATTLES}</span></td>
+				</tr>
+			</table>
+		</td>
+		<td>
+			<p><button onclick="updateBotStatus();">Refresh</button>&nbsp;<span id="refresh-progress">&nbsp;</span></p>
+			<p><button onclick="showRestartConfirm();">Restart Bot</button><span id="confirm-restart">&nbsp;</span></p>
+			${STOP_BUTTON}
+		</td>
+	</tr>
 </table>
 <hr />
 <h3>Bot Configuration</h3>
 <form method="post" action="">
 	<table border="0">
-		<tr><td>Server: </td><td><input id="text-server" name="server" type="text" size="50" value="${SERVER}"/></td></tr>
-		<tr><td>Port: </td><td><input id="text-port" name="port" type="text" size="50" value="${PORT}"/></td></tr>
-		<tr><td>Server-ID: </td><td><input id="text-serverid" name="serverid" type="text" size="50" value="${SERVERID}"/></td></tr>
-		<tr><td>Seconds to retry the connection: </td><td><input id="text-retry" name="retry" type="text" size="50" value="${RETRY}"/></td></tr>
+		<tr>
+			<td>Server: </td>
+			<td><input id="text-server" name="server" type="text" size="50" value="${SERVER}" /></td>
+		</tr>
+		<tr>
+			<td>Port: </td>
+			<td><input id="text-port" name="port" type="text" size="50" value="${PORT}" /></td>
+		</tr>
+		<tr>
+			<td>Server-ID: </td>
+			<td><input id="text-serverid" name="serverid" type="text" size="50" value="${SERVERID}" /></td>
+		</tr>
+		<tr>
+			<td>Seconds to retry the connection: </td>
+			<td><input id="text-retry" name="retry" type="text" size="50" value="${RETRY}" /></td>
+		</tr>
 	</table>
 	<p><input id="check-tls" type="checkbox" name="secure" value="true" ${SECURE} />&nbsp;Use secure connection (TLS).</p>
 	<p><input type="submit" name="editbot" value="Save Changes" /></p>
 </form>
 <p><button onclick="document.getElementById('text-server').value = 'sim3.psim.us'; document.getElementById('text-port').value = '443'; document.getElementById('check-tls').checked = true; document.getElementById('text-serverid').value = 'showdown'; document.getElementById('text-retry').value = '5';">Set values for play.pokemonshowdown.com</button></p>
+<p>
+	<input id="clienturl" name="url" type="text" size="40" placeholder="example.psim.us" value="" />&nbsp;&nbsp;
+	<button id="getserver" onclick="loadServerDetails();">Get Server details</button>&nbsp;&nbsp;
+	<span id="resultdiv">&nbsp;</span>
+</p>
 <p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

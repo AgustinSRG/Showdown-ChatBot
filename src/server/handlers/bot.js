@@ -10,6 +10,7 @@ const Path = require('path');
 const check = Tools('check');
 const Text = Tools('text');
 const Template = Tools('html-template');
+const ServerGet = Tools('ps-cross-server');
 
 const mainTemplate = new Template(Path.resolve(__dirname, 'templates', 'bot-config.html'));
 
@@ -54,6 +55,25 @@ exports.setup = function (App) {
 				}
 			}
 			return context.endWithText(JSON.stringify(data));
+		} else if (context.get.server) {
+			App.logServerAction(context.user.id, "Tool Server-Get used: " + context.get.server);
+			ServerGet.getShowdownServer(context.get.server, (err, data) => {
+				let result = '';
+				if (err) {
+					result = JSON.stringify({
+						error: err.message || "Unknown error",
+					});
+				} else {
+					result = JSON.stringify({
+						host: data.host,
+						port: data.port,
+						id: data.id,
+						https: !!data.https,
+					});
+				}
+				context.endWithText(result);
+			});
+			return;
 		}
 
 		let ok = null, error = null;
@@ -153,6 +173,7 @@ exports.setup = function (App) {
 
 		context.endWithWebPage(mainTemplate.make(htmlVars), {
 			title: "Bot Configuration - Showdown ChatBot",
-			scripts: ['/static/jquery-3.7.0.min.js']});
+			scripts: ['/static/jquery-3.7.0.min.js']
+		});
 	});
 };
