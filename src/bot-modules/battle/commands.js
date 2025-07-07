@@ -45,7 +45,7 @@ module.exports = {
 		const formatString = this.args.slice(1).join(",");
 		const format = parseAliases(formatString.split("@@@")[0], App);
 		const customRules = (formatString.split("@@@")[1] || "").split(",").map(function (a) {
-			return Text.toId(a);
+			return a.trim();
 		}).filter(function (a) {
 			return !!a;
 		});
