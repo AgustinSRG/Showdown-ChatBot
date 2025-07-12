@@ -1,4 +1,5 @@
 <!-- omit in toc -->
+
 # Official Add-ons for Showdown-ChatBot
 
 This is a list of official add-ons: developed by the authors of the bot ar accepted by them.
@@ -6,6 +7,8 @@ This is a list of official add-ons: developed by the authors of the bot ar accep
 The add-ons are sorted alphabetically.
 
 Index:
+
+- [Anti-idle](#anti-idle)
 - [Automated promotion to voice](#automated-promotion-to-voice)
 - [Automated response add-on](#automated-response-add-on)
 - [Battle spectate add-on](#battle-spectate-add-on)
@@ -14,7 +17,13 @@ Index:
 - [Pastebin add-on](#pastebin-add-on)
 - [YouTube link recognition add-on](#youtube-link-recognition-add-on)
 
---------------------
+---
+
+## Anti-idle
+
+**Description**: This add-on makes the bot automatically send private messages to itself periodically so it is never marked as idle.
+
+**Add-on file**: [anti-idle](./anti-idle.js)
 
 ## Automated promotion to voice
 
@@ -24,7 +33,7 @@ Index:
 
 **Configuration**: In order to configure the add-on, change the value of the following constants before installing:
 
- - `Rooms`: The list of rooms where this feature will be enabled
+- `Rooms`: The list of rooms where this feature will be enabled
 
 You can optionally change the value of `Promotion_Command`, in order to change the promotion command.
 
@@ -42,8 +51,8 @@ You can optionally change the value of `Promotion_Command`, in order to change t
 
 **Configuration**: In order to configure the add-on, change the value of the following constants before installing:
 
- - `SPECTATE_TOURNAMENT_BATTLES`: True to spectate tournament battles
- - `SPECTATE_SERVER_BATTLES`: True to spectate server battles announced in the `Lobby` room.
+- `SPECTATE_TOURNAMENT_BATTLES`: True to spectate tournament battles
+- `SPECTATE_SERVER_BATTLES`: True to spectate server battles announced in the `Lobby` room.
 
 ## Commands guide add-on
 
@@ -51,14 +60,14 @@ You can optionally change the value of `Promotion_Command`, in order to change t
 
 **Add-on files**:
 
- - English version: [commands-guide](./commands-guide.js)
- - Spanish version: [commands-guide-es](./commands-guide-es.js)
+- English version: [commands-guide](./commands-guide.js)
+- Spanish version: [commands-guide-es](./commands-guide-es.js)
 
 **Restrictions**:
 
- - The bot requires the rank of **global bot** in order to be able to use the `/sendhtmlpage` server command.
- - The bot must be present in the `Lobby` room of the server.
- - Showdown-ChatBot version must be equal or greater than `2.16.1`.
+- The bot requires the rank of **global bot** in order to be able to use the `/sendhtmlpage` server command.
+- The bot must be present in the `Lobby` room of the server.
+- Showdown-ChatBot version must be equal or greater than `2.16.1`.
 
 **Configuration**: You can configure the commands guide by accessing the `Commands Guide` section of the control panel.
 
@@ -76,27 +85,27 @@ Also, you can change the `MAX_COMMANDS_PER_PAGE` constant in order to change the
 
 **Add-on files**:
 
- - English version: [pastebin](./pastebin.js)
- - Spanish version: [pastebin-es](./pastebin-es.js)
+- English version: [pastebin](./pastebin.js)
+- Spanish version: [pastebin-es](./pastebin-es.js)
 
 **Added commands**:
 
-| Command syntax | Description |
-|--- | --- |
+| Command syntax                       | Description                                                                                          |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------- |
 | `setrand <Command>, <Pastebin link>` | Imports the options for a random command. The Pastebin must have the options separated in each line. |
-| `getkuncdata` | Exports the data of the game of Kunc. |
-| `setkuncdata <Pastebin link>` | Imports the data of the game of Kunc. |
-| `gettriviadata` | Exports the data of the game of Trivia. |
-| `settriviadata <Pastebin link>` | Imports the data of the game of Trivia. |
-| `gethangmandata` | Exports the data of the game of Hangman. |
-| `sethangmandata <Pastebin link>` | Imports the data of the game of Hangman. |
-| `getanagramsdata` | Exports the data of the game of Anagrams. |
-| `setanagramsdata <Pastebin link>` | Imports the data of the game of Anagrams. |
+| `getkuncdata`                        | Exports the data of the game of Kunc.                                                                |
+| `setkuncdata <Pastebin link>`        | Imports the data of the game of Kunc.                                                                |
+| `gettriviadata`                      | Exports the data of the game of Trivia.                                                              |
+| `settriviadata <Pastebin link>`      | Imports the data of the game of Trivia.                                                              |
+| `gethangmandata`                     | Exports the data of the game of Hangman.                                                             |
+| `sethangmandata <Pastebin link>`     | Imports the data of the game of Hangman.                                                             |
+| `getanagramsdata`                    | Exports the data of the game of Anagrams.                                                            |
+| `setanagramsdata <Pastebin link>`    | Imports the data of the game of Anagrams.                                                            |
 
 For the Kunc data, the following format is used: `Species||move1,move2...`. Example:
- 
+
 ```
-Pikachu||Thunderbolt,Fake Out,Iron Tail,Extreme Speed    
+Pikachu||Thunderbolt,Fake Out,Iron Tail,Extreme Speed
 Cinderace||Acrobatics,Pyro Ball,High Jump Kick,Court Change
 ```
 
@@ -118,7 +127,7 @@ Animal||Cat,Dog,Rabbit,Chicken,Cow,Pig,Sheep
 
 ```js
 // Name of the permission required for the commands
-const PERMISSION_REQUIRED = 'randadmin'; 
+const PERMISSION_REQUIRED = "randadmin";
 ```
 
 ## YouTube link recognition add-on
@@ -129,5 +138,5 @@ const PERMISSION_REQUIRED = 'randadmin';
 
 **Configuration**: In order to configure the add-on, change the value of the following constants before installing:
 
- - `Rooms`: The list of rooms where this feature will be enabled
- - `Youtube_API_Key`: The API key to get the YouTube data. Instructions on how to obtain one: https://developers.google.com/youtube/registering_an_application
+- `Rooms`: The list of rooms where this feature will be enabled
+- `Youtube_API_Key`: The API key to get the YouTube data. Instructions on how to obtain one: https://developers.google.com/youtube/registering_an_application
