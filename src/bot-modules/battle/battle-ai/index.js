@@ -21,7 +21,7 @@ exports.setup = function (App) {
 					App.bot.joinRooms(Object.keys(searchData.games));
 				}
 			} catch (err) {
-				console.log("Error: " + err.message + "\n" + err.stack);
+				App.reportCrash(err);
 			}
 		}
 	});
@@ -35,7 +35,7 @@ exports.setup = function (App) {
 			for (let room in this.battles) {
 				try {
 					this.battles[room].destroy();
-				} catch (e) {}
+				} catch (e) { }
 				delete this.battles[room];
 			}
 
@@ -51,7 +51,7 @@ exports.setup = function (App) {
 			for (let room in this.battles) {
 				try {
 					this.battles[room].tick();
-				} catch (e) {}
+				} catch (e) { }
 			}
 		},
 
@@ -62,7 +62,7 @@ exports.setup = function (App) {
 				if (this.battles[room]) {
 					try {
 						this.battles[room].destroy();
-					} catch (e) {}
+					} catch (e) { }
 				}
 				this.battles[room] = new Battle(room);
 			}
@@ -73,7 +73,7 @@ exports.setup = function (App) {
 				if (this.battles[room]) {
 					try {
 						this.battles[room].destroy();
-					} catch (e) {}
+					} catch (e) { }
 					delete this.battles[room];
 				}
 			} else if (spl[0] === 'noinit' && spl[1] === 'rename') {
@@ -104,7 +104,7 @@ exports.setup = function (App) {
 			for (let room in this.battles) {
 				try {
 					this.battles[room].destroy();
-				} catch (e) {}
+				} catch (e) { }
 				delete this.battles[room];
 			}
 			if (this.interval) {

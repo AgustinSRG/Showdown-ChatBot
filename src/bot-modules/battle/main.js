@@ -66,6 +66,19 @@ exports.setup = function (App) {
 
 	App.bot.on('line', (room, line, spl, isIntro) => {
 		switch (spl[0]) {
+			case 'updatesearch':
+				{
+					let searchData = spl.slice(1);
+					try {
+						searchData = JSON.parseNoPrototype(searchData);
+						if (searchData !== null && typeof searchData === "object" && searchData.searching !== null && Array.isArray(searchData.searching)) {
+							LadderManager.onUpdateSearching(searchData.searching);
+						}
+					} catch (err) {
+						App.reportCrash(err);
+					}
+				}
+				break;
 			case 'popup':
 				if ((spl[1] + "").toLowerCase().startsWith("your team was rejected")) {
 					App.log("[Battle Teams] Warning: Team rejected. Given reason: " + spl.slice(1).join("|"));

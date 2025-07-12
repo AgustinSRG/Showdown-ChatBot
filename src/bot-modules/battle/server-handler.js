@@ -233,47 +233,57 @@ exports.setup = function (App) {
 		let mod = App.modules.battle.system;
 		let ok = null, error = null;
 		if (context.post.startladder) {
-			let seconds = parseInt(context.post.interval);
-			let format = Text.toId(context.post.format);
+			let formats = (context.post.formats || "").split(",").map(Text.toId).filter(f => !!f);
 			try {
-				check(!mod.LadderManager.laddering, "Already laddering");
-				check(format, "You must specify a format");
-				check(App.bot.formats[format] && App.bot.formats[format].ladder, "Invalid Format");
-				check(!App.bot.formats[format].team || mod.TeamBuilder.hasTeam(format), "No available teams for " + Text.escapeHTML(format));
-				check(!isNaN(seconds) && seconds > 0, "Invalid interval");
+				check(formats.length > 0, "You must specify at least one format");
+
+				const formatSet = new Set();
+
+				for (let format of formats) {
+					check(!formatSet.has(format), "Repeated Format: " + Text.escapeHTML(format));
+					check(App.bot.formats[format] && App.bot.formats[format].ladder, "Invalid Format: " + Text.escapeHTML(format));
+					check(!App.bot.formats[format].team || mod.TeamBuilder.hasTeam(format), "No available teams for " + Text.escapeHTML(format));
+					formatSet.add(format);
+				}
 			} catch (err) {
 				error = err.message;
 			}
 
 			if (!error) {
-				mod.LadderManager.start(format, seconds * 1000);
-				App.logServerAction(context.user.id, "Start Laddering. Format: " + format + ", interval: " + seconds);
-				ok = 'Laddering in format: ' + Text.escapeHTML(App.bot.formats[format].name);
+				Config.laddering = formats;
+				App.db.write();
+
+				mod.LadderManager.update();
+				App.logServerAction(context.user.id, "Start Laddering. Formats: " + formats.join(", "));
+				ok = 'Laddering in formats: ' + formats.map(format => Text.escapeHTML(App.bot.formats[format].name)).join(", ");
 			}
 		} else if (context.post.stopladder) {
-			try {
-				check(mod.LadderManager.laddering, "Not laddering");
-			} catch (err) {
-				error = err.message;
-			}
-
-			if (!error) {
-				mod.LadderManager.stop();
-				App.logServerAction(context.user.id, "Stop Laddering");
-				ok = 'Stopped laddering';
-			}
+			Config.laddering = [];
+			App.db.write();
+			mod.LadderManager.update();
+			App.logServerAction(context.user.id, "Stop Laddering");
+			ok = 'Stopped laddering';
 		}
 
+		html += '<script>';
+		html += 'function addFormatToList() {';
+		html += 'var formatToAdd = document.getElementById("format-to-add").value || "";';
+		html += 'if (!formatToAdd) {return;}';
+		html += 'var formats = (document.getElementById("ladder-list-formats").value || "").split(",").map(f => f.toLowerCase().replace(/[^a-z0-9]/g, "")).filter(f => !!f);';
+		html += 'if (formats.includes(formatToAdd)) {return;}';
+		html += 'formats.push(formatToAdd);';
+		html += 'document.getElementById("ladder-list-formats").value = formats.join(", ");';
+		html += '}';
+		html += '</script>';
+
 		html += '<form method="post" action="">';
-		if (mod.LadderManager.laddering) {
-			let format = mod.LadderManager.format;
-			if (App.bot.formats[format]) format = App.bot.formats[format].name;
-			html += '<p><strong>Laddering in format ' + format + '</strong></p>';
+		if (Config.laddering && Config.laddering.length > 0) {
+			let formats = Config.laddering || [];
+			html += '<p><strong>Laddering in formats: ' + formats.map(format => Text.escapeHTML(App.bot.formats[format] ? App.bot.formats[format].name : format)).join(", ") + '</strong></p>';
 			html += '<p><input type="submit" name="stopladder" value="Stop Laddering" /></p>';
 		} else {
-			html += '<p><strong>Format</strong>:&nbsp;' + getLadderFormatsMenu() + '</p>';
-			html += '<p><strong>Search Interval (seconds)</strong>:&nbsp;' +
-				'<input name="interval" type="text" size="10" value="10" /></p>';
+			html += '<p><strong>Formats</strong>:&nbsp;<input id="ladder-list-formats" name="formats" type="text" size="60" /> (Separated by commas)</p>';
+			html += '<p>' + getLadderFormatsMenu() + '&nbsp;<button type="button" onclick="addFormatToList()">Add format</button></p>';
 			html += '<p><input type="submit" name="startladder" value="Start Laddering" /></p>';
 		}
 		html += '</form>';
@@ -399,7 +409,7 @@ exports.setup = function (App) {
 			formats.push('<option value="' + f + '">' + App.bot.formats[f].name + '</option>');
 		}
 		if (formats.length > 0) {
-			return ('<select name="format">' + formats.join() + '</select>');
+			return ('<select id="format-to-add" name="format">' + formats.join() + '</select>');
 		} else {
 			return '<input name="format" type="text" size="40" value="" />';
 		}

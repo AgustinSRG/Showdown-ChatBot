@@ -4,7 +4,7 @@
 
 'use strict';
 
-const Ladder_Check_Interval = 10 * 1000;
+const Ladder_Check_Interval = 5 * 1000;
 
 const Path = require('path');
 const Text = Tools('text');
@@ -32,28 +32,61 @@ exports.setup = function (App) {
 		LadderManager.reportsRoom = false;
 	};
 
-	LadderManager.laddering = false;
-	LadderManager.format = '';
-	LadderManager.interv = 0;
+	LadderManager.searching = [];
 	LadderManager.ladderTimer = null;
 
-	LadderManager.start = function (format, checkInterv) {
-		if (!format) return false;
-		if (LadderManager.laddering) return false;
-		let mod = App.modules.battle.system;
-		format = Text.toId(format);
-		let check = function () {
-			if (!App.bot.isConnected()) return;
-			let counter = 0;
-			let maxBattles = 1;
-			if (Config.ladderBattles && Config.ladderBattles > 0) maxBattles = Config.ladderBattles;
-			for (let i in mod.BattleBot.battles) {
-				if (mod.BattleBot.battles[i].self && mod.BattleBot.battles[i].tier && Text.toId(mod.BattleBot.battles[i].tier) === format && mod.BattleBot.battles[i].rated) {
-					counter++;
-				}
+	LadderManager.onUpdateSearching = function (searchingFormats) {
+		LadderManager.searching = searchingFormats.map(Text.toId);
+	};
+
+	LadderManager.update = function () {
+		let formats = Config.laddering || [];
+
+		if (typeof formats === "string") {
+			if (formats) {
+				formats = [formats];
+			} else {
+				formats = [];
 			}
-			if (counter >= maxBattles) return;
-			let cmds = [];
+		}
+
+		if (formats.length === 0) {
+			if (LadderManager.searching.length > 0) {
+				// Cancel all search
+				App.bot.send(['|/cancelsearch']);
+			}
+			return;
+		}
+
+		if (!App.bot.status.connected || !App.bot.status.named) {
+			return; // Bot not connected or named yet
+		}
+
+		const mod = App.modules.battle.system;
+
+		let maxBattles = 1;
+		if (Config.ladderBattles && Config.ladderBattles > 0) maxBattles = Config.ladderBattles;
+
+		let ratedBattleCounter = 0;
+
+		for (let i in mod.BattleBot.battles) {
+			if (mod.BattleBot.battles[i].self && mod.BattleBot.battles[i].rated) {
+				ratedBattleCounter++;
+			}
+		}
+
+		if (ratedBattleCounter >= maxBattles) {
+			if (LadderManager.searching.length > 0) {
+				// Cancel all search
+				App.bot.send(['|/cancelsearch']);
+			}
+			return;
+		}
+
+		const cmds = [];
+
+		for (let format of formats) {
+			if (LadderManager.searching.indexOf(format) >= 0) continue; // Already searching
 			let team = mod.TeamBuilder.getTeam(format);
 			if (team) {
 				cmds.push('|/utm ' + team);
@@ -61,31 +94,21 @@ exports.setup = function (App) {
 				cmds.push('|/utm null');
 			}
 			cmds.push('|/search ' + format);
-			App.bot.send(cmds);
-		};
-		LadderManager.laddering = true;
-		LadderManager.format = format;
-		LadderManager.interv = checkInterv;
-		LadderManager.ladderTimer = setInterval(check, checkInterv || Ladder_Check_Interval);
-		check();
-		return true;
-	};
+		}
 
-	LadderManager.stop = function () {
-		if (!LadderManager.laddering) return false;
-		LadderManager.laddering = false;
-		if (LadderManager.ladderTimer) clearTimeout(LadderManager.ladderTimer);
-		LadderManager.ladderTimer = null;
-		LadderManager.format = '';
-		LadderManager.interv = 0;
-		return true;
+		if (cmds.length > 0) {
+			App.bot.send(cmds);
+		}
 	};
 
 	LadderManager.destroy = function () {
-		LadderManager.laddering = false;
 		if (LadderManager.ladderTimer) clearTimeout(LadderManager.ladderTimer);
 		LadderManager.ladderTimer = null;
 	};
+
+	LadderManager.ladderTimer = setInterval(function () {
+		LadderManager.update();
+	}, Ladder_Check_Interval);
 
 	return LadderManager;
 };
