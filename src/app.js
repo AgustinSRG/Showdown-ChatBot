@@ -116,7 +116,6 @@ class ChatBotApp {
 				loginserv: Default_Login_Server,
 				serverid: "showdown",
 				retrydelay: (10 * 1000),
-				maxlines: 3,
 				buflen: 6,
 				senddelay: 150,
 			};
@@ -212,7 +211,6 @@ class ChatBotApp {
 			this.config.bot.port,
 			this.config.bot.serverid,
 			this.config.bot.loginserv,
-			this.config.bot.maxlines,
 			true,
 			this.config.bot.retrydelay,
 			this.config.bot.secure,

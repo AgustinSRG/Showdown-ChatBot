@@ -34,8 +34,8 @@ exports.setup = function (App) {
 			}
 			let buf = '';
 			buf += '<html><head><title>Process Exited</title><link rel="stylesheet" href="/static/style.css" /></head><body><p>The application exits successfully.</p>' +
-			'<a href=""><button>Refresh Page</button></a></body></html>';
-			context.response.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
+				'<a href=""><button>Refresh Page</button></a></body></html>';
+			context.response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
 			context.response.end(buf);
 			console.log("Exit via server, By: " + context.user.id);
 			process.exit(0);
@@ -43,7 +43,6 @@ exports.setup = function (App) {
 		} else if (context.post.savechanges) {
 			let newPort = parseInt(context.post.port);
 			let newHttpsPort = parseInt(context.post.sslport);
-			let maxlines = parseInt(context.post.maxlines);
 			let loginserv = (context.post.loginserv || "").trim();
 			let maxMsgLength = parseInt(context.post.maxmsglen);
 			let sslcertFile = context.post.sslcert || "";
@@ -53,7 +52,6 @@ exports.setup = function (App) {
 
 			try {
 				check(!isNaN(newPort), "Invalid port.");
-				check(!isNaN(maxlines) && maxlines > 0, "Invalid lines restriction");
 				check(!isNaN(bufLen) && bufLen > 0, "Invalid message buffer length");
 				check(!isNaN(senddelay) && senddelay > 0, "Invalid message sending delay");
 				check(!isNaN(maxMsgLength) && maxMsgLength > 0, "Invialid message length restriction");
@@ -78,10 +76,8 @@ exports.setup = function (App) {
 				App.config.server.url = context.post.appurl || "";
 				App.config.apptitle = context.post.apptitle || "";
 				App.config.bot.loginserv = loginserv || "play.pokemonshowdown.com";
-				App.config.bot.maxlines = maxlines;
 				App.config.bot.buflen = bufLen;
 				App.config.bot.senddelay = senddelay;
-				App.config.bot.maxlines = maxlines;
 				App.config.bot.maxMessageLength = maxMsgLength;
 				App.config.debug = !!context.post.debugmode;
 				App.config.useproxy = !!context.post.useproxy;
@@ -90,7 +86,6 @@ exports.setup = function (App) {
 				App.config.autoremoveuserdata = !!context.post.rmuserdata;
 				App.config.mainhtml = (context.post.mainhtml || '').trim();
 				App.saveConfig();
-				App.bot.maxLinesSend = App.config.bot.maxlines;
 				App.bot.sendBufferMaxlength = App.config.bot.buflen;
 				App.bot.chatThrottleDelay = App.config.bot.senddelay;
 				ok = "Changes made successfuly.";
@@ -110,7 +105,6 @@ exports.setup = function (App) {
 		htmlVars.appurl = Text.escapeHTML(App.config.server.url || "");
 		htmlVars.apptitle = Text.escapeHTML(App.config.apptitle || 'Showdown ChatBot');
 		htmlVars.loginserv = Text.escapeHTML(App.config.bot.loginserv || 'play.pokemonshowdown.com');
-		htmlVars.maxlines = Text.escapeHTML(App.config.bot.maxlines || '3');
 		htmlVars.buflen = Text.escapeHTML(App.config.bot.buflen || '6');
 		htmlVars.senddelay = Text.escapeHTML(App.config.bot.senddelay || '200');
 		htmlVars.maxmsglen = Text.escapeHTML(App.config.bot.maxMessageLength || '300');
@@ -124,6 +118,6 @@ exports.setup = function (App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Admin - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), { title: "Admin - Showdown ChatBot" });
 	});
 };

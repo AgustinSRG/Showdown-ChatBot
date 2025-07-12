@@ -29,7 +29,6 @@ const Default_Room = "lobby"; // If the server sends a message without specifyin
 const Default_Login_Server = "play.pokemonshowdown.com";
 const Default_Server_Id = "showdown";
 const Default_Retry_Delay = 10 * 1000;
-const Max_Lines_Default = 3;
 
 /**
  * Represents a Pokemon Showdown Bot
@@ -39,14 +38,13 @@ class Bot {
 	 * @param {String} server - The Pokemon Showdown sever to connect
 	 * @param {Number} port
 	 * @param {String} loginServer - Default: play.pokemonshowdown.com
-	 * @param {Number} maxLinesSend - Pokemon Showdown server lines per message restriction
 	 * @param {Boolean} connectionRetry - true for retrying the connectio on disconnect
 	 * @param {Number} connectionRetryDelay - miliseconds to wait before retrying the connection
 	 * @param {Boolean} secure - Use HTTPS
 	 * @param {Number} sendBufferMaxlength - Max length of the sending buffer
 	 * @param {Number} chatThrottleDelay - Chat throttle delay in ms
 	 */
-	constructor(server, port, serverId, loginServer, maxLinesSend, connectionRetry, connectionRetryDelay, secure, sendBufferMaxlength, chatThrottleDelay) {
+	constructor(server, port, serverId, loginServer, connectionRetry, connectionRetryDelay, secure, sendBufferMaxlength, chatThrottleDelay) {
 		this.server = server;
 		this.port = port;
 		this.secure = !!secure;
@@ -61,8 +59,6 @@ class Bot {
 			loginServer: (this.loginOptions.loginServer || Default_Login_Server),
 			serverId: (this.loginOptions.serverId || Default_Server_Id),
 		};
-
-		this.maxLinesSend = maxLinesSend || Max_Lines_Default;
 
 		this.socket = null;
 		this.connecting = false;
