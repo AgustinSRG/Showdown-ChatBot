@@ -87,12 +87,17 @@ exports.setup = function (App) {
 
 		for (let format of formats) {
 			if (LadderManager.searching.indexOf(format) >= 0) continue; // Already searching
-			let team = mod.TeamBuilder.getTeam(format);
-			if (team) {
+
+			if (!App.bot.formats[format] || !App.bot.formats[format].ladder) continue;
+
+			if (App.bot.formats[format].team) {
+				let team = mod.TeamBuilder.getTeam(format);
+				if (!team) continue;
 				cmds.push('|/utm ' + team);
 			} else {
 				cmds.push('|/utm null');
 			}
+
 			cmds.push('|/search ' + format);
 		}
 

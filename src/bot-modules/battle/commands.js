@@ -4,6 +4,8 @@
  * chall: bot sends a challenge to an arbitrary user
  * cancelchallenge: cancels an active challenge
  * searchbattle: searches a ladder battle and returns the link
+ * startladdering: starts searching battles in ladder
+ * stopladdering: stops searching battles in ladder
  * jointour: joins tournament
  * leavetour: leaves tournament
  * evalbattle: runs arbitrary javascript in a battle context
@@ -104,7 +106,7 @@ module.exports = {
 		if (!this.can('searchbattle', this.room)) return this.replyAccessDenied('searchbattle');
 		let mod = App.modules.battle.system;
 		let format = parseAliases(this.arg, App);
-		if (!format) return this.errorReply(this.usage({ desc: 'format' }));
+		if (!format) return this.errorReply(this.usage({ desc: this.mlt('format') }));
 		if (!App.bot.formats[format] || !App.bot.formats[format].ladder) {
 			return this.errorReply(this.mlt(0) + ' ' + Chat.italics(format) + ' ' + this.mlt(5));
 		}
@@ -127,6 +129,77 @@ module.exports = {
 		this.send(cmds);
 		App.logCommandAction(this);
 		this.reply(this.mlt(12));
+	},
+
+	startladder: "startladdering",
+	startladdering: function (App) {
+		this.setLangFile(Lang_File);
+		if (!this.can('searchbattle', this.room)) return this.replyAccessDenied('searchbattle');
+
+		const Config = App.config.modules.battle;
+		const mod = App.modules.battle.system;
+
+		if (Config.laddering && Config.laddering.length > 0) {
+			return this.errorReply(
+				this.mlt(17) + " (" +
+				Config.laddering.map(format => Chat.code(App.bot.formats[format] ? App.bot.formats[format].name : format)).join(", ") + "). " +
+				this.mlt(7) + ' ' + Chat.code(this.token + 'stopladdering') + ' ' + this.mlt(18)
+			);
+		}
+
+		const formats = this.args.map(f => Text.toId(f)).filter(f => !!f);
+
+		if (formats.length === 0) {
+			return this.errorReply(this.usage({ desc: this.mlt('format') }, { desc: "...", optional: true }));
+		}
+
+		const formatSet = new Set();
+
+		for (let format of formats) {
+			format = parseAliases(format, App);
+
+			if (formatSet.has(format)) continue;
+
+			if (!App.bot.formats[format] || !App.bot.formats[format].ladder) {
+				return this.errorReply(this.mlt(0) + ' ' + Chat.italics(format) + ' ' + this.mlt(5));
+			}
+			if (App.bot.formats[format].team && !mod.TeamBuilder.hasTeam(format)) {
+				return this.errorReply(this.mlt(2) + ' ' + Chat.italics(format));
+			}
+
+			formatSet.add(format);
+		}
+
+		Config.laddering = Array.from(formatSet);
+		App.db.write();
+
+		mod.LadderManager.update();
+
+		App.logCommandAction(this);
+
+		this.reply(this.mlt(15) + " (" + Config.laddering.map(format => Chat.code(App.bot.formats[format] ? App.bot.formats[format].name : format)).join(", ") + ")");
+	},
+
+	stopladder: "stopladdering",
+	stopladdering: function (App) {
+		this.setLangFile(Lang_File);
+		if (!this.can('searchbattle', this.room)) return this.replyAccessDenied('searchbattle');
+
+		const Config = App.config.modules.battle;
+		const mod = App.modules.battle.system;
+
+		if ((!Config.laddering || Config.laddering.length === 0) && mod.LadderManager.searching.length === 0) {
+			return this.errorReply(this.mlt(19));
+		}
+
+		Config.laddering = [];
+		App.db.write();
+
+		mod.LadderManager.update();
+
+		App.logCommandAction(this);
+
+		this.reply(this.mlt(16));
 	},
 
 	jointour: function (App) {

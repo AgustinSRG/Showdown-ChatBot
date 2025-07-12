@@ -24,6 +24,14 @@ $12 = Searching for ladder battle
 $13 = Challenge was accepted
 $14 = The challenge was rejected by
 
+$15 = Started searching battles in ladder
+$16 = Stopped searching battles in ladder
+
+$17 = Already searching battles in ladder
+$18 = to stop searching
+
+$19 = Not searching for ladder battles
+
 $busy = I can't accept the challenge because I'm already playing #BN battles right now. Try again later or use the ``.chall`` command if you have permission to use it.
 
 $customrules = I can't accept the challenge because you specified custom rules for a format that requires a team
@@ -67,3 +75,11 @@ $team = equipo
 $nochat = Este comando solo está disponible para las salas de chat
 
 $notour = No hay ningún torneo en esta sala.
+
+$15 = Buscando batallas en la ladder
+$16 = Se detuvo la búsqueda de batallas en la ladder
+
+$17 = Ya se están buscando batallas en la ladder
+$18 = para detener la búsqueda
+
+$19 = No se están buscando batallas en la ladder
