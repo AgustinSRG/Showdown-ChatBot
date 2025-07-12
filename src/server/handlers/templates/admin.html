@@ -55,7 +55,12 @@
 	</p>
 
 	<p>
-		<strong>Pokemon Showdown Message Throttle Delay (milliseconds)</strong>: <input type="number" step="1" name="senddelay" value="${SENDDELAY}" /><br>
+		<strong>Pokemon Showdown Message Throttle Delay (milliseconds)</strong>: <input type="number" step="1" id="send-delay" name="senddelay" value="${SENDDELAY}" />
+		<span> </span>
+		<button type="button" onclick="document.getElementById('send-delay').value = '150';">Set 150</button>
+		<span> </span>
+		<button type="button" onclick="document.getElementById('send-delay').value = '600';">Set 600</button>
+		<br>
 		<span>Pokemon showdown has a restriction on how fast you can send messages. <br>For regular users, it is <b>600</b> milliseconds of delay. For global ranks or public room staff, it is <b>150</b> milliseconds of delay. <br>Set this value accordingly with the rank of your bot account.</span>
 	</p>
 
