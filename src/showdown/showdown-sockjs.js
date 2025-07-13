@@ -30,6 +30,11 @@ const Default_Login_Server = "play.pokemonshowdown.com";
 const Default_Server_Id = "showdown";
 const Default_Retry_Delay = 10 * 1000;
 
+const THROTTLE_DELAY = 600;
+const THROTTLE_DELAY_TRUSTED = 100;
+const THROTTLE_DELAY_PUBLIC_BOT = 25;
+const THROTTLE_BUFFER_LIMIT = 6;
+
 /**
  * Represents a Pokemon Showdown Bot
  */
@@ -38,19 +43,22 @@ class Bot {
 	 * @param {String} server - The Pokemon Showdown sever to connect
 	 * @param {Number} port
 	 * @param {String} loginServer - Default: play.pokemonshowdown.com
-	 * @param {Boolean} connectionRetry - true for retrying the connectio on disconnect
-	 * @param {Number} connectionRetryDelay - miliseconds to wait before retrying the connection
+	 * @param {Boolean} connectionRetry - true for retrying the connection on disconnect
+	 * @param {Number} connectionRetryDelay - milliseconds to wait before retrying the connection
 	 * @param {Boolean} secure - Use HTTPS
-	 * @param {Number} sendBufferMaxlength - Max length of the sending buffer
-	 * @param {Number} chatThrottleDelay - Chat throttle delay in ms
+	 * @param {Number} msgQueueMaxLength - Max length of the message queue
+	 * @param {String} accountType - Bot account type (regular, trusted, gbot)
+	 * @param {Number} safetyThrottleExtraDelay - Extra throttle delay for safety
 	 */
-	constructor(server, port, serverId, loginServer, connectionRetry, connectionRetryDelay, secure, sendBufferMaxlength, chatThrottleDelay) {
+	constructor(server, port, serverId, loginServer, connectionRetry, connectionRetryDelay, secure, msgQueueMaxLength, accountType, safetyThrottleExtraDelay) {
 		this.server = server;
 		this.port = port;
 		this.secure = !!secure;
 
-		this.sendBufferMaxlength = Math.max(1, parseInt(sendBufferMaxlength + "") || 6);
-		this.chatThrottleDelay = Math.max(0, parseInt(chatThrottleDelay + "") || 200);
+		this.msgQueueMaxLength = Math.max(1, parseInt(msgQueueMaxLength + "") || 120);
+
+		this.accountType = accountType || "";
+		this.safetyThrottleExtraDelay = Math.max(0, parseInt(safetyThrottleExtraDelay + "") || 50);
 
 		this.loginOptions = Object.create(null);
 		this.loginOptions.serverId = serverId;
@@ -140,6 +148,21 @@ class Bot {
 	getLoginUrl() {
 		return Util.format("https://%s/~~%s/action.php",
 			encodeURIComponent(this.loginUrl.loginServer), encodeURIComponent(this.loginUrl.serverId));
+	}
+
+	getThrottleDelay() {
+		let delay = THROTTLE_DELAY;
+
+		switch (this.accountType) {
+			case "trusted":
+				delay = THROTTLE_DELAY_TRUSTED;
+				break;
+			case "gbot":
+				delay = THROTTLE_DELAY_PUBLIC_BOT;
+				break;
+		}
+
+		return delay + this.safetyThrottleExtraDelay;
 	}
 
 	/* Setters */
@@ -389,6 +412,12 @@ class Bot {
 	}
 
 	addToMsgQueue(msg) {
+		if (this.msgQueueMaxLength > 0) {
+			while (this.msgQueue.length >= this.msgQueueMaxLength) {
+				this.msgQueue.shift();
+			}
+		}
+
 		this.msgQueue.push(msg);
 	}
 
@@ -407,9 +436,7 @@ class Bot {
 			return (now < msg.et);
 		});
 
-		let timeEx = (this.sendingQueue.length > 0) ? (this.sendingQueue[this.sendingQueue.length - 1].et) : Date.now();
-
-		const spaceInQueue = this.sendBufferMaxlength - this.sendingQueue.length;
+		const spaceInQueue = THROTTLE_BUFFER_LIMIT - this.sendingQueue.length;
 
 		if (spaceInQueue > 0) {
 			const linesToSend = [];
@@ -418,15 +445,16 @@ class Bot {
 				linesToSend.push(this.msgQueue.shift());
 			}
 
+			const throttleDelay = this.getThrottleDelay();
+
 			while (linesToSend.length > 0) {
 				const lineToSend = linesToSend.shift();
 
 				this.socket.send(lineToSend);
 				this.events.emit('send', lineToSend);
 
-				timeEx += this.chatThrottleDelay;
 				this.sendingQueue.push({
-					et: timeEx,
+					et: Date.now() + throttleDelay,
 				});
 			}
 		}

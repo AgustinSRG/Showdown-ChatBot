@@ -47,14 +47,15 @@ exports.setup = function (App) {
 			let maxMsgLength = parseInt(context.post.maxmsglen);
 			let sslcertFile = context.post.sslcert || "";
 			let sslkeyFile = context.post.sslkey || "";
-			let bufLen = parseInt(context.post.buflen);
-			let senddelay = parseInt(context.post.senddelay);
+			let accountType = context.post.actype || "";
+			let safetyThrottleExtraDelay = parseInt(context.post.extradelay);
+			let msgQueueMaxLength = parseInt(context.post.queuelen);
 
 			try {
 				check(!isNaN(newPort), "Invalid port.");
-				check(!isNaN(bufLen) && bufLen > 0, "Invalid message buffer length");
-				check(!isNaN(senddelay) && senddelay > 0, "Invalid message sending delay");
-				check(!isNaN(maxMsgLength) && maxMsgLength > 0, "Invialid message length restriction");
+				check(!isNaN(safetyThrottleExtraDelay) && safetyThrottleExtraDelay > 0, "Invalid extra throttle delay");
+				check(!isNaN(msgQueueMaxLength) && msgQueueMaxLength > 0, "Invalid max message sending queue length");
+				check(!isNaN(maxMsgLength) && maxMsgLength > 0, "Invalid message length restriction");
 				check(!sslcertFile || FileSystem.existsSync(Path.resolve(App.appDir, sslcertFile)), "SSl certificate file was not found.");
 				check(!sslkeyFile || FileSystem.existsSync(Path.resolve(App.appDir, sslkeyFile)), "SSl key file was not found.");
 			} catch (err) {
@@ -76,8 +77,9 @@ exports.setup = function (App) {
 				App.config.server.url = context.post.appurl || "";
 				App.config.apptitle = context.post.apptitle || "";
 				App.config.bot.loginserv = loginserv || "play.pokemonshowdown.com";
-				App.config.bot.buflen = bufLen;
-				App.config.bot.senddelay = senddelay;
+				App.config.bot.accountType = accountType;
+				App.config.bot.safetyThrottleExtraDelay = safetyThrottleExtraDelay;
+				App.config.bot.msgQueueMaxLength = msgQueueMaxLength;
 				App.config.bot.maxMessageLength = maxMsgLength;
 				App.config.debug = !!context.post.debugmode;
 				App.config.useproxy = !!context.post.useproxy;
@@ -86,8 +88,9 @@ exports.setup = function (App) {
 				App.config.autoremoveuserdata = !!context.post.rmuserdata;
 				App.config.mainhtml = (context.post.mainhtml || '').trim();
 				App.saveConfig();
-				App.bot.sendBufferMaxlength = App.config.bot.buflen;
-				App.bot.chatThrottleDelay = App.config.bot.senddelay;
+				App.bot.accountType = App.config.bot.accountType;
+				App.bot.msgQueueMaxLength = App.config.bot.msgQueueMaxLength;
+				App.bot.safetyThrottleExtraDelay = App.config.bot.safetyThrottleExtraDelay;
 				ok = "Changes made successfuly.";
 				App.logServerAction(context.user.id, 'Administration options were edited');
 			}
@@ -105,8 +108,8 @@ exports.setup = function (App) {
 		htmlVars.appurl = Text.escapeHTML(App.config.server.url || "");
 		htmlVars.apptitle = Text.escapeHTML(App.config.apptitle || 'Showdown ChatBot');
 		htmlVars.loginserv = Text.escapeHTML(App.config.bot.loginserv || 'play.pokemonshowdown.com');
-		htmlVars.buflen = Text.escapeHTML(App.config.bot.buflen || '6');
-		htmlVars.senddelay = Text.escapeHTML(App.config.bot.senddelay || '200');
+		htmlVars.extra_delay = Text.escapeHTML(App.config.bot.safetyThrottleExtraDelay || '50');
+		htmlVars.queue_len = Text.escapeHTML(App.config.bot.msgQueueMaxLength || '120');
 		htmlVars.maxmsglen = Text.escapeHTML(App.config.bot.maxMessageLength || '300');
 		htmlVars.debugmode = (App.config.debug ? 'checked="checked"' : '');
 		htmlVars.useproxy = (App.config.useproxy ? 'checked="checked"' : '');
@@ -115,9 +118,21 @@ exports.setup = function (App) {
 		htmlVars.rmuserdata = (App.config.autoremoveuserdata ? 'checked="checked"' : '');
 		htmlVars.mainhtml = Text.escapeHTML(App.config.mainhtml || '');
 
+		htmlVars.ac_type_select = getAccountTypeSelect();
+
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
 		context.endWithWebPage(mainTemplate.make(htmlVars), { title: "Admin - Showdown ChatBot" });
 	});
+
+
+	function getAccountTypeSelect() {
+		let html = '<select name="actype">';
+		html += '<option value="regular"' + ((!App.config.bot.accountType || App.config.bot.accountType === 'regular') ? ' selected="selected"' : '') + '>10 messages per second (Regular user or staff only in private rooms)</option>';
+		html += '<option value="trusted"' + (App.config.bot.accountType === 'trusted' ? ' selected="selected"' : '') + '>60 messages per second (Global rank or staff rank in public or official rooms)</option>';
+		html += '<option value="gbot"' + (App.config.bot.accountType === 'gbot' ? ' selected="selected"' : '') + '>240 messages per second (Global bot rank or bot rank in public or official rooms)</option>';
+		html += '<select>';
+		return html;
+	}
 };

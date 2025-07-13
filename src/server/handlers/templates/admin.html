@@ -55,18 +55,25 @@
 	</p>
 
 	<p>
-		<strong>Pokemon Showdown Message Throttle Delay (milliseconds)</strong>: <input type="number" step="1" id="send-delay" name="senddelay" value="${SENDDELAY}" />
-		<span> </span>
-		<button type="button" onclick="document.getElementById('send-delay').value = '150';">Set 150</button>
-		<span> </span>
-		<button type="button" onclick="document.getElementById('send-delay').value = '600';">Set 600</button>
+		<strong>Maximum message sending speed</strong>: ${AC_TYPE_SELECT}
 		<br>
-		<span>Pokemon showdown has a restriction on how fast you can send messages. <br>For regular users, it is <b>600</b> milliseconds of delay. For global ranks or public room staff, it is <b>150</b> milliseconds of delay. <br>Set this value accordingly with the rank of your bot account.</span>
+		<span>
+			Pokemon showdown has a restriction on how fast you can send messages. <br>
+			Set this max speed accordingly with the rank of your bot account.
+		</span>
 	</p>
 
 	<p>
-		<strong>Max size of message buffer</strong>: <input type="number" step="1" name="buflen" value="${BUFLEN}" /><br>
-		<span>Max number of messages to keep in queue if they cannot be sent due to the throttle delay.</span>
+		<strong>Extra delay (milliseconds)</strong>: <input type="number" step="1" name="extradelay" value="${EXTRA_DELAY}" /><br>
+		<span>
+			Extra delay when scheduling message sending past the speed limit, to ensure no messages are throttled by the server. <br>
+			Recommended to be set at <b>50</b> milliseconds. Increase it if you notice lost messages.
+		</span>
+	</p>
+
+	<p>
+		<strong>Max size of message queue</strong>: <input type="number" step="1" name="queuelen" value="${QUEUE_LEN}" /><br>
+		<span>Max number of messages to keep in queue if they cannot be sent due to the limit in message sending speed.</span>
 	</p>
 
 	<h3>Other settings</h3>

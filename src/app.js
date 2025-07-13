@@ -116,9 +116,24 @@ class ChatBotApp {
 				loginserv: Default_Login_Server,
 				serverid: "showdown",
 				retrydelay: (10 * 1000),
-				buflen: 6,
-				senddelay: 150,
+				msgQueueMaxLength: 120,
+				accountType: "regular",
+				safetyThrottleExtraDelay: 50,
 			};
+		}
+
+		if (!this.config.bot.msgQueueMaxLength) {
+			this.config.bot.msgQueueMaxLength = 120;
+		}
+
+		if (!this.config.bot.accountType) {
+			if (this.config.bot.senddelay && this.config.bot.senddelay <= 50) {
+				this.config.bot.accountType = "gbot";
+			} else if (this.config.bot.senddelay && this.config.bot.senddelay <= 200) {
+				this.config.bot.accountType = "trusted";
+			} else {
+				this.config.bot.accountType = "regular";
+			}
 		}
 
 		/* Server default config */
@@ -214,8 +229,9 @@ class ChatBotApp {
 			true,
 			this.config.bot.retrydelay,
 			this.config.bot.secure,
-			this.config.bot.buflen || 6,
-			this.config.bot.senddelay || 200
+			this.config.bot.msgQueueMaxLength || 120,
+			this.config.bot.accountType || "regular",
+			this.config.bot.safetyThrottleExtraDelay || 50
 		);
 
 		/* Create the server */
