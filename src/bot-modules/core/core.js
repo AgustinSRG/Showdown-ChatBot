@@ -26,7 +26,7 @@ function setup(App) {
 
 	const CoreMod = Object.create(null);
 
-	let lastLogin = CoreMod.lastLogin = {nick: '', named: false};
+	let lastLogin = CoreMod.lastLogin = { nick: '', named: false };
 
 	let manager = CoreMod.manager = new RoomManager(Path.resolve(App.confDir, 'rooms/'));
 	CoreMod.loginTimer = null;
@@ -196,6 +196,11 @@ function setup(App) {
 				App.bot.sendTo(room, reBroadcastCommand);
 			}
 		}
+
+		if (line === '|raw|<strong class="message-throttle-notice">Your message was not sent because you\'ve been typing too quickly.</strong>') {
+			App.log("[WANING] A message was throttled by the server in room " + room + ". Consider adjusting the message sending settings in the Admin section.");
+		}
+
 		if (App.config.debug) {
 			App.logToConsole('LINE: ' + line);
 		}
