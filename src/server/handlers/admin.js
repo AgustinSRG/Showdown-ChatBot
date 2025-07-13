@@ -129,9 +129,9 @@ exports.setup = function (App) {
 
 	function getAccountTypeSelect() {
 		let html = '<select name="actype">';
-		html += '<option value="regular"' + ((!App.config.bot.accountType || App.config.bot.accountType === 'regular') ? ' selected="selected"' : '') + '>10 messages per second (Regular user or staff only in private rooms)</option>';
-		html += '<option value="trusted"' + (App.config.bot.accountType === 'trusted' ? ' selected="selected"' : '') + '>60 messages per second (Global rank or staff rank in public or official rooms)</option>';
-		html += '<option value="gbot"' + (App.config.bot.accountType === 'gbot' ? ' selected="selected"' : '') + '>240 messages per second (Global bot rank or bot rank in public or official rooms)</option>';
+		html += '<option value="regular"' + ((!App.config.bot.accountType || App.config.bot.accountType === 'regular') ? ' selected="selected"' : '') + '>~2 messages per second (Regular user or staff only in private rooms)</option>';
+		html += '<option value="trusted"' + (App.config.bot.accountType === 'trusted' ? ' selected="selected"' : '') + '>~6 messages per second (Global rank or staff rank in public or official rooms)</option>';
+		html += '<option value="gbot"' + (App.config.bot.accountType === 'gbot' ? ' selected="selected"' : '') + '>~12 messages per second (Global bot rank or bot rank in public or official rooms)</option>';
 		html += '<select>';
 		return html;
 	}

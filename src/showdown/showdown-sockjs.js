@@ -33,7 +33,7 @@ const Default_Retry_Delay = 10 * 1000;
 const THROTTLE_DELAY = 600;
 const THROTTLE_DELAY_TRUSTED = 100;
 const THROTTLE_DELAY_PUBLIC_BOT = 25;
-const THROTTLE_BUFFER_LIMIT = 6;
+const THROTTLE_BUFFER_LIMIT = 5;
 
 /**
  * Represents a Pokemon Showdown Bot
@@ -59,6 +59,8 @@ class Bot {
 
 		this.accountType = accountType || "";
 		this.safetyThrottleExtraDelay = Math.max(0, parseInt(safetyThrottleExtraDelay + "") || 50);
+
+		this.lastProcessedMessage = 0;
 
 		this.loginOptions = Object.create(null);
 		this.loginOptions.serverId = serverId;
@@ -427,35 +429,53 @@ class Bot {
 			this.sendingQueueTimeout = null;
 		}
 
-		if (!this.isConnected() || this.msgQueue.length === 0) {
+		if (this.msgQueue.length === 0) {
+			return;
+		}
+
+		if (!this.isConnected()) {
+			this.msgQueue = [];
 			return;
 		}
 
 		const now = Date.now();
+
 		this.sendingQueue = this.sendingQueue.filter(function (msg) {
 			return (now < msg.et);
 		});
 
-		const spaceInQueue = THROTTLE_BUFFER_LIMIT - this.sendingQueue.length;
+		const throttleDelay = this.getThrottleDelay();
 
-		if (spaceInQueue > 0) {
-			const linesToSend = [];
+		while (THROTTLE_BUFFER_LIMIT - this.sendingQueue.length > 0 && this.msgQueue.length > 0) {
+			const lineToSend = this.msgQueue.shift();
 
-			for (let i = 0; i < spaceInQueue && this.msgQueue.length > 0; i++) {
-				linesToSend.push(this.msgQueue.shift());
-			}
+			this.socket.send(lineToSend);
+			this.events.emit('send', lineToSend);
 
-			const throttleDelay = this.getThrottleDelay();
+			const msgSentTimestamp = Date.now();
 
-			while (linesToSend.length > 0) {
-				const lineToSend = linesToSend.shift();
+			this.sendingQueue = this.sendingQueue.filter(function (msg) {
+				return (msgSentTimestamp < msg.et);
+			});
 
-				this.socket.send(lineToSend);
-				this.events.emit('send', lineToSend);
+			if (msgSentTimestamp - this.lastProcessedMessage < throttleDelay) {
+				// Sending too fast, this message
+				// will be added to the sending queue
+				// we set 'et' to the estimated timestamp the message will be processed by the server
 
-				this.sendingQueue.push({
-					et: Date.now() + throttleDelay,
-				});
+				if (this.sendingQueue.length > 0) {
+					this.lastProcessedMessage = this.sendingQueue[this.sendingQueue.length - 1].et + throttleDelay;
+					this.sendingQueue.push({
+						et: this.lastProcessedMessage,
+					});
+				} else {
+					this.lastProcessedMessage = msgSentTimestamp + (throttleDelay - (msgSentTimestamp - this.lastProcessedMessage));
+					this.sendingQueue.push({
+						et: this.lastProcessedMessage,
+					});
+				}
+			} else {
+				this.lastProcessedMessage = msgSentTimestamp;
 			}
 		}
 
