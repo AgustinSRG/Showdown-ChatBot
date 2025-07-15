@@ -756,7 +756,10 @@ class Bot {
 		let commaIndex, formatData, code, name;
 		this.formats = Object.create(null);
 		for (let i = 0; i < formatsArr.length; i++) {
-			commaIndex = formatsArr[i].indexOf(',');
+			if (formatsArr[i] === ",LL") {
+				continue;
+			}
+			commaIndex = formatsArr[i].lastIndexOf(',');
 			if (commaIndex === -1) {
 				this.formats[Text.toId(formatsArr[i])] = {
 					name: formatsArr[i],
