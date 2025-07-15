@@ -1,5 +1,3 @@
-<!-- omit in toc -->
-
 # Official Add-ons for Showdown-ChatBot
 
 This is a list of official add-ons: developed by the authors of the bot ar accepted by them.
@@ -8,22 +6,16 @@ The add-ons are sorted alphabetically.
 
 Index:
 
-- [Anti-idle](#anti-idle)
-- [Automated promotion to voice](#automated-promotion-to-voice)
-- [Automated response add-on](#automated-response-add-on)
-- [Battle spectate add-on](#battle-spectate-add-on)
-- [Commands guide add-on](#commands-guide-add-on)
-- [HashPoke command exceptions](#hashpoke-command-exceptions)
-- [Pastebin add-on](#pastebin-add-on)
-- [YouTube link recognition add-on](#youtube-link-recognition-add-on)
+- [Official Add-ons for Showdown-ChatBot](#official-add-ons-for-showdown-chatbot)
+  - [Automated promotion to voice](#automated-promotion-to-voice)
+  - [Automated response add-on](#automated-response-add-on)
+  - [Battle spectate add-on](#battle-spectate-add-on)
+  - [Commands guide add-on](#commands-guide-add-on)
+  - [HashPoke command exceptions](#hashpoke-command-exceptions)
+  - [Pastebin add-on](#pastebin-add-on)
+  - [YouTube link recognition add-on](#youtube-link-recognition-add-on)
 
 ---
-
-## Anti-idle
-
-**Description**: This add-on makes the bot automatically send private messages to itself periodically so it is never marked as idle.
-
-**Add-on file**: [anti-idle](./anti-idle.js)
 
 ## Automated promotion to voice
 

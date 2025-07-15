@@ -10,6 +10,8 @@ const RoomManager = require(Path.resolve(__dirname, 'rooms.js'));
 
 const REABROADCAST_ERROR_MSG = "You can't broadcast this because it was just broadcasted. If this was intentional, use ";
 
+const IDLE_PREVENT_INTERVAL = 15 * 60 * 1000; // Half the period for staff (30 mins)
+
 function setup(App) {
 	if (!App.config.modules.core) {
 		App.config.modules.core = {
@@ -21,6 +23,7 @@ function setup(App) {
 			privaterooms: [],
 			joinall: false,
 			joinofficial: false,
+			idlePrevent: false,
 		};
 	}
 
@@ -207,6 +210,19 @@ function setup(App) {
 	});
 
 	App.server.setPermission('core', 'Permission for changing the bot autojoin and login configuration');
+
+	setInterval(() => {
+		if (!App.config.modules.core.idlePrevent) {
+			return;
+		}
+
+		if (!App.bot.status.connected || !App.bot.status.named) {
+			return;
+		}
+
+		// Send a private message to itself to prevent idle status
+		App.bot.pm(App.bot.getBotNick(), "[IDLE-PREVENT] " + (new Date()).toISOString());
+	}, IDLE_PREVENT_INTERVAL);
 
 	return CoreMod;
 }
