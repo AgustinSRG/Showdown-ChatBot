@@ -201,7 +201,7 @@ function setup(App) {
 		}
 
 		if (line === '|raw|<strong class="message-throttle-notice">Your message was not sent because you\'ve been typing too quickly.</strong>') {
-			App.log("[WANING] A message was throttled by the server in room " + room + ". Consider adjusting the message sending settings in the Admin section.");
+			App.log("[WARNING] A message was throttled by the server in room " + room + ". Consider adjusting the message sending settings in the Admin section.");
 		}
 
 		if (App.config.debug) {
