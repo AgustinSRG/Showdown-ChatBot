@@ -46,7 +46,11 @@ function setup(App) {
 			}
 
 			if (oldStatus !== App.config.modules.core.status) {
-				cmds.push('|/status ' + App.config.modules.core.status);
+				if (App.config.modules.core.status) {
+					cmds.push('|/status ' + App.config.modules.core.status);
+				} else {
+					cmds.push('|/clearstatus');
+				}
 			}
 
 			if (cmds.length) {

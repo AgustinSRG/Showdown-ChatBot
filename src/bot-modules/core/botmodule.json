@@ -1,59 +1,62 @@
 {
-  "id": "core",
-  "name": "Core",
-  "main": "core.js",
-  "commands": [
-    "commands/exec-cmd.js",
-    "commands/seen.js",
-    "commands/control.js",
-    "commands/cmd-admin.js"
-  ],
-  "permissions": {
-    "commands": {
-      "excepted": true
-    },
-    "grant": {
-      "excepted": true
-    },
-    "reconnect": {
-      "excepted": true
-    },
-    "set": {
-      "group": "owner"
-    },
-    "joinroom": {
-      "group": "admin"
-    },
-    "leaveroom": {
-      "group": "admin"
-    },
-    "send": {
-      "group": "admin"
-    },
-    "say": {
-      "group": "mod"
-    },
-    "saycmd": {
-      "group": "mod"
-    },
-    "alts": {
-      "group": "user"
-    },
-    "fullalts": {
-      "group": "admin"
-    }
-  },
-  "handlers": [
-    "handlers/autojoin.js",
-    "handlers/login.js"
-  ],
-  "langfiles": [
-    "../../command-parser.translations",
-    "../../command-usage.translations",
-    "./commands/cmd-admin.translations",
-    "./commands/control.translations",
-    "./commands/exec-cmd.translations",
-    "./commands/seen.translations"
-  ],
-  "description": "Essential Module"
+	"id": "core",
+	"name": "Core",
+	"main": "core.js",
+	"commands": [
+		"commands/exec-cmd.js",
+		"commands/seen.js",
+		"commands/control.js",
+		"commands/cmd-admin.js"
+	],
+	"permissions": {
+		"commands": {
+			"excepted": true
+		},
+		"grant": {
+			"excepted": true
+		},
+		"reconnect": {
+			"excepted": true
+		},
+		"botconfig": {
+			"excepted": true
+		},
+		"set": {
+			"group": "owner"
+		},
+		"joinroom": {
+			"group": "admin"
+		},
+		"leaveroom": {
+			"group": "admin"
+		},
+		"send": {
+			"group": "admin"
+		},
+		"say": {
+			"group": "mod"
+		},
+		"saycmd": {
+			"group": "mod"
+		},
+		"alts": {
+			"group": "user"
+		},
+		"fullalts": {
+			"group": "admin"
+		}
+	},
+	"handlers": [
+		"handlers/autojoin.js",
+		"handlers/login.js"
+	],
+	"langfiles": [
+		"../../command-parser.translations",
+		"../../command-usage.translations",
+		"./commands/cmd-admin.translations",
+		"./commands/control.translations",
+		"./commands/exec-cmd.translations",
+		"./commands/seen.translations"
+	],
+	"description": "Essential Module"
 }

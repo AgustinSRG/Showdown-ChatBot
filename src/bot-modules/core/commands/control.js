@@ -16,6 +16,9 @@
  * uptime: gets the process uptime
  * contime: gets the connection time
  * reconnect: Forces the bot to reconnect to the server
+ * setavatar: Sets bot avatar
+ * setstatusmessage: Sets bot status message
+ * clearstatusmessage: Clears bot status message
  */
 
 'use strict';
@@ -34,7 +37,7 @@ module.exports = {
 	joinroom: function () {
 		this.setLangFile(Lang_File);
 		if (!this.can('joinroom', this.room)) return this.replyAccessDenied('joinroom');
-		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: '...', optional: true}));
+		if (!this.arg) return this.errorReply(this.usage({ desc: this.usageTrans('room') }, { desc: '...', optional: true }));
 		let rooms = [];
 		for (let i = 0; i < this.args.length; i++) {
 			let roomid = Text.toRoomid(this.args[i]);
@@ -53,7 +56,7 @@ module.exports = {
 	leaveroom: function () {
 		this.setLangFile(Lang_File);
 		if (!this.can('leaveroom', this.room)) return this.replyAccessDenied('leaveroom');
-		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: '...', optional: true}));
+		if (!this.arg) return this.errorReply(this.usage({ desc: this.usageTrans('room') }, { desc: '...', optional: true }));
 		let rooms = [];
 		for (let i = 0; i < this.args.length; i++) {
 			let roomid = Text.toRoomid(this.args[i]);
@@ -77,12 +80,60 @@ module.exports = {
 		App.restartBot();
 	},
 
+	/* Config commands */
+
+	setavatar: function (App) {
+		this.setLangFile(Lang_File);
+		if (!this.can('botconfig', this.room)) return this.replyAccessDenied('botconfig');
+
+		const avatar = Text.toRoomid(this.arg);
+
+		if (!avatar) return this.errorReply(this.usage({ desc: this.usageTrans('avatar') }));
+
+		App.config.modules.core.avatar = avatar;
+
+		App.db.write();
+		this.addToSecurityLog();
+
+		App.bot.send('|/avatar ' + avatar);
+	},
+
+	setstatusmsg: 'setstatusmessage',
+	setstatusmessage: function (App) {
+		this.setLangFile(Lang_File);
+		if (!this.can('botconfig', this.room)) return this.replyAccessDenied('botconfig');
+
+		const msg = (this.arg || "").trim();
+
+		if (!msg) return this.errorReply(this.usage({ desc: this.usageTrans('message') }));
+
+		App.config.modules.core.status = msg;
+
+		App.db.write();
+		this.addToSecurityLog();
+
+		App.bot.send('|/status ' + msg);
+	},
+
+	clearstatusmsg: 'clearstatusmessage',
+	clearstatusmessage: function (App) {
+		this.setLangFile(Lang_File);
+		if (!this.can('botconfig', this.room)) return this.replyAccessDenied('botconfig');
+
+		App.config.modules.core.status = "";
+
+		App.db.write();
+		this.addToSecurityLog();
+
+		App.bot.send('|/clearstatus');
+	},
+
 	/* Custom send */
 
 	custom: function () {
 		this.setLangFile(Lang_File);
 		if (!this.can('send', this.room)) return this.replyAccessDenied('send');
-		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('message')}));
+		if (!this.arg) return this.errorReply(this.usage({ desc: this.usageTrans('message') }));
 		this.send(this.arg, this.targetRoom);
 		this.addToSecurityLog();
 	},
@@ -91,12 +142,12 @@ module.exports = {
 		this.setLangFile(Lang_File);
 		if (!this.can('send', this.room)) return this.replyAccessDenied('send');
 		if (this.args.length < 2) {
-			return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: this.usageTrans('message')}));
+			return this.errorReply(this.usage({ desc: this.usageTrans('room') }, { desc: this.usageTrans('message') }));
 		}
 		let room = this.parseRoomAliases(Text.toRoomid(this.args[0]));
 		let msg = Text.trim(this.args.slice(1).join(','));
 		if (!msg) {
-			return this.errorReply(this.usage({desc: this.usageTrans('room')}, {desc: this.usageTrans('message')}));
+			return this.errorReply(this.usage({ desc: this.usageTrans('room') }, { desc: this.usageTrans('message') }));
 		}
 		this.send(msg, room);
 		this.addToSecurityLog();
@@ -106,10 +157,10 @@ module.exports = {
 	sendpm: function () {
 		this.setLangFile(Lang_File);
 		if (!this.can('send', this.room)) return this.replyAccessDenied('send');
-		if (this.args.length < 2) return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: this.usageTrans('message')}));
+		if (this.args.length < 2) return this.errorReply(this.usage({ desc: this.usageTrans('user') }, { desc: this.usageTrans('message') }));
 		let user = Text.toId(this.args[0]);
 		let msg = this.args.slice(1).join(',');
-		if (!user || !msg) return this.errorReply(this.usage({desc: this.usageTrans('user')}, {desc: this.usageTrans('message')}));
+		if (!user || !msg) return this.errorReply(this.usage({ desc: this.usageTrans('user') }, { desc: this.usageTrans('message') }));
 		this.sendPM(user, msg);
 		this.addToSecurityLog();
 	},
@@ -117,14 +168,14 @@ module.exports = {
 	say: function () {
 		this.setLangFile(Lang_File);
 		if (!this.can('say', this.room)) return this.replyAccessDenied('say');
-		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('message')}));
+		if (!this.arg) return this.errorReply(this.usage({ desc: this.usageTrans('message') }));
 		this.reply(Text.stripCommands(this.arg));
 	},
 
 	saycmd: function () {
 		this.setLangFile(Lang_File);
 		if (!this.can('saycmd', this.room)) return this.replyAccessDenied('saycmd');
-		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
+		if (!this.arg) return this.errorReply(this.usage({ desc: this.usageTrans('command') }));
 
 		const replyText = this.arg.trim();
 		let hasExemptedCommand = false;
@@ -178,7 +229,7 @@ module.exports = {
 		if (!this.parser.app.config.debug) return;
 		if (this.parser.app.env.staticmode) return;
 		if (!this.isExcepted()) return;
-		if (!this.arg) return this.errorReply(this.usage({desc: 'script'}));
+		if (!this.arg) return this.errorReply(this.usage({ desc: 'script' }));
 		if (!App.jsInject) return this.errorReply("[Javascript injection is disabled]");
 		try {
 			let res = JSON.stringify(eval(this.arg));

@@ -14,6 +14,7 @@ $text = text
 $rank = rank
 $message = message
 $format = format
+$avatar = avatar
 
 %spanish
 
@@ -25,3 +26,4 @@ $text = texto
 $rank = rango
 $message = mensaje
 $format = formato
+$avatar = avatar
