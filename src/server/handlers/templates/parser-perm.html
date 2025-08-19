@@ -9,7 +9,7 @@
 </script>
 <h3>Exceptions</h3>
 <form method="post" action="">
-	<p><strong>Excepted Users</strong>:&nbsp;<input name="expusers" type="text" size="50" value="${EXPUSERS}" autocomplete="off" />&nbsp;(Separated by commas)</p>
+	<p><strong>Excepted Users</strong>:&nbsp;<input name="expusers" type="text" style="width: 100%; max-width: 50ch;" value="${EXPUSERS}" autocomplete="off" />&nbsp;(Separated by commas)</p>
 	<p><strong>Command Exceptions</strong></p>
 	<textarea name="canexp" style="width: 100%; max-width: 80ch;" rows="3">${CANEXP}</textarea>
 	<p>(Format: <em>permission, user, room</em>)</p>
@@ -20,7 +20,7 @@ ${GLOBAL_CHART}
 ${ROOMS_CHARTS}
 <hr />
 <form method="post" action="">
-	<input name="room" type="text" size="30" />&nbsp;&nbsp;<input type="submit" name="addroom" value="Add Room" />
+	<input name="room" type="text" style="width: 100%; max-width: 30ch;" />&nbsp;&nbsp;<input type="submit" name="addroom" value="Add Room" />
 </form>
 <p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
 		

@@ -3,15 +3,15 @@
 <form method="post" action="">
 	<input type="hidden" name="name" value="${ID}" />
 	<table border="0">
-		<tr><td>Name: </td><td><input name="newname" type="text" size="10" value="${NAME}" /></td></tr><tr></tr>
-		<tr><td>Room: </td><td><input name="room" type="text" size="10" value="${ROOM}" /></td></tr><tr></tr>
-		<tr><td>Points for winner: </td><td><input name="winner" type="text" size="10" value="${WINNER}" /></td></tr><tr>
-		<tr><td>Points for finalist: </td><td><input name="finalist" type="text" size="10" value="${FINALIST}" /></td></tr><tr>
-		<tr><td>Points for semi-finalist: </td><td><input name="semifinalist" type="text" size="10" value="${SEMIFINALIST}" /></td></tr><tr>
-		<tr><td>Custom title: </td><td><input name="ctitle" type="text" size="30" value="${CTITLE}" /></td></tr><tr></tr>
-		<tr><td>Description: </td><td><input name="description" type="text" size="30" value="${DESCRIPTION}" /></td></tr><tr></tr>
-		<tr><td>Aliases (split by commas): </td><td><input name="aliases" type="text" size="30" value="${ALIASES}" /></td></tr><tr></tr>
-		<tr><td>Banned users (split by commas): </td><td><input name="banned" type="text" size="30" value="${BANNED}" /></td></tr><tr></tr>
+		<tr><td>Name: </td><td><input name="newname" type="text" style="width: 100%; max-width: 10ch;" value="${NAME}" /></td></tr><tr></tr>
+		<tr><td>Room: </td><td><input name="room" type="text" style="width: 100%; max-width: 10ch;" value="${ROOM}" /></td></tr><tr></tr>
+		<tr><td>Points for winner: </td><td><input name="winner" type="text" style="width: 100%; max-width: 10ch;" value="${WINNER}" /></td></tr><tr>
+		<tr><td>Points for finalist: </td><td><input name="finalist" type="text" style="width: 100%; max-width: 10ch;" value="${FINALIST}" /></td></tr><tr>
+		<tr><td>Points for semi-finalist: </td><td><input name="semifinalist" type="text" style="width: 100%; max-width: 10ch;" value="${SEMIFINALIST}" /></td></tr><tr>
+		<tr><td>Custom title: </td><td><input name="ctitle" type="text" style="width: 100%; max-width: 30ch;" value="${CTITLE}" /></td></tr><tr></tr>
+		<tr><td>Description: </td><td><input name="description" type="text" style="width: 100%; max-width: 30ch;" value="${DESCRIPTION}" /></td></tr><tr></tr>
+		<tr><td>Aliases (split by commas): </td><td><input name="aliases" type="text" style="width: 100%; max-width: 30ch;" value="${ALIASES}" /></td></tr><tr></tr>
+		<tr><td>Banned users (split by commas): </td><td><input name="banned" type="text" style="width: 100%; max-width: 30ch;" value="${BANNED}" /></td></tr><tr></tr>
 	</table>
 	<p><input type="checkbox" name="automated" value="true" ${AUTOMATED} />&nbsp;Automatically make tournaments official.</p>
 	<p><input type="checkbox" name="silent" value="true" ${SILENT} />&nbsp;Silent mode (Do not announce results).</p>

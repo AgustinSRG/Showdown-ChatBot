@@ -9,7 +9,7 @@
 </script>
 ${CMDS}
 <form method="post" action="">
-	<p><strong>Command</strong>:&nbsp;<input name="cmd" type="text" size="40" value="${CMD}" /></p>
+	<p><strong>Command</strong>:&nbsp;<input name="cmd" type="text" style="width: 100%; max-width: 40ch;" value="${CMD}" /></p>
 	<p><textarea name="content" style="width: 100%; max-width: 150ch;" rows="4" placeholder="command options (each line, one option)">${CONTENT}</textarea></p>
 	<p><input type="submit" name="add" value="Add random Command" /></p>
 </form>

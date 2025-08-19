@@ -19,7 +19,7 @@
 <hr />
 <form method="post" action="">
 	<table border="0">
-		<tr><td><strong>Room</strong>:&nbsp;</td><td><label><input name="room" type="text" size="30" /></label></td></tr>
+		<tr><td><strong>Room</strong>:&nbsp;</td><td><label><input name="room" type="text" style="width: 100%; max-width: 30ch;" /></label></td></tr>
 		<tr><td><strong>Language</strong>:&nbsp;</td><td>${LIST_B}</td></tr>
 	</table>
 	<p><input type="submit" name="addroom" value="Set Room Language" /></p>
@@ -34,7 +34,7 @@
 	${LANGDEFS}
 </table>
 <form method="post" action="">
-	<p><input name="lang" type="text" size="30" />&nbsp;&nbsp;
+	<p><input name="lang" type="text" style="width: 100%; max-width: 30ch;" />&nbsp;&nbsp;
 	<input type="submit" name="addcustomlang" value="Add Custom Language" /></p>
 </form>
 <p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

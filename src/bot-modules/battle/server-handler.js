@@ -213,7 +213,7 @@ exports.setup = function (App) {
 			html += '<p><strong>Challenging ' + mod.ChallManager.challenges.challengeTo.to + ' in format ' + format + '</strong></p>';
 			html += '<p><input type="submit" name="cancelchall" value="Cancel Challenge" /></p>';
 		} else {
-			html += '<p><strong>User</strong>:&nbsp;<input name="showdownname" type="text" size="30" value="" /></p>';
+			html += '<p><strong>User</strong>:&nbsp;<input name="showdownname" type="text" style="width: 100%; max-width: 30ch;" value="" /></p>';
 			html += '<p><strong>Format</strong>:&nbsp;' + getLadderFormatsMenu() + '</p>';
 			html += '<p><strong>Team</strong>:&nbsp;' + getTeamsMenu() + '</p>';
 			html += '<p><input type="submit" name="sendchall" value="Send Challenge" /></p>';
@@ -282,7 +282,7 @@ exports.setup = function (App) {
 			html += '<p><strong>Laddering in formats: ' + formats.map(format => Text.escapeHTML(App.bot.formats[format] ? App.bot.formats[format].name : format)).join(", ") + '</strong></p>';
 			html += '<p><input type="submit" name="stopladder" value="Stop Laddering" /></p>';
 		} else {
-			html += '<p><strong>Formats</strong>:&nbsp;<input id="ladder-list-formats" name="formats" type="text" size="60" /> (Separated by commas)</p>';
+			html += '<p><strong>Formats</strong>:&nbsp;<input id="ladder-list-formats" name="formats" type="text" style="width: 100%; max-width: 60ch;" /> (Separated by commas)</p>';
 			html += '<p>' + getLadderFormatsMenu() + '&nbsp;<button type="button" onclick="addFormatToList()">Add format</button></p>';
 			html += '<p><input type="submit" name="startladder" value="Start Laddering" /></p>';
 		}
@@ -411,7 +411,7 @@ exports.setup = function (App) {
 		if (formats.length > 0) {
 			return ('<select id="format-to-add" name="format">' + formats.join() + '</select>');
 		} else {
-			return '<input name="format" type="text" size="40" value="" />';
+			return '<input name="format" type="text" style="width: 100%; max-width: 40ch;" value="" />';
 		}
 	}
 
@@ -425,7 +425,7 @@ exports.setup = function (App) {
 		if (formats.length > 0) {
 			return ('<select name="format">' + formats.join() + '</select>');
 		} else {
-			return '<input name="format" type="text" size="40" value="' + (selected || "") + '" />';
+			return '<input name="format" type="text" style="width: 100%; max-width: 40ch;" value="' + (selected || "") + '" />';
 		}
 	}
 

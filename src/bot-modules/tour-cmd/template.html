@@ -1,16 +1,16 @@
 <h2>Tournament Command</h2>
 <form method="post" action="">
 	<table border="0">
-		<tr><td><strong>Default Format</strong>: </td><td><input name="format" type="text" size="30" value="${FORMAT}" /></td></tr>
+		<tr><td><strong>Default Format</strong>: </td><td><input name="format" type="text" style="width: 100%; max-width: 30ch;" value="${FORMAT}" /></td></tr>
 		<tr><td><strong>Default Type</strong>: </td><td><select name="type">
 			<option value="elimination"${ELIMINATION}>Elimination</option>
 			<option value="roundrobin"${ROUNDROBIN}>Round Robin</option>
 		</select></td></tr>
-		<tr><td><strong>Users Limit (0 for no limit)</strong>: </td><td><input name="users" type="text" size="20" value="${USERS}" /></td></tr>
-		<tr><td><strong>Sign-ups Time (seconds)</strong>: </td><td><input name="time" type="text" size="20" value="${TIME}" /></td></tr>
-		<tr><td><strong>Autodq (minutes)</strong>: </td><td><input name="autodq" type="text" size="20" value="${AUTODQ}" /></td></tr>
-		<tr><td><strong>Max options for poll</strong>: </td><td><input name="pollmaxoptions" type="text" size="20" value="${POLLMAXOPTIONS}" /></td></tr>
-		<tr><td><strong>Poll time (minutes)</strong>: </td><td><input name="polltime" type="text" size="20" value="${POLLTIME}" /></td></tr>
+		<tr><td><strong>Users Limit (0 for no limit)</strong>: </td><td><input name="users" type="text" style="width: 100%; max-width: 20ch;" value="${USERS}" /></td></tr>
+		<tr><td><strong>Sign-ups Time (seconds)</strong>: </td><td><input name="time" type="text" style="width: 100%; max-width: 20ch;" value="${TIME}" /></td></tr>
+		<tr><td><strong>Autodq (minutes)</strong>: </td><td><input name="autodq" type="text" style="width: 100%; max-width: 20ch;" value="${AUTODQ}" /></td></tr>
+		<tr><td><strong>Max options for poll</strong>: </td><td><input name="pollmaxoptions" type="text" style="width: 100%; max-width: 20ch;" value="${POLLMAXOPTIONS}" /></td></tr>
+		<tr><td><strong>Poll time (minutes)</strong>: </td><td><input name="polltime" type="text" style="width: 100%; max-width: 20ch;" value="${POLLTIME}" /></td></tr>
 		<tr><td><strong>Scout</strong>: </td><td><select name="scout">
 			<option value="yes" ${SCOUT_YES}>Allow</option>
 			<option value="no" ${SCOUT_NO}>Disallow</option>
@@ -19,9 +19,9 @@
 			<option value="yes" ${TIMER_YES}>YES</option>
 			<option value="no" ${TIMER_NO}>NO</option>
 		</select></td></tr>
-		<tr><td><strong>Creation Message</strong>: </td><td><input name="creationmsg" type="text" size="60" maxlength="300" value="${CREATIONMSG}" /></td></tr>
-		<tr><td><strong>Rooms for announcing final battle (separated with commas)</strong>: </td><td><input name="finals" type="text" size="60" value="${FINALS}" /></td></tr>
-		<tr><td><strong>Rooms for announcing tournament winner (separated with commas)</strong>: </td><td><input name="winnergrats" type="text" size="60" value="${WINNERGRATS}" /></td></tr>
+		<tr><td><strong>Creation Message</strong>: </td><td><input name="creationmsg" type="text" style="width: 100%; max-width: 60ch;" maxlength="300" value="${CREATIONMSG}" /></td></tr>
+		<tr><td><strong>Rooms for announcing final battle (separated with commas)</strong>: </td><td><input name="finals" type="text" style="width: 100%; max-width: 60ch;" value="${FINALS}" /></td></tr>
+		<tr><td><strong>Rooms for announcing tournament winner (separated with commas)</strong>: </td><td><input name="winnergrats" type="text" style="width: 100%; max-width: 60ch;" value="${WINNERGRATS}" /></td></tr>
 		<tr><td colspan="2"><strong>Aliases </strong>(<em>alias, format</em>):<p><textarea name="aliases" style="width: 100%; max-width: 80ch;" rows="4">${ALIASES}</textarea></p></td></tr>
 		<tr><td colspan="2"><strong>Custom formats </strong>(<em>name: format, rule, ...</em>):<p><textarea name="customformats" style="width: 100%; max-width: 80ch;" rows="4">${CUSTOMFORMATS}</textarea></p></td></tr>
 		<tr><td colspan="2"><strong>Poll sets </strong>(<em>name: format, format, ...</em>):<p><textarea name="pollsets" style="width: 100%; max-width: 80ch;" rows="4">${POLLSETS}</textarea></p></td></tr>

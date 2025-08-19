@@ -111,7 +111,7 @@ exports.setup = function (App) {
 			htmlVars.opts += '<tr>';
 			htmlVars.opts += '<td><strong>' + App.server.menu[opt].name + '</strong></td>';
 			htmlVars.opts += '<td><input name="' + Text.escapeHTML(opt) + '" type="text" value="' +
-				Text.escapeHTML(level) + '" size="15" placeholder="default" autocomplete="off" /></td>';
+				Text.escapeHTML(level) + '" style="width: 100%; max-width: 15ch;" placeholder="default" autocomplete="off" /></td>';
 			htmlVars.opts += '<tr>';
 			htmlVars.opts += '</tr>';
 		}

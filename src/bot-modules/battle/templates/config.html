@@ -1,21 +1,21 @@
 <form method="post" action="">
 	<p>
-		<strong>Max number of battles of regular users</strong>:&nbsp;<input name="maxbattles" type="text" size="10" value="${MAXBATTLES}" /><br>
+		<strong>Max number of battles of regular users</strong>:&nbsp;<input name="maxbattles" type="text" style="width: 100%; max-width: 10ch;" value="${MAXBATTLES}" /><br>
 		<span>When the bot is playing this number of battles, or more, it will refuse to accept challenges from users, unless they have the permission <i>chall</i>.</span>
 	</p>
 	<p>
-		<strong>Max number of ladder battles</strong>:&nbsp;<input name="maxladder" type="text" size="10" value="${MAXLADDER}" /><br>
+		<strong>Max number of ladder battles</strong>:&nbsp;<input name="maxladder" type="text" style="width: 100%; max-width: 10ch;" value="${MAXLADDER}" /><br>
 		<span>When laddering, the bot will try to search for battles until it is playing this number of ladder battles. <br>Then, it will wait for one battle to finish before searching for more.</span>
 	</p>
 	<p>
-		<strong>Max number of turns (0 = no limit)</strong>:&nbsp;<input name="maxturns" type="text" size="10" value="${MAXTURNS}" /><br>
+		<strong>Max number of turns (0 = no limit)</strong>:&nbsp;<input name="maxturns" type="text" style="width: 100%; max-width: 10ch;" value="${MAXTURNS}" /><br>
 		<span>The bot will forfeit if this limit of turns is reached. This will prevent players from stalling the bot with very long battles.</span>
 	</p>
 	<p>
 		<input type="checkbox" name="timeron" ${TIMER_ON} />&nbsp;Turn the battle timer on (recommended to prevent user from time-stalling the bot).
 	</p>
 	<p>
-		<strong>Rooms to join tournaments</strong>:&nbsp;<input name="jointours" type="text" size="50" value="${JOINTOURS}" autocomplete="off" /> (separated by commas)<br>
+		<strong>Rooms to join tournaments</strong>:&nbsp;<input name="jointours" type="text" style="width: 100%; max-width: 50ch;" value="${JOINTOURS}" autocomplete="off" /> (separated by commas)<br>
 		<span>The bot will automatically join tournaments (if it can) when created in these rooms.</span>
 	</p>
 	<p><input type="checkbox" name="joinabandoned" ${JOIN_ABANDONED} />&nbsp;Join abandoned / pending battles (when the bot restarts, it will join back the battles that were interrupted).</p>

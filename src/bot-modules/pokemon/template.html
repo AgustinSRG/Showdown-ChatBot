@@ -1,11 +1,11 @@
 <h2>Pokemon Module Configuration</h2>
 <form method="post" action="">
-	<p>Usage Link: <input name="usagelink" type="text" size="30" value="${USAGE_LINK}" /></p>
+	<p>Usage Link: <input name="usagelink" type="text" style="width: 100%; max-width: 30ch;" value="${USAGE_LINK}" /></p>
 	<p><input type="submit" name="savelink" value="Change Usage Link" /></p>
 </form>
 <hr />
 <form method="post" action="">
-	<p>Default Format for Commands: <input name="format" type="text" size="30" value="${DEF_FORMAT}" /></p>
+	<p>Default Format for Commands: <input name="format" type="text" style="width: 100%; max-width: 30ch;" value="${DEF_FORMAT}" /></p>
 	<p><input type="submit" name="save" value="Set Default Format" /></p>
 </form>
 <hr />
@@ -15,8 +15,8 @@
 </table>
 <hr />
 <form method="post" action="">
-	<p>Room: <input name="room" type="text" size="30" value="" /></p>
-	<p>Default Format: <input name="format" type="text" size="30" value="" /></p>
+	<p>Room: <input name="room" type="text" style="width: 100%; max-width: 30ch;" value="" /></p>
+	<p>Default Format: <input name="format" type="text" style="width: 100%; max-width: 30ch;" value="" /></p>
 	<p><input type="submit" name="setroom" value="Set Room Default Format" /></p>
 </form>
 <p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

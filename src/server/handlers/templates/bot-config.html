@@ -113,19 +113,19 @@
 	<table border="0">
 		<tr>
 			<td>Server: </td>
-			<td><input id="text-server" name="server" type="text" size="50" value="${SERVER}" /></td>
+			<td><input id="text-server" name="server" type="text" style="width: 100%; max-width: 50ch;" value="${SERVER}" /></td>
 		</tr>
 		<tr>
 			<td>Port: </td>
-			<td><input id="text-port" name="port" type="text" size="50" value="${PORT}" /></td>
+			<td><input id="text-port" name="port" type="text" style="width: 100%; max-width: 50ch;" value="${PORT}" /></td>
 		</tr>
 		<tr>
 			<td>Server-ID: </td>
-			<td><input id="text-serverid" name="serverid" type="text" size="50" value="${SERVERID}" /></td>
+			<td><input id="text-serverid" name="serverid" type="text" style="width: 100%; max-width: 50ch;" value="${SERVERID}" /></td>
 		</tr>
 		<tr>
 			<td>Seconds to retry the connection: </td>
-			<td><input id="text-retry" name="retry" type="text" size="50" value="${RETRY}" /></td>
+			<td><input id="text-retry" name="retry" type="text" style="width: 100%; max-width: 50ch;" value="${RETRY}" /></td>
 		</tr>
 	</table>
 	<p><input id="check-tls" type="checkbox" name="secure" value="true" ${SECURE} />&nbsp;Use secure connection (TLS).</p>
@@ -133,7 +133,7 @@
 </form>
 <p><button onclick="document.getElementById('text-server').value = 'sim3.psim.us'; document.getElementById('text-port').value = '443'; document.getElementById('check-tls').checked = true; document.getElementById('text-serverid').value = 'showdown'; document.getElementById('text-retry').value = '5';">Set values for play.pokemonshowdown.com</button></p>
 <p>
-	<input id="clienturl" name="url" type="text" size="40" placeholder="example.psim.us" value="" />&nbsp;&nbsp;
+	<input id="clienturl" name="url" type="text" style="width: 100%; max-width: 40ch;" placeholder="example.psim.us" value="" />&nbsp;&nbsp;
 	<button id="getserver" onclick="loadServerDetails();">Get Server details</button>&nbsp;&nbsp;
 	<span id="resultdiv">&nbsp;</span>
 </p>

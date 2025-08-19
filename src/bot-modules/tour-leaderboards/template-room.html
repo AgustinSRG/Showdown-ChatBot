@@ -3,11 +3,11 @@
 <form method="post" action="">
 	<input type="hidden" name="room" value="${ROOM}" />
 	<table border="0">
-		<tr><td>Points for winner: </td><td><input name="winner" type="text" size="10" value="${WINNER}" /></td></tr><tr>
-		<tr><td>Points for finalist: </td><td><input name="finalist" type="text" size="10" value="${FINALIST}" /></td></tr><tr>
-		<tr><td>Points for semi-finalist: </td><td><input name="semifinalist" type="text" size="10" value="${SEMIFINALIST}" /></td></tr><tr>
-		<tr><td>Points per battle: </td><td><input name="battle" type="text" size="10" value="${BATTLE}" /></td></tr><tr>
-		<tr><td>Banned users (split by commas): </td><td><input name="banned" type="text" size="30" value="${BANNED}" /></td></tr><tr></tr>
+		<tr><td>Points for winner: </td><td><input name="winner" type="text" style="width: 100%; max-width: 10ch;" value="${WINNER}" /></td></tr><tr>
+		<tr><td>Points for finalist: </td><td><input name="finalist" type="text" style="width: 100%; max-width: 10ch;" value="${FINALIST}" /></td></tr><tr>
+		<tr><td>Points for semi-finalist: </td><td><input name="semifinalist" type="text" style="width: 100%; max-width: 10ch;" value="${SEMIFINALIST}" /></td></tr><tr>
+		<tr><td>Points per battle: </td><td><input name="battle" type="text" style="width: 100%; max-width: 10ch;" value="${BATTLE}" /></td></tr><tr>
+		<tr><td>Banned users (split by commas): </td><td><input name="banned" type="text" style="width: 100%; max-width: 30ch;" value="${BANNED}" /></td></tr><tr></tr>
 		<tr><td colspan="2"><input name="useratio" type="checkbox" value="true"${USERATIO} />&nbsp;Use battles won ratio to calculate score.</td></tr>
 		<tr><td colspan="2"><input name="onlyofficial" type="checkbox" value="true"${ONLYOFFICIAL} />&nbsp;Count only official tournaments.</td></tr>
 	</table>

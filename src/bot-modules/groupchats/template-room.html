@@ -16,9 +16,9 @@
 <hr />
 <p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
 <form method="post" action="">
-	<p><b>Name: </b> <input name="room" type="text" size="50" value="${NAME}"/></p>
+	<p><b>Name: </b> <input name="room" type="text" style="width: 100%; max-width: 50ch;" value="${NAME}"/></p>
 	<p><input type="checkbox" name="private" ${PRIVATE} />&nbsp;Is a private groupchat</p>
-	<p><b>Copy auth from room: </b> <input name="authfrom" type="text" size="40" value="${AUTHFROM}"/></p>
+	<p><b>Copy auth from room: </b> <input name="authfrom" type="text" style="width: 100%; max-width: 40ch;" value="${AUTHFROM}"/></p>
 	<p><input type="submit" name="edit" value="Save Changes" /></p>
 </form>
 <hr />
@@ -38,7 +38,7 @@
 </table>
 <hr />
 <form method="post" action="">
-	<p><strong>User</strong>: <input name="user" type="text" size="30" maxlength="19" /></p>
+	<p><strong>User</strong>: <input name="user" type="text" style="width: 100%; max-width: 30ch;" maxlength="19" /></p>
 	<p><strong>Group</strong>: 
 		<select name="group">
 			<option value="none">None</option>

@@ -20,13 +20,13 @@
 <p><a href="/dyncmd/list" target="_blank">View Dynamic commands current list</a></p>
 <p><a href="/dyncmd/aliases" target="_blank">View aliases list</a></p>
 <form method="post" action="./">
-	<p>ID:&nbsp;<input name="cmd" type="text" size="30" value="${FAIL_ID}"/></p>
+	<p>ID:&nbsp;<input name="cmd" type="text" style="width: 100%; max-width: 30ch;" value="${FAIL_ID}"/></p>
 	<p><textarea name="content" style="width: 100%; max-width: 80ch;" rows="2">${FAIL_TEXT}</textarea></p>
 	<p><input type="submit" name="addtextcmd" value="Add Text Command" /></p>
 </form>
 <hr />
 <form method="post" action="./">
-	<p>ID:&nbsp;<input name="cmd" type="text" size="30" value="${FAIL_INDEX_ID}" /></p>
+	<p>ID:&nbsp;<input name="cmd" type="text" style="width: 100%; max-width: 30ch;" value="${FAIL_INDEX_ID}" /></p>
 	<p><input type="submit" name="addindexcmd" value="Add Index Command" /></p>
 </form>
 <hr />

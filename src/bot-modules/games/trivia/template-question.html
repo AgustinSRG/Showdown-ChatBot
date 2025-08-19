@@ -2,7 +2,7 @@
 <a id="a" name="${ID}"></a>
 <form method="post" action="#${ID}">
 	<input type="hidden" name="id" value="${ID}" />
-	<p><strong>Question</strong>:&nbsp;<input name="clue" type="text" size="80" value="${CLUE}" /></p>
-	<p><strong>Answers</strong>:&nbsp;<input name="answers" type="text" size="80" value="${ANSWERS}" /></p>
+	<p><strong>Question</strong>:&nbsp;<input name="clue" type="text" style="width: 100%; max-width: 80ch;" value="${CLUE}" /></p>
+	<p><strong>Answers</strong>:&nbsp;<input name="answers" type="text" style="width: 100%; max-width: 80ch;" value="${ANSWERS}" /></p>
 	<p><input type="submit" name="edit" value="Edit" />&nbsp;&nbsp;<input type="submit" name="del" value="Delete" /></p>
 </form>

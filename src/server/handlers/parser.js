@@ -432,7 +432,7 @@ exports.setup = function (App) {
 		html += '<input type="hidden" name="room" value="' + Text.escapeHTML(room) + '" />';
 
 		if (room !== 'global-room') {
-			html += '<p><strong>Command Tokens (override)</strong>:&nbsp;<input name="tokens_override" type="text" size="50" value="' + Text.escapeHTML(App.parser.data.roomTokensOverride[room] || '') + '" autocomplete="off" />&nbsp;(Separated by spaces)</p>';
+			html += '<p><strong>Command Tokens (override)</strong>:&nbsp;<input name="tokens_override" type="text" style="width: 100%; max-width: 50ch;" value="' + Text.escapeHTML(App.parser.data.roomTokensOverride[room] || '') + '" autocomplete="off" />&nbsp;(Separated by spaces)</p>';
 		}
 
 		html += '<table border="1">';

@@ -229,7 +229,7 @@ exports.setup = function (App) {
 					content += '<tr><td>Default (English)</td><td>' + Text.escapeHTML(dataFile.get(key, "english")) + '</td></tr>';
 					content += '<tr><td>Custom (' + Text.escapeHTML(languages[selectedLang]) + ')</td><td>' +
 						'<input type="text" name="custom-' + key + '" value="' + Text.escapeHTML(dataFileMod[key] || "") +
-						'" placeholder="' + Text.escapeHTML(dataFile.get(key, selectedLang) || "") + '" size="100" />' + '</td></tr>';
+						'" placeholder="' + Text.escapeHTML(dataFile.get(key, selectedLang) || "") + '" style="width: 100%; max-width: 100ch;" />' + '</td></tr>';
 					content += '</table>';
 				}
 			}
