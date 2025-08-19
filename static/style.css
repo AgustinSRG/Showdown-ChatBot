@@ -330,10 +330,12 @@ p {
 
 .page-content {
 	padding: 10px;
+	overflow: auto;
 }
 
 .header {
 	margin: 8px;
+	overflow: auto;
 }
 
 .invalid-login {
@@ -344,6 +346,7 @@ p {
 
 .copyright {
 	padding: 8px;
+	overflow: auto;
 }
 
 .menu-option,
@@ -375,6 +378,7 @@ p {
 .menu {
 	padding: 8px;
 	text-align: center;
+	overflow: auto;
 }
 
 .error-msg {
