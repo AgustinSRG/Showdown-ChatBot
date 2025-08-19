@@ -3,7 +3,7 @@
 	<tr><td colspan="2">
 	<form method="post" action="#Cmd-${CMDID}">
 		<input type="hidden" name="cmd" value="${CMDID}" />
-		<p><textarea name="content" cols="80" rows="2">${TEXT}</textarea></p>
+		<p><textarea name="content" style="width: 100%; max-width: 80ch;" rows="2">${TEXT}</textarea></p>
 		<p><input type="submit" name="editcmd" value="Edit Command" /></p>
 	</form>
 	<p><button onclick="deleteCommand('${CMDID}')">Delete Command</button>&nbsp;<span id="confirm-delcmd-${CMDID}">&nbsp;</span></p>

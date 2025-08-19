@@ -11,7 +11,7 @@
 <form method="post" action="">
 	<p><strong>Excepted Users</strong>:&nbsp;<input name="expusers" type="text" size="50" value="${EXPUSERS}" autocomplete="off" />&nbsp;(Separated by commas)</p>
 	<p><strong>Command Exceptions</strong></p>
-	<textarea name="canexp" cols="80" rows="3">${CANEXP}</textarea>
+	<textarea name="canexp" style="width: 100%; max-width: 80ch;" rows="3">${CANEXP}</textarea>
 	<p>(Format: <em>permission, user, room</em>)</p>
 	<p><input type="submit" name="editexp" value="Save Changes" /></p>
 </form>

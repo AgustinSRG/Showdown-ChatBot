@@ -10,7 +10,7 @@
 ${CMDS}
 <form method="post" action="">
 	<p><strong>Command</strong>:&nbsp;<input name="cmd" type="text" size="40" value="${CMD}" /></p>
-	<p><textarea name="content" cols="150" rows="4" placeholder=".command 1 && .command 2 && ...">${CONTENT}</textarea></p>
+	<p><textarea name="content" style="width: 100%; max-width: 150ch;" rows="4" placeholder=".command 1 && .command 2 && ...">${CONTENT}</textarea></p>
 	<p><input type="submit" name="add" value="Add Shortcut Command" /></p>
 </form>
 <p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>

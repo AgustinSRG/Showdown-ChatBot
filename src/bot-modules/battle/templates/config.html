@@ -20,11 +20,11 @@
 	</p>
 	<p><input type="checkbox" name="joinabandoned" ${JOIN_ABANDONED} />&nbsp;Join abandoned / pending battles (when the bot restarts, it will join back the battles that were interrupted).</p>
 	<p><strong>Battle Initial Messages</strong>:</p>
-	<p><textarea name="initmsg" cols="60" rows="3" placeholder="gl hf">${INITMSG}</textarea></p>
+	<p><textarea name="initmsg" style="width: 100%; max-width: 60ch;" rows="3" placeholder="gl hf">${INITMSG}</textarea></p>
 	<p><strong>Win Messages</strong>:</p>
-	<p><textarea name="winmsg" cols="60" rows="3" placeholder="I win!">${WINMSG}</textarea></p>
+	<p><textarea name="winmsg" style="width: 100%; max-width: 60ch;" rows="3" placeholder="I win!">${WINMSG}</textarea></p>
 	<p><strong>Lose Messages</strong>:</p>
-	<p><textarea name="losemsg" cols="60" rows="3" placeholder="gg">${LOSEMSG}</textarea></p>
+	<p><textarea name="losemsg" style="width: 100%; max-width: 60ch;" rows="3" placeholder="gg">${LOSEMSG}</textarea></p>
 
 	<details>
 		<summary style="font-size: 14px"><strong>More battle message options</strong></summary>
@@ -45,19 +45,19 @@
 		<p>If the event does not provide information about a variable, it will be set to ???. <br>For example: For the fainted pokemon events, $POKE_FOE is only available when a foe's pokemon faint, and $POKE is only available when a bot's pokemon faints.</p>
 
 		<p><strong>Messages when doing a critical hit</strong>:</p>
-		<p><textarea name="critfoemsg" cols="60" rows="3" placeholder="Great! Got a crit!">${CRITFOEMSG}</textarea></p>
+		<p><textarea name="critfoemsg" style="width: 100%; max-width: 60ch;" rows="3" placeholder="Great! Got a crit!">${CRITFOEMSG}</textarea></p>
 		<p><strong>Messages when receiving a critical hit</strong>:</p>
-		<p><textarea name="critmsg" cols="60" rows="3" placeholder="I call hax!">${CRITMSG}</textarea></p>
+		<p><textarea name="critmsg" style="width: 100%; max-width: 60ch;" rows="3" placeholder="I call hax!">${CRITMSG}</textarea></p>
 
 		<p><strong>Messages when missing a move</strong>:</p>
-		<p><textarea name="missmsg" cols="60" rows="3" placeholder="Come on $POKE! You are blind!">${MISSMSG}</textarea></p>
+		<p><textarea name="missmsg" style="width: 100%; max-width: 60ch;" rows="3" placeholder="Come on $POKE! You are blind!">${MISSMSG}</textarea></p>
 		<p><strong>Messages when foe misses a move against the bot</strong>:</p>
-		<p><textarea name="missfoemsg" cols="60" rows="3" placeholder="Great work $POKE! Keep dodging!">${MISSFOEMSG}</textarea></p>
+		<p><textarea name="missfoemsg" style="width: 100%; max-width: 60ch;" rows="3" placeholder="Great work $POKE! Keep dodging!">${MISSFOEMSG}</textarea></p>
 
 		<p><strong>Messages when a bot's pokemon faints</strong>:</p>
-		<p><textarea name="faintmsg" cols="60" rows="3" placeholder="You did a great work $POKE... Now rest in peace...">${FAINTMSG}</textarea></p>
+		<p><textarea name="faintmsg" style="width: 100%; max-width: 60ch;" rows="3" placeholder="You did a great work $POKE... Now rest in peace...">${FAINTMSG}</textarea></p>
 		<p><strong>Messages when a foe's pokemon faints</strong>:</p>
-		<p><textarea name="faintfoemsg" cols="60" rows="3" placeholder="Ha ha, get rekt $POKE_FOE!">${FAINTFOEMSG}</textarea></p>
+		<p><textarea name="faintfoemsg" style="width: 100%; max-width: 60ch;" rows="3" placeholder="Ha ha, get rekt $POKE_FOE!">${FAINTFOEMSG}</textarea></p>
 	</details>
 
 	<p><input type="submit" name="edit" value="Save Changes" /></p>

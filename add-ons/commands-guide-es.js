@@ -446,7 +446,7 @@ exports.setup = function (App) {
 		html += '<p>Edit the guide in the following text box:</p>';
 
 		html += '<form method="post" action="">';
-		html += '<textarea name="data" cols="100" rows="30">';
+		html += '<textarea name="data" style="width: 100%; max-width: 100ch;" rows="30">';
 		html += Text.escapeHTML(commandsGuide.serializeCommandGuideConfig());
 		html += '</textarea>';
 		html += '<p><input type="checkbox" name="autoupdate"' + (commandsGuide.data.autoUpdate ? ' checked="checked"' : '') + ' />&nbsp;Automatically update guide every 24 hours (note: this will overwrite your previously guide, keep disabled for a custom guide).</p>';

@@ -50,7 +50,7 @@ exports.setup = function (App) {
 				html += '<h2>Exceptions for hpoke command</h2>';
 				html += '<p>Format: <b>Name, Custom Pokemon</b></p>';
 				html += '<form method="post" action="">';
-				html += '<textarea name="data" cols="100" rows="30">';
+				html += '<textarea name="data" style="width: 100%; max-width: 100ch;" rows="30">';
 				html += exceptions.join('\n');
 				html += '</textarea>';
 				html += '<p><input type="submit" name="save" value="Save Changes" /></p>';

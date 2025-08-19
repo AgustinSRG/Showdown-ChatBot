@@ -4,7 +4,7 @@
 		<form method="post" action="#Cmd-${CMDID}">
 			<input type="hidden" name="cmd" value="${CMDID}" />
 			<input type="hidden" name="subcmd" value="${SUBCMD}" />
-			<p><label><textarea name="content" cols="80" rows="2">${TEXT}</textarea></label></p>
+			<p><label><textarea name="content" style="width: 100%; max-width: 80ch;" rows="2">${TEXT}</textarea></label></p>
 			<p><label><input type="submit" name="editsubcmd" value="Edit SubCommand" /></label></p>
 		</form>
 		<p><button onclick="deleteSubCommand('${CMDID}', '${SUBCMD}')">Delete SubCommand</button>&nbsp;
