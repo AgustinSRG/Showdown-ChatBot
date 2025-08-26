@@ -1,4 +1,4 @@
-/* Css File */
+/* CSS File */
 
 :root {
 	/* Light theme */
@@ -27,7 +27,7 @@
 	--light-theme-btn-text-shadow: 0 1px 0 white;
 	--light-theme-btn-text-color: #222222;
 
-	--light-theme-btn-hover-background: linear-gradient(to bottom,  #f2f2f2,  #b2b2b2);;
+	--light-theme-btn-hover-background: linear-gradient(to bottom,  #f2f2f2,  #b2b2b2);
 	--light-theme-btn-hover-border: #606060;
 
 	--light-theme-btn-active-background: linear-gradient(to bottom,  #bfbfbf,  #f2f2f2);
@@ -386,7 +386,7 @@ p {
 }
 
 .ok-msg {
-	color: var(--theme-success-color)
+	color: var(--theme-success-color);
 }
 
 .userlist {
@@ -493,4 +493,4 @@ select:disabled {
 
 .theme-select {
 	font-size: 9pt;
-}
+	}
