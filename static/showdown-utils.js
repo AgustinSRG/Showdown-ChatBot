@@ -1,4 +1,4 @@
-/* Pokémon showdown Imported code */
+/* Pokemon showdown Imported code */
 
 function unescapeHTML(str) {
 	str = (str ? '' + str : '');
@@ -68,15 +68,16 @@ function toId(text) {
 	return text.toLowerCase().replace(/[^a-z0-9]+/g, '');
 }
 
+
 window.toId = toId;
 
-function escapeHTML(text) {
+function escapeHtml(text) {
 	return text.replace(/[\"&<>]/g, function (a) {
 		return { '"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;' }[a];
 	});
 }
 
-window.escapeHTML = escapeHTML;
+window.escapeHTML = escapeHtml;
 
 function parseMessage(str) {
 	if (str.indexOf('/announce') === 0) {
@@ -113,15 +114,15 @@ function parseMessage(str) {
 		return '<a href="http://en.wikipedia.org/w/index.php?title=Special:Search&search=' +
 			p1 + '" target="_blank" rel="noopener noreferrer">' + p0 + '</a>';
 	});
-	// server issue #pull-request
-	//   Links to github Pokémon Showdown server pull request number
+	// server issue #pullreq
+	//   Links to github Pokemon Showdown server pullreq number
 	str = str.replace(/\bserver issue ?#(\d+)/ig, function (p0, p1) {
 		p1 = escapeHTML(encodeURIComponent(unescapeHTML(p1)));
 		return '<a href="https://github.com/Zarel/Pokemon-Showdown/pull/' +
 			p1 + '" target="_blank" rel="noopener noreferrer">' + p0 + '</a>';
 	});
-	// client issue #pull-request
-	//   Links to github Pokémon Showdown client pull request number
+	// client issue #pullreq
+	//   Links to github Pokemon Showdown client pullreq number
 	str = str.replace(/\bclient issue ?#(\d+)/ig, function (p0, p1) {
 		p1 = escapeHTML(encodeURIComponent(unescapeHTML(p1)));
 		return '<a href="https://github.com/Zarel/Pokemon-Showdown-Client/pull/' +
@@ -135,7 +136,7 @@ function parseMessage(str) {
 			'" target="_blank" rel="noopener noreferrer">' + p1 + '</a>';
 	});	
 	// __italics__
-	str = str.replace(/\_\_([^< ](?:[^<]*?[^< ])??)\_\_(?![^<]*?<\/a>)/g, '<i>$1</i>');
+	str = str.replace(/\_\_([^< ](?:[^<]*?[^< ])??)\_\_(?![^<]*?<\/a)/g, '<i>$1</i>');
 	// **bold**
 	str = str.replace(/\*\*([^< ](?:[^<]*?[^< ])??)\*\*/g, '<b>$1</b>');
 	return str;
