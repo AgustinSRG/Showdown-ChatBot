@@ -25,25 +25,30 @@
 			<tr>
 				<td><strong>ID</strong>: </td>
 				<td><input name="user" type="text" style="width: 100%; max-width: 50ch;" value="${ID}" /></td>
+				<td></td>
 			</tr>
 			<tr>
 				<td><strong>Password</strong>: </td>
-				<td><input id="new_user_password" name="password" type="password" style="width: 100%; max-width: 50ch;" />&nbsp;<a href="javascript:;" style="font-size: small;" id="new_user_password_toggle" onclick="togglePasswordVisibility('new_user_password', 'new_user_password_toggle')">Show password</a></td>
+				<td><input id="new_user_password" name="password" type="password" style="width: 100%; max-width: 50ch;" /></td>
+				<td><a href="javascript:;" style="font-size: small;" id="new_user_password_toggle" onclick="togglePasswordVisibility('new_user_password', 'new_user_password_toggle')">Show&nbsp;password</a></td>
 			</tr>
 			<tr>
 				<td><strong>Password (confirm)</strong>: </td>
-				<td><input id="new_user_password_confirm" name="passwordconfirm" type="password" style="width: 100%; max-width: 50ch;" />&nbsp;<a href="javascript:;" style="font-size: small;" id="new_user_password_confirm_toggle" onclick="togglePasswordVisibility('new_user_password_confirm', 'new_user_password_confirm_toggle')">Show password</a></td>
+				<td><input id="new_user_password_confirm" name="passwordconfirm" type="password" style="width: 100%; max-width: 50ch;" /></td>
+				<td><a href="javascript:;" style="font-size: small;" id="new_user_password_confirm_toggle" onclick="togglePasswordVisibility('new_user_password_confirm', 'new_user_password_confirm_toggle')">Show&nbsp;password</a></td>
 			</tr>
 			<tr>
 				<td><strong>Name</strong>: </td>
 				<td><input name="username" type="text" style="width: 100%; max-width: 50ch;" value="${NAME}" /></td>
+				<td></td>
 			</tr>
 			<tr>
 				<td><strong>Group</strong>: </td>
 				<td><input name="usergroup" type="text" style="width: 100%; max-width: 50ch;" value="${GROUP}" /></td>
+				<td></td>
 			</tr>
 			<tr>
-				<td colspan="2"><input type="checkbox" name="makeadmin" value="true" />&nbsp;Create with administrator permissions</td>
+				<td colspan="3"><input type="checkbox" name="makeadmin" value="true" />&nbsp;Create with administrator permissions</td>
 			</tr>
 		</table>
 		<p><input type="submit" name="adduser" value="Create New User" /></p>

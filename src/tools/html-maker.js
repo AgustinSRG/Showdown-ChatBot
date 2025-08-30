@@ -3,9 +3,9 @@
  * For bot control pages
  */
 
-'use strict';
+"use strict";
 
-const Util = require('util');
+const Util = require("util");
 
 /**
  * Wraps HTML
@@ -14,24 +14,24 @@ const Util = require('util');
  * @returns The final HTML
  */
 exports.wrapHTML = function (body, title) {
-	let html = "<!DOCTYPE html><html>";
+  let html = "<!DOCTYPE html><html>";
 
-	html += "<head>";
+  html += "<head>";
 
-	html += "<html>";
+  html += "<html>";
 
-	if (title) {
-		html += '<title>' + title + '</title>';
-	}
+  if (title) {
+    html += "<title>" + title + "</title>";
+  }
 
-	html += '<link rel="stylesheet" href="/static/style.css" />';
+  html += '<link rel="stylesheet" href="/static/style.css" />';
 
-	html += "</head>";
+  html += "</head>";
 
-	html += "<body>" + body + "</body>";
+  html += "<body>" + body + "</body>";
 
-	html += "</html>";
-	return html;
+  html += "</html>";
+  return html;
 };
 
 /**
@@ -43,125 +43,163 @@ exports.wrapHTML = function (body, title) {
  * @returns {String} html source of the webpage
  */
 exports.generate = function (body, loginData, menu, options) {
-	let buf = '<!DOCTYPE html>';
-	if (!loginData) loginData = Object.create(null);
-	if (!options) options = Object.create(null);
+  let buf = "<!DOCTYPE html>";
+  if (!loginData) loginData = Object.create(null);
+  if (!options) options = Object.create(null);
 
-	buf += '<html lang="en">';
-	buf += '<head>';
-	buf += '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
+  buf += '<html lang="en">';
+  buf += "<head>";
+  buf +=
+    '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
 
-	buf += '<link rel="stylesheet" href="/static/style.css" />';
-	if (options.styles) {
-		for (let i = 0; i < options.styles.length; i++) {
-			buf += Util.format("<link rel=\"stylesheet\" href=\"%s\" />", options.styles[i]);
-		}
-	}
+  buf += '<link rel="stylesheet" href="/static/style.css" />';
+  if (options.styles) {
+    for (let i = 0; i < options.styles.length; i++) {
+      buf += Util.format(
+        '<link rel="stylesheet" href="%s" />',
+        options.styles[i]
+      );
+    }
+  }
 
-	buf += '<script type="text/javascript" src="/static/common.js?v3"></script>';
+  buf += '<script type="text/javascript" src="/static/common.js?v3"></script>';
 
-	if (options.scripts) {
-		for (let i = 0; i < options.scripts.length; i++) {
-			buf += Util.format("<script type=\"text/javascript\" src=\"%s\"></script>", options.scripts[i]);
-		}
-	}
+  if (options.scripts) {
+    for (let i = 0; i < options.scripts.length; i++) {
+      buf += Util.format(
+        '<script type="text/javascript" src="%s"></script>',
+        options.scripts[i]
+      );
+    }
+  }
 
-	if (options.title) {
-		buf += '<title>' + options.title + '</title>';
-	} else {
-		buf += '<title>Pokemon Showdown ChatBot</title>';
-	}
+  if (options.title) {
+    buf += "<title>" + options.title + "</title>";
+  } else {
+    buf += "<title>Pokemon Showdown ChatBot</title>";
+  }
 
-	buf += '</head>';
+  buf += "</head>";
 
-	if (options.theme === "l") {
-		buf += '<body class="light">';
-	} else if (options.theme === "d") {
-		buf += '<body class="dark">';
-	} else {
-		buf += '<body>';
-	}
+  if (options.theme === "l") {
+    buf += '<body class="light">';
+  } else if (options.theme === "d") {
+    buf += '<body class="dark">';
+  } else {
+    buf += "<body>";
+  }
 
-	buf += '<div align="center">';
+  buf += '<div align="center">';
 
-	buf += '<div align="center" class="maindiv">';
+  buf += '<div align="center" class="maindiv">';
 
-	buf += '<br /><div class="header">';
-	buf += '<table width="100%" border="0"><tr>';
-	buf += '<td width="60%"><a class="home-link" href="/"><div class="banner" align="center"><h1>' +
-		(options.banner || 'Showdown ChatBot') + '</h1></div></a></td>';
+  buf += '<br /><div class="header">';
+  buf += '<table width="100%" border="0"><tr>';
+  buf +=
+    '<td width="60%"><a class="home-link" href="/"><div class="banner" align="center"><h1>' +
+    (options.banner || "Showdown ChatBot") +
+    "</h1></div></a></td>";
 
-	buf += '<td width="30%"><div align="right">';
-	if (loginData.name) {
-		/* Logout form */
-		buf += '<div style=" margin-bottom:8px;"><strong><big>' +
-			loginData.name + '</big></strong></div>';
-		if (loginData.group) {
-			buf += '<div style=" margin-bottom:8px;"><strong><i>(' +
-				loginData.group + ')</i></strong></div>';
-		}
-		buf += '<div style=" margin-bottom:8px;"><a href="/chpass/"><i>Change Password</i></a></div>';
-		buf += '<div style=" margin-bottom:8px;">' +
-			'<form class="logoutform" method="POST" action="/">' +
-			'<input type="submit" name="logout" value="Logout" /></form></div>';
-	} else {
-		/* Login form */
-		buf += '<form class="loginform" method="POST" action="">' +
-			'<div style="margin-bottom:5px;"><strong>User:</strong>&nbsp;' +
-			'<input type="text" name="user" value="' + (loginData.invalid || '') + '" /></div>' +
-			'<div style="margin-bottom:2px;"><strong>Pass:</strong>&nbsp;' +
-			'<input id="login_password_input" type="password" name="password" /></div>' +
-			'<div style="margin-bottom:8px;"><a href="javascript:;" style="font-size: small;" id="password_visibility_toggle" onclick="togglePasswordVisibility()">Show password</a></div>' +
-			'<div>' + (loginData.invalid ? '<span class="invalid-login">Invalid Credentials</span>&nbsp;' : '') +
-			'<input type="submit" name="login" value="Login" />' +
-			'</div></form>';
-	}
-	buf += '</div></td>';
+  buf += '<td width="30%"><div align="right">';
+  if (loginData.name) {
+    /* Logout form */
+    buf +=
+      '<div style=" margin-bottom:8px;"><strong><big>' +
+      loginData.name +
+      "</big></strong></div>";
+    if (loginData.group) {
+      buf +=
+        '<div style=" margin-bottom:8px;"><strong><i>(' +
+        loginData.group +
+        ")</i></strong></div>";
+    }
+    buf +=
+      '<div style=" margin-bottom:8px;"><a href="/chpass/"><i>Change Password</i></a></div>';
+    buf +=
+      '<div style=" margin-bottom:8px;">' +
+      '<form class="logoutform" method="POST" action="/">' +
+      '<input type="submit" name="logout" value="Logout" /></form></div>';
+  } else {
+    /* Login form */
+    buf +=
+      '<form class="loginform" method="POST" action="">' +
+      '<div style="margin-bottom:5px;"><strong>User:</strong>&nbsp;' +
+      '<input type="text" name="user" value="' +
+      (loginData.invalid || "") +
+      '" /></div>' +
+      '<div style="margin-bottom:2px;"><strong>Pass:</strong>&nbsp;' +
+      '<input id="login_password_input" type="password" name="password" /></div>' +
+      '<div style="margin-bottom:8px;"><a href="javascript:;" style="font-size: small;" id="password_visibility_toggle" onclick="togglePasswordVisibility()">Show&nbsp;password</a></div>' +
+      "<div>" +
+      (loginData.invalid
+        ? '<span class="invalid-login">Invalid Credentials</span>&nbsp;'
+        : "") +
+      '<input type="submit" name="login" value="Login" />' +
+      "</div></form>";
+  }
+  buf += "</div></td>";
 
-	buf += '</tr></table>';
-	buf += '</div>';
-	buf += '</div>';
+  buf += "</tr></table>";
+  buf += "</div>";
+  buf += "</div>";
 
-	if (menu) {
-		buf += '<div align="center" class="maindiv">';
-		buf += '<div class="menu">';
-		let levels = [];
-		for (let j = 0; j < menu.length; j++) {
-			let menuOpts = menu[j].menu;
-			let auxMenu = [];
-			for (let k = 0; k < menuOpts.length; k++) {
-				if (menuOpts[k].selected) {
-					auxMenu.push('<a class="menu-option-selected" href="' + menuOpts[k].url + '">' + menuOpts[k].name + '</a>');
-				} else {
-					auxMenu.push('<a class="menu-option" href="' + menuOpts[k].url + '">' + menuOpts[k].name + '</a>');
-				}
-			}
-			levels.push(auxMenu.join('<span class="menu-separator">&nbsp;| </span>'));
-		}
-		buf += levels.join('<hr />');
-		buf += '</div>';
-		buf += '</div>';
-	}
+  if (menu) {
+    buf += '<div align="center" class="maindiv">';
+    buf += '<div class="menu">';
+    let levels = [];
+    for (let j = 0; j < menu.length; j++) {
+      let menuOpts = menu[j].menu;
+      let auxMenu = [];
+      for (let k = 0; k < menuOpts.length; k++) {
+        if (menuOpts[k].selected) {
+          auxMenu.push(
+            '<a class="menu-option-selected" href="' +
+              menuOpts[k].url +
+              '">' +
+              menuOpts[k].name +
+              "</a>"
+          );
+        } else {
+          auxMenu.push(
+            '<a class="menu-option" href="' +
+              menuOpts[k].url +
+              '">' +
+              menuOpts[k].name +
+              "</a>"
+          );
+        }
+      }
+      levels.push(auxMenu.join('<span class="menu-separator">&nbsp;| </span>'));
+    }
+    buf += levels.join("<hr />");
+    buf += "</div>";
+    buf += "</div>";
+  }
 
-	buf += '<div align="center" class="maindiv">';
-	buf += '<div align="left" class="page-content">';
-	buf += body;
-	buf += '</div></div>';
+  buf += '<div align="center" class="maindiv">';
+  buf += '<div align="left" class="page-content">';
+  buf += body;
+  buf += "</div></div>";
 
-	if (options.package) {
-		buf += '<div align="center" class="maindiv">';
-		buf += '<div align="center" class="copyright">';
-		buf += '<i>This is a Pokemon Showdown Bot for Node JS - ';
-		buf += '<a href="' + options.package.homepage + '" target="_blank">Showdown-ChatBot' + '</a> v' + options.package.version;
-		buf += '</i>';
-		buf += ' - Theme: <select class="theme-select" value="">';
-		buf += '<option value="">Device</option>';
-		buf += '<option value="d">Dark</option>';
-		buf += '<option value="l">Light</option>';
-		buf += '</select>';
-		buf += '</div></div>';
-	}
-	buf += '</div></body>';
-	buf += '</html>';
-	return buf;
+  if (options.package) {
+    buf += '<div align="center" class="maindiv">';
+    buf += '<div align="center" class="copyright">';
+    buf += "<i>This is a Pokemon Showdown Bot for Node JS - ";
+    buf +=
+      '<a href="' +
+      options.package.homepage +
+      '" target="_blank">Showdown-ChatBot' +
+      "</a> v" +
+      options.package.version;
+    buf += "</i>";
+    buf += ' - Theme: <select class="theme-select" value="">';
+    buf += '<option value="">Device</option>';
+    buf += '<option value="d">Dark</option>';
+    buf += '<option value="l">Light</option>';
+    buf += "</select>";
+    buf += "</div></div>";
+  }
+  buf += "</div></body>";
+  buf += "</html>";
+  return buf;
 };
