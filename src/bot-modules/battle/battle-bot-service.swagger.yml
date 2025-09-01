@@ -1,0 +1,121 @@
+openapi: 3.0.4
+info:
+  title: Showdown-ChatBot external battle bot service - API specification
+  description: |-
+    This is the specification of the API required in order for a battle bot service to be called by Showdown-ChatBot.
+
+    Thi is a very simple API consisting on one single endpoint (POST /battle-bot), in order to provide the battle bot and retrieve the decisions.
+  license:
+    name: MIT
+    url: "https://github.com/AgustinSRG/Showdown-ChatBot/blob/master/LICENSE"
+  version: 1.0.0
+tags:
+  - name: battle_bot
+    description: "The API to interact with the battle bot"
+paths:
+  /battle-bot:
+    post:
+      tags:
+        - battle_bot
+      summary: "Invokes the battle bot"
+      description: "Invokes the battle bot, providing a log and optionally requesting a decision."
+      operationId: callBattleBot
+      requestBody:
+        $ref: '#/components/requestBodies/BattleBotBody'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BattleBotResponse'
+        '400':
+          description: "Invalid request body"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '401':
+          description: "Unauthorized"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - service_auth:
+            - write:battle_bot
+            - read:battle_bot
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      description: "An error response send by the server"
+      properties:
+        code:
+          type: string
+          example: "ERROR_CODE"
+          description: "The error code"
+        message:
+          type: string
+          example: "An example error message"
+          description: "The error message"
+      required:
+        - code
+    BattleUpdateObject:
+      type: object
+      description: "A request to update a battle, and optionally requesting a decision"
+      properties:
+        id:
+          type: string
+          example: "battle-gen9randombattle-2432959576"
+          description: "The battle ID"
+        log:
+          type: array
+          description: "Array of battle log messages"
+          items:
+            type: string
+            example: "|rule|HP Percentage Mod: HP is shown in percentages"
+            description: "Battle log message"
+        decide:
+          type: boolean
+          description: "Set it to 'true' to ask for a decision from the battle bot"
+        clear:
+          type: boolean
+          example: false
+          description: "Set it to 'true' in order to clear the resources for the battle. Make sure to clear the battles after they finish."
+      required:
+        - id
+    BattleUpdateResponse:
+      type: object
+      description: "A response to a battle being updated, optinally containing the decision"
+      properties:
+        id:
+          type: string
+          example: "battle-gen9randombattle-2432959576"
+          description: "Battle ID"
+        decision:
+          type: string
+          example: "/choose move 1"
+          description: "The decision, as a command to send to the battle"
+    BattleBotResponse:
+      type: array
+      description: "A response from the battle bot API"
+      items:
+        $ref: "#/components/schemas/BattleUpdateResponse"
+  requestBodies:
+    BattleBotBody:
+      description: "List of battles to update"
+      required: true
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/BattleUpdateObject'
+  securitySchemes:
+    service_auth:
+      type: apiKey
+      name: Authorization
+      in: header
