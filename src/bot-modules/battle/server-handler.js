@@ -13,6 +13,7 @@ const Template = Tools('html-template');
 const configTemplate = new Template(Path.resolve(__dirname, 'templates', 'config.html'));
 const teamsMainTemplate = new Template(Path.resolve(__dirname, 'templates', 'teams-main.html'));
 const teamsItemTemplate = new Template(Path.resolve(__dirname, 'templates', 'teams-item.html'));
+const externalServiceTemplate = new Template(Path.resolve(__dirname, 'templates', 'external-service.html'));
 
 exports.setup = function (App) {
 	const Config = App.config.modules.battle;
@@ -37,6 +38,7 @@ exports.setup = function (App) {
 			{ id: 'algo', title: 'Battle&nbsp;Algorithms', url: '/battle/algo/', handler: battleAlgorithmsHandler },
 			{ id: 'chall', title: 'Challenge', url: '/battle/chall/', handler: battleChallengeHandler },
 			{ id: 'ladder', title: 'Ladder', url: '/battle/ladder/', handler: battleLadderHandler },
+			{ id: 'external', title: 'External&nbsp;Service', url: '/battle/external/', handler: battleExternalServiceHandler },
 		], 'config');
 
 		return submenu.run();
@@ -476,5 +478,56 @@ exports.setup = function (App) {
 		} else {
 			context.endWithError('404', 'File not found', 'The team you requested was not found!');
 		}
+	}
+
+	function validUrl(url) {
+		try {
+			let u = new URL(url);
+
+			return u.protocol === "http:" || u.protocol === "https:";
+		} catch (_ex) {
+			return false;
+		}
+	}
+
+	function battleExternalServiceHandler(context, html) {
+		let ok = null, error = null;
+		if (context.post.edit) {
+			let enabled = !!context.post.serviceenabled;
+			let url = context.post.baseurl || "";
+			let authValue = context.post.authvalue || "";
+			let authHeaderName = context.post.authname || "";
+
+			try {
+				check(validUrl(url), "Invalid service URL provided");
+			} catch (err) {
+				error = err.message;
+			}
+
+			if (!error) {
+				Config.externalService.enabled = enabled;
+				Config.externalService.url = url;
+				Config.externalService.authToken = authValue;
+				Config.externalService.authHeader = authHeaderName;
+
+				App.db.write();
+				App.logServerAction(context.user.id, "Edit battle bot configuration (External service)");
+				ok = 'External battle bot service configuration saved';
+			}
+		}
+
+		let htmlVars = Object.create(null);
+
+		htmlVars.service_enabled = (!Config.externalService.enabled ? "" : "checked=\"checked\"");
+
+		htmlVars.base_url = Text.escapeHTML(Config.externalService.url);
+		htmlVars.auth_value = Text.escapeHTML(Config.externalService.authToken);
+		htmlVars.auth_name = Text.escapeHTML(Config.externalService.authHeader);
+
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
+
+		html += externalServiceTemplate.make(htmlVars);
+		context.endWithWebPage(html, { title: "Battle Bot - Showdown ChatBot" });
 	}
 };
