@@ -13,7 +13,7 @@ const Util = require('util');
 const Text = Tools('text');
 const HtmlMaker = Tools('html-maker');
 
-exports.setup = function (App, CustomModules) {
+exports.setup = function (App, CustomModules, ExternalService) {
 	const BattleData = require(Path.resolve(__dirname, "battle-data.js")).setup(App);
 	const Modules = require(Path.resolve(__dirname, "modules.js")).setup(App, BattleData, CustomModules);
 	const DecisionMaker = require(Path.resolve(__dirname, "decision.js"));
@@ -113,6 +113,22 @@ exports.setup = function (App, CustomModules) {
 			if (this.ended) return;
 			if (!decision || !decision.length) return;
 			this.debug("Send Decision: " + JSON.stringify(decision));
+
+			if (typeof decision === "string") {
+				this.lastSend = {
+					rqid: this.rqid,
+					time: Date.now(),
+					decision: decision,
+				};
+				let cmds = [];
+				if (retry) {
+					cmds.push("/undo");
+				}
+				cmds.push(decision);
+				this.send(cmds);
+				return;
+			}
+
 			let str = "/choose ";
 			for (let i = 0; i < decision.length; i++) {
 				switch (decision[i].type) {
@@ -346,7 +362,7 @@ exports.setup = function (App, CustomModules) {
 			this.makeDecision();
 		}
 
-		makeDecision(forced) {
+		makeDecision(forced, noExternal) {
 			if (this.decisionTimeout) {
 				clearTimeout(this.decisionTimeout);
 				this.decisionTimeout = null;
@@ -368,6 +384,22 @@ exports.setup = function (App, CustomModules) {
 			if (this.lock) return;
 			this.lock = true;
 			this.debug("Making decisions - " + this.id);
+
+			if (!noExternal && ExternalService.isEnabled()) {
+				this.debug("Using external decision service - " + this.id);
+				ExternalService.decide(this.id, decision => {
+					this.lock = false;
+
+					if (decision === null) {
+						this.makeDecision(false, true); // Fallback
+						return;
+					}
+
+					this.sendDecision(decision);
+				});
+				return;
+			}
+
 			let decisions, mod;
 			try {
 				decisions = DecisionMaker.getDecisions(this, BattleData);
@@ -413,6 +445,9 @@ exports.setup = function (App, CustomModules) {
 		}
 
 		add(line, isIntro) {
+			if (ExternalService.isEnabled()) {
+				ExternalService.addBattleLine(this.id, line);
+			}
 			this.run(line, isIntro);
 			this.log(line);
 		}
@@ -892,6 +927,9 @@ exports.setup = function (App, CustomModules) {
 			if (this.leaveInterval) {
 				clearInterval(this.leaveInterval);
 				this.leaveInterval = null;
+			}
+			if (ExternalService.isEnabled()) {
+				ExternalService.clearBattle(this.id);
 			}
 		}
 	}

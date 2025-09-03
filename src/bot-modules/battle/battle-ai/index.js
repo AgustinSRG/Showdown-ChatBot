@@ -10,7 +10,8 @@ const Path = require('path');
 exports.setup = function (App) {
 	const CustomModules = Object.create(null);
 
-	const Battle = require(Path.resolve(__dirname, 'battle.js')).setup(App, CustomModules);
+	const ExternalService = require(Path.resolve(__dirname, 'external-service.js')).setup(App);
+	const Battle = require(Path.resolve(__dirname, 'battle.js')).setup(App, CustomModules, ExternalService);
 
 	App.bot.on("line", (room, line, spl, isIntro) => {
 		if (spl[0] === "updatesearch" && !App.config.modules.battle.ignoreAbandonedbattles) {
@@ -30,6 +31,7 @@ exports.setup = function (App) {
 		battles: Object.create(null),
 		interval: null,
 		customModules: CustomModules,
+		externalService: ExternalService,
 
 		init: function () {
 			for (let room in this.battles) {
@@ -67,7 +69,11 @@ exports.setup = function (App) {
 				this.battles[room] = new Battle(room);
 			}
 			if (this.battles[room]) {
-				this.battles[room].add(data, isIntro);
+				try {
+					this.battles[room].add(data, isIntro);
+				} catch (ex) {
+					App.reportCrash(ex);
+				}
 			}
 			if (spl[0] === 'deinit' || spl[0] === 'expire') {
 				if (this.battles[room]) {
