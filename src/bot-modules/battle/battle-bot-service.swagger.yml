@@ -4,7 +4,9 @@ info:
   description: |-
     This is the specification of the API required in order for a battle bot service to be called by Showdown-ChatBot.
 
-    Thi is a very simple API consisting on one single endpoint (POST /battle-bot), in order to provide the battle bot and retrieve the decisions.
+    This is a very simple API consisting on one single endpoint (POST /battle-bot), in order to provide the battle bot and retrieve the decisions.
+
+    Example implementation: https://github.com/AgustinSRG/ps-battle-bot-service-example
   license:
     name: MIT
     url: "https://github.com/AgustinSRG/Showdown-ChatBot/blob/master/LICENSE"
@@ -89,7 +91,7 @@ components:
         - id
     BattleUpdateResponse:
       type: object
-      description: "A response to a battle being updated, optinally containing the decision"
+      description: "A response to a battle being updated, optionally containing the decision"
       properties:
         id:
           type: string
