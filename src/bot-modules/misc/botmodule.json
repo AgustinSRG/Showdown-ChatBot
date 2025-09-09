@@ -6,12 +6,6 @@
 		"commands.js"
 	],
 	"permissions": {
-		"regdate": {
-			"group": "voice"
-		},
-		"usernamecolor": {
-			"group": "voice"
-		},
 		"randomanswer": {
 			"group": "voice"
 		},
@@ -27,8 +21,7 @@
 	},
 	"langfiles": [
 		"./commands/fun.translations",
-		"./commands/randomanswer.translations",
-		"./commands/regdate.translations"
+		"./commands/randomanswer.translations"
 	],
 	"description": "Misc Commands Plugins"
 }

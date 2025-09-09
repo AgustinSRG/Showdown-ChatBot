@@ -1,0 +1,21 @@
+{
+	"id": "profiles",
+	"name": "Profiles",
+	"main": "main.js",
+	"commands": [
+		"commands.js"
+	],
+	"permissions": {
+		"regdate": {
+			"group": "voice"
+		},
+		"usernamecolor": {
+			"group": "voice"
+		}
+	},
+	"langfiles": [
+		"./commands/regdate.translations",
+		"./commands/usercolor.translations"
+	],
+	"description": "User profile commands, and related"
+}

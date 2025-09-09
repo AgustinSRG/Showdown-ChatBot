@@ -26,7 +26,7 @@ module.exports = {
 		let target = Text.toId(this.arg) || Text.toId(this.by);
 		if (!target || target.length > 18) return this.pmReply(this.mlt('inv'));
 
-		const Mod = App.modules.misc.system;
+		const Mod = App.modules.profiles.system;
 
 		const targetName = (this.arg || this.byIdent.name).trim();
 
