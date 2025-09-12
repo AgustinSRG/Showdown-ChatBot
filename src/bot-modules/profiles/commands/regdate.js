@@ -21,16 +21,6 @@ const Cache = Tools('cache').BufferCache;
 const Lang_File = Path.resolve(__dirname, 'regdate.translations');
 const regdateCache = new Cache(10);
 
-function getESTDiff(timestamp) {
-	let date = new Date(timestamp);
-	if (date.getMonth() < 11 && date.getMonth() > 1) {
-		if (date.getMonth() === 10 && (date.getDate() - date.getDay() <= 6)) return -5;
-		if (date.getMonth() === 2 && (date.getDate() - date.getDay() < 0)) return -5;
-		return -4;
-	}
-	return -5;
-}
-
 function formatTime(h, m, s) {
 	h = "" + h;
 	m = "" + m;
@@ -69,15 +59,14 @@ module.exports = {
 		let cacheData = regdateCache.get(target);
 		let callback = function (data) {
 			// Parse Data
-			let regTimestamp = data.registertime * 1000;
-			regTimestamp += (1000 * 60 * 60 * getESTDiff(regTimestamp)) +
-				(new Date().getTimezoneOffset() * 60 * 1000) - 364000;
-			let rDate = (new Date(regTimestamp));
+			let rDate = (new Date(data.registertime * 1000));
 			this.restrictReply(this.mlt('user') + " " + (data.username || target) +
-				" " + this.mlt('regdate') + " " + this.mlt('date', {day: rDate.getDate(),
+				" " + this.mlt('regdate') + " " + this.mlt('date', {
+				day: rDate.getDate(),
 				month: this.mlt(MonthsAbv[rDate.getMonth()]),
 				year: rDate.getFullYear(),
-				time: formatTime(rDate.getHours(), rDate.getMinutes(), rDate.getSeconds())}), "regdate");
+				time: formatTime(rDate.getHours(), rDate.getMinutes(), rDate.getSeconds())
+			}), "regdate");
 		}.bind(this);
 		if (cacheData) {
 			return callback(cacheData);

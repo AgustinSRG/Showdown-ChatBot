@@ -11,6 +11,9 @@
 		},
 		"usernamecolor": {
 			"group": "voice"
+		},
+		"profile": {
+			"group": "voice"
 		}
 	},
 	"langfiles": [

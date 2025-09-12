@@ -3,11 +3,14 @@
 
 'use strict';
 
+const Path = require('path');
 const Chat = Tools('chat');
 const Text = Tools('text');
 const Https = require('https');
 const Http = require('http');
 const Cache = Tools('cache').BufferCache;
+
+const BattleAvatarNames = require(Path.resolve(__dirname, "avatars.js"));
 
 const USER_COLOR_GLOBAL_CONFIG_1 = 'https://play.pokemonshowdown.com/config/config.js';
 const USER_COLOR_GLOBAL_CONFIG_2 = 'https://play.pokemonshowdown.com/config/colors.json';
@@ -257,7 +260,7 @@ exports.setup = function (App) {
 				return;
 			}
 
-			this.regDataStatus.cache(target, data);
+			this.regDataStatus.cache.cache(target, data);
 
 			for (let cb of callbacks) {
 				try {
@@ -282,13 +285,77 @@ exports.setup = function (App) {
 		const cbData = {
 			callbacks: [callback],
 			timeout: setTimeout(() => {
+				const c = this.queryResponseCallbacks.get(user);
+
+				if (!c) {
+					return;
+				}
+
 				this.queryResponseCallbacks.delete(user);
+
+				for (let cb of c.callbacks) {
+					try {
+						// eslint-disable-next-line callback-return
+						cb(null);
+					} catch (ex) {
+						App.reportCrash(ex);
+					}
+				}
 			}, 10000),
 		};
 
 		this.queryResponseCallbacks.set(user, cbData);
 
 		App.bot.send(["|/cmd userdetails " + user]);
+	};
+
+	ProfilesModule.getUserProfileInfo = function (user, callback) {
+		user = Text.toId(user);
+
+		const result = {
+			id: user,
+			name: user,
+			avatar: "lucas",
+			status: "",
+			group: " ",
+			online: false,
+			color: this.getCustomColor(user) || Chat.usernameColor(user),
+			regDate: null,
+			regName: user,
+			lastSeen: App.userdata.getLastSeen(user),
+		};
+
+		let userDetailsFetched = false;
+		let registerDataFetched = false;
+
+		this.getUserDetails(user, queryResponse => {
+			userDetailsFetched = true;
+
+			if (queryResponse) {
+				result.name = (queryResponse.name || result.name) + "";
+				result.online = !!queryResponse.rooms;
+				result.avatar = (BattleAvatarNames[queryResponse.avatar] || queryResponse.avatar || "lucas") + "";
+				result.status = (queryResponse.status || "") + "";
+				result.group = (queryResponse.group || " ") + "";
+			}
+
+			if (registerDataFetched) {
+				return callback(result);
+			}
+		});
+
+		this.getRegisterData(user, registerData => {
+			registerDataFetched = true;
+
+			if (registerData) {
+				result.regDate = new Date(registerData.registertime * 1000);
+				result.regName = (registerData.username || user) + "";
+			}
+
+			if (userDetailsFetched) {
+				return callback(result);
+			}
+		});
 	};
 
 	ProfilesModule.start = function () {
@@ -299,6 +366,15 @@ exports.setup = function (App) {
 		App.bot.on('connect', () => {
 			this.queryResponseCallbacks.forEach(c => {
 				clearTimeout(c.timeout);
+
+				for (let cb of c.callbacks) {
+					try {
+						// eslint-disable-next-line callback-return
+						cb(null);
+					} catch (ex) {
+						App.reportCrash(ex);
+					}
+				}
 			});
 			this.queryResponseCallbacks.clear();
 		});

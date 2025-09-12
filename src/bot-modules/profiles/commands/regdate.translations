@@ -1,6 +1,6 @@
 ﻿# Translations file
 
-@ misc-regdate
+@ profiles-regdate
 
 %english
 
@@ -32,7 +32,7 @@ $14 = The account
 $15 = requires
 $16 = more to be autoconfirmed
 
-$date = ${MONTH} ${DAY}, ${YEAR} at ${TIME} (EST)
+$date = ${MONTH} ${DAY}, ${YEAR}
 
 $jan = January
 $feb = February
@@ -77,7 +77,7 @@ $14 = A la cuenta
 $15 = le quedan
 $16 = para ser autoconfirmed
 
-$date = ${DAY} de ${MONTH} de ${YEAR} a las ${TIME} (EST)
+$date = ${DAY} de ${MONTH} de ${YEAR}
 
 $jan = Enero
 $feb = Febrero

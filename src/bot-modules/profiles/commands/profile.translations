@@ -1,0 +1,113 @@
+# Translations file
+
+@ profiles-cmd
+
+%english
+
+$inv = Invalid username
+$busy = Currently downloading the data, try again in a few seconds
+
+$nobot = Bot requires rank of bot or higher to use this feature
+
+$date = ${MONTH} ${DAY}, ${YEAR}
+
+$jan = January
+$feb = February
+$mar = March
+$apr = April
+$may = May
+$jun = June
+$jul = July
+$aug = August
+$sep = September
+$oct = October
+$nov = November
+$dec = December
+
+$second = second
+$seconds = seconds
+$minute = minute
+$minutes = minutes
+$hour = hour
+$hours = hours
+$day = day
+$days = days
+
+$name = Name
+
+$status = Status
+$online = Online
+$offline = Offline
+$idle = Idle
+$busy = Busy
+
+$rank = Rank
+$global = Global
+
+$admin = Administrator
+$mod = Moderator
+$driver = Driver
+$voice = Voice
+$bot = Bot
+$owner = Room Owner
+
+$lastseen = Last seen
+$lastseen1 =
+$lastseen2 = ago
+
+$regdate = Registration date
+
+%spanish
+
+$inv = Nombre de usuario no válido
+$busy = Ahora mismo estoy descargando los datos, inténtalo de nuevo en unos segundos
+
+$nobot = Necesito rango de bot o superior para poder usar esta funcionalidad
+
+$date = ${DAY} de ${MONTH} de ${YEAR}
+
+$jan = Enero
+$feb = Febrero
+$mar = Marzo
+$apr = Abril
+$may = Mayo
+$jun = Junio
+$jul = Julio
+$aug = Agosto
+$sep = Septiembre
+$oct = Octubre
+$nov = Noviembre
+$dec = Diciembre
+
+$second = segundo
+$seconds = segundos
+$minute = minuto
+$minutes = minutos
+$hour = hora
+$hours = horas
+$day = día
+$days = días
+
+$name = Nombre
+
+$status = Estado
+$online = Conectado
+$offline = Desconectado
+$idle = Inactivo
+$busy = Ocupado
+
+$rank = Rango
+$global = Global
+
+$admin = Administrador
+$mod = Moderador
+$driver = Driver
+$voice = Voice
+$bot = Bot
+$owner = Dueño de la sala
+
+$lastseen = Visto por última vez
+$lastseen1 = Hace
+$lastseen2 =
+
+$regdate = Fecha de registro
