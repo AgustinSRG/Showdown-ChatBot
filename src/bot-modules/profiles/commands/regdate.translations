@@ -6,7 +6,7 @@
 
 $inv = Invalid username
 $busy = Currently downloading the data, try again in a few seconds
-$err = Could not get data from
+$err = Could not get data
 $user = User
 $not = is not registered
 $regtime1 = was registered
@@ -51,7 +51,7 @@ $dec = December
 
 $inv = Nombre de usuario no válido
 $busy = Ahora mismo estoy descargando los datos, inténtalo de nuevo en unos segundos
-$err = No se pudieron obtener los datos desde
+$err = No se pudieron obtener los datos
 $user = El usuario
 $not = no está registrado
 $regtime1 = está registrado desde hace
