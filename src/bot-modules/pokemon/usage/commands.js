@@ -427,7 +427,7 @@ module.exports = {
 
 		let canHTML = true;
 
-		if (this.getRoomType(this.room) !== 'chat') {
+		if (this.getRoomType(this.room) !== 'chat' || this.isGroupChat(this.room)) {
 			canHTML = false;
 		}
 
