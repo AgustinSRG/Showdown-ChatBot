@@ -44,7 +44,7 @@ module.exports = {
 
 		html += '<strong>' +
 			Text.escapeHTML(this.mlt(3)) + ': </strong><strong style="color: ' + effectiveColor + ';">' +
-			Text.escapeHTML(effectiveColor) + '</strong>';
+			Text.escapeHTML(effectiveColor.toUpperCase()) + '</strong>';
 
 		if (customColorName) {
 			html += ' (' + this.mlt(6) + " " + '<strong style="color: ' + effectiveColor + ';">' + Text.escapeHTML(customColorName) + '</strong>)';
@@ -54,7 +54,7 @@ module.exports = {
 			html += '<br>';
 			html += '<strong>' +
 				Text.escapeHTML(this.mlt(5)) + ': </strong><strong style="color: ' + color + ';">' +
-				Text.escapeHTML(color) + '</strong> (<strong style="color: ' + color + ';">' +
+				Text.escapeHTML(color.toUpperCase()) + '</strong> (<strong style="color: ' + color + ';">' +
 				Text.escapeHTML(targetName) + '</strong>)';
 		}
 
@@ -62,13 +62,13 @@ module.exports = {
 		let txtResponse;
 		if (customColor) {
 			txtResponse = this.mlt(1) +
-				" " + Chat.bold(targetName) + ": " + Chat.code(customColor) +
+				" " + Chat.bold(targetName) + ": " + Chat.code(customColor.toUpperCase()) +
 				" (" + this.mlt(6) + " " + Chat.code(customColorName) + ")" +
 				" - " +
 				linkCustomColor + " | " +
-				this.mlt(5) + ": " + Chat.code(color) + " - " + linkColor;
+				this.mlt(5) + ": " + Chat.code(color.toUpperCase()) + " - " + linkColor;
 		} else {
-			txtResponse = this.mlt(1) + " " + Chat.bold(targetName) + ": " + Chat.code(color) + " - " + linkColor;
+			txtResponse = this.mlt(1) + " " + Chat.bold(targetName) + ": " + Chat.code(color.toUpperCase()) + " - " + linkColor;
 		}
 
 		this.htmlRestrictReplyNoImages(html, 'usernamecolor', txtResponse);
