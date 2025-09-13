@@ -343,7 +343,7 @@ exports.setup = function (App) {
 		this.getUserDetails(user, queryResponse => {
 			userDetailsFetched = true;
 
-			if (queryResponse) {
+			if (queryResponse && (!queryResponse.userid || queryResponse.userid === user)) {
 				result.name = (queryResponse.name || result.name) + "";
 				result.online = !!queryResponse.rooms;
 				result.avatar = (BattleAvatarNames[queryResponse.avatar] || queryResponse.avatar || "lucas") + "";
