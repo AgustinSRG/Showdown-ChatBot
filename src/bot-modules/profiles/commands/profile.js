@@ -2,6 +2,8 @@
  * Commands File
  *
  * userprofile: Displays the profile of an user
+ * setuserprofileimage: Sets the profile image
+ * deleteuserprofileimage: Deletes the profile image
  */
 
 'use strict';
@@ -38,6 +40,9 @@ const usersBusy = Object.create(null);
 
 const USERS_BUSY_COOLDOWN = 10 * 1000;
 
+const MAX_IMG_WIDTH = 1024;
+const MAX_IMG_HEIGHT = 128;
+
 module.exports = {
 	profile: "userprofile",
 	userprofile: function (App) {
@@ -46,7 +51,9 @@ module.exports = {
 		const caller = Text.toId(this.by);
 
 		let target = Text.toId(this.arg) || Text.toId(this.by);
-		if (!target || target.length > 18) return this.pmReply(this.mlt('inv'));
+		if (!target || target.length > 18) {
+			return this.errorReply(this.mlt('inv'));
+		}
 
 		const Mod = App.modules.profiles.system;
 
@@ -198,6 +205,10 @@ module.exports = {
 				})) + '</span></p>';
 			}
 
+			if (data.profileImage && typeof data.profileImage === "object") {
+				html += '<img src="' + Text.escapeHTML(data.profileImage.url + "") + '" width="' + Text.escapeHTML(data.profileImage.width + "") + '" height="' + Text.escapeHTML(data.profileImage.height + "") + '">';
+			}
+
 			html += '</td>';
 
 			html += '</tr>';
@@ -212,5 +223,92 @@ module.exports = {
 				this.send("/pminfobox " + this.byIdent.id + ", " + html, pmHtmlRoom || 'lobby');
 			}
 		});
+	},
+
+	setprofileimage: "setuserprofileimage",
+	setuserprofileimage: function (App) {
+		this.setLangFile(Lang_File);
+
+		let user = Text.toId(this.by);
+		let argOffset = 0;
+
+		if (this.args.length === 4) {
+			argOffset = 1;
+
+			if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
+
+			user = Text.toId(this.args[0]);
+
+			if (!user || user.length > 18) {
+				return this.errorReply(this.mlt('inv'));
+			}
+		} else if (this.args.length === 3) {
+			if (!this.can('profileimage', this.room)) return this.replyAccessDenied('profileimage');
+		} else {
+			return this.errorReply(this.usage({ desc: this.usageTrans('user'), optional: true }, { desc: this.mlt("imageurl") }, { desc: this.mlt("imagewidth") }, { desc: this.mlt("imageheight") }));
+		}
+
+		const Mod = App.modules.profiles.system;
+
+		const url = this.args[argOffset].trim();
+
+		if (!Text.validateHttpsURL(url)) {
+			return this.errorReply(this.mlt('invalidurl'));
+		}
+
+		const width = parseInt(this.args[argOffset + 1]) || 0;
+
+		if (width < 1 || width > MAX_IMG_WIDTH) {
+			return this.errorReply(this.mlt('invalidwidth'));
+		}
+
+		const height = parseInt(this.args[argOffset + 2]) || 0;
+
+		if (height < 1 || height > MAX_IMG_HEIGHT) {
+			return this.errorReply(this.mlt('invalidheight'));
+		}
+
+		Mod.data.profileImages[user] = {
+			url: url,
+			width: width,
+			height: height,
+		};
+
+		Mod.db.write();
+		this.addToSecurityLog();
+
+		this.reply(this.mlt("profileimageset"));
+	},
+
+	deleteprofileimage: "deleteuserprofileimage",
+	deleteuserprofileimage: function (App) {
+		this.setLangFile(Lang_File);
+
+		let user = Text.toId(this.by);
+
+		if (this.arg) {
+			if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
+
+			user = Text.toId(this.args[0]);
+
+			if (!user || user.length > 18) {
+				return this.errorReply(this.mlt('inv'));
+			}
+		} else {
+			if (!this.can('profileimage', this.room)) return this.replyAccessDenied('profileimage');
+		}
+
+		const Mod = App.modules.profiles.system;
+
+		if (!Mod.data.profileImages[user]) {
+			return this.errorReply(this.mlt('noprofileimage'));
+		}
+
+		delete Mod.data.profileImages[user];
+
+		Mod.db.write();
+		this.addToSecurityLog();
+
+		this.reply(this.mlt("profileimagedeleted"));
 	},
 };

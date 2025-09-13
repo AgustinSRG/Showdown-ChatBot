@@ -14,9 +14,16 @@
 		},
 		"profile": {
 			"group": "voice"
+		},
+		"profileimage": {
+			"group": "driver"
+		},
+		"profileadmin": {
+			"group": "admin"
 		}
 	},
 	"langfiles": [
+		"./commands/profile.translations",
 		"./commands/regdate.translations",
 		"./commands/usercolor.translations"
 	],

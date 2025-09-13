@@ -81,6 +81,17 @@ function parseColorsFromJson(json) {
 exports.setup = function (App) {
 	const ProfilesModule = Object.create(null);
 
+	ProfilesModule.db = App.dam.getDataBase('user-profiles.json');
+	ProfilesModule.data = ProfilesModule.db.data;
+
+	if (!ProfilesModule.data.profileImages) {
+		ProfilesModule.data.profileImages = Object.create(null);
+	}
+
+	if (!ProfilesModule.data.badges) {
+		ProfilesModule.data.badges = Object.create(null);
+	}
+
 	ProfilesModule.customColors = Object.create(null);
 
 	ProfilesModule.getCustomColor = function (name) {
@@ -323,6 +334,7 @@ exports.setup = function (App) {
 			regDate: null,
 			regName: user,
 			lastSeen: App.userdata.getLastSeen(user),
+			profileImage: this.data.profileImages[user] || null,
 		};
 
 		let userDetailsFetched = false;

@@ -218,3 +218,20 @@ exports.parseUserIdent = function (ident) {
 		away: away,
 	};
 };
+
+/**
+ * Validates HTTPS URL
+ * @param {String} url
+ * @returns {Boolean} true if valid, false if invalid
+ */
+exports.validateHttpsURL = function (url) {
+	let u;
+
+	try {
+		u = new URL(url);
+	} catch (ex) {
+		return false;
+	}
+
+	return u.protocol === "https:";
+};

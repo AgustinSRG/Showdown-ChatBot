@@ -57,6 +57,19 @@ $lastseen2 = ago
 
 $regdate = Registration date
 
+$imageurl = Image URL
+$imagewidth = Image width (pixels)
+$imageheight = Image height (pixels)
+
+$invalidurl = Invalid URL. Must be a valid URL using HTTPS
+$invalidwidth = Invalid width. Must be positive and less than 1024
+$invalidheight = Invalid height. Must be positive and less than 128
+
+$profileimageset = Successfully changed the profile image
+
+$noprofileimage = No profile image is set
+$profileimagedeleted = Successfully deleted the profile image
+
 %spanish
 
 $inv = Nombre de usuario no válido
@@ -111,3 +124,16 @@ $lastseen1 = Hace
 $lastseen2 =
 
 $regdate = Fecha de registro
+
+$imageurl = URL de la imagen
+$imagewidth = Ancho de la imagen (pixels)
+$imageheight = Alto de la imagen (pixels)
+
+$invalidurl = URL no válida. Debe ser una URL válida que use HTTPS
+$invalidwidth = Ancho no válido. Debe ser positivo y menos que 1024
+$invalidheight = Alto no válido. Debe ser positivo y menos que 128
+
+$profileimageset = La imagen personalizada para el perfil ha sido establecida
+
+$noprofileimage = No hay ninguna imagen personalizada para el perfil
+$profileimagedeleted =  La imagen personalizada para el perfil ha sido eliminada
