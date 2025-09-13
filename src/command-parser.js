@@ -928,19 +928,23 @@ class CommandContext {
 		return room && room.substring(0, 10) === "groupchat-";
 	}
 
-	htmlRestrictReply(html, perm) {
+	htmlRestrictReply(html, perm, textAlternative) {
 		if (!this.room) {
-			return this.htmlPrivateReply(html);
+			return this.htmlPrivateReply(html, textAlternative);
 		}
 
 		if (!this.can(perm, this.room)) {
-			return this.htmlPrivateReply(html);
+			return this.htmlPrivateReply(html, textAlternative);
 		}
 
 		const roomData = this.parser.bot.rooms[this.room];
 
 		if (!roomData || roomData.type !== 'chat' || this.isGroupChat(this.room)) {
-			return this.htmlPrivateReply(html);
+			if (textAlternative) {
+				return this.reply(textAlternative);
+			}
+
+			return this.htmlPrivateReply(html, textAlternative);
 		}
 
 		const botUserId = Text.toId(this.parser.bot.getBotNick());
@@ -948,13 +952,51 @@ class CommandContext {
 		const canHtml = roomData.users[botUserId] && this.parser.equalOrHigherGroup({ group: roomData.users[botUserId] }, 'bot');
 
 		if (!canHtml) {
-			return this.htmlPrivateReply(html);
+			if (textAlternative) {
+				return this.reply(textAlternative);
+			}
+
+			return this.htmlPrivateReply(html, textAlternative);
 		}
 
 		this.send("/addhtmlbox " + html, this.room);
 	}
 
-	htmlPrivateReply(html) {
+	htmlRestrictReplyNoImages(html, perm, textAlternative) {
+		if (!this.room) {
+			return this.htmlPrivateReply(html, textAlternative);
+		}
+
+		if (!this.can(perm, this.room)) {
+			return this.htmlPrivateReply(html, textAlternative);
+		}
+
+		const roomData = this.parser.bot.rooms[this.room];
+
+		if (!roomData || roomData.type !== 'chat') {
+			if (textAlternative) {
+				return this.reply(textAlternative);
+			}
+
+			return this.htmlPrivateReply(html, textAlternative);
+		}
+
+		const botUserId = Text.toId(this.parser.bot.getBotNick());
+
+		const canHtml = roomData.users[botUserId] && this.parser.equalOrHigherGroup({ group: roomData.users[botUserId] }, 'bot');
+
+		if (!canHtml) {
+			if (textAlternative) {
+				return this.reply(textAlternative);
+			}
+
+			return this.htmlPrivateReply(html, textAlternative);
+		}
+
+		this.send("/addhtmlbox " + html, this.room);
+	}
+
+	htmlPrivateReply(html, textAlternative) {
 		const botUserId = Text.toId(this.parser.bot.getBotNick());
 
 		if (this.room) {
@@ -985,6 +1027,10 @@ class CommandContext {
 			if (canHtml) {
 				return this.send("/pminfobox " + this.byIdent.id + ", " + html, room);
 			}
+		}
+
+		if (textAlternative) {
+			return this.pmReply(textAlternative);
 		}
 
 		return this.errorReply(this.parser.app.multilang.mlt(Lang_File, this.lang, "nobot"));
