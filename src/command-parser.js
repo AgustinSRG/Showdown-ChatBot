@@ -921,6 +921,75 @@ class CommandContext {
 		}
 	}
 
+	isGroupChat(room) {
+		if (room === undefined) {
+			room = this.room;
+		}
+		return room && room.substring(0, 10) === "groupchat-";
+	}
+
+	htmlRestrictReply(html, perm) {
+		if (!this.room) {
+			return this.htmlPrivateReply(html);
+		}
+
+		if (!this.can(perm, this.room)) {
+			return this.htmlPrivateReply(html);
+		}
+
+		const roomData = this.parser.bot.rooms[this.room];
+
+		if (!roomData || roomData.type !== 'chat' || this.isGroupChat(this.room)) {
+			return this.htmlPrivateReply(html);
+		}
+
+		const botUserId = Text.toId(this.parser.bot.getBotNick());
+
+		const canHtml = roomData.users[botUserId] && this.parser.equalOrHigherGroup({ group: roomData.users[botUserId] }, 'bot');
+
+		if (!canHtml) {
+			return this.htmlPrivateReply(html);
+		}
+
+		this.send("/addhtmlbox " + html, this.room);
+	}
+
+	htmlPrivateReply(html) {
+		const botUserId = Text.toId(this.parser.bot.getBotNick());
+
+		if (this.room) {
+			const roomData = this.parser.bot.rooms[this.room];
+
+			if (roomData && roomData.type === 'chat' && !this.isGroupChat(this.room)) {
+				const canHtml = roomData.users[botUserId] && this.parser.equalOrHigherGroup({ group: roomData.users[botUserId] }, 'bot');
+
+				if (canHtml) {
+					return this.send("/pminfobox " + this.byIdent.id + ", " + html, this.room);
+				}
+			}
+		}
+
+		for (let room of Object.keys(this.parser.bot.rooms)) {
+			let roomData = this.parser.bot.rooms[room];
+
+			if (roomData.type !== 'chat') {
+				continue;
+			}
+
+			if (this.isGroupChat(room)) {
+				continue;
+			}
+
+			const canHtml = roomData.users[botUserId] && this.parser.equalOrHigherGroup({ group: roomData.users[botUserId] }, 'bot');
+
+			if (canHtml) {
+				return this.send("/pminfobox " + this.byIdent.id + ", " + html, room);
+			}
+		}
+
+		return this.errorReply(this.parser.app.multilang.mlt(Lang_File, this.lang, "nobot"));
+	}
+
 	/**
 	 * Replies with an error message
 	 * @param {Array<String>|String} msg

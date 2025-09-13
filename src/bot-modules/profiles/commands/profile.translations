@@ -7,8 +7,6 @@
 $inv = Invalid username
 $busy = Currently downloading the data, try again in a few seconds
 
-$nobot = Bot requires rank of bot or higher to use this feature
-
 $date = ${MONTH} ${DAY}, ${YEAR}
 
 $jan = January
@@ -74,8 +72,6 @@ $profileimagedeleted = Successfully deleted the profile image
 
 $inv = Nombre de usuario no válido
 $busy = Ahora mismo estoy descargando los datos, inténtalo de nuevo en unos segundos
-
-$nobot = Necesito rango de bot o superior para poder usar esta funcionalidad
 
 $date = ${DAY} de ${MONTH} de ${YEAR}
 

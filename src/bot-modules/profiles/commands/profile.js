@@ -16,26 +16,6 @@ const Lang_File = Path.resolve(__dirname, 'profile.translations');
 
 const MonthsAbv = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 
-function botCanHtml(room, App) {
-	let roomData = App.bot.rooms[room];
-	let botid = Text.toId(App.bot.getBotNick());
-	return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'bot'));
-}
-
-function botGetHtmlRoom(App) {
-	for (let room of Object.keys(App.bot.rooms)) {
-		let roomData = App.bot.rooms[room];
-		let botid = Text.toId(App.bot.getBotNick());
-		const canHtml = (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'bot'));
-
-		if (canHtml) {
-			return room;
-		}
-	}
-
-	return null;
-}
-
 const usersBusy = Object.create(null);
 
 const USERS_BUSY_COOLDOWN = 10 * 1000;
@@ -58,14 +38,6 @@ module.exports = {
 		const Mod = App.modules.profiles.system;
 
 		const room = this.room;
-
-		const useHtmlBox = this.room && botCanHtml(this.room, App) && this.can("profile", this.room);
-
-		const pmHtmlRoom = botGetHtmlRoom(App);
-
-		if (!useHtmlBox && !pmHtmlRoom) {
-			return this.errorReply(this.mlt('nobot'));
-		}
 
 		const busyTs = usersBusy[caller] || 0;
 
@@ -142,7 +114,7 @@ module.exports = {
 			rankMappings[App.config.parser.voice] = this.mlt("voice");
 
 			// Room rank
-			const hasRoomRank = App.bot.rooms[room] && App.bot.rooms[room].users[target] && App.bot.rooms[room].users[target] !== " " && App.bot.rooms[room].users[target] !== data.group;
+			const hasRoomRank = room && App.bot.rooms[room] && App.bot.rooms[room].users[target] && App.bot.rooms[room].users[target] !== " " && App.bot.rooms[room].users[target] !== data.group;
 			if (hasRoomRank) {
 				if (data.group && data.group !== " ") {
 					html += '<p style="margin: 4px 0"><u>' + this.mlt("rank") + ' (' + Text.escapeHTML(App.bot.rooms[room].title || room) + '):</u> <b>';
@@ -217,11 +189,7 @@ module.exports = {
 
 			// Send html
 
-			if (useHtmlBox) {
-				this.send("/addhtmlbox " + html, this.room);
-			} else {
-				this.send("/pminfobox " + this.byIdent.id + ", " + html, pmHtmlRoom || 'lobby');
-			}
+			this.htmlRestrictReply(html, "userprofile");
 		});
 	},
 
