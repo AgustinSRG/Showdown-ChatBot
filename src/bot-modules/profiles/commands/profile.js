@@ -70,7 +70,12 @@ module.exports = {
 			html += '<div style="text-align: center; padding-bottom: 6px;"><b class="username" style="color: ' + Text.escapeHTML(data.color) + ';">' + Text.escapeHTML(username) + '</b></div>';
 
 			// Avatar
-			html += '<div style="text-align: center;"><img width="80" height="80" src="https://play.pokemonshowdown.com/sprites/trainers/' + Text.escapeHTML(data.avatar) + '.png"></div>';
+			if (data.avatar && typeof data.avatar === "string" && data.avatar.charAt(0) === "#") {
+				// Custom avatar
+				html += '<div style="text-align: center;"><img width="80" height="80" src="https://play.pokemonshowdown.com/sprites/trainers-custom/' + Text.escapeHTML(data.avatar.substring(1)) + '.png"></div>';
+			} else {
+				html += '<div style="text-align: center;"><img width="80" height="80" src="https://play.pokemonshowdown.com/sprites/trainers/' + Text.escapeHTML(data.avatar) + '.png"></div>';
+			}
 
 			// Badges
 			if (data.badges && data.badges.length > 0) {
@@ -244,19 +249,19 @@ module.exports = {
 		const url = this.args[argOffset].trim();
 
 		if (!Text.validateHttpsURL(url)) {
-			return this.errorReply(this.mlt('invalidurl'));
+			return this.errorReply(this.mlt('invalidurl') + " | " + this.usage({ desc: this.usageTrans('user'), optional: true }, { desc: this.mlt("imageurl") }, { desc: this.mlt("imagewidth") }, { desc: this.mlt("imageheight") }));
 		}
 
 		const width = parseInt(this.args[argOffset + 1]) || 0;
 
 		if (width < 1 || width > MAX_IMG_WIDTH) {
-			return this.errorReply(this.mlt('invalidwidth'));
+			return this.errorReply(this.mlt('invalidwidth') + " | " + this.usage({ desc: this.usageTrans('user'), optional: true }, { desc: this.mlt("imageurl") }, { desc: this.mlt("imagewidth") }, { desc: this.mlt("imageheight") }));
 		}
 
 		const height = parseInt(this.args[argOffset + 2]) || 0;
 
 		if (height < 1 || height > MAX_IMG_HEIGHT) {
-			return this.errorReply(this.mlt('invalidheight'));
+			return this.errorReply(this.mlt('invalidheight') + " | " + this.usage({ desc: this.usageTrans('user'), optional: true }, { desc: this.mlt("imageurl") }, { desc: this.mlt("imagewidth") }, { desc: this.mlt("imageheight") }));
 		}
 
 		Mod.data.profileImages[user] = {

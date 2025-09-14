@@ -40,13 +40,13 @@ module.exports = {
 		const id = Text.toId(name);
 
 		if (!id || name.length > MAX_BADGE_NAME) {
-			return this.errorReply(this.mlt('invalidname'));
+			return this.errorReply(this.mlt('invalidname') + " | " + this.usage({ desc: this.mlt("badgename") }, { desc: this.mlt("imageurl") }, { desc: this.mlt("badgedescription"), optional: true }));
 		}
 
 		const url = this.args[1].trim();
 
 		if (!Text.validateHttpsURL(url)) {
-			return this.errorReply(this.mlt('invalidurl'));
+			return this.errorReply(this.mlt('invalidurl') + " | " + this.usage({ desc: this.mlt("badgename") }, { desc: this.mlt("imageurl") }, { desc: this.mlt("badgedescription"), optional: true }));
 		}
 
 		let description = "";
@@ -86,17 +86,21 @@ module.exports = {
 
 		const oldId = Text.toId(this.args[0]);
 
+		if (!oldId) {
+			return this.errorReply(this.usage({ desc: this.mlt("badgename") }, { desc: this.mlt("badgenewname") }, { desc: this.mlt("imageurl") }, { desc: this.mlt("badgedescription"), optional: true }));
+		}
+
 		const name = this.args[1].trim();
 		const id = Text.toId(name);
 
 		if (!id || name.length > MAX_BADGE_NAME) {
-			return this.errorReply(this.mlt('invalidname'));
+			return this.errorReply(this.mlt('invalidname') + " | " + this.usage({ desc: this.mlt("badgename") }, { desc: this.mlt("badgenewname") }, { desc: this.mlt("imageurl") }, { desc: this.mlt("badgedescription"), optional: true }));
 		}
 
 		const url = this.args[2].trim();
 
 		if (!Text.validateHttpsURL(url)) {
-			return this.errorReply(this.mlt('invalidurl'));
+			return this.errorReply(this.mlt('invalidurl') + " | " + this.usage({ desc: this.mlt("badgename") }, { desc: this.mlt("badgenewname") }, { desc: this.mlt("imageurl") }, { desc: this.mlt("badgedescription"), optional: true }));
 		}
 
 		let description = "";
@@ -181,7 +185,7 @@ module.exports = {
 		}
 
 		if (!Mod.data.badges[id]) {
-			return this.errorReply(this.mlt('badgenotfound') + ": " + Chat.italics(id));
+			return this.errorReply(this.mlt('badgenotfound') + ": " + Chat.italics(id) + " | " + this.usage({ desc: this.usageTrans('user') }, { desc: this.mlt("badgename") }));
 		}
 
 		const badgeName = Mod.data.badges[id].name;
