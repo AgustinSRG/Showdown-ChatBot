@@ -189,7 +189,7 @@ module.exports = {
 
 			// Send html
 
-			this.htmlRestrictReply(html, "userprofile");
+			this.htmlRestrictReply(html, "profile");
 		});
 	},
 

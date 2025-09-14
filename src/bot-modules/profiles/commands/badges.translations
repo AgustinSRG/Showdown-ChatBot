@@ -1,0 +1,85 @@
+# Translations file
+
+@ profiles-badges
+
+%english
+
+$inv = Invalid username
+
+$badgename = Badge name
+$badgenewname = Badge new name
+$image = Image
+$imageurl = Image URL
+$badgedescription = Badge description
+
+$invalidname = Invalid badge name. Cannot exceed 20 characters
+$invalidurl = Invalid URL. Must be a valid URL using HTTPS
+
+$badgenameinuse = The badge name is already in use
+$badgenotfound = Badge not found
+
+$badgecreated = Badge created
+$badgeupdated = Badge updated
+$badgedeleted = Badge deleted
+
+$empty = There are no badges yet
+
+$badgeholders = Badge holders
+
+$alreadyholder1 = User
+$alreadyholder2 = already holds the badge
+
+$givenbadge1 = Badge
+$givenbadge2 = granted to user
+
+$noholder1 = User
+$noholder2 = does not hold the badge
+
+$takenbadge1 = Badge
+$takenbadge2 = taken from user
+
+$usernobadges1 = User
+$usernobadges2 = does not have any badges
+
+$userbadges = Badges hold by
+
+%spanish
+
+$inv = Nombre de usuario no válido
+
+$badgename = Nombre de la medalla
+$badgenewname = Nuevo nombre de la medalla
+$image = Imagen
+$imageurl = URL de la imagen
+$badgedescription = Descripción de la medalla
+
+$invalidname = Nombre de la medalla no válido. No puede exceder los 20 caracteres
+$invalidurl = URL no válida. Debe ser una URL válida que use HTTPS
+
+$badgenameinuse = Ya existe una medalla con el mismo nombre
+$badgenotfound = No se encontró la medalla
+
+$badgecreated = Medalla creada
+$badgeupdated = Medalla actualizada
+$badgedeleted = Medalla eliminada
+
+$empty = No hay ninguna medalla todavía
+
+$badgeholders = Poseedores de la medalla
+
+$alreadyholder1 = El usuario
+$alreadyholder2 = ya tiene la medalla
+
+$givenbadge1 = Medalla
+$givenbadge2 = concedida al usuario
+
+$noholder1 = El usuario
+$noholder2 = no tiene la medalla
+
+$takenbadge1 = Medalla
+$takenbadge2 = retirada al usuario
+
+$usernobadges1 = El usuario
+$usernobadges2 = no tiene ninguna medalla
+
+$userbadges = Medallas poseídas por

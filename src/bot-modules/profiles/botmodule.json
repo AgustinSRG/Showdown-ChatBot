@@ -20,6 +20,12 @@
 		},
 		"profileadmin": {
 			"group": "admin"
+		},
+		"badgeadmin": {
+			"group": "admin"
+		},
+		"badgegive": {
+			"group": "admin"
 		}
 	},
 	"langfiles": [
