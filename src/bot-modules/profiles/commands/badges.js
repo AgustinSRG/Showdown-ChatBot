@@ -2,6 +2,7 @@
  * Commands File
  *
  * addbadge: Creates a badge
+ * updatebadge: Updates a badge
  * rmbadge: Deletes a badge
  * givebadge: Gives a badge to an user
  * takebadge: Takes a badge from an user
