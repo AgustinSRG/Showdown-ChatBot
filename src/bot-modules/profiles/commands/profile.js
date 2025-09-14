@@ -23,6 +23,9 @@ const USERS_BUSY_COOLDOWN = 10 * 1000;
 const MAX_IMG_WIDTH = 1024;
 const MAX_IMG_HEIGHT = 128;
 
+const BADGE_IMG_WIDTH = 16;
+const BADGE_IMG_HEIGHT = 16;
+
 module.exports = {
 	profile: "userprofile",
 	userprofile: function (App) {
@@ -59,6 +62,7 @@ module.exports = {
 			html += '<tr>';
 
 
+			// Start of avatar section
 			html += '<td style="width: 80px; text-align: center; border-right: solid 1px black; padding: 12px;">';
 
 			// Username
@@ -68,9 +72,27 @@ module.exports = {
 			// Avatar
 			html += '<div style="text-align: center;"><img width="80" height="80" src="https://play.pokemonshowdown.com/sprites/trainers/' + Text.escapeHTML(data.avatar) + '.png"></div>';
 
+			// Badges
+			if (data.badges && data.badges.length > 0) {
+				html += '<div style="text-align: center; padding-top: 6px;">';
+
+				for (let badge of data.badges) {
+					const badgeTitle = badge.name + (badge.description ? (": " + badge.description) : "");
+					html += '<img src="' + Text.escapeHTML(badge.url) +
+						'" alt="' + Text.escapeHTML(badge.name) +
+						'" width="' + BADGE_IMG_WIDTH +
+						'" height="' + BADGE_IMG_HEIGHT +
+						'" title="' + Text.escapeHTML(badgeTitle) +
+						'" style="margin: 2px;">';
+				}
+
+				html += '</div>';
+			}
+
+			// End of avatar section
 			html += '</td>';
 
-
+			// Start of info section
 			html += '<td>';
 
 			// Username (info section)
@@ -181,6 +203,7 @@ module.exports = {
 				html += '<img src="' + Text.escapeHTML(data.profileImage.url + "") + '" width="' + Text.escapeHTML(data.profileImage.width + "") + '" height="' + Text.escapeHTML(data.profileImage.height + "") + '">';
 			}
 
+			// End of info section
 			html += '</td>';
 
 			html += '</tr>';

@@ -335,6 +335,9 @@ exports.setup = function (App) {
 			regName: user,
 			lastSeen: App.userdata.getLastSeen(user),
 			profileImage: this.data.profileImages[user] || null,
+			badges: Object.values(this.data.badges).filter(badge => {
+				return badge.holders && badge.holders[user];
+			}),
 		};
 
 		let userDetailsFetched = false;
