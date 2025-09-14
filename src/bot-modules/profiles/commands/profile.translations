@@ -53,11 +53,11 @@ $lastseen = Last seen
 $lastseen1 =
 $lastseen2 = ago
 
-$regdate = Registration date
+$regdate = Registration Date
 
 $imageurl = Image URL
-$imagewidth = Image width (pixels)
-$imageheight = Image height (pixels)
+$imagewidth = Image Width (pixels)
+$imageheight = Image Height (pixels)
 
 $invalidurl = Invalid URL. Must be a valid URL using HTTPS
 $invalidwidth = Invalid width. Must be positive and less than 1024

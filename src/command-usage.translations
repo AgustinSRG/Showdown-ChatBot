@@ -6,24 +6,24 @@
 
 %english
 
-$user = user
-$room = room
-$command = command
-$subcmd = sub-command
-$text = text
-$rank = rank
-$message = message
-$format = format
-$avatar = avatar
+$user = User
+$room = Room
+$command = Command
+$subcmd = Sub-Command
+$text = Text
+$rank = Rank
+$message = Message
+$format = Format
+$avatar = Avatar
 
 %spanish
 
-$user = usuario
-$room = sala
-$command = comando
-$subcmd = sub-comando
-$text = texto
-$rank = rango
-$message = mensaje
-$format = formato
-$avatar = avatar
+$user = Usuario
+$room = Sala
+$command = Comando
+$subcmd = Sub-Comando
+$text = Texto
+$rank = Rango
+$message = Mensaje
+$format = Formato
+$avatar = Avatar

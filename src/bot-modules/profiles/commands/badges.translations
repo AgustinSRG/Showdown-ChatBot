@@ -6,11 +6,11 @@
 
 $inv = Invalid username
 
-$badgename = Badge name
-$badgenewname = Badge new name
+$badgename = Badge Name
+$badgenewname = Badge Name (new)
 $image = Image
 $imageurl = Image URL
-$badgedescription = Badge description
+$badgedescription = Badge Description
 
 $invalidname = Invalid badge name. Cannot exceed 20 characters
 $invalidurl = Invalid URL. Must be a valid URL using HTTPS
@@ -24,7 +24,7 @@ $badgedeleted = Badge deleted
 
 $empty = There are no badges yet
 
-$badgeholders = Badge holders
+$badgeholders = Badge Holders
 
 $alreadyholder1 = User
 $alreadyholder2 = already holds the badge
