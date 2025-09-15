@@ -296,8 +296,12 @@ module.exports = {
 
 		tableHtml += '</table>';
 
-		if (badgeCount === 0 && user) {
-			return this.errorReply(this.mlt('usernobadges1') + " " + Chat.bold(user) + " " + this.mlt('usernobadges2'));
+		if (badgeCount === 0) {
+			if (user) {
+				return this.errorReply(this.mlt('usernobadges1') + " " + Chat.bold(user) + " " + this.mlt('usernobadges2'));
+			} else {
+				return this.errorReply(this.mlt('empty'));
+			}
 		}
 
 		let html = '';
