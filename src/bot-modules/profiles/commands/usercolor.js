@@ -14,6 +14,7 @@ const Chat = Tools('chat');
 const Lang_File = Path.resolve(__dirname, 'usercolor.translations');
 
 module.exports = {
+	namecolor: "usernamecolor",
 	usercolor: "usernamecolor",
 	usernamecolor: function (App) {
 		this.setLangFile(Lang_File);
