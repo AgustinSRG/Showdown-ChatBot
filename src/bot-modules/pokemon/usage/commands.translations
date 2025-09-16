@@ -33,6 +33,7 @@ $items = Items
 $moves = Moves
 $spreads = Spreads
 $teammates = Teammates
+$teratypes = Tera Types
 $source = Source
 $badladder = Invalid ladder type. Available types
 
@@ -77,6 +78,7 @@ $items = Objetos
 $moves = Movimientos
 $spreads = Naturalezas y EVs
 $teammates = Compañeros
+$teratypes = Teratipos
 $source = Fuente
 $badladder = Tipo de ladder incorrecto. Tipos válidos
 

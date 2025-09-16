@@ -622,6 +622,7 @@ module.exports = {
 								"moves": "",
 								"spreads": "",
 								"teammates": "",
+								"teratypes": "",
 							};
 
 							for (let i = 0; i < pokeData.length; i++) {
@@ -642,6 +643,9 @@ module.exports = {
 											break;
 										case 'teammates':
 											htmlKey = 'teammates';
+											break;
+										case 'teratypes':
+											htmlKey = 'teratypes';
 											break;
 										default:
 											continue;
@@ -672,7 +676,11 @@ module.exports = {
 							}
 
 							detailsHTML = '';
-							for (let key of ['abilities', 'items', 'moves', 'spreads', 'teammates']) {
+							for (let key of ['abilities', 'items', 'moves', 'spreads', 'teratypes', 'teammates']) {
+								if (!htmlData[key]) {
+									continue;
+								}
+
 								if (canHTML) {
 									detailsHTML += '<details>' +
 										'<summary style="font-size: 14px"><strong>' + Text.escapeHTML(this.mlt(key)) + '</strong></summary>' +
