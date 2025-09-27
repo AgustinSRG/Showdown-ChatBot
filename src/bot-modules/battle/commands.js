@@ -246,8 +246,13 @@ module.exports = {
 		if (!this.arg) return this.errorReply(this.usage({ desc: 'script' }));
 		if (App.modules.battle.system.BattleBot.battles[this.room]) {
 			try {
-				let result = App.modules.battle.system.BattleBot.battles[this.room].evalBattle(this.arg);
-				this.reply('' + JSON.stringify(result));
+				const result = App.modules.battle.system.BattleBot.battles[this.room].evalBattle(this.arg);
+				const resultStr = JSON.stringify(result);
+				if (resultStr.length <= App.config.bot.maxMessageLength) {
+					this.reply(JSON.stringify(result));
+				} else {
+					this.reply('!code ' + JSON.stringify(result));
+				}
 			} catch (err) {
 				this.reply("Error: " + err.code + " - " + err.message);
 			}
