@@ -64,7 +64,7 @@ exports.setup = function (App) {
 		return effect;
 	};
 
-	BattleDataManager.getPokemon = BattleDataManager.getTemplate = function (poke, gen) {
+	BattleDataManager.getPokemon = BattleDataManager.getTemplate = function (poke, gen, onlyBase) {
 		if (!gen || gen > 9 || gen < 1) gen = 9;
 		poke = Text.toId(poke || "");
 		let pokemon = Object.create(null);
@@ -88,6 +88,17 @@ exports.setup = function (App) {
 		if (pokemon.name) {
 			pokemon.species = pokemon.name;
 		}
+		if (!onlyBase && pokemon.baseSpecies) {
+			const basePoke = BattleDataManager.getPokemon(pokemon.baseSpecies, gen, true);
+
+			for (let key of Object.keys(basePoke)) {
+				if (pokemon[key] !== undefined) {
+					continue;
+				}
+
+				pokemon[key] = basePoke[key];
+			}
+		}
 		if (!pokemon.species) {
 			return {
 				num: 0,
@@ -101,9 +112,11 @@ exports.setup = function (App) {
 				eggGroups: ["Field"],
 			};
 		}
+		if (!pokemon.types) {
+			pokemon.types = [];
+		}
 		return pokemon;
 	};
-
 
 	BattleDataManager.getZPower = function (basePower) {
 		if (basePower >= 140) {
