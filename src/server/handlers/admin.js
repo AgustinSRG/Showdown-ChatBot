@@ -50,6 +50,7 @@ exports.setup = function (App) {
 			let accountType = context.post.actype || "";
 			let safetyThrottleExtraDelay = parseInt(context.post.extradelay);
 			let msgQueueMaxLength = parseInt(context.post.queuelen);
+			let reconnectDelay = parseInt(context.post.reconnectdelay);
 
 			try {
 				check(!isNaN(newPort), "Invalid port.");
@@ -58,6 +59,7 @@ exports.setup = function (App) {
 				check(!isNaN(maxMsgLength) && maxMsgLength > 0, "Invalid message length restriction");
 				check(!sslcertFile || FileSystem.existsSync(Path.resolve(App.appDir, sslcertFile)), "SSl certificate file was not found.");
 				check(!sslkeyFile || FileSystem.existsSync(Path.resolve(App.appDir, sslkeyFile)), "SSl key file was not found.");
+				check(!isNaN(reconnectDelay) && reconnectDelay > 0, "Invalid reconnection attempt delay.");
 			} catch (err) {
 				error = err.message;
 			}
@@ -81,6 +83,10 @@ exports.setup = function (App) {
 				App.config.bot.safetyThrottleExtraDelay = safetyThrottleExtraDelay;
 				App.config.bot.msgQueueMaxLength = msgQueueMaxLength;
 				App.config.bot.maxMessageLength = maxMsgLength;
+				App.config.bot.retrydelay = reconnectDelay * 1000;
+				if (App.bot.errOptions) {
+					App.bot.errOptions.retryDelay = App.config.bot.retrydelay;
+				}
 				App.config.debug = !!context.post.debugmode;
 				App.config.useproxy = !!context.post.useproxy;
 				App.config.blockautodownload = !!context.post.blockautodownload;
@@ -91,7 +97,7 @@ exports.setup = function (App) {
 				App.bot.accountType = App.config.bot.accountType;
 				App.bot.msgQueueMaxLength = App.config.bot.msgQueueMaxLength;
 				App.bot.safetyThrottleExtraDelay = App.config.bot.safetyThrottleExtraDelay;
-				ok = "Changes made successfuly.";
+				ok = "Changes made successfully.";
 				App.logServerAction(context.user.id, 'Administration options were edited');
 			}
 		}
@@ -117,6 +123,7 @@ exports.setup = function (App) {
 		htmlVars.disableuserdata = (App.config.disableuserdata ? 'checked="checked"' : '');
 		htmlVars.rmuserdata = (App.config.autoremoveuserdata ? 'checked="checked"' : '');
 		htmlVars.mainhtml = Text.escapeHTML(App.config.mainhtml || '');
+		htmlVars.reconnectdelay = Text.escapeHTML(Math.floor(App.config.bot.retrydelay / 1000));
 
 		htmlVars.ac_type_select = getAccountTypeSelect();
 

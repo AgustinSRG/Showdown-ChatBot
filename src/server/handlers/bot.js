@@ -96,11 +96,9 @@ exports.setup = function (App) {
 				error = "The bot was already stopped.";
 			}
 		} else if (context.post.editbot) {
-			let secRetry = parseInt(context.post.retry);
 			let newPort = parseInt(context.post.port);
 
 			try {
-				check(!isNaN(secRetry) && secRetry > 0, "Invalid time to retry the connection.");
 				check(!isNaN(newPort), "Invalid Port");
 			} catch (err) {
 				error = err.message;
@@ -111,14 +109,10 @@ exports.setup = function (App) {
 				App.config.bot.port = context.post.port;
 				App.config.bot.secure = !!context.post.secure;
 				App.config.bot.serverid = context.post.serverid || 'showdown';
-				App.config.bot.retrydelay = secRetry * 1000;
 				App.bot.server = App.config.bot.server;
 				App.bot.port = App.config.bot.port;
 				App.bot.secure = App.config.bot.secure;
 				App.bot.loginUrl.serverId = App.config.bot.serverid;
-				if (App.bot.errOptions) {
-					App.bot.errOptions.retryDelay = App.config.bot.retrydelay;
-				}
 				App.saveConfig();
 				App.logServerAction(context.user.id, 'Edit Bot configuration');
 				ok = "Bot configuration changed successfully. Restart the bot to make the changes effective.";
@@ -166,7 +160,6 @@ exports.setup = function (App) {
 		htmlVars.port = Text.escapeHTML(App.bot.port);
 		htmlVars.secure = (App.bot.secure ? 'checked="checked"' : '');
 		htmlVars.serverid = Text.escapeHTML(App.bot.loginUrl.serverId);
-		htmlVars.retry = Text.escapeHTML(Math.floor(App.config.bot.retrydelay / 1000));
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));

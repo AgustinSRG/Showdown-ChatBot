@@ -83,6 +83,11 @@
 		<span>Note: Leave it to <b>play.pokemonshowdown.com</b> unless you are using a custom login server.</span>
 	</p>
 
+	<p>
+		<strong>Reconnection attempt delay (seconds)</strong>: <input type="number" step="1" style="width: 100%; max-width: 40ch;" name="reconnectdelay" value="${RECONNECTDELAY}" /><br>
+		<span>When the bot is started, and disconnects for any reason (server restart, network error), it will try to reconnect after a set delay.</span>
+	</p>
+
 	<p><input type="checkbox" name="debugmode" value="true" ${DEBUGMODE} />&nbsp;Enable debug mode (increases the amount of logs and enables eval commands, for development purposes).</p>
 
 	<p><input type="checkbox" name="blockautodownload" value="true" ${BLOCKAUTODOWNLOAD} />&nbsp;Block automated data downloads (reduces bandwidth, but downloaded data like the Pokedex won't be automatically updated).</p>

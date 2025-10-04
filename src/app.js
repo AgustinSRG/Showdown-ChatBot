@@ -115,7 +115,7 @@ class ChatBotApp {
 				port: Default_Server_Port,
 				loginserv: Default_Login_Server,
 				serverid: "showdown",
-				retrydelay: (10 * 1000),
+				retrydelay: (5 * 1000),
 				msgQueueMaxLength: 120,
 				accountType: "regular",
 				safetyThrottleExtraDelay: 50,
