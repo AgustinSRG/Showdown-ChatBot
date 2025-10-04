@@ -39,6 +39,11 @@ function setup(App) {
 				App.config.modules.core.pass = pass;
 				App.db.write();
 				App.logServerAction(context.user.id, 'Edit Bot Login details (Core Module)');
+
+				if (App.bot.isConnected()) {
+					App.bot.rename(nick, pass);
+				}
+
 				ok = "Bot login details have been set successfully. Restart the bot to make them effective.";
 			}
 		}
@@ -52,7 +57,7 @@ function setup(App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Bot Login - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), { title: "Bot Login - Showdown ChatBot" });
 	});
 }
 
