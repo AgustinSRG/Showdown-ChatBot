@@ -1,6 +1,6 @@
 {
 	"name": "showdown-chatbot",
-	"version": "2.24.1",
+	"version": "2.24.2",
 	"author": {
 		"name": "Agustin San Roman",
 		"email": "agustinsanromanguzman@gmail.com",
@@ -8,8 +8,8 @@
 	},
 	"scripts": {
 		"start": "node run-forever",
-		"test": "eslint --cache showdown-chatbot config-example.js src/ add-ons/",
-		"fix-test": "eslint --fix --cache showdown-chatbot config-example.js src/ add-ons/"
+		"test": "eslint --cache ./showdown-chatbot ./config-example.js ./src/ ./add-ons/",
+		"fix-test": "eslint --fix --cache ./showdown-chatbot ./config-example.js ./src/ ./add-ons/"
 	},
 	"main": "showdown-chatbot",
 	"bin": "showdown-chatbot",
