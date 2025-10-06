@@ -26,6 +26,31 @@ const MAX_IMG_HEIGHT = 128;
 const BADGE_IMG_WIDTH = 16;
 const BADGE_IMG_HEIGHT = 16;
 
+function resolveAvatar(App, avatar) {
+	avatar = avatar + "";
+
+	if (avatar.charAt(0) === "#") {
+		return 'https://play.pokemonshowdown.com/sprites/trainers-custom/' + Text.toId(avatar.substring(1)) + '.png';
+	}
+
+	if (avatar.includes('.')) {
+		// Custom avatar served by the server
+
+		if (!App.config.bot.secure) {
+			// Insecure servers cannot have custom avatars
+			// Use default avatar to show something
+			return "https://play.pokemonshowdown.com/sprites/trainers/lucas.png";
+		}
+
+		const server = App.config.bot.server;
+		const port = App.config.bot.port;
+
+		return "https://" + server + ":" + port + "/avatars/" + encodeURIComponent(avatar).replace(/%3F/g, '?');
+	}
+
+	return "https://play.pokemonshowdown.com/sprites/trainers/" + avatar + ".png";
+}
+
 module.exports = {
 	profile: "userprofile",
 	userprofile: function (App) {
@@ -70,12 +95,7 @@ module.exports = {
 			html += '<div style="text-align: center; padding-bottom: 6px;"><b class="username" style="color: ' + Text.escapeHTML(data.color) + ';">' + Text.escapeHTML(username) + '</b></div>';
 
 			// Avatar
-			if (data.avatar && typeof data.avatar === "string" && data.avatar.charAt(0) === "#") {
-				// Custom avatar
-				html += '<div style="text-align: center;"><img width="80" height="80" src="https://play.pokemonshowdown.com/sprites/trainers-custom/' + Text.escapeHTML(data.avatar.substring(1)) + '.png"></div>';
-			} else {
-				html += '<div style="text-align: center;"><img width="80" height="80" src="https://play.pokemonshowdown.com/sprites/trainers/' + Text.escapeHTML(data.avatar) + '.png"></div>';
-			}
+			html += '<div style="text-align: center;"><img width="80" height="80" src="' + Text.escapeHTML(resolveAvatar(App, data.avatar)) + '"></div>';
 
 			// Badges
 			if (data.badges && data.badges.length > 0) {
@@ -143,24 +163,28 @@ module.exports = {
 			// Room rank
 			const hasRoomRank = room && App.bot.rooms[room] && App.bot.rooms[room].users[target] && App.bot.rooms[room].users[target] !== " " && App.bot.rooms[room].users[target] !== data.group;
 			if (hasRoomRank) {
-				if (data.group && data.group !== " ") {
-					html += '<p style="margin: 4px 0"><u>' + this.mlt("rank") + ' (' + Text.escapeHTML(App.bot.rooms[room].title || room) + '):</u> <b>';
+				const roomRank = App.bot.rooms[room].users[target];
 
-					if (rankMappings[data.group]) {
-						html += Text.escapeHTML(rankMappings[data.group] + " (" + data.group + ")");
-					} else {
-						html += Text.escapeHTML(data.group);
-					}
+				html += '<p style="margin: 4px 0"><u>' + this.mlt("rank") + ' (' + Text.escapeHTML(App.bot.rooms[room].title || room) + '):</u> <b>';
 
-					html += '</b></p>';
+				if (Mod.customGroups.has(roomRank)) {
+					html += Text.escapeHTML(Mod.customGroups.get(roomRank) + " (" + roomRank + ")");
+				} else if (rankMappings[roomRank]) {
+					html += Text.escapeHTML(rankMappings[roomRank] + " (" + roomRank + ")");
+				} else {
+					html += Text.escapeHTML(roomRank);
 				}
+
+				html += '</b></p>';
 			}
 
 			// Rank
 			if (data.group && data.group !== " ") {
 				html += '<p style="margin: 4px 0"><u>' + this.mlt("rank") + (hasRoomRank ? (' (' + this.mlt('global') + ')') : "") + ':</u> <b>';
 
-				if (rankMappings[data.group]) {
+				if (Mod.customGroups.has(data.group)) {
+					html += Text.escapeHTML(Mod.customGroups.get(data.group) + " (" + data.group + ")");
+				} else if (rankMappings[data.group]) {
 					html += Text.escapeHTML(rankMappings[data.group] + " (" + data.group + ")");
 				} else {
 					html += Text.escapeHTML(data.group);

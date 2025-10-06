@@ -92,6 +92,8 @@ exports.setup = function (App) {
 		ProfilesModule.data.badges = Object.create(null);
 	}
 
+	ProfilesModule.customGroups = new Map();
+
 	ProfilesModule.customColors = Object.create(null);
 
 	ProfilesModule.getCustomColor = function (name) {
@@ -392,6 +394,37 @@ exports.setup = function (App) {
 				}
 			});
 			this.queryResponseCallbacks.clear();
+		});
+
+		App.bot.on('line', (room, line, spl, isIntro) => {
+			if (spl[0] !== "customgroups") {
+				return;
+			}
+
+			const customGroupsJson = spl.slice(1).join("|");
+
+			let customGroups = [];
+
+			try {
+				customGroups = JSON.parseNoPrototype(customGroupsJson);
+			} catch (ex) {
+				App.reportCrash(ex);
+				return;
+			}
+
+			ProfilesModule.customGroups.clear();
+
+			if (!customGroups || typeof customGroups !== "object" || !Array.isArray(customGroups)) {
+				return;
+			}
+
+			for (let cg of customGroups) {
+				if (typeof cg !== "object" || !cg) {
+					continue;
+				}
+
+				ProfilesModule.customGroups.set(cg.symbol + "", cg.name + "");
+			}
 		});
 
 		App.bot.on('queryresponse', response => {
