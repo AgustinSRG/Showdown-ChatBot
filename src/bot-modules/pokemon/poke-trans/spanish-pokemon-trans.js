@@ -1826,6 +1826,7 @@ exports.translations.moves = {
 	"terastarstorm": "Teraclúster",
 	"thunderclap": "Relámpago Súbito",
 	"upperhand": "Palma Rauda",
+	"polarflare": "", // CAP
 };
 
 /* Natures */
@@ -3286,6 +3287,52 @@ exports.translations.pokemon = {
 	"terapagosstellar": "Terapagos (Forma Astral)",
 	"pecharunt": "Pecharunt",
 	"cresceidon": "", //CAP
+	"burmysandy": "Burmy (Arena)",
+	"burmytrash": "Burmy (Basura)",
+	"shelloseast": "Shellos (Este)",
+	"gastrodoneast": "Gastrodon (Este)",
+	"deerlingsummer": "Deerling (Verano)",
+	"deerlingautumn": "Deerling (Otoño)",
+	"deerlingwinter": "Deerling (Invierno)",
+	"vivillonicysnow": "Vivillon (Polar)",
+	"vivillonpolar": "Vivillon (Taiga)",
+	"vivillontundra": "Vivillon (Tundra)",
+	"vivilloncontinental": "Vivillon (Continental)",
+	"vivillongarden": "Vivillon (Vergel)",
+	"vivillonelegant": "Vivillon (Oriental)",
+	"vivillonmodern": "Vivillon (Moderno)",
+	"vivillonmarine": "Vivillon (Marino)",
+	"vivillonarchipelago": "Vivillon (Isleño)",
+	"vivillonhighplains": "Vivillon (Estepa)",
+	"vivillonsandstorm": "Vivillon (Desierto)",
+	"vivillonriver": "Vivillon (Oasis)",
+	"vivillonmonsoon": "Vivillon (Monzón)",
+	"vivillonsavanna": "Vivillon (Pantano)",
+	"vivillonsun": "Vivillon (Solar)",
+	"vivillonocean": "Vivillon (Océano)",
+	"vivillonjungle": "Vivillon (Jungla)",
+	"rockruffdusk": "Rockruff (Crepuscular)",
+	"miniororange": "Minior (Naranja)",
+	"minioryellow": "Minior (Amarillo)",
+	"miniorgreen": "Minior (Verde)",
+	"miniorblue": "Minior (Azul)",
+	"miniorindigo": "Minior (Añil)",
+	"miniorviolet": "Minior (Violeta)",
+	"alcremierubycream": "Alcremie (Crema rosa)",
+	"alcremiematchacream": "Alcremie (Crema de té)",
+	"alcremiemintcream": "Alcremie (Crema de menta)",
+	"alcremielemoncream": "Alcremie (Crema de limón)",
+	"alcremierubyswirl": "Alcremie (Mezcla rosa)",
+	"alcremiecaramelswirl": "Alcremie (Mezcla caramelo)",
+	"alcremierainbowswirl": "Alcremie (Tres sabores)",
+	"tatsugiridroopy": "Tatsugiri (Forma lánguida)",
+	"tatsugiristretchy": "Tatsugiri (Forma recta)",
+	"chuggon": "", // CAP
+	"draggalong": "", // CAP
+	"chuggalong": "", // CAP
+	"shox": "", // CAP
+	"ramnarok": "", // CAP
+	"ramnarokradiant": "", // CAP
 };
 
 /* Legacy Translation */
