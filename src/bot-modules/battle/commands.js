@@ -249,9 +249,9 @@ module.exports = {
 				const result = App.modules.battle.system.BattleBot.battles[this.room].evalBattle(this.arg);
 				const resultStr = JSON.stringify(result);
 				if (resultStr.length <= App.config.bot.maxMessageLength) {
-					this.reply(JSON.stringify(result));
+					this.reply(resultStr);
 				} else {
-					this.reply('!code ' + JSON.stringify(result));
+					this.reply('!code ' + resultStr);
 				}
 			} catch (err) {
 				this.reply("Error: " + err.code + " - " + err.message);

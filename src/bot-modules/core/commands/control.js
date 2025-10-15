@@ -232,9 +232,11 @@ module.exports = {
 		if (!this.arg) return this.errorReply(this.usage({ desc: 'script' }));
 		if (!App.jsInject) return this.errorReply("[Javascript injection is disabled]");
 		try {
-			let res = JSON.stringify(eval(this.arg));
-			if (res.length > 0) {
-				this.reply(Chat.code(res));
+			let resultStr = JSON.stringify(eval(this.arg));
+			if (resultStr.length <= App.config.bot.maxMessageLength) {
+				this.reply(resultStr);
+			} else {
+				this.reply('!code ' + resultStr);
 			}
 		} catch (err) {
 			this.reply('Error: ' + err.code + ' - ' + err.message);
