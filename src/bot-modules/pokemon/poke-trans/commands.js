@@ -26,8 +26,8 @@ module.exports = {
 	translate: function (App) {
 		this.setLangFile(Lang_File);
 		if (!this.arg) {
-			return this.errorReply(this.usage({desc: this.mlt(6)},
-				{desc: this.mlt(7), optional: true}, {desc: this.mlt(8), optional: true}));
+			return this.errorReply(this.usage({ desc: this.mlt(6) },
+				{ desc: this.mlt(7), optional: true }, { desc: this.mlt(8), optional: true }));
 		}
 		let args = this.args;
 		let word = args[0].trim();
@@ -35,8 +35,8 @@ module.exports = {
 		let to = Text.toId(args[2] || 'en');
 		let bidirectional = true;
 		if (!word || !from || !to || from === to) {
-			return this.errorReply(this.usage({desc: this.mlt(6)},
-				{desc: this.mlt(7), optional: true}, {desc: this.mlt(8), optional: true}));
+			return this.errorReply(this.usage({ desc: this.mlt(6) },
+				{ desc: this.mlt(7), optional: true }, { desc: this.mlt(8), optional: true }));
 		}
 
 		if (Available_Languages.indexOf(from) === -1) {
@@ -61,15 +61,35 @@ module.exports = {
 		}
 
 		/* Translation */
-		let translations = getTranslations(from, to, word);
-		if (bidirectional) {
-			let translationsInv = getTranslations(to, from, word);
-			if (translationsInv && translationsInv.length) {
-				if ((!translations || !translations.length) || (translationsInv[0].ld < translations[0].ld)) {
-					translations = translationsInv;
-					let temp = to;
-					to = from;
-					from = temp;
+		let translations = [];
+
+		const fromList = from === "es" ? ["es", "lat"] : [from];
+		const toList = to === "es" ? ["es", "lat"] : [to];
+
+		for (let fromListElement of fromList) {
+			for (let toListElement of toList) {
+				let tempTranslations = getTranslations(fromListElement, toListElement, word);
+				let reverse = false;
+
+				if (bidirectional) {
+					const translationsInv = getTranslations(toListElement, fromListElement, word);
+					if (translationsInv && translationsInv.length) {
+						if ((!tempTranslations || !tempTranslations.length) || (translationsInv[0].ld < tempTranslations[0].ld)) {
+							tempTranslations = translationsInv;
+							reverse = true;
+						}
+					}
+				}
+
+				if (!tempTranslations || !tempTranslations.length) {
+					continue;
+				}
+
+				if ((!translations || !translations.length) || (tempTranslations[0].ld < translations[0].ld)) {
+					translations = tempTranslations;
+
+					from = reverse ? toListElement : fromListElement;
+					to = reverse ? fromListElement : toListElement;
 				}
 			}
 		}
@@ -86,20 +106,61 @@ module.exports = {
 		}
 		text += this.mlt(3) + ' ' + " " + Chat.bold(translations[0].from) +
 			" (" + this.mlt(from) + " - " + this.mlt(to) + "): ";
-		let results = [];
+
+		const results = [];
+		const resultsWords = new Set();
+
 		for (let i = 0; i < translations.length; i++) {
 			if (normalize(translations[0].from) !== normalize(translations[i].from)) continue;
 			if (i !== 0 && translations[i].type === "legacy" && translations[i].to === translations[0].to) {
 				continue;
 			}
 			if (typeof translations[i].to === "string") {
+				resultsWords.add(translations[i].to);
 				results.push(Chat.bold(translations[i].to) + " (" +
 					(this.mlt(translations[i].type) || translations[i].type) + ")");
 			} else {
+				resultsWords.add(translations[i].to[0]);
 				results.push(Chat.bold(translations[i].to[0]) + " (" +
 					(this.mlt(translations[i].type) || translations[i].type) + ")");
 			}
 		}
+
+		if (from === "en" && to === "es") {
+			let latTranslations = getTranslations("en", "lat", translations[0].from);
+
+			if (latTranslations && latTranslations.length > 0) {
+				const latResults = [];
+
+				for (let i = 0; i < latTranslations.length; i++) {
+					if (normalize(latTranslations[0].from) !== normalize(latTranslations[i].from)) continue;
+					if (i !== 0 && latTranslations[i].type === "legacy" && latTranslations[i].to === latTranslations[0].to) {
+						continue;
+					}
+
+					let translatedWord;
+
+					if (typeof latTranslations[i].to === "string") {
+						translatedWord = latTranslations[i].to;
+					} else {
+						translatedWord = latTranslations[i].to[0];
+					}
+
+					if (resultsWords.has(translatedWord)) {
+						continue;
+					}
+
+					latResults.push(Chat.bold(translatedWord) + " (" +
+						(this.mlt(latTranslations[i].type) || latTranslations[i].type) + ")");
+				}
+
+				if (latResults.length > 0) {
+					this.restrictReply(text + results.join(', ') + " | " + this.mlt("lat") + ": " + latResults.join(", "), "translate");
+					return;
+				}
+			}
+		}
+
 		this.restrictReply(text + results.join(', '), "translate");
 	},
 
