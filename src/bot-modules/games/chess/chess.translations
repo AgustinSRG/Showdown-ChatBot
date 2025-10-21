@@ -1,0 +1,53 @@
+[English]
+
+%name% = Chess Game
+%desc% = Play interactive chess games with full rule support
+
+$0 = Chess game started!
+$1 = It's your turn to play
+$2 = Invalid move
+$3 = Game ended
+$4 = Checkmate!
+$5 = Stalemate - Draw!
+$6 = Check!
+$7 = Move played successfully
+$8 = Not your turn
+$9 = No game in progress
+$10 = Game already exists in this room
+$11 = Invalid move format. Use algebraic notation like e2-e4
+$12 = Players cannot be the same person
+$13 = Invalid players specified
+$14 = Use: startchess [player1], [player2]
+$15 = Chess game ended successfully
+$16 = Spectating chess game
+$17 = Use: move [from]-[to] (example: move e2-e4)
+$18 = White wins!
+$19 = Black wins!
+$20 = Game ended in a draw
+
+[Spanish]
+
+%name% = Juego de Ajedrez
+%desc% = Juega partidas de ajedrez interactivas con soporte completo de reglas
+
+$0 = ¡Partida de ajedrez iniciada!
+$1 = Es tu turno de jugar
+$2 = Movimiento inválido
+$3 = Partida terminada
+$4 = ¡Jaque mate!
+$5 = Tablas por ahogado
+$6 = ¡Jaque!
+$7 = Movimiento realizado con éxito
+$8 = No es tu turno
+$9 = No hay partida en progreso
+$10 = Ya existe una partida en esta sala
+$11 = Formato de movimiento inválido. Usa notación algebraica como e2-e4
+$12 = Los jugadores no pueden ser la misma persona
+$13 = Jugadores especificados inválidos
+$14 = Uso: startchess [jugador1], [jugador2]
+$15 = Partida de ajedrez terminada exitosamente
+$16 = Espectando partida de ajedrez
+$17 = Uso: move [desde]-[hasta] (ejemplo: move e2-e4)
+$18 = ¡Ganan las blancas!
+$19 = ¡Ganan las negras!
+$20 = La partida terminó en tablas

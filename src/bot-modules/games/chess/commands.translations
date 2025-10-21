@@ -1,0 +1,29 @@
+[English]
+
+c1 = Chess game system not available
+c2 = Usage: startchess [player1], [player2]
+c3 = Invalid players specified
+c4 = Players cannot be the same person
+c5 = Chess game started!
+c6 = Chess game ended
+c7 = Usage: move [from]-[to] (example: move e2-e4)
+c8 = Not your turn to move
+c9 = Invalid move format or illegal move
+c10 = Game over
+c11 = No active chess game in this room
+c12 = You are now spectating the chess game
+
+[Spanish]
+
+c1 = Sistema de ajedrez no disponible
+c2 = Uso: startchess [jugador1], [jugador2]
+c3 = Jugadores especificados inválidos
+c4 = Los jugadores no pueden ser la misma persona
+c5 = ¡Partida de ajedrez iniciada!
+c6 = Partida de ajedrez terminada
+c7 = Uso: move [desde]-[hasta] (ejemplo: move e2-e4)
+c8 = No es tu turno de mover
+c9 = Formato de movimiento inválido o movimiento ilegal
+c10 = Juego terminado
+c11 = No hay partida de ajedrez activa en esta sala
+c12 = Ahora estás espectando la partida de ajedrez
