@@ -20,17 +20,17 @@ module.exports = {
 			return false;
 		}
 
-		if (!cmds['chess'] || cmds['chess'].disabled) return false;
-		if (cmds['chess'].rooms && cmds['chess'].rooms.length) {
-			if (cmds['chess'].rooms.indexOf(this.room) < 0) return false;
+		if (!cmds.chess || cmds.chess.disabled) return false;
+		if (cmds.chess.rooms && cmds.chess.rooms.length) {
+			if (cmds.chess.rooms.indexOf(this.room) < 0) return false;
 		}
-		if (cmds['chess'].except && cmds['chess'].except.length) {
-			if (cmds['chess'].except.indexOf(this.room) >= 0) return false;
+		if (cmds.chess.except && cmds.chess.except.length) {
+			if (cmds.chess.except.indexOf(this.room) >= 0) return false;
 		}
 
-		let cmd = this.cmd;
-		let args = this.args || [];
-		let allowedCmds = [
+		const cmd = this.cmd;
+		const args = this.args || [];
+		const allowedCmds = [
 			'chess', 'startchess', 'newchess', 'endchess', 'stopchess',
 			'chessboard', 'board', 'move', 'chessmove', 'watch', 'spectate'
 		];
@@ -44,14 +44,14 @@ module.exports = {
 				return false;
 			}
 
-			let context = {
+			const context = {
 				room: this.room,
 				by: this.by,
 				cmd: cmd,
 				args: args,
 				bot: App.bot,
 				lang: function () {
-					return App.config.language.rooms[this.room] || App.config.language['default'];
+					return App.config.language.rooms[this.room] || App.config.language.default;
 				},
 				trad: function (key) {
 					return App.multilang.mlt(Lang_File, this.lang(), key);
@@ -63,7 +63,7 @@ module.exports = {
 					return this.reply('Access denied');
 				},
 				can: function (permission, room) {
-					return true; // Simplified permission check
+					return true;
 				},
 				parseUser: function (str) {
 					if (!str) return null;

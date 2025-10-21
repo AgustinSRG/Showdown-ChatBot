@@ -42,7 +42,6 @@ module.exports = {
 			
 			this.reply(this.trad('c5') + ' **' + player1 + '** (White) vs **' + player2 + '** (Black)');
 			
-			// Show initial board
 			const boardResult = ChessManager.showBoard(this.room);
 			if (boardResult.success) {
 				this.reply('/html ' + boardResult.board + '<br>' + boardResult.info);
@@ -78,7 +77,6 @@ module.exports = {
 				return this.reply(result.error);
 			}
 			
-			// Show updated board
 			const boardResult = ChessManager.showBoard(this.room);
 			if (boardResult.success) {
 				this.reply('/html ' + boardResult.board + '<br>' + boardResult.info);
