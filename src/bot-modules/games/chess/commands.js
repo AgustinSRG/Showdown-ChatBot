@@ -4,8 +4,6 @@
 
 'use strict';
 
-const Path = require('path');
-
 module.exports = {
 	chess: function (game) {
 		if (!this.can('games', this.room)) return this.replyAccessDenied('games');

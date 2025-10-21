@@ -4,10 +4,6 @@
 
 'use strict';
 
-const Path = require('path');
-
-const Cmd_File = Path.resolve(__dirname, 'commands.js');
-
 // Chess piece constants
 const PIECES = {
 	WHITE: {
@@ -437,12 +433,9 @@ class ChessGame {
 }
 
 exports.setup = function (App) {
-	function getLanguage(room) {
-		return App.config.language.rooms[room] || App.config.language['default'];
-	}
 	const ChessManager = {
 		games: new Map(),
-		startGame: function(room, players) {
+		startGame: function (room, players) {
 			if (this.games.has(room)) {
 				return { success: false, error: 'Game already running in this room' };
 			}
@@ -450,31 +443,31 @@ exports.setup = function (App) {
 			this.games.set(room, game);
 			return { success: true, game: game };
 		},
-		endGame: function(room) {
+		endGame: function (room) {
 			if (!this.games.has(room)) {
 				return { success: false, error: 'No game running in this room' };
 			}
 			this.games.delete(room);
 			return { success: true };
 		},
-		getGame: function(room) {
+		getGame: function (room) {
 			return this.games.get(room);
 		},
-		playMove: function(room, user, move) {
+		playMove: function (room, user, move) {
 			const game = this.games.get(room);
 			if (!game) {
 				return { success: false, error: 'No game running in this room' };
 			}
 			return game.playMove(user, move);
 		},
-		showBoard: function(room) {
+		showBoard: function (room) {
 			const game = this.games.get(room);
 			if (!game) {
 				return { success: false, error: 'No game running in this room' };
 			}
 			return { success: true, board: game.getBoardHTML(), info: game.getGameInfo() };
 		},
-		addSpectator: function(room, user) {
+		addSpectator: function (room, user) {
 			const game = this.games.get(room);
 			if (game) {
 				game.spectators.add(user);
