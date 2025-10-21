@@ -3,6 +3,8 @@
  *
  * seen: Gets the last time the bot saw an user
  * alts: Gets the known alts that the bot got via rename warnings
+ *
+ * cleanalts: Cleans the alts registry
  */
 
 'use strict';
@@ -136,5 +138,28 @@ module.exports = {
 				this.pmReply(this.mlt(18) + ' ' + Chat.italics(name) + '');
 			}
 		}
+	},
+
+	clearalts: "cleanalts",
+	cleanalts: function (App) {
+		this.setLangFile(Lang_File);
+
+		if (!this.can('cleanalts', this.room)) return this.replyAccessDenied('cleanalts');
+
+		if (!this.arg) {
+			return this.errorReply(this.usage({ desc: this.usageTrans('user') + " | *" }));
+		}
+
+		const targetId = Text.toId(this.arg);
+
+		if (targetId === "all" || this.arg.trim() === "*") {
+			App.userdata.cleanAlts();
+			this.reply(this.mlt('clean'));
+		} else {
+			App.userdata.cleanUserAlts(targetId);
+			this.reply(this.mlt('cleanuser') + ": " + Chat.italics(targetId));
+		}
+
+		this.addToSecurityLog();
 	},
 };

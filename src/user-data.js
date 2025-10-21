@@ -88,7 +88,7 @@ class UserDataManager {
 		for (let i = 0; i < files.length; i++) {
 			try {
 				FileSystem.unlinkSync(Path.resolve(this.path, files[i]));
-			} catch (err) {}
+			} catch (err) { }
 		}
 	}
 
@@ -114,7 +114,7 @@ class UserDataManager {
 			}
 		}
 		if (this.writeBuffer[id]) {
-			return this.applyBuffer(id, {name: id, lastSeen: Object.create(null)});
+			return this.applyBuffer(id, { name: id, lastSeen: Object.create(null) });
 		} else {
 			return null;
 		}
@@ -171,7 +171,7 @@ class UserDataManager {
 			try {
 				let obj = JSON.parseNoPrototype(data[index].substr(id.length + 1));
 				name = obj.name;
-			} catch (err) {}
+			} catch (err) { }
 		}
 		let seenObj = {
 			type: this.writeBuffer[id].type,
@@ -181,7 +181,7 @@ class UserDataManager {
 		if (this.writeBuffer[id].detail) {
 			seenObj.detail = this.writeBuffer[id].detail;
 		}
-		data[index] = id + "," + JSON.stringify({name: name, lastSeen: seenObj});
+		data[index] = id + "," + JSON.stringify({ name: name, lastSeen: seenObj });
 		FileSystem.writeFileSync(Path.resolve(this.path, firstChar + ".seen.log"), data.join("\n"));
 		delete this.writeBuffer[id];
 	}
@@ -207,6 +207,19 @@ class UserDataManager {
 		for (let k in this.altstree) {
 			delete this.altstree[k];
 		}
+
+		this.altsdb.write();
+	}
+
+	cleanUserAlts(user) {
+		const altsRoot = this.getAltsRoot(user);
+
+		if (!altsRoot) {
+			return;
+		}
+
+		delete this.altstree[altsRoot];
+
 		this.altsdb.write();
 	}
 

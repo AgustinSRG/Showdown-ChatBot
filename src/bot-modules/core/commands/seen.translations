@@ -41,6 +41,9 @@ $inv = Invalid username
 
 $disabled = This feature is disabled
 
+$clean = The alts registry has been cleaned
+$cleanuser = The alts registry has been cleaned for user
+
 %spanish
 
 $0 = ¿Te has mirado en el espejo últimamente?
@@ -79,3 +82,6 @@ $18 = No se encontraron cuentas alternas conocidas para el usuario
 $inv = Nombre de usuario no válido
 
 $disabled = Esta funcionalidad se encuentra deshabilitada
+
+$clean = Se ha limpiado el registro de alts
+$cleanuser = Se ha limpiado el registro de alts para el usuario

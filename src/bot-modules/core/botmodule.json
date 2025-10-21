@@ -42,6 +42,9 @@
 		"alts": {
 			"group": "user"
 		},
+		"cleanalts": {
+			"excepted": true
+		},
 		"fullalts": {
 			"group": "admin"
 		}
