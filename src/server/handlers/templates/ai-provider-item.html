@@ -3,4 +3,9 @@
 		<strong>${NAME}</strong>
 		<span class="provider-status ${STATUS_CLASS}">(${STATUS})</span>
 	</div>
+	<div>
+		<button onclick="editProvider('${ID}');">Edit</button>
+		<button onclick="removeProvider('${ID}');">Remove</button>
+		<span id="confirm-${ID}">&nbsp;</span>
+	</div>
 </div>
