@@ -1,11 +1,7 @@
 <h2>AI Provider Configuration</h2>
 <p><strong>Configure AI API keys for battle and chat AI functionality</strong></p>
 
-<div class="privacy-notice" style="background: #fff3cd; padding: 10px; border-left: 4px solid #ffc107; margin: 20px 0;">
-	<strong>Privacy Notice:</strong> 
-	API keys are encrypted and stored securely. Data sent to AI providers is subject to their privacy policies. 
-	You can control what data is shared using the privacy settings below.
-</div>
+<!-- Privacy notice removed per request -->
 
 <div class="ai-config-section">
 	<div class="section ai-card">
@@ -20,8 +16,7 @@
 		<form method="post" action="">
 			<p>
 				<label>Provider:</label>
-				<select name="providerId" required>
-					<option value="">Select Provider</option>
+				<select name="providerId">
 					<option value="openai">OpenAI (ChatGPT)</option>
 					<option value="gemini">Google Gemini</option>
 					<option value="anthropic">Anthropic Claude</option>
@@ -29,7 +24,7 @@
 			</p>
 			<p>
 				<label>API Key:</label>
-				<input type="password" name="apiKey" placeholder="Enter your API key" style="width: 100%; max-width: 400px;" required />
+				<input type="password" name="apiKey" placeholder="Enter your API key" style="width: 100%; max-width: 400px;" />
 			</p>
 			<p><input type="submit" name="addProvider" value="Add Provider" /></p>
 		</form>
@@ -89,7 +84,6 @@
 <p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
 
 <style>
-/* Removed custom submit button colors to use global defaults */
 .section { margin: 30px 0; padding: 20px; border: 1px solid var(--theme-main-div-border-color); border-radius: 5px; background: var(--theme-main-div-background); }
 .section h3 { margin-top: 0; color: var(--theme-text-color); }
 .providers-list { display: grid; gap: 10px; }
@@ -102,6 +96,5 @@ input[type="text"], input[type="password"], input[type="number"], select, textar
 	padding: 8px; border: 1px solid var(--theme-input-border-color); border-radius: 3px; font-size: 14px; background: var(--theme-input-background); color: var(--theme-input-text-color);
 }
 input[type="checkbox"] { margin-right: 8px; }
-/* Removed custom input[type=submit] overrides to allow global/module styles */
-.privacy-notice { font-size: 14px; }
+/* No custom submit button styling; global defaults apply */
 </style>
