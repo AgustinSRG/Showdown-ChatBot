@@ -6,3 +6,11 @@
 	<p><input type="submit" name="add" value="Install Add-on" /></p>
 </form>
 <p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
+<script>(function(){
+	function ready(fn){ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',fn);} else {fn();}}
+	function tryInit(){
+		var ta=document.getElementById('textareacontent');
+		if(!ta) return; if(window.CodeMirror && !ta._cm_inited){ try{ var cm=window.CodeMirror.fromTextArea(ta,{mode:'javascript',lineNumbers:true,theme:'default',tabSize:2,indentUnit:2,smartIndent:true,matchBrackets:true,autoCloseBrackets:true}); ta._cm_inited=true; var form=(ta.closest&&ta.closest('form'))||ta.form; if(form){ form.addEventListener('submit', function(){ if(cm&&cm.save) cm.save(); }); } }catch(e){} }
+	}
+	ready(function(){ var tries=0; (function poll(){ tryInit(); if(!(window.CodeMirror && document.getElementById('textareacontent') && document.getElementById('textareacontent')._cm_inited) && tries<30){ tries++; setTimeout(poll,100); } })(); });
+})();</script>
