@@ -18,7 +18,8 @@ exports.setup = function (App) {
 
 	// Initialize AI Provider Manager
 	if (!App.aiManager) {
-		const AIProviderManager = require(Path.resolve(__dirname, '..', 'ai-provider-manager.js'));
+		// Fix path: handlers -> server -> src
+		const AIProviderManager = require(Path.resolve(__dirname, '..', '..', 'ai-provider-manager.js'));
 		App.aiManager = new AIProviderManager(App);
 	}
 
