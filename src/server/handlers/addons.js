@@ -16,6 +16,19 @@ const addonItemTemplate = new Template(Path.resolve(__dirname, 'templates', 'add
 const addingTemplate = new Template(Path.resolve(__dirname, 'templates', 'addons-new.html'));
 const editTemplate = new Template(Path.resolve(__dirname, 'templates', 'addons-edit.html'));
 
+// Common CodeMirror assets (CDN)
+const CM_STYLES = [
+	'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css',
+	'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/default.min.css',
+];
+const CM_SCRIPTS = [
+	'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js',
+	'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js',
+	'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js',
+	'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js',
+	'/static/addons-codemirror.js',
+];
+
 exports.setup = function (App) {
 	if (App.env.staticmode) return;
 
@@ -106,7 +119,11 @@ exports.setup = function (App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(addingTemplate.make(htmlVars), { title: "New Add-on - Showdown ChatBot" });
+		context.endWithWebPage(addingTemplate.make(htmlVars), {
+			title: "New Add-on - Showdown ChatBot",
+			scripts: CM_SCRIPTS,
+			styles: CM_STYLES,
+		});
 	}
 
 	function editAddonHandler(context, parts) {
@@ -157,6 +174,10 @@ exports.setup = function (App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(editTemplate.make(htmlVars), { title: "Add-ons - Showdown ChatBot" });
+		context.endWithWebPage(editTemplate.make(htmlVars), {
+			title: "Add-ons - Showdown ChatBot",
+			scripts: CM_SCRIPTS,
+			styles: CM_STYLES,
+		});
 	}
 };
