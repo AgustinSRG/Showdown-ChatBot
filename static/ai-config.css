@@ -1,0 +1,50 @@
+/* AI Config specific tweaks for readability and native buttons */
+/* Improve contrast for labels and content within .page-content on dark */
+.page-content .ai-config-section label,
+.page-content .ai-config-section .section-title,
+.page-content .ai-config-section .provider-item,
+.page-content .ai-config-section input,
+.page-content .ai-config-section select,
+.page-content .ai-config-section textarea {
+  color: var(--theme-text-color) !important;
+}
+
+/* Cards */
+.ai-card { border: 1px solid var(--theme-main-div-border-color); background: var(--theme-main-div-background); padding: 10px; border-radius: 6px; margin: 8px 0; }
+.ai-card h3 { margin-top: 0; }
+
+/* Provider pill statuses */
+.ai-status { font-size: 11px; padding: 2px 6px; border-radius: 10px; }
+.ai-status.error { background: rgba(255,0,0,.15); color: #ff8080; border: 1px solid rgba(255,0,0,.35); }
+.ai-status.success { background: rgba(0,200,0,.15); color: #8aff8a; border: 1px solid rgba(0,200,0,.35); }
+.ai-status.warning { background: rgba(255,200,0,.15); color: #ffd66b; border: 1px solid rgba(255,200,0,.35); }
+
+/* Use native-looking buttons instead of the custom neumorphic ones */
+button,
+input[type=button],
+input[type=submit] {
+  appearance: button;
+  -webkit-appearance: button;
+  border-radius: 4px !important;
+  border: 1px solid var(--theme-btn-border-color) !important;
+  box-shadow: none !important;
+  background: var(--theme-btn-background) !important;
+  color: var(--theme-btn-text-color) !important;
+  padding: 6px 10px !important;
+}
+button:hover,
+input[type=button]:hover,
+input[type=submit]:hover { filter: brightness(1.05); }
+button:active,
+input[type=button]:active,
+input[type=submit]:active { filter: brightness(0.95); }
+
+/* Inputs full-width on mobile for visibility */
+@media (max-width: 600px){
+  .ai-config-section input[type=text],
+  .ai-config-section input[type=number],
+  .ai-config-section select {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
