@@ -2,6 +2,10 @@
 <form method="post" action="">
 	<input type="hidden" name="addon" value="${FILE}" />
 	<p><strong>File: ${FILE}</strong></p>
+	<div class="cm-toolbar" style="margin:6px 0; display:flex; gap:6px;">
+		<button type="button" id="cm-select-all">Select All</button>
+		<button type="button" id="cm-cut">Cut</button>
+	</div>
 	<p><textarea id="textareacontent" name="content" style="width: 100%; max-width: 140ch;" rows="20">${CONTENT}</textarea></p>
 	<p><input type="submit" name="edit" value="Save Changes" /></p>
 </form>
@@ -9,10 +13,10 @@
 <script>(function(){
 	function ready(fn){ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',fn);} else {fn();}}
 	function isDark(){ return document.body && document.body.classList.contains('dark'); }
-	function themeName(){ return isDark() ? 'dracula' : 'default'; }
+	function themeName(){ return isDark() ? 'default' : 'default'; }
 	function tryInit(){
 		var ta=document.getElementById('textareacontent');
-		if(!ta) return; if(window.CodeMirror && !ta._cm_inited){ try{ var cm=window.CodeMirror.fromTextArea(ta,{mode:'javascript',lineNumbers:true,theme:themeName(),tabSize:2,indentUnit:2,smartIndent:true,matchBrackets:true,autoCloseBrackets:true}); ta._cm_inited=true; var form=(ta.closest&&ta.closest('form'))||ta.form; if(form){ form.addEventListener('submit', function(){ if(cm&&cm.save) cm.save(); }); } }catch(e){} }
+		if(!ta) return; if(window.CodeMirror && !ta._cm_inited){ try{ var cm=window.CodeMirror.fromTextArea(ta,{mode:'javascript',lineNumbers:true,theme:themeName(),tabSize:2,indentUnit:2,smartIndent:true,matchBrackets:true,autoCloseBrackets:true,styleSelectedText:true,styleActiveLine:true,keyMap:{'Ctrl-A':function(cm){cm.execCommand('selectAll');},'Cmd-A':function(cm){cm.execCommand('selectAll');}}}); ta._cm_inited=true; var form=(ta.closest&&ta.closest('form'))||ta.form; if(form){ form.addEventListener('submit', function(){ if(cm&&cm.save) cm.save(); }); } var selecting=false; cm.on('beforeSelectionChange', function(){ selecting=true; }); cm.on('cursorActivity', function(){ selecting=false; }); cm.getWrapperElement().addEventListener('touchmove', function(e){ if(selecting){ e.preventDefault(); } }, {passive:false}); var selectBtn=document.getElementById('cm-select-all'); if(selectBtn){ selectBtn.addEventListener('click', function(){ try{ var last=cm.lastLine(); var lt=cm.getLine(last)||''; if(lt!=='' && !/\n$/.test(cm.getValue())){ cm.replaceRange('\n', {line:last, ch:lt.length}); } }catch(_){} cm.execCommand('selectAll'); cm.scrollTo(0,0); cm.focus(); }); } var cutBtn=document.getElementById('cm-cut'); if(cutBtn){ cutBtn.addEventListener('click', function(){ if(!cm.somethingSelected()){ cm.execCommand('selectAll'); } var ok=false; try{ ok=document.execCommand('cut'); }catch(_){} setTimeout(function(){ if(!ok && cm.somethingSelected()){ cm.replaceSelection(''); } if(cm.save) cm.save(); cm.focus(); },0); }); } }catch(e){} }
 	}
 	ready(function(){ var tries=0; (function poll(){ tryInit(); if(!(window.CodeMirror && document.getElementById('textareacontent') && document.getElementById('textareacontent')._cm_inited) && tries<30){ tries++; setTimeout(poll,100); } })(); });
 })();</script>

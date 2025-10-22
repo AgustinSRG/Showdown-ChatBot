@@ -1,10 +1,11 @@
-/* CodeMirror control panel theme bridge (enforced) */
+/* CodeMirror control panel theme bridge (enforced + mobile tweaks) */
 /* Surface */
-.CodeMirror { background: var(--theme-input-background) !important; color: var(--theme-input-text-color) !important; border: 1px solid var(--theme-input-border-color) !important; }
+.CodeMirror { background: var(--theme-input-background) !important; color: var(--theme-input-text-color) !important; border: 1px solid var(--theme-input-border-color) !important; -webkit-tap-highlight-color: rgba(0,0,0,0); -webkit-touch-callout: default; }
 .CodeMirror-focused { outline: 1px solid var(--theme-input-border-color-focus) !important; }
 .CodeMirror-gutters { background: var(--theme-main-div-background) !important; border-right: 1px solid var(--theme-main-div-border-color) !important; color: var(--theme-input-text-color) !important; }
 .CodeMirror-linenumber { color: var(--theme-input-text-color) !important; opacity: 0.7; }
 .CodeMirror-cursor { border-left: 1px solid var(--theme-text-color) !important; }
+.CodeMirror-scroll { overscroll-behavior: contain; }
 
 /* Selection */
 .CodeMirror ::selection { background: rgba(68,147,248,0.25) !important; }
