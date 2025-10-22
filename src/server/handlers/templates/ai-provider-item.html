@@ -3,13 +3,5 @@
 		<strong>${NAME}</strong>
 		<span class="provider-status ${STATUS_CLASS}">(${STATUS})</span>
 	</div>
-	<div>
-		${IF_CONFIGURED}
-		<form method="post" action="" style="display: inline;">
-			<input type="hidden" name="providerId" value="${ID}" />
-			<input type="submit" name="removeProvider" value="Remove" style="background: #dc3545;" 
-				onclick="return confirm('Are you sure you want to remove this provider?')" />
-		</form>
-		${END_IF}
-	</div>
+	<!-- Remove-provider action intentionally removed -->
 </div>
