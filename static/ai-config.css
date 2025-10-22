@@ -1,32 +1,4 @@
-/* Force AI page buttons to inherit the global default styles exactly */
-.page-content .ai-config-section button,
-.page-content .ai-config-section input[type=button],
-.page-content .ai-config-section input[type=submit] {
-  all: unset;
-  display: inline-block;
-  box-sizing: border-box;
-  border-radius: 5px;
-  font-family: Verdana, Helvetica, Arial, sans-serif;
-  text-align: center;
-  cursor: pointer;
-  font-size: 9pt;
-  padding: 3px 8px;
-  background: var(--theme-btn-background);
-  box-shadow: var(--theme-btn-box-shadow);
-  border: 1px solid var(--theme-btn-border-color);
-  text-shadow: var(--theme-btn-text-shadow);
-  color: var(--theme-btn-text-color);
-}
-.page-content .ai-config-section button:not(:disabled):hover,
-.page-content .ai-config-section input[type=button]:not(:disabled):hover,
-.page-content .ai-config-section input[type=submit]:not(:disabled):hover {
-  background: var(--theme-btn-hover-background);
-  border-color: var(--theme-btn-hover-border);
-}
-.page-content .ai-config-section button:active,
-.page-content .ai-config-section input[type=button]:active,
-.page-content .ai-config-section input[type=submit]:active {
-  background: var(--theme-btn-active-background);
-  border-color: var(--theme-btn-active-border);
-  box-shadow: var(--theme-btn-active-box-shadow);
-}
+/* AI Config minimal page styles – rely on global module styles */
+/* Remove button overrides entirely to inherit defaults */
+/* Keep only layout helpers if needed */
+.ai-config-section .section { margin: 30px 0; }
