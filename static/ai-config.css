@@ -1,29 +1,32 @@
-/* Stronger specificity to override global button styles on AI Config page */
+/* Force AI page buttons to inherit the global default styles exactly */
 .page-content .ai-config-section button,
 .page-content .ai-config-section input[type=button],
 .page-content .ai-config-section input[type=submit] {
-  border-radius: 5px !important;
-  font-family: Verdana, Helvetica, Arial, sans-serif !important;
-  text-align: center !important;
-  cursor: pointer !important;
-  font-size: 9pt !important;
-  padding: 3px 8px !important;
-  background: var(--theme-btn-background) !important;
-  box-shadow: var(--theme-btn-box-shadow) !important;
-  border-color: var(--theme-btn-border-color) !important;
-  text-shadow: var(--theme-btn-text-shadow) !important;
-  color: var(--theme-btn-text-color) !important;
+  all: unset;
+  display: inline-block;
+  box-sizing: border-box;
+  border-radius: 5px;
+  font-family: Verdana, Helvetica, Arial, sans-serif;
+  text-align: center;
+  cursor: pointer;
+  font-size: 9pt;
+  padding: 3px 8px;
+  background: var(--theme-btn-background);
+  box-shadow: var(--theme-btn-box-shadow);
+  border: 1px solid var(--theme-btn-border-color);
+  text-shadow: var(--theme-btn-text-shadow);
+  color: var(--theme-btn-text-color);
 }
 .page-content .ai-config-section button:not(:disabled):hover,
 .page-content .ai-config-section input[type=button]:not(:disabled):hover,
 .page-content .ai-config-section input[type=submit]:not(:disabled):hover {
-  background: var(--theme-btn-hover-background) !important;
-  border-color: var(--theme-btn-hover-border) !important;
+  background: var(--theme-btn-hover-background);
+  border-color: var(--theme-btn-hover-border);
 }
 .page-content .ai-config-section button:active,
 .page-content .ai-config-section input[type=button]:active,
 .page-content .ai-config-section input[type=submit]:active {
-  background: var(--theme-btn-active-background) !important;
-  border-color: var(--theme-btn-active-border) !important;
-  box-shadow: var(--theme-btn-active-box-shadow) !important;
+  background: var(--theme-btn-active-background);
+  border-color: var(--theme-btn-active-border);
+  box-shadow: var(--theme-btn-active-box-shadow);
 }
