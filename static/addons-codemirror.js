@@ -1,16 +1,12 @@
-/* CodeMirror loader for Add-on editor (CDN with fallback, Dracula dark theme) */
+/* CodeMirror loader for Add-on editor (panel-native theme) */
 (function(){
 	function onReady(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
 	function loadScript(src){ return new Promise(function(res, rej){ var s=document.createElement('script'); s.src=src; s.async=true; s.onload=res; s.onerror=function(){rej(new Error('Failed '+src));}; document.head.appendChild(s); }); }
 	function loadCSS(href){ var l=document.createElement('link'); l.rel='stylesheet'; l.href=href; document.head.appendChild(l); }
-	function isDark(){ return document.body && document.body.classList.contains('dark'); }
-	function themeName(){ return isDark() ? 'dracula' : 'default'; }
-	function themeCssCdn(){ return isDark() ? 'dracula.min.css' : 'default.min.css'; }
-	function themeCssCdn2(){ return isDark() ? 'theme/dracula.css' : 'theme/default.css'; }
 	function initIfReady(){
 		var ta=document.getElementById('textareacontent');
 		if(!ta||!window.CodeMirror) return false; if(ta._cm_inited) return true;
-		var cm=window.CodeMirror.fromTextArea(ta,{mode:'javascript',lineNumbers:true,theme:themeName(),tabSize:2,indentUnit:2,smartIndent:true,matchBrackets:true,autoCloseBrackets:true});
+		var cm=window.CodeMirror.fromTextArea(ta, { mode:'javascript', lineNumbers:true, tabSize:2, indentUnit:2, smartIndent:true, matchBrackets:true, autoCloseBrackets:true });
 		ta._cm_inited=true;
 		var form=(ta.closest&&ta.closest('form'))||ta.form; if(form){ form.addEventListener('submit', function(){ if(cm&&cm.save) cm.save(); }); }
 		return true;
@@ -19,12 +15,10 @@
 	var CDN='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/';
 	var CDN2='https://cdn.jsdelivr.net/npm/codemirror@5.65.16/';
 	onReady(function(){
+		// Base structure CSS + local theme bridge CSS
 		loadCSS(CDN+'codemirror.min.css');
-		// theme CSS with fallback
-		var themeHref1 = CDN+'theme/'+themeCssCdn();
-		var themeHref2 = CDN2+themeCssCdn2();
-		var themeLink = document.createElement('link'); themeLink.rel='stylesheet'; themeLink.href=themeHref1; themeLink.onerror=function(){ themeLink.onerror=null; themeLink.href=themeHref2; }; document.head.appendChild(themeLink);
-		// scripts
+		loadCSS('/static/codemirror-theme.css');
+		// Scripts with fallback
 		loadScript(CDN+'codemirror.min.js')
 		.then(function(){ return loadScript(CDN+'addon/edit/matchbrackets.min.js'); })
 		.then(function(){ return loadScript(CDN+'addon/edit/closebrackets.min.js'); })
