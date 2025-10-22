@@ -1,11 +1,13 @@
-/* CodeMirror loader for Add-on editor */
+/* CodeMirror loader for Add-on editor (CDN version) */
 (function(){
 	function loadScript(src, cb){
 		var s=document.createElement('script');
-		s.src=src; s.onload=cb; document.head.appendChild(s);
+		s.src=src; s.async=true; s.onload=cb; s.onerror=function(){console.error('Failed to load', src);};
+		document.head.appendChild(s);
 	}
 	function loadCSS(href){
-		var l=document.createElement('link'); l.rel='stylesheet'; l.href=href; document.head.appendChild(l);
+		var l=document.createElement('link'); l.rel='stylesheet'; l.href=href; l.onerror=function(){console.error('Failed to load', href);};
+		document.head.appendChild(l);
 	}
 	function init(){
 		if (!window.CodeMirror) return;
@@ -19,18 +21,21 @@
 			indentUnit:2,
 			smartIndent:true,
 			matchBrackets:true,
-			autoCloseBrackets:true,
+			autoCloseBrackets:true
 		});
-		// Ensure textarea stays synced on form submit
-		var form=ta.closest('form');
-		if (form){
-			form.addEventListener('submit', function(){ cm.save(); });
-		}
+		var form=ta.closest && ta.closest('form');
+		if (form){ form.addEventListener('submit', function(){ cm.save(); }); }
 	}
-	// Load assets
-	loadCSS('/static/codemirror/codemirror.css');
-	loadCSS('/static/codemirror/theme/default.css');
-	loadScript('/static/codemirror/codemirror.js', function(){
-		loadScript('/static/codemirror/mode/javascript/javascript.js', init);
+	// CDN versions (CodeMirror 5.65.16 via cdnjs)
+	var baseCss='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/';
+	var baseJs='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/';
+	loadCSS(baseCss + 'codemirror.min.css');
+	loadCSS(baseCss + 'theme/default.min.css');
+	loadScript(baseJs + 'codemirror.min.js', function(){
+		loadScript(baseJs + 'addon/edit/matchbrackets.min.js', function(){
+			loadScript(baseJs + 'addon/edit/closebrackets.min.js', function(){
+				loadScript(baseJs + 'mode/javascript/javascript.min.js', init);
+			});
+		});
 	});
 })();
