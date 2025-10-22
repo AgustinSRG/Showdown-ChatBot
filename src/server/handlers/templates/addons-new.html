@@ -1,24 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>New Add-on</title>
-	<link rel="stylesheet" href="/static/style.css">
-	<link rel="stylesheet" href="/static/codemirror/codemirror.css">
-	<link rel="stylesheet" href="/static/codemirror/theme/default.css">
-</head>
-<body>
-	<p><a href="/addons/">Back to Add-ons list</a></p>
-	<form method="post" action="">
-		<p><strong>File (without ext):</strong>&nbsp;<input name="addon" type="text" style="width: 100%; max-width: 30ch;" /></p>
-		<p>Copy in the following textarea the full script file.</p>
-		<p><textarea id="textareacontent" name="content" style="width: 100%; max-width: 140ch;" rows="20">${CONTENT}</textarea></p>
-		<p><input type="submit" name="add" value="Install Add-on" /></p>
-	</form>
-	<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
-	<script src="/static/jquery-3.7.0.min.js"></script>
-	<script src="/static/codemirror/codemirror.js"></script>
-	<script src="/static/codemirror/mode/javascript/javascript.js"></script>
-	<script src="/static/addons-codemirror.js"></script>
-</body>
-</html>
+<p><a href="/addons/">Back to Add-ons list</a></p>
+<form method="post" action="">
+	<p><strong>File (without ext):</strong>&nbsp;<input name="addon" type="text" style="width: 100%; max-width: 30ch;" /></p>
+	<p>Copy in the following textarea the full script file.</p>
+	<p><textarea id="textareacontent" name="content" style="width: 100%; max-width: 140ch;" rows="20">${CONTENT}</textarea></p>
+	<p><input type="submit" name="add" value="Install Add-on" /></p>
+</form>
+<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
