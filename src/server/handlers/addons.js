@@ -16,10 +16,10 @@ const addonItemTemplate = new Template(Path.resolve(__dirname, 'templates', 'add
 const addingTemplate = new Template(Path.resolve(__dirname, 'templates', 'addons-new.html'));
 const editTemplate = new Template(Path.resolve(__dirname, 'templates', 'addons-edit.html'));
 
-// Common CodeMirror assets (CDN)
+// CodeMirror assets: structure CSS + local theme bridge
 const CM_STYLES = [
 	'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css',
-	'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/default.min.css',
+	'/static/codemirror-theme.css',
 ];
 const CM_SCRIPTS = [
 	'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js',
