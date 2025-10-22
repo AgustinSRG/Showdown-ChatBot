@@ -1,3 +1,17 @@
+<script type="text/javascript">
+	function editProvider(providerId) {
+		// Navigate to edit provider page or show edit form
+		window.location.href = '/ai-config/edit/' + encodeURIComponent(providerId);
+	}
+
+	function removeProvider(providerId) {
+		var elem = document.getElementById('confirm-' + providerId);
+		if (elem) {
+			elem.innerHTML = '<form style="display:inline;" method="post" action=""><input type="hidden" name="providerId" value="' + providerId + '" />Are you sure?&nbsp;<input type="submit" name="removeProvider" value="Remove Provider" /></form>';
+		}
+		return false;
+	}
+</script>
 <h2>AI Provider Configuration</h2>
 <p><strong>Configure AI API keys for battle and chat AI functionality</strong></p>
 
