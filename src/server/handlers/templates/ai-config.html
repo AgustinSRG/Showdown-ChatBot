@@ -1,12 +1,6 @@
 <h2>AI Provider Configuration</h2>
 <p><strong>Configure AI API keys for battle and chat AI functionality</strong></p>
 
-<p class="ai-privacy-note" style="margin: 10px 0;">
-	<strong>Privacy Notice:</strong>
-	API keys are encrypted and stored securely. Data sent to AI providers is subject to their privacy policies.
-	You can control what data is shared using the privacy settings below.
-</p>
-
 <div class="ai-config-section">
 	<div class="section maindiv">
 		<div class="page-content">
@@ -43,7 +37,7 @@
 			<h3>General Settings</h3>
 			<form method="post" action="">
 				<p>
-					<label><input type="checkbox" name="enabled" ${ENABLED_CHECKED} /> Enable AI Integration</label>
+					<input type="checkbox" name="enabled" ${ENABLED_CHECKED} />&nbsp;Enable AI Integration
 				</p>
 				<p>
 					<label>Default Provider:</label>
@@ -70,15 +64,15 @@
 			<h3>Privacy Settings</h3>
 			<form method="post" action="">
 				<p>
-					<label><input type="checkbox" name="sendBattleLogs" ${SEND_BATTLE_LOGS} /> Send battle logs to AI providers</label>
+					<input type="checkbox" name="sendBattleLogs" ${SEND_BATTLE_LOGS} />&nbsp;Send battle logs to AI providers
 				</p>
 				<p>
-					<label><input type="checkbox" name="sendUserMessages" ${SEND_USER_MESSAGES} /> Send user messages to AI providers</label>
+					<input type="checkbox" name="sendUserMessages" ${SEND_USER_MESSAGES} />&nbsp;Send user messages to AI providers
 				</p>
 				<p>
-					<label><input type="checkbox" name="anonymizeData" ${ANONYMIZE_DATA} /> Anonymize data before sending</label>
+					<input type="checkbox" name="anonymizeData" ${ANONYMIZE_DATA} />&nbsp;Anonymize data before sending
 				</p>
-				<p><input type="submit" name="updateSettings" value="Update Privacy Settings" /></p>
+				<p><input type="submit" name="updatePrivacy" value="Update Privacy Settings" /></p>
 			</form>
 		</div>
 	</div>
@@ -96,13 +90,3 @@
 </div>
 
 <p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
-
-<style>
-/* Remove template-local button styles, rely on globals */
-.providers-list { display: grid; gap: 10px; }
-.provider-item { padding: 15px; border: 1px solid var(--theme-main-div-border-color); border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
-label { display: inline-block; margin-bottom: 5px; font-weight: bold; color: var(--theme-text-color); }
-input[type="text"], input[type="password"], input[type="number"], select, textarea { padding: 8px; border: 1px solid var(--theme-input-border-color); border-radius: 3px; font-size: 14px; background: var(--theme-input-background); color: var(--theme-input-text-color); }
-input[type="checkbox"] { margin-right: 8px; }
-.ai-privacy-note { color: var(--theme-text-color); }
-</style>
