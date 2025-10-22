@@ -1,56 +1,29 @@
-/* AI Config specific tweaks - match module buttons and balanced contrast */
-.ai-config-section label,
-.ai-config-section .section-title,
-.ai-config-section .provider-item,
-.ai-config-section input,
-.ai-config-section select,
-.ai-config-section textarea {
-  color: var(--theme-text-color);
+/* Stronger specificity to override global button styles on AI Config page */
+.page-content .ai-config-section button,
+.page-content .ai-config-section input[type=button],
+.page-content .ai-config-section input[type=submit] {
+  border-radius: 5px !important;
+  font-family: Verdana, Helvetica, Arial, sans-serif !important;
+  text-align: center !important;
+  cursor: pointer !important;
+  font-size: 9pt !important;
+  padding: 3px 8px !important;
+  background: var(--theme-btn-background) !important;
+  box-shadow: var(--theme-btn-box-shadow) !important;
+  border-color: var(--theme-btn-border-color) !important;
+  text-shadow: var(--theme-btn-text-shadow) !important;
+  color: var(--theme-btn-text-color) !important;
 }
-
-/* Use global button variables to match other modules */
-.ai-config-section button,
-.ai-config-section input[type=button],
-.ai-config-section input[type=submit] {
-  border-radius: 5px;
-  font-family: Verdana, Helvetica, Arial, sans-serif;
-  text-align: center;
-  cursor: pointer;
-  font-size: 9pt;
-  padding: 3px 8px;
-  background: var(--theme-btn-background);
-  box-shadow: var(--theme-btn-box-shadow);
-  border-color: var(--theme-btn-border-color);
-  text-shadow: var(--theme-btn-text-shadow);
-  color: var(--theme-btn-text-color);
+.page-content .ai-config-section button:not(:disabled):hover,
+.page-content .ai-config-section input[type=button]:not(:disabled):hover,
+.page-content .ai-config-section input[type=submit]:not(:disabled):hover {
+  background: var(--theme-btn-hover-background) !important;
+  border-color: var(--theme-btn-hover-border) !important;
 }
-.ai-config-section button:not(:disabled):hover,
-.ai-config-section input[type=button]:not(:disabled):hover,
-.ai-config-section input[type=submit]:not(:disabled):hover {
-  background: var(--theme-btn-hover-background);
-  border-color: var(--theme-btn-hover-border);
-}
-.ai-config-section button:active,
-.ai-config-section input[type=button]:active,
-.ai-config-section input[type=submit]:active {
-  background: var(--theme-btn-active-background);
-  border-color: var(--theme-btn-active-border);
-  box-shadow: var(--theme-btn-active-box-shadow);
-}
-
-/* Provider status chips tuned for dark/light */
-.ai-status { font-size: 11px; padding: 2px 6px; border-radius: 10px; }
-.ai-status.error { background: rgba(255,0,0,.12); color: #ff8a8a; border: 1px solid rgba(255,0,0,.25); }
-.ai-status.success { background: rgba(0,200,0,.12); color: #8cff8c; border: 1px solid rgba(0,200,0,.25); }
-.ai-status.warning { background: rgba(255,200,0,.12); color: #ffd66b; border: 1px solid rgba(255,200,0,.25); }
-
-/* Section cards */
-.ai-card { border: 1px solid var(--theme-main-div-border-color); background: var(--theme-main-div-background); padding: 10px; border-radius: 6px; margin: 8px 0; }
-.ai-card h3 { margin: 0 0 6px 0; }
-
-/* Mobile widths */
-@media (max-width: 600px){
-  .ai-config-section input[type=text],
-  .ai-config-section input[type=number],
-  .ai-config-section select { width: 100%; max-width: 100%; }
+.page-content .ai-config-section button:active,
+.page-content .ai-config-section input[type=button]:active,
+.page-content .ai-config-section input[type=submit]:active {
+  background: var(--theme-btn-active-background) !important;
+  border-color: var(--theme-btn-active-border) !important;
+  box-shadow: var(--theme-btn-active-box-shadow) !important;
 }
