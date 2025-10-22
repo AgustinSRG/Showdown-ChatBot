@@ -1,54 +1,43 @@
-/* CodeMirror control panel theme bridge
-   Aligns editor colors with control panel CSS variables (light/dark)
-*/
-.CodeMirror {
-	background: var(--theme-input-background);
-	color: var(--theme-input-text-color);
-	border: 1px solid var(--theme-input-border-color);
-}
-.CodeMirror-focused {
-	outline: 1px solid var(--theme-input-border-color-focus);
-}
-.CodeMirror-gutters {
-	background: var(--theme-main-div-background);
-	border-right: 1px solid var(--theme-main-div-border-color);
-	color: var(--theme-input-text-color);
-}
-.CodeMirror-linenumber { color: var(--theme-input-text-color); opacity: 0.7; }
-.CodeMirror-cursor { border-left: 1px solid var(--theme-text-color); }
+/* CodeMirror control panel theme bridge (enforced) */
+/* Surface */
+.CodeMirror { background: var(--theme-input-background) !important; color: var(--theme-input-text-color) !important; border: 1px solid var(--theme-input-border-color) !important; }
+.CodeMirror-focused { outline: 1px solid var(--theme-input-border-color-focus) !important; }
+.CodeMirror-gutters { background: var(--theme-main-div-background) !important; border-right: 1px solid var(--theme-main-div-border-color) !important; color: var(--theme-input-text-color) !important; }
+.CodeMirror-linenumber { color: var(--theme-input-text-color) !important; opacity: 0.7; }
+.CodeMirror-cursor { border-left: 1px solid var(--theme-text-color) !important; }
 
 /* Selection */
-.CodeMirror ::selection { background: rgba(68,147,248,0.25); }
-.CodeMirror ::-moz-selection { background: rgba(68,147,248,0.25); }
-body.dark .CodeMirror ::selection { background: rgba(68,147,248,0.35); }
-body.dark .CodeMirror ::-moz-selection { background: rgba(68,147,248,0.35); }
+.CodeMirror ::selection { background: rgba(68,147,248,0.25) !important; }
+.CodeMirror ::-moz-selection { background: rgba(68,147,248,0.25) !important; }
+body.dark .CodeMirror ::selection { background: rgba(68,147,248,0.35) !important; }
+body.dark .CodeMirror ::-moz-selection { background: rgba(68,147,248,0.35) !important; }
 .CodeMirror-selected { background: rgba(68,147,248,0.20) !important; }
 body.dark .CodeMirror-selected { background: rgba(68,147,248,0.28) !important; }
 
 /* Matching brackets */
-.CodeMirror-matchingbracket { background: rgba(255,255,0,0.15); outline: 1px solid rgba(255,255,0,0.35); }
-.CodeMirror-nonmatchingbracket { background: rgba(255,0,0,0.15); outline: 1px solid rgba(255,0,0,0.35); }
+.CodeMirror-matchingbracket { background: rgba(255,255,0,0.15) !important; outline: 1px solid rgba(255,255,0,0.35) !important; }
+.CodeMirror-nonmatchingbracket { background: rgba(255,0,0,0.15) !important; outline: 1px solid rgba(255,0,0,0.35) !important; }
 
-/* Token colors tuned to variables */
-.cm-keyword, .cm-operator { color: var(--theme-menu-option-color-base); }
-.cm-variable, .cm-variable-2, .cm-property { color: var(--theme-text-color); }
-.cm-def { color: var(--theme-link-visited-color); }
-.cm-builtin { color: var(--theme-link-color); }
-.cm-string { color: #2a7a1b; }
-.cm-number { color: #b95e00; }
-.cm-atom { color: #8b2bb9; }
-.cm-comment { color: #6b7280; font-style: italic; }
-.cm-tag { color: var(--theme-link-color); }
-.cm-attribute { color: #b95e00; }
-.cm-qualifier { color: #8b2bb9; }
+/* Token colors */
+.cm-keyword, .cm-operator { color: var(--theme-menu-option-color-base) !important; }
+.cm-variable, .cm-variable-2, .cm-property { color: var(--theme-text-color) !important; }
+.cm-def { color: var(--theme-link-visited-color) !important; }
+.cm-builtin { color: var(--theme-link-color) !important; }
+.cm-string { color: #2a7a1b !important; }
+.cm-number { color: #b95e00 !important; }
+.cm-atom { color: #8b2bb9 !important; }
+.cm-comment { color: #6b7280 !important; font-style: italic; }
+.cm-tag { color: var(--theme-link-color) !important; }
+.cm-attribute { color: #b95e00 !important; }
+.cm-qualifier { color: #8b2bb9 !important; }
 
-/* Dark-specific fine-tuning */
-body.dark .cm-string { color: #91d76d; }
-body.dark .cm-number { color: #f7b955; }
-body.dark .cm-atom { color: #caa4ff; }
-body.dark .cm-comment { color: #9aa4b2; }
+/* Dark overrides */
+body.dark .cm-string { color: #91d76d !important; }
+body.dark .cm-number { color: #f7b955 !important; }
+body.dark .cm-atom { color: #caa4ff !important; }
+body.dark .cm-comment { color: #9aa4b2 !important; }
 
-/* Editor chrome */
-.CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler { background: var(--theme-main-div-background); }
-.CodeMirror-activeline-background { background: rgba(255,255,255,0.05); }
-body.light .CodeMirror-activeline-background { background: rgba(0,0,0,0.05); }
+/* Chrome */
+.CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler { background: var(--theme-main-div-background) !important; }
+.CodeMirror-activeline-background { background: rgba(255,255,255,0.05) !important; }
+body.light .CodeMirror-activeline-background { background: rgba(0,0,0,0.05) !important; }
