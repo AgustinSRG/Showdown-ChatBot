@@ -9,9 +9,23 @@
 		var cm=window.CodeMirror.fromTextArea(ta, {
 			mode:'javascript', lineNumbers:true, tabSize:2, indentUnit:2, smartIndent:true,
 			matchBrackets:true, autoCloseBrackets:true,
-			styleSelectedText:true, styleActiveLine:true
+			styleSelectedText:true, styleActiveLine:true,
+			keyMap:{
+				'Ctrl-A': function(cm){ cm.execCommand('selectAll'); },
+				'Cmd-A': function(cm){ cm.execCommand('selectAll'); }
+			}
 		});
 		ta._cm_inited=true;
+		// Ensure cut works across desktop/mobile keyboards
+		var cmEl = cm.getWrapperElement();
+		cmEl.addEventListener('cut', function(){
+			// Let the browser attempt the cut first
+			setTimeout(function(){
+				if (cm.somethingSelected()) { cm.replaceSelection(''); }
+				if (cm.save) cm.save();
+			}, 0);
+		});
+		// Sync on form submit
 		var form=(ta.closest&&ta.closest('form'))||ta.form; if(form){ form.addEventListener('submit', function(){ if(cm&&cm.save) cm.save(); }); }
 		return true;
 	}
