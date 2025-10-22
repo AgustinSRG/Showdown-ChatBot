@@ -1,50 +1,56 @@
-/* AI Config specific tweaks for readability and native buttons */
-/* Improve contrast for labels and content within .page-content on dark */
-.page-content .ai-config-section label,
-.page-content .ai-config-section .section-title,
-.page-content .ai-config-section .provider-item,
-.page-content .ai-config-section input,
-.page-content .ai-config-section select,
-.page-content .ai-config-section textarea {
-  color: var(--theme-text-color) !important;
+/* AI Config specific tweaks - match module buttons and balanced contrast */
+.ai-config-section label,
+.ai-config-section .section-title,
+.ai-config-section .provider-item,
+.ai-config-section input,
+.ai-config-section select,
+.ai-config-section textarea {
+  color: var(--theme-text-color);
 }
 
-/* Cards */
-.ai-card { border: 1px solid var(--theme-main-div-border-color); background: var(--theme-main-div-background); padding: 10px; border-radius: 6px; margin: 8px 0; }
-.ai-card h3 { margin-top: 0; }
+/* Use global button variables to match other modules */
+.ai-config-section button,
+.ai-config-section input[type=button],
+.ai-config-section input[type=submit] {
+  border-radius: 5px;
+  font-family: Verdana, Helvetica, Arial, sans-serif;
+  text-align: center;
+  cursor: pointer;
+  font-size: 9pt;
+  padding: 3px 8px;
+  background: var(--theme-btn-background);
+  box-shadow: var(--theme-btn-box-shadow);
+  border-color: var(--theme-btn-border-color);
+  text-shadow: var(--theme-btn-text-shadow);
+  color: var(--theme-btn-text-color);
+}
+.ai-config-section button:not(:disabled):hover,
+.ai-config-section input[type=button]:not(:disabled):hover,
+.ai-config-section input[type=submit]:not(:disabled):hover {
+  background: var(--theme-btn-hover-background);
+  border-color: var(--theme-btn-hover-border);
+}
+.ai-config-section button:active,
+.ai-config-section input[type=button]:active,
+.ai-config-section input[type=submit]:active {
+  background: var(--theme-btn-active-background);
+  border-color: var(--theme-btn-active-border);
+  box-shadow: var(--theme-btn-active-box-shadow);
+}
 
-/* Provider pill statuses */
+/* Provider status chips tuned for dark/light */
 .ai-status { font-size: 11px; padding: 2px 6px; border-radius: 10px; }
-.ai-status.error { background: rgba(255,0,0,.15); color: #ff8080; border: 1px solid rgba(255,0,0,.35); }
-.ai-status.success { background: rgba(0,200,0,.15); color: #8aff8a; border: 1px solid rgba(0,200,0,.35); }
-.ai-status.warning { background: rgba(255,200,0,.15); color: #ffd66b; border: 1px solid rgba(255,200,0,.35); }
+.ai-status.error { background: rgba(255,0,0,.12); color: #ff8a8a; border: 1px solid rgba(255,0,0,.25); }
+.ai-status.success { background: rgba(0,200,0,.12); color: #8cff8c; border: 1px solid rgba(0,200,0,.25); }
+.ai-status.warning { background: rgba(255,200,0,.12); color: #ffd66b; border: 1px solid rgba(255,200,0,.25); }
 
-/* Use native-looking buttons instead of the custom neumorphic ones */
-button,
-input[type=button],
-input[type=submit] {
-  appearance: button;
-  -webkit-appearance: button;
-  border-radius: 4px !important;
-  border: 1px solid var(--theme-btn-border-color) !important;
-  box-shadow: none !important;
-  background: var(--theme-btn-background) !important;
-  color: var(--theme-btn-text-color) !important;
-  padding: 6px 10px !important;
-}
-button:hover,
-input[type=button]:hover,
-input[type=submit]:hover { filter: brightness(1.05); }
-button:active,
-input[type=button]:active,
-input[type=submit]:active { filter: brightness(0.95); }
+/* Section cards */
+.ai-card { border: 1px solid var(--theme-main-div-border-color); background: var(--theme-main-div-background); padding: 10px; border-radius: 6px; margin: 8px 0; }
+.ai-card h3 { margin: 0 0 6px 0; }
 
-/* Inputs full-width on mobile for visibility */
+/* Mobile widths */
 @media (max-width: 600px){
   .ai-config-section input[type=text],
   .ai-config-section input[type=number],
-  .ai-config-section select {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
+  .ai-config-section select { width: 100%; max-width: 100%; }
 }
