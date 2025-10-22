@@ -35,6 +35,12 @@ exports.setup = function (App) {
 
 		let ok = null, error = null;
 
+		// Inject page-specific stylesheet for readability
+		const pageOptions = {
+			title: 'AI Configuration - Showdown ChatBot',
+			styles: ['/static/ai-config.css'],
+		};
+
 		// Handle form submissions
 		if (context.post.addProvider) {
 			const providerId = context.post.providerId;
@@ -123,19 +129,10 @@ exports.setup = function (App) {
 			htmlVars.send_user_messages = config.privacySettings.sendUserMessages ? 'checked' : '';
 			htmlVars.anonymize_data = config.privacySettings.anonymizeData ? 'checked' : '';
 
-			// Provider options for default selection
-			htmlVars.provider_options = '';
-			for (const [id, provider] of Object.entries(providers)) {
-				if (provider.configured) {
-					const selected = id === config.defaultProvider ? 'selected' : '';
-					htmlVars.provider_options += `<option value="${Text.escapeHTML(id)}" ${selected}>${Text.escapeHTML(provider.name)}</option>`;
-				}
-			}
-
 			htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 			htmlVars.request_msg = (ok ? ok : (error || ''));
 
-			context.endWithWebPage(mainTemplate.make(htmlVars), { title: 'AI Configuration - Showdown ChatBot' });
+			context.endWithWebPage(mainTemplate.make(htmlVars), pageOptions);
 		}
 	});
 };
