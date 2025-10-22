@@ -7,101 +7,101 @@
 	You can control what data is shared using the privacy settings below.
 </div>
 
-<div class="section">
-	<h3>Available Providers</h3>
-	<div class="providers-list">
-		${PROVIDERS_LIST}
+<div class="ai-config-section">
+	<div class="section ai-card">
+		<h3 class="section-title">Available Providers</h3>
+		<div class="providers-list">
+			${PROVIDERS_LIST}
+		</div>
 	</div>
-</div>
 
-<div class="section">
-	<h3>Add New Provider</h3>
-	<form method="post" action="">
-		<p>
-			<label>Provider:</label>
-			<select name="providerId" required>
-				<option value="">Select Provider</option>
-				<option value="openai">OpenAI (ChatGPT)</option>
-				<option value="gemini">Google Gemini</option>
-				<option value="anthropic">Anthropic Claude</option>
-			</select>
-		</p>
-		<p>
-			<label>API Key:</label>
-			<input type="password" name="apiKey" placeholder="Enter your API key" style="width: 100%; max-width: 400px;" required />
-		</p>
-		<p><input type="submit" name="addProvider" value="Add Provider" /></p>
-	</form>
-</div>
+	<div class="section ai-card">
+		<h3 class="section-title">Add New Provider</h3>
+		<form method="post" action="">
+			<p>
+				<label>Provider:</label>
+				<select name="providerId" required>
+					<option value="">Select Provider</option>
+					<option value="openai">OpenAI (ChatGPT)</option>
+					<option value="gemini">Google Gemini</option>
+					<option value="anthropic">Anthropic Claude</option>
+				</select>
+			</p>
+			<p>
+				<label>API Key:</label>
+				<input type="password" name="apiKey" placeholder="Enter your API key" style="width: 100%; max-width: 400px;" required />
+			</p>
+			<p><input type="submit" name="addProvider" value="Add Provider" /></p>
+		</form>
+	</div>
 
-<div class="section">
-	<h3>General Settings</h3>
-	<form method="post" action="">
-		<p>
-			<label><input type="checkbox" name="enabled" ${ENABLED_CHECKED} /> Enable AI Integration</label>
-		</p>
-		<p>
-			<label>Default Provider:</label>
-			<select name="defaultProvider">
-				<option value="">None</option>
-				${PROVIDER_OPTIONS}
-			</select>
-		</p>
-		<p>
-			<label>Daily Usage Limit:</label>
-			<input type="number" name="dailyLimit" value="${DAILY_LIMIT}" min="1" max="1000" />
-		</p>
-		<p>
-			<label>Hourly Usage Limit:</label>
-			<input type="number" name="hourlyLimit" value="${HOURLY_LIMIT}" min="1" max="100" />
-		</p>
-		<p><input type="submit" name="updateSettings" value="Update Settings" /></p>
-	</form>
-</div>
+	<div class="section ai-card">
+		<h3 class="section-title">General Settings</h3>
+		<form method="post" action="">
+			<p>
+				<label><input type="checkbox" name="enabled" ${ENABLED_CHECKED} /> Enable AI Integration</label>
+			</p>
+			<p>
+				<label>Default Provider:</label>
+				<select name="defaultProvider">
+					<option value="">None</option>
+					${PROVIDER_OPTIONS}
+				</select>
+			</p>
+			<p>
+				<label>Daily Usage Limit:</label>
+				<input type="number" name="dailyLimit" value="${DAILY_LIMIT}" min="1" max="1000" />
+			</p>
+			<p>
+				<label>Hourly Usage Limit:</label>
+				<input type="number" name="hourlyLimit" value="${HOURLY_LIMIT}" min="1" max="100" />
+			</p>
+			<p><input type="submit" name="updateSettings" value="Update Settings" /></p>
+		</form>
+	</div>
 
-<div class="section">
-	<h3>Privacy Settings</h3>
-	<form method="post" action="">
-		<p>
-			<label><input type="checkbox" name="sendBattleLogs" ${SEND_BATTLE_LOGS} /> Send battle logs to AI providers</label>
-		</p>
-		<p>
-			<label><input type="checkbox" name="sendUserMessages" ${SEND_USER_MESSAGES} /> Send user messages to AI providers</label>
-		</p>
-		<p>
-			<label><input type="checkbox" name="anonymizeData" ${ANONYMIZE_DATA} /> Anonymize data before sending</label>
-		</p>
-		<p><input type="submit" name="updateSettings" value="Update Privacy Settings" /></p>
-	</form>
-</div>
+	<div class="section ai-card">
+		<h3 class="section-title">Privacy Settings</h3>
+		<form method="post" action="">
+			<p>
+				<label><input type="checkbox" name="sendBattleLogs" ${SEND_BATTLE_LOGS} /> Send battle logs to AI providers</label>
+			</p>
+			<p>
+				<label><input type="checkbox" name="sendUserMessages" ${SEND_USER_MESSAGES} /> Send user messages to AI providers</label>
+			</p>
+			<p>
+				<label><input type="checkbox" name="anonymizeData" ${ANONYMIZE_DATA} /> Anonymize data before sending</label>
+			</p>
+			<p><input type="submit" name="updateSettings" value="Update Privacy Settings" /></p>
+		</form>
+	</div>
 
-<div class="section">
-	<h3>API Documentation Links</h3>
-	<ul>
-		<li><strong>OpenAI:</strong> <a href="https://platform.openai.com/api-keys" target="_blank">Get API Key</a> | <a href="https://platform.openai.com/docs" target="_blank">Documentation</a></li>
-		<li><strong>Google Gemini:</strong> <a href="https://makersuite.google.com/app/apikey" target="_blank">Get API Key</a> | <a href="https://ai.google.dev/docs" target="_blank">Documentation</a></li>
-		<li><strong>Anthropic:</strong> <a href="https://console.anthropic.com/" target="_blank">Get API Key</a> | <a href="https://docs.anthropic.com/" target="_blank">Documentation</a></li>
-	</ul>
+	<div class="section ai-card">
+		<h3 class="section-title">API Documentation Links</h3>
+		<ul>
+			<li><strong>OpenAI:</strong> <a href="https://platform.openai.com/api-keys" target="_blank">Get API Key</a> | <a href="https://platform.openai.com/docs" target="_blank">Documentation</a></li>
+			<li><strong>Google Gemini:</strong> <a href="https://makersuite.google.com/app/apikey" target="_blank">Get API Key</a> | <a href="https://ai.google.dev/docs" target="_blank">Documentation</a></li>
+			<li><strong>Anthropic:</strong> <a href="https://console.anthropic.com/" target="_blank">Get API Key</a> | <a href="https://docs.anthropic.com/" target="_blank">Documentation</a></li>
+		</ul>
+	</div>
 </div>
 
 <p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
 
 <style>
-.section { margin: 30px 0; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
-.section h3 { margin-top: 0; color: #333; }
+/* Removed custom submit button colors to use global defaults */
+.section { margin: 30px 0; padding: 20px; border: 1px solid var(--theme-main-div-border-color); border-radius: 5px; background: var(--theme-main-div-background); }
+.section h3 { margin-top: 0; color: var(--theme-text-color); }
 .providers-list { display: grid; gap: 10px; }
-.provider-item { padding: 15px; border: 1px solid #ddd; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
+.provider-item { padding: 15px; border: 1px solid var(--theme-main-div-border-color); border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
 .provider-status.success { color: #28a745; font-weight: bold; }
 .provider-status.warning { color: #ffc107; font-weight: bold; }
 .provider-status.error { color: #dc3545; font-weight: bold; }
-label { display: inline-block; margin-bottom: 5px; font-weight: bold; }
+label { display: inline-block; margin-bottom: 5px; font-weight: bold; color: var(--theme-text-color); }
 input[type="text"], input[type="password"], input[type="number"], select, textarea {
-	padding: 8px; border: 1px solid #ccc; border-radius: 3px; font-size: 14px;
+	padding: 8px; border: 1px solid var(--theme-input-border-color); border-radius: 3px; font-size: 14px; background: var(--theme-input-background); color: var(--theme-input-text-color);
 }
 input[type="checkbox"] { margin-right: 8px; }
-input[type="submit"] {
-	background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;
-}
-input[type="submit"]:hover { background: #0056b3; }
+/* Removed custom input[type=submit] overrides to allow global/module styles */
 .privacy-notice { font-size: 14px; }
 </style>
