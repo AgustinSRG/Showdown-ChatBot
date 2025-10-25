@@ -1,8 +1,12 @@
 <p><a href="/addons/">Back to Add-ons list</a></p>
 <form method="post" action="">
-	<p><strong>File (without ext):</strong>&nbsp;<input name="addon" type="text" style="width: 100%; max-width: 30ch;" /></p>
+	<p><strong>File (without ext):</strong>&nbsp;<input name="addon" type="text"
+			style="width: 100%; max-width: 30ch;" /></p>
 	<p>Copy in the following textarea the full script file.</p>
-	<p><textarea name="content" style="width: 100%; max-width: 140ch;" rows="20">${CONTENT}</textarea></p>
+	<div class="addons-editor-container"></div>
+	<p><textarea id="textareacontent" name="content" style="width: 100%; max-width: 140ch;"
+			rows="20">${CONTENT}</textarea></p>
 	<p><input type="submit" name="add" value="Install Add-on" /></p>
 </form>
 <p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
+<script src="/addons/code-mirror.js" async></script>

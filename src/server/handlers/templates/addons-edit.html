@@ -2,7 +2,10 @@
 <form method="post" action="">
 	<input type="hidden" name="addon" value="${FILE}" />
 	<p><strong>File: ${FILE}</strong></p>
-	<p><textarea id="textareacontent" name="content" style="width: 100%; max-width: 140ch;" rows="20">${CONTENT}</textarea></p>
+	<div class="addons-editor-container"></div>
+	<p><textarea id="textareacontent" name="content" style="width: 100%; max-width: 140ch;"
+			rows="20">${CONTENT}</textarea></p>
 	<p><input type="submit" name="edit" value="Save Changes" /></p>
 </form>
 <p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
+<script src="/addons/code-mirror.js" async></script>

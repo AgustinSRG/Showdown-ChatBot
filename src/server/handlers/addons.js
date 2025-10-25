@@ -10,6 +10,7 @@ const Path = require('path');
 const Text = Tools('text');
 const check = Tools('check');
 const Template = Tools('html-template');
+const CodeMirrorBundle = require("@asanrom/showdown-chatbot-codemirror");
 
 const listTemplate = new Template(Path.resolve(__dirname, 'templates', 'addons-list.html'));
 const addonItemTemplate = new Template(Path.resolve(__dirname, 'templates', 'addons-item.html'));
@@ -34,6 +35,10 @@ exports.setup = function (App) {
 			return;
 		} else if (parts[0] === 'edit') {
 			editAddonHandler(context, parts);
+			return;
+		} else if (parts[0] === 'code-mirror.js') {
+			const bundleFile = CodeMirrorBundle.getBundlePath();
+			context.endWithStaticFile(bundleFile, 31536000);
 			return;
 		}
 
@@ -106,7 +111,10 @@ exports.setup = function (App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(addingTemplate.make(htmlVars), { title: "New Add-on - Showdown ChatBot" });
+		context.endWithWebPage(addingTemplate.make(htmlVars), {
+			title: "New Add-on - Showdown ChatBot",
+			styles: ["/static/addons.css"],
+		});
 	}
 
 	function editAddonHandler(context, parts) {
@@ -157,6 +165,9 @@ exports.setup = function (App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(editTemplate.make(htmlVars), { title: "Add-ons - Showdown ChatBot" });
+		context.endWithWebPage(editTemplate.make(htmlVars), {
+			title: "Add-ons - Showdown ChatBot",
+			styles: ["/static/addons.css"],
+		});
 	}
 };

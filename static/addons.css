@@ -1,0 +1,11 @@
+/* Style for add-ons pages */
+
+.addons-editor-container {
+	max-height: 480px;
+	overflow: auto;
+}
+
+.cm-content,
+.cm-gutter {
+	min-height: 480px !important;
+}

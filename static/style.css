@@ -22,17 +22,17 @@
 	--light-theme-user-list-border-color: #BBCCDD;
 
 	--light-theme-btn-background: #e3e3e3;
-	--light-theme-btn-box-shadow: 0 1px 2px rgba(0,0,0,.2), inset 0 -1px 2px rgba(255,255,255,1);
+	--light-theme-btn-box-shadow: 0 1px 2px rgba(0, 0, 0, .2), inset 0 -1px 2px rgba(255, 255, 255, 1);
 	--light-theme-btn-border-color: #AAAAAA;
 	--light-theme-btn-text-shadow: 0 1px 0 white;
 	--light-theme-btn-text-color: #222222;
 
-	--light-theme-btn-hover-background: linear-gradient(to bottom,  #f2f2f2,  #b2b2b2);
+	--light-theme-btn-hover-background: linear-gradient(to bottom, #f2f2f2, #b2b2b2);
 	--light-theme-btn-hover-border: #606060;
 
-	--light-theme-btn-active-background: linear-gradient(to bottom,  #bfbfbf,  #f2f2f2);
+	--light-theme-btn-active-background: linear-gradient(to bottom, #bfbfbf, #f2f2f2);
 	--light-theme-btn-active-border: #AAAAAA;
-	--light-theme-btn-active-box-shadow: 0 1px 2px rgba(0,0,0,.2), inset 0 -1px 2px rgba(255,255,255,1);
+	--light-theme-btn-active-box-shadow: 0 1px 2px rgba(0, 0, 0, .2), inset 0 -1px 2px rgba(255, 255, 255, 1);
 
 	--light-theme-btn-disabled-opacity: 0.7;
 	--light-theme-btn-disabled-box-shadow: none;
@@ -493,4 +493,4 @@ select:disabled {
 
 .theme-select {
 	font-size: 9pt;
-	}
+}
