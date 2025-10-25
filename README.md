@@ -61,7 +61,7 @@ Here is a list of options you can include in the `command` section:
 - `-p [port]` - Changes the HTTP listening port of the control panel. Default: `8080`
 - `-b [address]` - Changes the listening address of the control panel.
 - `-d [path]` - Sets the path to store the configuration and data (default: `/bot`)
-- `-i [instance]` - Uses a named instance as configuration (will be sabed in the `instances`) folder. If this option is set, `-d` is ignored.
+- `-i [instance]` - Uses a named instance as configuration (will be saved in the `instances`) folder. If this option is set, `-d` is ignored.
 - `-sp [port]` - Changes the HTTPS listening port of the control panel. Default: `443`
 - `-k [ssl-key]` - Changes the path to the SSL key for HTTPS.
 - `-c [ssl-cert]` - Changes the path to the SSL certificate for HTTPS.
