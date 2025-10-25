@@ -51,6 +51,7 @@ exports.setup = function (App) {
 			let safetyThrottleExtraDelay = parseInt(context.post.extradelay);
 			let msgQueueMaxLength = parseInt(context.post.queuelen);
 			let reconnectDelay = parseInt(context.post.reconnectdelay);
+			let connectionMonitorCheckTime = parseInt(context.post.conmonitorchecktime);
 
 			try {
 				check(!isNaN(newPort), "Invalid port.");
@@ -60,6 +61,8 @@ exports.setup = function (App) {
 				check(!sslcertFile || FileSystem.existsSync(Path.resolve(App.appDir, sslcertFile)), "SSl certificate file was not found.");
 				check(!sslkeyFile || FileSystem.existsSync(Path.resolve(App.appDir, sslkeyFile)), "SSl key file was not found.");
 				check(!isNaN(reconnectDelay) && reconnectDelay > 0, "Invalid reconnection attempt delay.");
+				check(!isNaN(connectionMonitorCheckTime) && connectionMonitorCheckTime >= 0, "Invalid connection monitor interval.");
+				check(connectionMonitorCheckTime === 0 || connectionMonitorCheckTime > 10, "Connection monitor interval cannot be lower than 10 seconds.");
 			} catch (err) {
 				error = err.message;
 			}
@@ -93,10 +96,15 @@ exports.setup = function (App) {
 				App.config.disableuserdata = !!context.post.disableuserdata;
 				App.config.autoremoveuserdata = !!context.post.rmuserdata;
 				App.config.mainhtml = (context.post.mainhtml || '').trim();
+				const changedConnectionMonitorConfig = App.config.connmonitor.checktime !== connectionMonitorCheckTime;
+				App.config.connmonitor.checktime = connectionMonitorCheckTime;
 				App.saveConfig();
 				App.bot.accountType = App.config.bot.accountType;
 				App.bot.msgQueueMaxLength = App.config.bot.msgQueueMaxLength;
 				App.bot.safetyThrottleExtraDelay = App.config.bot.safetyThrottleExtraDelay;
+				if (changedConnectionMonitorConfig) {
+					App.connMonitor.start();
+				}
 				ok = "Changes made successfully.";
 				App.logServerAction(context.user.id, 'Administration options were edited');
 			}
@@ -124,6 +132,7 @@ exports.setup = function (App) {
 		htmlVars.rmuserdata = (App.config.autoremoveuserdata ? 'checked="checked"' : '');
 		htmlVars.mainhtml = Text.escapeHTML(App.config.mainhtml || '');
 		htmlVars.reconnectdelay = Text.escapeHTML(Math.floor(App.config.bot.retrydelay / 1000));
+		htmlVars.conmonitorchecktime = Text.escapeHTML(App.config.connmonitor.checktime);
 
 		htmlVars.ac_type_select = getAccountTypeSelect();
 

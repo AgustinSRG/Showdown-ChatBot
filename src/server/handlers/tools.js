@@ -20,7 +20,6 @@ const clearUsersTemplate = new Template(Path.resolve(__dirname, 'templates', 'to
 const hotpatchTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-hotpatch.html'));
 const dowloadDataTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-ddata.html'));
 const cacheTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-cache.html'));
-const monitorTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-monitor.html'));
 const backupsTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-backups.html'));
 const evalTemplate = new Template(Path.resolve(__dirname, 'templates', 'tool-eval.html'));
 
@@ -44,7 +43,6 @@ exports.setup = function (App) {
 			{ id: 'hotpatch', title: 'Hotpatch', url: '/tools/hotpatch/', handler: toolHotpatch },
 			{ id: 'ddata', title: 'Reload&nbsp;Data', url: '/tools/ddata/', handler: toolDownloadData },
 			{ id: 'cache', title: 'Clear&nbsp;Cache', url: '/tools/cache/', handler: toolClearCache },
-			{ id: 'cnnmonitor', title: 'Connection&nbsp;Monitor', url: '/tools/cnnmonitor/', handler: toolConnectionMonitor },
 			{ id: 'backups', title: 'Backups', url: '/tools/backups/', handler: toolBackups },
 			{ id: 'eval', title: 'Eval&nbsp;(JavaScript)', url: '/tools/eval/', handler: toolEval },
 		], 'getserver');
@@ -275,43 +273,6 @@ exports.setup = function (App) {
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
 		html += clearUsersTemplate.make(htmlVars);
-
-		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot" });
-	}
-
-	function toolConnectionMonitor(context, html, parts) {
-		let ok = null, error = null;
-		if (context.post.edit) {
-			let checktime = parseInt(context.post.interv);
-			if (!isNaN(checktime) && checktime > 10) {
-				App.config.connmonitor.checktime = checktime;
-				App.config.connmonitor.room = Text.toRoomid(context.post.room);
-				App.config.connmonitor.msg = Text.trim(context.post.cmd);
-				App.config.connmonitor.enabled = !!context.post.enabled;
-				if (App.config.connmonitor.enabled) {
-					App.connMonitor.start();
-				} else {
-					App.connMonitor.stop();
-				}
-				App.saveConfig();
-				App.logServerAction(context.user.id, 'Edit connection monitor configuration');
-				ok = "Connection monitor configuration saved.";
-			} else {
-				error = "Invalid time interval.";
-			}
-		}
-
-		let htmlVars = Object.create(null);
-
-		htmlVars.interv = Text.escapeHTML(App.config.connmonitor.checktime);
-		htmlVars.room = Text.escapeHTML(App.config.connmonitor.room);
-		htmlVars.cmd = Text.escapeHTML(App.config.connmonitor.msg);
-		htmlVars.enabled = (App.config.connmonitor.enabled ? ' checked="checked"' : '');
-
-		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
-		htmlVars.request_msg = (ok ? ok : (error || ""));
-
-		html += monitorTemplate.make(htmlVars);
 
 		context.endWithWebPage(html, { title: "Develoment Tools - Showdown ChatBot" });
 	}

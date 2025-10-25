@@ -9,6 +9,8 @@
 
 'use strict';
 
+const Text = Tools('text');
+
 class ConnectionMonitor {
 	constructor(App) {
 		this.app = App;
@@ -16,10 +18,7 @@ class ConnectionMonitor {
 		this.lastReceived = Date.now();
 		if (!App.config.connmonitor) {
 			App.config.connmonitor = {
-				enabled: false,
-				checktime: 10,
-				room: 'lobby',
-				msg: '/lagtest',
+				checktime: 30,
 			};
 		}
 		App.bot.on('connect', function () {
@@ -38,7 +37,7 @@ class ConnectionMonitor {
 			clearInterval(this.timer);
 			this.timer = null;
 		}
-		if (!this.app.config.connmonitor.enabled) return;
+		if (!this.app.config.connmonitor.checktime || this.app.config.connmonitor.checktime < 0) return;
 		this.timer = setInterval(function () {
 			this.check();
 		}.bind(this), this.app.config.connmonitor.checktime * 1000);
@@ -49,11 +48,11 @@ class ConnectionMonitor {
 		let limit = this.app.config.connmonitor.checktime;
 		let noMessage = Math.round((Date.now() - this.lastReceived) / 1000);
 		if (noMessage >= (limit * 2)) {
-			this.app.log("[MONITOR] Still no response. Restarting the bot...");
+			this.app.log("[CONNECTION MONITOR] Still no response. Restarting the bot...");
 			this.app.restartBot();
 		} else if (noMessage >= limit) {
-			this.app.log("[MONITOR] No message received during " + noMessage + " seconds. Sending a test message.");
-			this.app.bot.sendTo(this.app.config.connmonitor.room, this.app.config.connmonitor.msg);
+			this.app.log("[CONNECTION MONITOR] No message received during " + noMessage + " seconds. Sending a test message.");
+			this.app.bot.send(["|/cmd userdetails " + Text.toId(this.app.bot.getBotNick())]);
 		}
 	}
 

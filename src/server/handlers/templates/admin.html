@@ -9,7 +9,8 @@
 	}
 </script>
 <h2>Administration Options</h2>
-<p>Note: Changes here require an application restart to be effective. In order to do it, use the <b>Exit Process</b> button at the bottom of this page.</p>
+<p>Note: Changes here require an application restart to be effective. In order to do it, use the <b>Exit Process</b>
+	button at the bottom of this page.</p>
 <form method="post" action="">
 	<h3>Control panel settings</h3>
 	<table border="0">
@@ -43,14 +44,17 @@
 		</tr>
 	</table>
 
-	<p><input type="checkbox" name="useproxy" value="true" ${USEPROXY} />&nbsp;Check this option if you are using a reverse proxy (like NGINX) for your control panel.</p>
+	<p><input type="checkbox" name="useproxy" value="true" ${USEPROXY} />&nbsp;Check this option if you are using a
+		reverse proxy (like NGINX) for your control panel.</p>
 
-	<p><textarea id="textareamainhtml" name="mainhtml" style="width: 100%; max-width: 80ch;" rows="4" placeholder="Custom HTML for main page. Leave this blank for default page.">${MAINHTML}</textarea></p>
+	<p><textarea id="textareamainhtml" name="mainhtml" style="width: 100%; max-width: 80ch;" rows="4"
+			placeholder="Custom HTML for main page. Leave this blank for default page.">${MAINHTML}</textarea></p>
 
 	<h3>Message sending settings</h3>
 
 	<p>
-		<strong>Maximum size for chat messages</strong>: <input type="number" step="1" name="maxmsglen" value="${MAXMSGLEN}" /><br>
+		<strong>Maximum size for chat messages</strong>: <input type="number" step="1" name="maxmsglen"
+			value="${MAXMSGLEN}" /><br>
 		<span>Normally, it is <b>300</b> characters, but server administrators can bypass this limit.</span>
 	</p>
 
@@ -64,38 +68,59 @@
 	</p>
 
 	<p>
-		<strong>Extra delay (milliseconds)</strong>: <input type="number" step="1" name="extradelay" value="${EXTRA_DELAY}" /><br>
+		<strong>Extra delay (milliseconds)</strong>: <input type="number" step="1" name="extradelay"
+			value="${EXTRA_DELAY}" /><br>
 		<span>
-			Extra delay when scheduling message sending past the speed limit, to ensure no messages are throttled by the server. <br>
+			Extra delay when scheduling message sending past the speed limit, to ensure no messages are throttled by the
+			server. <br>
 			Recommended to be set at <b>50</b> milliseconds. Increase it if you notice lost messages.
 		</span>
 	</p>
 
 	<p>
-		<strong>Max size of message queue</strong>: <input type="number" step="1" name="queuelen" value="${QUEUE_LEN}" /><br>
-		<span>Max number of messages to keep in queue if they cannot be sent due to the limit in message sending speed.</span>
+		<strong>Max size of message queue</strong>: <input type="number" step="1" name="queuelen"
+			value="${QUEUE_LEN}" /><br>
+		<span>Max number of messages to keep in queue if they cannot be sent due to the limit in message sending
+			speed.</span>
 	</p>
 
 	<h3>Other settings</h3>
 
 	<p>
-		<strong>Pokemon Showdown Login Server</strong>: <input type="text" style="width: 100%; max-width: 40ch;" name="loginserv" value="${LOGINSERV}" /><br>
+		<strong>Pokemon Showdown Login Server</strong>: <input type="text" style="width: 100%; max-width: 40ch;"
+			name="loginserv" value="${LOGINSERV}" /><br>
 		<span>Note: Leave it to <b>play.pokemonshowdown.com</b> unless you are using a custom login server.</span>
 	</p>
 
 	<p>
-		<strong>Reconnection attempt delay (seconds)</strong>: <input type="number" step="1" style="width: 100%; max-width: 40ch;" name="reconnectdelay" value="${RECONNECTDELAY}" /><br>
+		<strong>Reconnection attempt delay (seconds)</strong>: <input type="number" step="1"
+			style="width: 100%; max-width: 40ch;" name="reconnectdelay" value="${RECONNECTDELAY}" /><br>
 		<span>
-			When the bot is started, and disconnects for any reason (server restart, network error), it will try to reconnect after a set delay. <br />
+			When the bot is started, and disconnects for any reason (server restart, network error), it will try to
+			reconnect after a set delay. <br />
 			Keep it low (5-10 seconds), so the bot won't take much time to reconnect back after a disconnection.
 		</span>
 	</p>
 
-	<p><input type="checkbox" name="debugmode" value="true" ${DEBUGMODE} />&nbsp;Enable debug mode (increases the amount of logs and enables eval commands, for development purposes).</p>
+	<p>
+		<strong>Connection monitor interval (seconds)</strong>: <input type="number" step="1"
+			style="width: 100%; max-width: 40ch;" name="conmonitorchecktime" value="${CONMONITORCHECKTIME}" /><br>
+		<span>
+			The connection monitor will periodically check for ghost connections, and restart the bot if they are
+			detected. <br />
+			Recommended value: 30 seconds. You can set it to 0 in order to disable it.
+		</span>
+	</p>
 
-	<p><input type="checkbox" name="blockautodownload" value="true" ${BLOCKAUTODOWNLOAD} />&nbsp;Block automated data downloads (reduces bandwidth, but downloaded data like the Pokedex won't be automatically updated).</p>
-	<p><input type="checkbox" name="disableuserdata" value="true" ${DISABLEUSERDATA} />&nbsp;Disable collecting user data (reduces storage usage, but disables alts and seen commands).</p>
-	<p><input type="checkbox" name="rmuserdata" value="true" ${RMUSERDATA} />&nbsp;Remove User-Data on connection reset (reduces storage usage, but alts and seen commands won't remember anything before the last bot restart).</p>
+	<p><input type="checkbox" name="debugmode" value="true" ${DEBUGMODE} />&nbsp;Enable debug mode (increases the amount
+		of logs and enables eval commands, for development purposes).</p>
+
+	<p><input type="checkbox" name="blockautodownload" value="true" ${BLOCKAUTODOWNLOAD} />&nbsp;Block automated data
+		downloads (reduces bandwidth, but downloaded data like the Pokedex won't be automatically updated).</p>
+	<p><input type="checkbox" name="disableuserdata" value="true" ${DISABLEUSERDATA} />&nbsp;Disable collecting user
+		data (reduces storage usage, but disables alts and seen commands).</p>
+	<p><input type="checkbox" name="rmuserdata" value="true" ${RMUSERDATA} />&nbsp;Remove User-Data on connection reset
+		(reduces storage usage, but alts and seen commands won't remember anything before the last bot restart).</p>
 
 	<p><input type="submit" name="savechanges" value="Save Changes" /></p>
 </form>
