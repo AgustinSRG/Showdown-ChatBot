@@ -336,7 +336,8 @@ class Bot {
 				str += chunk;
 			});
 			res.on('end', function () {
-				if (str === ';') {
+				str = str.toLowerCase();
+				if (str === ';' || str.includes('wrong password')) {
 					this.events.emit('renamefailure', 'wrongpassword', nick, pass);
 					return;
 				}
