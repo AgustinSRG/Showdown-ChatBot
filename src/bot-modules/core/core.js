@@ -34,6 +34,8 @@ function setup(App) {
 	let manager = CoreMod.manager = new RoomManager(Path.resolve(App.confDir, 'rooms/'));
 	CoreMod.loginTimer = null;
 
+	CoreMod.wrongPassword = false;
+
 	function execInitCmds() {
 		let cmds = [];
 		for (let mod in App.modules) {
@@ -157,11 +159,14 @@ function setup(App) {
 			// Join configured rooms
 			runFirstLogin();
 		}
+		if (named) {
+			CoreMod.wrongPassword = false;
+		}
 		lastLogin.nick = nick;
 		lastLogin.named = named;
 	});
 
-	App.bot.on('renamefailure', err => {
+	App.bot.on('renamefailure', (err, _nick, _pass, exception) => {
 		if (lastLogin.named) return;
 		if (!App.bot.isConnected()) return;
 		if (CoreMod.loginTimer) {
@@ -171,9 +176,11 @@ function setup(App) {
 		if (err === 'wrongpassword') {
 			App.logToConsole("Login Error: Wrong password.");
 			App.log("[Bot Core] Login Error: Wrong password.");
+			CoreMod.wrongPassword = true;
 		} else if (App.config.modules.core.nick) {
-			App.logToConsole("Login Error: Heavy Load / Connection error. Retrying in 5 seconds");
-			App.log("[Bot Core] Login Error: Heavy Load / Connection error. Retrying in 5 seconds");
+			let errDetails = err + (exception ? (typeof exception === "string" ? (": " + exception) : (": " + exception.message)) : "");
+			App.logToConsole("Login Error: Heavy Load / Connection error (" + errDetails + "). Retrying in 5 seconds");
+			App.log("[Bot Core] Login Error: Heavy Load / Connection error (" + errDetails + "). Retrying in 5 seconds");
 			App.bot.retryRename(5000, App.config.modules.core.nick, App.config.modules.core.pass);
 			setLoginTimer(35 * 1000);
 		}

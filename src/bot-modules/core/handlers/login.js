@@ -15,6 +15,24 @@ function setup(App) {
 	/* Menu Options */
 	App.server.setMenuOption('botlogin', 'Bot&nbsp;Login', '/botlogin/', 'core', 1);
 
+
+	function serveLoginConfigPage(context, ok, error) {
+		const CoreMod = App.modules.core.system;
+
+		let htmlVars = Object.create(null);
+
+		htmlVars.nick = Text.escapeHTML(App.config.modules.core.nick || '-');
+		htmlVars.pass = (App.config.modules.core.pass ? 'Yes' : 'No');
+		htmlVars.nick_fail = Text.escapeHTML(context.post.nick || '');
+
+		htmlVars.wrong_password = CoreMod.wrongPassword ? "(Wrong password)" : "";
+
+		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
+		htmlVars.request_msg = (ok ? ok : (error || ""));
+
+		context.endWithWebPage(mainTemplate.make(htmlVars), { title: "Bot Login - Showdown ChatBot" });
+	}
+
 	/* Handlers */
 	App.server.setHandler('botlogin', (context, parts) => {
 		if (!context.user || !context.user.can('core')) {
@@ -41,23 +59,22 @@ function setup(App) {
 				App.logServerAction(context.user.id, 'Edit Bot Login details (Core Module)');
 
 				if (App.bot.isConnected()) {
-					App.bot.rename(nick, pass);
+					App.bot.rename(nick, pass, function (success, err) {
+						if (success) {
+							ok = "Bot login details have been set successfully";
+						} else {
+							error = "Bot login details seem incorrect: " + Text.escapeHTML(err);
+						}
+						serveLoginConfigPage(context, ok, error);
+					});
+					return;
 				}
 
 				ok = "Bot login details have been set successfully. Restart the bot to make them effective.";
 			}
 		}
 
-		let htmlVars = Object.create(null);
-
-		htmlVars.nick = Text.escapeHTML(App.config.modules.core.nick || '-');
-		htmlVars.pass = (App.config.modules.core.pass ? 'Yes' : 'No');
-		htmlVars.nick_fail = Text.escapeHTML(context.post.nick || '');
-
-		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
-		htmlVars.request_msg = (ok ? ok : (error || ""));
-
-		context.endWithWebPage(mainTemplate.make(htmlVars), { title: "Bot Login - Showdown ChatBot" });
+		serveLoginConfigPage(context, ok, error);
 	});
 }
 

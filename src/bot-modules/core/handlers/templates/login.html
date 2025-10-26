@@ -6,7 +6,7 @@
 	</tr>
 	<tr>
 		<td><strong>Password</strong>: </td>
-		<td>${PASS}</td>
+		<td>${PASS} <span class="error-msg">${WRONG_PASSWORD}</span></td>
 	</tr>
 </table>
 <br />
@@ -14,18 +14,24 @@
 	<table border="0">
 		<tr>
 			<td>Bot Nickname: </td>
-			<td><input name="nick" type="text" style="width: 100%; max-width: 30ch;" maxlength="20" value="${NICK_FAIL}" /></td>
+			<td><input name="nick" type="text" style="width: 100%; max-width: 30ch;" maxlength="20"
+					value="${NICK_FAIL}" /></td>
 			<td></td>
 		</tr>
 		<tr>
 			<td>Password:</td>
 			<td><input id="bot_password" name="pass" type="password" style="width: 100%; max-width: 30ch;" /></td>
-			<td><a href="javascript:;" style="font-size: small;" id="bot_password_toggle" onclick="togglePasswordVisibility('bot_password', 'bot_password_toggle')">Show&nbsp;password</a></td>
+			<td><a href="javascript:;" style="font-size: small;" id="bot_password_toggle"
+					onclick="togglePasswordVisibility('bot_password', 'bot_password_toggle')">Show&nbsp;password</a>
+			</td>
 		</tr>
 		<tr>
 			<td>Password (confirm):</td>
-			<td><input id="bot_password_confirm" name="passconfirm" type="password" style="width: 100%; max-width: 30ch;" /></td>
-			<td><a href="javascript:;" style="font-size: small;" id="bot_password_confirm_toggle" onclick="togglePasswordVisibility('bot_password_confirm', 'bot_password_confirm_toggle')">Show&nbsp;password</a></td>
+			<td><input id="bot_password_confirm" name="passconfirm" type="password"
+					style="width: 100%; max-width: 30ch;" /></td>
+			<td><a href="javascript:;" style="font-size: small;" id="bot_password_confirm_toggle"
+					onclick="togglePasswordVisibility('bot_password_confirm', 'bot_password_confirm_toggle')">Show&nbsp;password</a>
+			</td>
 		</tr>
 	</table>
 	<p><input type="submit" name="setlogin" value="Set Credentials" /></p>

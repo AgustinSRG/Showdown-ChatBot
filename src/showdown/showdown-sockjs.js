@@ -297,10 +297,14 @@ class Bot {
 	 * @param {String} nick
 	 * @param {String} pass - Passowrd if needed
 	 * @param {funtion(String)} callback - Gets the access token
+	 * @param {funtion(String)} errorCallback - Gets the error
 	 */
-	getRename(nick, pass, callback) {
+	getRename(nick, pass, callback, errorCallback) {
 		if (!this.status.challstr) {
 			this.events.emit('renamefailure', 'nochallstr', nick, pass);
+			if (errorCallback && typeof errorCallback === "function") {
+				errorCallback("No Login Server Challenge");
+			}
 			return;
 		}
 
@@ -339,14 +343,23 @@ class Bot {
 				str = str.toLowerCase();
 				if (str === ';' || str.includes('wrong password')) {
 					this.events.emit('renamefailure', 'wrongpassword', nick, pass);
+					if (errorCallback && typeof errorCallback === "function") {
+						errorCallback("Wrong Password");
+					}
 					return;
 				}
 				if (str.length < 50) {
 					this.events.emit('renamefailure', 'servererror', nick, pass);
+					if (errorCallback && typeof errorCallback === "function") {
+						errorCallback("Login Server Error");
+					}
 					return;
 				}
 				if (str.includes('heavy load')) {
 					this.events.emit('renamefailure', 'heavyload', nick, pass);
+					if (errorCallback && typeof errorCallback === "function") {
+						errorCallback("Heavy Load");
+					}
 					return;
 				}
 				try {
@@ -355,6 +368,9 @@ class Bot {
 						str = str.assertion;
 					} else {
 						this.events.emit('renamefailure', 'unknown', nick, pass, JSON.stringify(str));
+						if (errorCallback && typeof errorCallback === "function") {
+							errorCallback("Unknown Error");
+						}
 						return;
 					}
 				} catch (e) { }
@@ -364,6 +380,9 @@ class Bot {
 
 		req.on('error', function (err) {
 			this.events.emit('renamefailure', 'request', nick, pass, err);
+			if (errorCallback && typeof errorCallback === "function") {
+				errorCallback("request: " + err.message);
+			}
 		}.bind(this));
 
 		if (data) {
@@ -375,17 +394,33 @@ class Bot {
 
 	/**
 	 * @param {String} nick
-	 * @param {String} pass - Passowrd if needed
+	 * @param {String} pass - Password if needed
+	 * @param {function(boolean)} - Callback
 	 */
-	rename(nick, pass) {
+	rename(nick, pass, callback) {
 		if (Text.toId(this.status.nick) === Text.toId(nick)) {
 			this.sendToGlobal('/trn ' + nick);
+			if (callback && typeof callback === "function") {
+				return callback(true);
+			}
 		} else {
 			this.getRename(nick, pass, function (token) {
 				if (token) {
 					this.sendToGlobal('/trn ' + nick + ',0,' + token);
+					if (callback && typeof callback === "function") {
+						return callback(true);
+					}
+				} else {
+					this.events.emit('renamefailure', 'empty-token', nick, pass);
+					if (callback && typeof callback === "function") {
+						return callback(false, "Empty Login Token");
+					}
 				}
-			}.bind(this));
+			}.bind(this), function (err) {
+				if (callback && typeof callback === "function") {
+					return callback(false, err);
+				}
+			});
 		}
 	}
 
