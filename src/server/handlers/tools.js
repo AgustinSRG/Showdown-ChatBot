@@ -99,9 +99,17 @@ exports.setup = function (App) {
 			let result = '';
 			if (context.post.botuser) {
 				if (App.bot.isConnected()) {
-					App.bot.rename(context.post.botuser, context.post.botpass);
 					App.logServerAction(context.user.id, "Tool Bot-Login used. Bot Username: " + context.post.botuser);
-					result += '<p style="padding:5px;"><span class="ok-msg">Login request successfully sent.</span></p>';
+					App.bot.rename(context.post.botuser, context.post.botpass, function (success, err) {
+						if (success) {
+							result += '<p style="padding:5px;"><span class="ok-msg">Login successful.</span></p>';
+						} else {
+							result += '<p style="padding:5px;"><span class="error-msg">Error: ' + Text.escapeHTML(err) + '</span></p>';
+						}
+
+						return context.endWithText(result);
+					});
+					return;
 				} else {
 					result += '<p style="padding:5px;"><span class="error-msg">Error: The bot is not connected.</span></p>';
 				}
