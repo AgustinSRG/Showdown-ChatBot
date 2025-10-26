@@ -112,7 +112,8 @@ class ChatBotApp {
 		if (!this.config.bot) {
 			this.config.bot = {
 				server: "",
-				port: Default_Server_Port,
+				port: "443",
+				secure: true,
 				loginserv: Default_Login_Server,
 				serverid: "showdown",
 				retrydelay: (5 * 1000),
