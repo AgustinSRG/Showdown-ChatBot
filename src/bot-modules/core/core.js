@@ -86,6 +86,10 @@ function setup(App) {
 	}
 
 	function setLoginTimer(time) {
+		if (CoreMod.loginTimer) {
+			clearTimeout(CoreMod.loginTimer);
+			CoreMod.loginTimer = null;
+		}
 		CoreMod.loginTimer = setTimeout(() => {
 			CoreMod.loginTimer = null;
 			App.logToConsole("Login Timeout. Retrying in 5 seconds");
@@ -128,6 +132,11 @@ function setup(App) {
 		runFirstLogin(rooms);
 	});
 
+	App.bot.on('connect', () => {
+		lastLogin.nick = '';
+		lastLogin.named = false;
+	});
+
 	App.bot.on('updateuser', (nick, named) => {
 		if (named && CoreMod.loginTimer) {
 			clearTimeout(CoreMod.loginTimer);
@@ -135,10 +144,17 @@ function setup(App) {
 		}
 		App.logToConsole('Nick Changed: ' + nick);
 		App.log('[Bot Core] Nick Changed: ' + nick);
-		if (!lastLogin.named && named && (App.config.modules.core.joinall || App.config.modules.core.joinofficial)) {
+		if (lastLogin.named && !named && App.config.modules.core.nick) {
+			// Bot ran /logout, try to log back in
+			App.logToConsole('Logging into ' + App.config.modules.core.nick + '...');
+			setLoginTimer(30 * 1000);
+			App.bot.rename(App.config.modules.core.nick, App.config.modules.core.pass);
+		} else if (!lastLogin.named && named && (App.config.modules.core.joinall || App.config.modules.core.joinofficial)) {
+			// Join all rooms (use query)
 			CoreMod.waitingQueryResponse = true;
 			App.bot.send(["|/cmd rooms"]);
 		} else if (!lastLogin.named && named) {
+			// Join configured rooms
 			runFirstLogin();
 		}
 		lastLogin.nick = nick;
