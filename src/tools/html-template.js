@@ -15,27 +15,27 @@ class HTMLTemplate {
 	 */
 	constructor(file) {
 		this.file = file;
-		this.html = FileSystem.readFileSync(file).toString().replace(/[\n\t]/g, '');
+		this.html = FileSystem.readFileSync(file).toString();
 	}
 
 	/**
 	 * Creates html using this template
 	 * @param {Object} vars
-	 * @retuns {String}
+	 * @returns {String}
 	 */
-	 make(vars) {
+	make(vars) {
 		return this.html.replace(/\$\{[a-z0-9_]+\}/gi, key => {
 			return ('' + vars[(key.toLowerCase().replace(/[^a-z0-9_]/g, ''))]);
 		});
-	 }
+	}
 
-	 /**
-	  * Returns the html file content
-	  * @returns {String}
-	  */
-	  get() {
-		  return this.html;
-	  }
+	/**
+	 * Returns the html file content
+	 * @returns {String}
+	 */
+	get() {
+		return this.html;
+	}
 }
 
 module.exports = HTMLTemplate;
