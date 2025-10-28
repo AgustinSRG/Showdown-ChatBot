@@ -3,26 +3,54 @@
 		return text.replace(/[\"&<>]/g, function (a) { return { '"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;' }[a]; });
 	}
 	var req = null;
-	function updateBotStatus() {
-		if (req) { try { req.abort() } catch (err) { } req = null; }
+	function updateBotStatus(manual) {
+		if (req) {
+			if (manual) {
+				try {
+					req.abort();
+				} catch (ex) { }
+				req = null;
+			} else {
+				return;
+			}
+		}
 		var rp = document.getElementById('refresh-progress');
-		rp.innerHTML = "&nbsp;";
+		if (manual) {
+			rp.innerHTML = "&nbsp;";
+		}
+
+		var oldConnectionTime = parseInt(document.getElementById('bot-conntime').value);
+
 		req = $.get('/bot/?getbotstatus=' + Date.now(), function (data) {
+			req = null;
 			try {
 				data = JSON.parse(data);
 				document.getElementById('bot-connection').innerHTML = data.con;
-				document.getElementById('bot-conntime').innerHTML = data.ctime;
+				document.getElementById('bot-conntime').value = data.ctime + "";
 				document.getElementById('bot-nick').innerHTML = data.nick;
 				document.getElementById('bot-rooms').innerHTML = escapeHtml(data.rooms.join(', '));
 				document.getElementById('bot-battles').innerHTML = escapeHtml(data.battles.join(', '));
-				rp.innerHTML = '&nbsp;';
+				if (manual) {
+					rp.innerHTML = '&nbsp;';
+				}
 			} catch (err) {
+				console.error(err);
+				if (manual) {
+					rp.innerHTML = '<small><span class="error-msg">Refresh failure</span></small>';
+				}
+			}
+
+			if (!oldConnectionTime || parseInt(document.getElementById('bot-conntime').value) < oldConnectionTime) {
+				setupConnectionTime();
+			}
+		}).fail(function (err) {
+			console.error(err);
+			if (manual) {
 				rp.innerHTML = '<small><span class="error-msg">Refresh failure</span></small>';
 			}
-		}).fail(function () {
-			rp.innerHTML = '<small><span class="error-msg">Refresh failure</span></small>';
 		});
 	}
+	setInterval(updateBotStatus, 1500);
 	function loadServerDetails() {
 		var server = document.getElementById("clienturl").value;
 		if (!server) {
@@ -69,68 +97,116 @@
 		}
 	}
 </script>
-<table border="0">
+<input type="hidden" name="conntime" id="bot-conntime" value="${CONNTIME}" />
+<table border="1" style="width: 100%;">
 	<tr>
-		<td>
-			<table border="1">
-				<tr>
-					<td colspan="2">
-						<div align="center"><strong>Bot Status </strong></div>
-					</td>
-				</tr>
-				<tr>
-					<td width="150"><strong>Connection</strong></td>
-					<td width="150">${CONNECTION}</td>
-				</tr>
-				<tr>
-					<td width="150"><strong>Connection Date</strong></td>
-					<td width="150">${CONNTIME}</td>
-				</tr>
-				<tr>
-					<td><strong>Nickname</strong></td>
-					<td><span id="bot-nick">${NICK}</span></td>
-				</tr>
-				<tr>
-					<td><strong>Rooms</strong></td>
-					<td><span id="bot-rooms">${ROOMS}</span></td>
-				</tr>
-				<tr>
-					<td><strong>Battles</strong></td>
-					<td><span id="bot-battles">${BATTLES}</span></td>
-				</tr>
-			</table>
-		</td>
-		<td>
-			<p><button onclick="updateBotStatus();">Refresh</button>&nbsp;<span id="refresh-progress">&nbsp;</span></p>
-			<p><button onclick="showRestartConfirm();">Restart Bot</button><span id="confirm-restart">&nbsp;</span></p>
-			${STOP_BUTTON}
+		<td colspan="2">
+			<div><strong>Bot Status</strong></div>
 		</td>
 	</tr>
+	<tr>
+		<td style="white-space: nowrap;"><strong>Connection</strong></td>
+		<td style="width: 100%;">${CONNECTION}</td>
+	</tr>
+	<tr id="connection-time-row" style="display: none;">
+		<td style="white-space: nowrap;"><strong>Connection Time</strong></td>
+		<td style="width: 100%;"><span id="connection-time"></span></td>
+	</tr>
+	<tr>
+		<td style="white-space: nowrap;"><strong>Nickname</strong></td>
+		<td style="width: 100%;"><span id="bot-nick">${NICK}</span></td>
+	</tr>
+	<tr>
+		<td style="white-space: nowrap;"><strong>Rooms</strong></td>
+		<td style="width: 100%;"><span id="bot-rooms">${ROOMS}</span></td>
+	</tr>
+	<tr>
+		<td style="white-space: nowrap;"><strong>Battles</strong></td>
+		<td style="width: 100%;"><span id="bot-battles">${BATTLES}</span></td>
+	</tr>
 </table>
+<p><button onclick="updateBotStatus(true);">Refresh</button>&nbsp;<span id="refresh-progress">&nbsp;</span></p>
+<p><button onclick="showRestartConfirm();">Restart Bot</button><span id="confirm-restart">&nbsp;</span></p>
+${STOP_BUTTON}
 <hr />
 <h3>Bot Configuration</h3>
 <form method="post" action="">
 	<table border="0">
 		<tr>
 			<td>Server: </td>
-			<td><input id="text-server" name="server" type="text" style="width: 100%; max-width: 50ch;" value="${SERVER}" /></td>
+			<td><input id="text-server" name="server" type="text" style="width: 100%; max-width: 50ch;"
+					value="${SERVER}" /></td>
 		</tr>
 		<tr>
 			<td>Port: </td>
-			<td><input id="text-port" name="port" type="text" style="width: 100%; max-width: 50ch;" value="${PORT}" /></td>
+			<td><input id="text-port" name="port" type="text" style="width: 100%; max-width: 50ch;" value="${PORT}" />
+			</td>
 		</tr>
 		<tr>
 			<td>Server-ID: </td>
-			<td><input id="text-serverid" name="serverid" type="text" style="width: 100%; max-width: 50ch;" value="${SERVERID}" /></td>
+			<td><input id="text-serverid" name="serverid" type="text" style="width: 100%; max-width: 50ch;"
+					value="${SERVERID}" /></td>
 		</tr>
 	</table>
-	<p><input id="check-tls" type="checkbox" name="secure" value="true" ${SECURE} />&nbsp;Use secure connection (TLS).</p>
+	<p><input id="check-tls" type="checkbox" name="secure" value="true" ${SECURE} />&nbsp;Use secure connection (TLS).
+	</p>
 	<p><input type="submit" name="editbot" value="Save Changes" /></p>
 </form>
-<p><button onclick="document.getElementById('text-server').value = 'sim3.psim.us'; document.getElementById('text-port').value = '443'; document.getElementById('check-tls').checked = true; document.getElementById('text-serverid').value = 'showdown';">Set values for play.pokemonshowdown.com</button></p>
+<p><button
+		onclick="document.getElementById('text-server').value = 'sim3.psim.us'; document.getElementById('text-port').value = '443'; document.getElementById('check-tls').checked = true; document.getElementById('text-serverid').value = 'showdown';">Set
+		values for play.pokemonshowdown.com</button></p>
 <p>
-	<input id="clienturl" name="url" type="text" style="width: 100%; max-width: 40ch;" placeholder="example.psim.us" value="" />&nbsp;&nbsp;
+	<input id="clienturl" name="url" type="text" style="width: 100%; max-width: 40ch;" placeholder="example.psim.us"
+		value="" />&nbsp;&nbsp;
 	<button id="getserver" onclick="loadServerDetails();">Get Server details</button>&nbsp;&nbsp;
 	<span id="resultdiv">&nbsp;</span>
 </p>
 <p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
+<script type="text/javascript">
+	var updateConTimeInterval = null;
+	function setupConnectionTime() {
+		if (updateConTimeInterval) {
+			clearInterval(updateConTimeInterval);
+			updateConTimeInterval = null;
+		}
+
+		var connectionTimeInitial = parseInt(document.getElementById("bot-conntime").value);
+
+		if (!connectionTimeInitial) {
+			document.getElementById("connection-time-row").style.display = "none";
+			return;
+		}
+
+		document.getElementById("connection-time-row").style.display = "";
+
+		var n = Date.now();
+		function updateConnectionTime() {
+			var d = Date.now();
+			var times = [];
+			var time = (connectionTimeInitial * 1000) + (d - n);
+			time = Math.round(time / 1000);
+			var aux = time % 60;
+			if (aux > 0 || time === 0) {
+				times.unshift(aux + " " + (aux === 1 ? "second" : "seconds"));
+			}
+			time = Math.floor(time / 60); aux = time % 60;
+			if (aux > 0) {
+				times.unshift(aux + " " + (aux === 1 ? "minute" : "minutes"));
+			}
+			time = Math.floor(time / 60);
+			aux = time % 24;
+			if (aux > 0) {
+				times.unshift(aux + " " + (aux === 1 ? "hour" : "hours"));
+			}
+			time = Math.floor(time / 24);
+			if (time > 0) {
+				times.unshift(time + " " + (time === 1 ? "day" : "days"));
+			}
+			document.getElementById("connection-time").innerHTML = "<i>" + times.join(", ") + "</i>";
+		}
+		updateConTimeInterval = setInterval(updateConnectionTime, 1000);
+		updateConnectionTime();
+	}
+
+	setupConnectionTime();
+</script>

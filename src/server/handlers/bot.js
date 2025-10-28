@@ -31,15 +31,23 @@ exports.setup = function (App) {
 		if (context.get.getbotstatus) {
 			let data = Object.create(null);
 			if (App.bot.status.connected) {
-				let ct = new Date(App.bot.conntime);
+				let cTime = 0;
+
+				try {
+					const d = new Date(App.bot.conntime);
+					cTime = Math.max(1, Math.ceil((Date.now() - d.getTime()) / 1000));
+				} catch (ex) {
+					App.reportCrash(ex);
+				}
+
 				data.con = '<font color="green"><strong>CONNECTED</strong></font>';
-				data.ctime = '<i>' + Text.escapeHTML(ct.toString()) + '</i>';
+				data.ctime = cTime;
 			} else if (App.bot.connecting) {
 				data.con = '<font color="orange"><strong>CONNECTING...</strong></font>';
-				data.ctime = '&nbsp;';
+				data.ctime = 0;
 			} else {
 				data.con = '<font color="red"><strong>NOT CONNECTED</strong></font>';
-				data.ctime = '&nbsp;';
+				data.ctime = 0;
 			}
 			data.nick = (App.bot.getBotNick().substr(1) || "-");
 			data.rooms = [];
@@ -128,15 +136,23 @@ exports.setup = function (App) {
 		}
 
 		if (App.bot.status.connected) {
-			let ct = new Date(App.bot.conntime);
+			let cTime = 0;
+
+			try {
+				const d = new Date(App.bot.conntime);
+				cTime = Math.max(1, Math.ceil((Date.now() - d.getTime()) / 1000));
+			} catch (ex) {
+				App.reportCrash(ex);
+			}
+
 			htmlVars.connection = '<span id="bot-connection"><font color="green"><strong>CONNECTED</strong></font></span>';
-			htmlVars.conntime = '<span id="bot-conntime"><i>' + Text.escapeHTML(ct.toString()) + '</i></span>';
+			htmlVars.conntime = cTime + "";
 		} else if (App.bot.connecting) {
 			htmlVars.connection = '<span id="bot-connection"><font color="orange"><strong>CONNECTING...</strong></font></span>';
-			htmlVars.conntime = '<span id="bot-conntime"><i>&nbsp;</i></span>';
+			htmlVars.conntime = '0';
 		} else {
 			htmlVars.connection = '<span id="bot-connection"><font color="red"><strong>NOT CONNECTED</strong></font></span>';
-			htmlVars.conntime = '<span id="bot-conntime"><i>&nbsp;</i></span>';
+			htmlVars.conntime = '0';
 		}
 
 		htmlVars.nick = Text.escapeHTML(App.bot.getBotNick().substr(1) || "-");
