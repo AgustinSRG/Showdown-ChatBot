@@ -249,6 +249,7 @@ exports.setup = function (App) {
 			try {
 				data = JSON.parseNoPrototype(data);
 			} catch (error) {
+				App.log("[Profiles Module] [Error] The Pokemon Showdown Users API responded with invalid JSON response: " + data);
 				for (let cb of callbacks) {
 					try {
 						// eslint-disable-next-line callback-return
