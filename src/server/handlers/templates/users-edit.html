@@ -10,16 +10,34 @@
 <form id="user-form" name="user-form" method="post" action="">
 	<input type="hidden" name="user" value="${ID}" />
 	<table class="user-table">
-		<tr><td><strong>ID</strong><td><td>${ID}</td></tr>
-		<tr><td><strong>Name</strong><td><td><input name="username" value="${NAME}" type="text" style="width: 100%; max-width: 50ch;" /></td></tr>
-		<tr><td><strong>Group</strong><td><td><input name="usergroup" value="${GROUP}" type="text" style="width: 100%; max-width: 50ch;" /></td></tr>
-		<tr><td colspan="2"><strong>Permissions</strong></td></tr>
+		<tr>
+			<td><strong>ID</strong>
+			<td>
+			<td>${ID}</td>
+		</tr>
+		<tr>
+			<td><strong>Name</strong>
+			<td>
+			<td><input name="username" value="${NAME}" type="text" style="width: 100%; max-width: 50ch;" /></td>
+		</tr>
+		<tr>
+			<td><strong>Group</strong>
+			<td>
+			<td><input name="usergroup" value="${GROUP}" type="text" style="width: 100%; max-width: 50ch;" /></td>
+		</tr>
+		<tr>
+			<td colspan="2"><strong>Permissions</strong></td>
+		</tr>
 	</table>
 	<div style="padding:10px;">
 		${PERMISSIONS}
 	</div>
 	<p><input type="submit" name="edituser" value="Save Changes" /></p>
 </form>
-<p><button onclick="deleteUser('${ID}');">Delete User</button>&nbsp;<span id="confirm-del-${ID}"></span></p>
-<p><span class="${REQUEST_RESULT}">${REQUEST_MSG}</span></p>
-				
+<p ${CANNOT_DELETE_USER}>
+	<button onclick="deleteUser('${ID}');">Delete User</button>&nbsp;
+	<span id="confirm-del-${ID}"></span>
+</p>
+<p>
+	<span class="${REQUEST_RESULT}">${REQUEST_MSG}</span>
+</p>

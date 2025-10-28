@@ -49,7 +49,7 @@ exports.setup = function (App) {
 					password: App.server.encryptPassword(pass),
 					name: (name || userid),
 					group: (group || ""),
-					permissions: {chpass: true},
+					permissions: { chpass: true },
 				};
 				if (context.post.makeadmin) {
 					App.server.users[userid].permissions['root'] = true;
@@ -111,16 +111,17 @@ exports.setup = function (App) {
 				for (let i in App.server.permissions) {
 					htmlVars.permissions += '<div class="user-perm-option">';
 					htmlVars.permissions += '<input name="perm-' + Text.escapeHTML(i) + '" type="checkbox" value="true"' +
-					(users[user].permissions[i] ? 'checked="checked"' : '') + ' />';
+						(users[user].permissions[i] ? 'checked="checked"' : '') + ' />';
 					htmlVars.permissions += '&nbsp;<strong>' + Text.escapeHTML(i) + '</strong>&nbsp;(' + Text.escapeHTML(App.server.permissions[i].desc) + ')';
 					htmlVars.permissions += '</div>';
 				}
+				htmlVars.cannot_delete_user = user === context.user.id ? ' style="display:none;"' : '';
 				htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 				htmlVars.request_msg = (ok ? ok : (error || ""));
 
-				context.endWithWebPage(editTemplate.make(htmlVars), {title: 'User ' + Text.escapeHTML(user) + ' - Showdown ChatBot'});
+				context.endWithWebPage(editTemplate.make(htmlVars), { title: 'User ' + Text.escapeHTML(user) + ' - Showdown ChatBot' });
 			} else {
-				context.endWithWebPage('<h1>User Not Found</h1><p>The user <b>' + Text.escapeHTML(user) + '</b> was not found</p>', {title: 'User not found'});
+				context.endWithWebPage('<h1>User Not Found</h1><p>The user <b>' + Text.escapeHTML(user) + '</b> was not found</p>', { title: 'User not found' });
 			}
 		} else {
 			let htmlVars = Object.create(null);
@@ -134,14 +135,18 @@ exports.setup = function (App) {
 				htmlVars.users_list += '<td>' + Text.escapeHTML(target.id) + '</td>';
 				htmlVars.users_list += '<td>' + Text.escapeHTML(target.name) + '</td>';
 				htmlVars.users_list += '<td>' + Text.escapeHTML(target.group || '-') + '</td>';
-				htmlVars.users_list += '<td><a href="/users/' + encodeURIComponent(u) + '"><button>Edit</button></a>&nbsp;&nbsp;<button onclick="deleteUser(\'' +
-				Text.escapeHTML(u) + '\')">Delete</button>&nbsp;<span id=\'confirm-del-' + Text.escapeHTML(u) + '\'></span></td>';
+				htmlVars.users_list += '<td><a href="/users/' + encodeURIComponent(u) + '"><button>Edit</button></a>';
+				if (u !== context.user.id) {
+					htmlVars.users_list += '&nbsp;&nbsp;<button onclick="deleteUser(\'' +
+						Text.escapeHTML(u) + '\')">Delete</button>&nbsp;<span id=\'confirm-del-' + Text.escapeHTML(u) + '\'></span>';
+				}
+				htmlVars.users_list += '</td>';
 				htmlVars.users_list += '</tr>';
 			}
 			htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 			htmlVars.request_msg = (ok ? ok : (error || ""));
 
-			context.endWithWebPage(mainTemplate.make(htmlVars), {title: 'Users - Showdown ChatBot'});
+			context.endWithWebPage(mainTemplate.make(htmlVars), { title: 'Users - Showdown ChatBot' });
 		}
 	});
 };
