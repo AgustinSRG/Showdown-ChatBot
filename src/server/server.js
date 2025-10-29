@@ -540,7 +540,7 @@ class Server {
 		if (this.app.config.useproxy && request.headers['x-forwarded-for']) {
 			ip = request.headers['x-forwarded-for'].split(',')[0];
 		}
-		return ip;
+		return ip || "";
 	}
 
 	/**
@@ -580,15 +580,19 @@ class Server {
 	 */
 	requestHandler(request, response) {
 		let ip = this.getIP(request);
-		if (ip) {
-			if (this.monitor.isLocked(ip)) {
-				request.connection.destroy();
-				return;
-			}
-			this.monitor.count(ip);
+
+		if (this.monitor.isLocked(ip)) {
+			request.connection.destroy();
+			return;
 		}
+
 		let context = new RequestContext(this, request, response, ip);
 		this.checkTrusted(context);
+
+		if (!context.trusted) {
+			this.monitor.count(ip);
+		}
+
 		context.resolveVars(function () {
 			if (!this.applyLogin(context)) return;
 			try {
