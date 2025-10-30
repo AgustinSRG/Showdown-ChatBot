@@ -39,12 +39,18 @@ exports.setup = function (App) {
 				App.config.modules.chatlogger.logpm = !!context.post.logpm;
 				App.config.modules.chatlogger.logGroupChats = !!context.post.logGroupChats;
 				App.config.modules.chatlogger.maxold = maxold;
+
+				App.config.modules.chatlogger.logTourUpdate = !context.post.ignoreTourUpdate;
+				App.config.modules.chatlogger.ignoreChallenges = !!context.post.ignoreChallenges;
+				App.config.modules.chatlogger.ignoreSelfPm = !!context.post.ignoreSelfPm;
+
 				for (let room in App.modules.chatlogger.system.loggers) {
 					App.modules.chatlogger.system.loggers[room].maxOld = maxold;
 				}
 				if (App.modules.chatlogger.system.pmLogger) {
 					App.modules.chatlogger.system.pmLogger.maxOld = maxold;
 				}
+
 				App.modules.chatlogger.system.refreshLoggers();
 				App.db.write();
 				App.logServerAction(context.user.id, 'Edit Chat-Logger Configuration (ChatLogger Module)');
@@ -61,9 +67,13 @@ exports.setup = function (App) {
 		htmlVars.loggroupchats = (App.config.modules.chatlogger.logGroupChats ? ' checked="checked"' : '');
 		htmlVars.age = Text.escapeHTML(App.config.modules.chatlogger.maxold);
 
+		htmlVars.ignoretourupdate = (!App.config.modules.chatlogger.logTourUpdate ? ' checked="checked"' : '');
+		htmlVars.ignorechallenges = (App.config.modules.chatlogger.ignoreChallenges ? ' checked="checked"' : '');
+		htmlVars.ignoreselfpm = (App.config.modules.chatlogger.ignoreSelfPm ? ' checked="checked"' : '');
+
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(mainTemplate.make(htmlVars), {title: "Chat-Logger Configuration - Showdown ChatBot"});
+		context.endWithWebPage(mainTemplate.make(htmlVars), { title: "Chat-Logger Configuration - Showdown ChatBot" });
 	});
 };

@@ -57,28 +57,57 @@ exports.setup = function (App) {
 
 		receiveLog(room, line, splittedLine, initialMsg) {
 			if (line === "") return;
-			if (splittedLine[0] === 'pm' && App.config.modules.chatlogger.logpm) {
+
+			const config = App.config.modules.chatlogger;
+
+			if (splittedLine[0] === 'tournament' && (splittedLine[1] === 'update' || splittedLine[1] === 'updateEnd')) {
+				if (!config.logTourUpdate) {
+					return;
+				}
+			}
+
+			if (splittedLine[0] === 'pm' && config.logpm) {
+				if (config.ignoreSelfPm) {
+					if (splittedLine[1] === splittedLine[2]) {
+						return;
+					}
+				}
+
+				if (config.ignoreChallenges) {
+					const privateMessage = splittedLine.slice(3).join("|");
+
+					if (privateMessage.startsWith("/challenge")) {
+						return;
+					}
+
+					if (privateMessage.startsWith("/nonotify")) {
+						return;
+					}
+
+					if (privateMessage.startsWith("/log ") && privateMessage.endsWith("wants to battle!")) {
+						return;
+					}
+				}
+
 				if (!this.pmLogger) {
 					let path = Path.resolve(App.logsDir, 'pm');
 					checkdir(path);
-					this.pmLogger = new Logger(path, 'pm', App.config.modules.chatlogger.maxold);
+					this.pmLogger = new Logger(path, 'pm', config.maxold);
 				}
 				this.pmLogger.log(line);
-			} else if (App.config.modules.chatlogger.rooms[room]) {
-				if (splittedLine[0] === 'tournament' && (splittedLine[1] === 'update' || splittedLine[1] === 'updateEnd')) return;
+			} else if (config.rooms[room]) {
 				if (!this.loggers[room]) {
 					let path = Path.resolve(App.logsDir, 'rooms', room);
 					checkdir(path);
-					this.loggers[room] = new Logger(path, Text.toId(room), App.config.modules.chatlogger.maxold);
+					this.loggers[room] = new Logger(path, Text.toId(room), config.maxold);
 				}
 				this.loggers[room].log((initialMsg ? '[INTRO] ' : '') + line);
-			} else if (App.config.modules.chatlogger.logGroupChats && room.substr(0, "groupchat-".length) === "groupchat-") {
+			} else if (config.logGroupChats && room.substr(0, "groupchat-".length) === "groupchat-") {
 				if (!this.groupchatsLogger) {
 					let path = Path.resolve(App.logsDir, 'groupchat');
 					checkdir(path);
-					this.groupchatsLogger = new Logger(path, 'groupchat', App.config.modules.chatlogger.maxold);
+					this.groupchatsLogger = new Logger(path, 'groupchat', config.maxold);
 				}
-				if (splittedLine[0] === 'tournament' && (splittedLine[1] === 'update' || splittedLine[1] === 'updateEnd')) return;
 				this.groupchatsLogger.log("[" + room + "] " + (initialMsg ? '[INTRO] ' : '') + line);
 			}
 		}
