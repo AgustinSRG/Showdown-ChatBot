@@ -25,6 +25,7 @@ function setup(App) {
 		if (context.post.edit) {
 			let oldAvatar = App.config.modules.core.avatar || "";
 			let oldStatus = App.config.modules.core.status || "";
+			let enabledAntiIdle = !App.config.modules.core.idlePrevent && !!context.post.previdle;
 
 			let rooms = (context.post.rooms || "").split(',').map(Text.toRoomid).filter(room => room);
 			let privaterooms = (context.post.privaterooms || "").split(',').map(Text.toRoomid).filter(room => room);
@@ -51,6 +52,10 @@ function setup(App) {
 				} else {
 					cmds.push('|/clearstatus');
 				}
+			}
+
+			if (enabledAntiIdle) {
+				cmds.push('|/msg ' + Text.toId(App.bot.getBotNick()) + ",[IDLE-PREVENT] " + (new Date()).toISOString());
 			}
 
 			if (cmds.length) {
