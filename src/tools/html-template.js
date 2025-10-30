@@ -15,7 +15,7 @@ class HTMLTemplate {
 	 */
 	constructor(file) {
 		this.file = file;
-		this.html = FileSystem.readFileSync(file).toString();
+		this.html = FileSystem.readFileSync(file).toString().replace(/[\t\n]+/g, " ");
 	}
 
 	/**
