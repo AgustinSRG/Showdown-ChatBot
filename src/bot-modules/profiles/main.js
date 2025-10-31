@@ -253,7 +253,7 @@ exports.setup = function (App) {
 				for (let cb of callbacks) {
 					try {
 						// eslint-disable-next-line callback-return
-						cb(null, error);
+						cb(null, data.length > 100 ? error : new Error(data));
 					} catch (ex) {
 						App.reportCrash(ex);
 					}
