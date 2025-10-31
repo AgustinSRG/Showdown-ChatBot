@@ -27,8 +27,13 @@ exports.setup = function (App) {
 		createWebHook(callback) {
 			if (this.running) return;
 			let config = App.config.modules.github;
+			try {
+				require('githubhook');
+			} catch (ex) {
+				require("child_process").spawnSync('npm', ['install', 'githubhook'], { stdio: 'inherit' });
+			}
 			const GitHubHook = require('githubhook');
-			this.webhook = new GitHubHook({port: config.port, secret: config.secret});
+			this.webhook = new GitHubHook({ port: config.port, secret: config.secret });
 			this.running = true;
 			prepareWebHook(this.webhook);
 			this.webhook.listen(callback);

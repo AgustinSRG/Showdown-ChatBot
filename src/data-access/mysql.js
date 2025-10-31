@@ -5,6 +5,12 @@
 
 'use strict';
 
+try {
+	require('mysql');
+} catch (ex) {
+	require("child_process").spawnSync('npm', ['install', 'mysql'], { stdio: 'inherit' });
+}
+
 const Table_Name = "SHOWDOWN_CHATBOT_CONFIG";
 const Table_Create_Sentence = "CREATE TABLE " + Table_Name + " (file varchar(64), id int, block int, data varchar(1024));";
 
@@ -16,11 +22,11 @@ const CryptoDataBase = require(Path.resolve(__dirname, 'mysql-json-db-crypto.js'
 function splitDataInRows(file, id, data) {
 	let rows = [];
 	while (data.length > 1024) {
-		rows.push({file: file, id: id, block: rows.length, data: data.substr(0, 1024)});
+		rows.push({ file: file, id: id, block: rows.length, data: data.substr(0, 1024) });
 		data = data.substr(1024);
 	}
 	if (data.length > 0 || rows.length > 0) {
-		rows.push({file: file, id: id, block: rows.length, data: data});
+		rows.push({ file: file, id: id, block: rows.length, data: data });
 	}
 	return rows;
 }
