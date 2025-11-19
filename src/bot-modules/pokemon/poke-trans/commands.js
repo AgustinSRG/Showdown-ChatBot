@@ -23,6 +23,9 @@ const abreviations = {
 };
 
 module.exports = {
+	tl: "translate",
+	trad: "translate",
+	trans: "translate",
 	translate: function (App) {
 		this.setLangFile(Lang_File);
 		if (!this.arg) {
