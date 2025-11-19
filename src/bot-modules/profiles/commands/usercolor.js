@@ -13,6 +13,8 @@ const Chat = Tools('chat');
 
 const Lang_File = Path.resolve(__dirname, 'usercolor.translations');
 
+const COLOR_PICKER_URL = "https://www.w3schools.com/colors/colors_picker.asp?color=";
+
 module.exports = {
 	namecolor: "usernamecolor",
 	usercolor: "usernamecolor",
@@ -26,16 +28,17 @@ module.exports = {
 		const targetName = (this.arg || this.byIdent.name).trim();
 
 		const color = Chat.usernameColor(target);
-		const linkColor = 'https://www.w3schools.com/colors/colors_picker.asp?color=' + color.substring(1);
+		const linkColor = COLOR_PICKER_URL + color.substring(1);
 
 		const customColor = Mod.getCustomColor(target);
 		const customColorName = Mod.getCustomColorUsername(target);
-		const linkCustomColor = customColor ? ('https://www.w3schools.com/colors/colors_picker.asp?color=' + customColor.substring(1)) : null;
+		const linkCustomColor = customColor ? (COLOR_PICKER_URL + customColor.substring(1)) : null;
 
 		// HTML response
 		let html = '';
 
 		const effectiveColor = customColor || color;
+		const effectiveColorLink = COLOR_PICKER_URL + effectiveColor.substring(1);
 
 		html += '<strong>' +
 			Text.escapeHTML(this.mlt(2)) + ': </strong><strong style="color: ' + effectiveColor + ';">' +
@@ -44,8 +47,8 @@ module.exports = {
 		html += '<br>';
 
 		html += '<strong>' +
-			Text.escapeHTML(this.mlt(3)) + ': </strong><strong style="color: ' + effectiveColor + ';">' +
-			Text.escapeHTML(effectiveColor.toUpperCase()) + '</strong>';
+			Text.escapeHTML(this.mlt(3)) + ': </strong><a href="' + Text.escapeHTML(effectiveColorLink) + '" target="_blank"><strong style="color: ' + effectiveColor + ';">' +
+			Text.escapeHTML(effectiveColor.toUpperCase()) + '</strong></a>';
 
 		if (customColorName) {
 			html += ' (' + this.mlt(6) + " " + '<strong style="color: ' + effectiveColor + ';">' + Text.escapeHTML(customColorName) + '</strong>)';
@@ -54,8 +57,8 @@ module.exports = {
 		if (customColor) {
 			html += '<br>';
 			html += '<strong>' +
-				Text.escapeHTML(this.mlt(5)) + ': </strong><strong style="color: ' + color + ';">' +
-				Text.escapeHTML(color.toUpperCase()) + '</strong> (<strong style="color: ' + color + ';">' +
+				Text.escapeHTML(this.mlt(5)) + ': </strong><a href="' + Text.escapeHTML(linkColor) + '" target="_blank"><strong style="color: ' + color + ';">' +
+				Text.escapeHTML(color.toUpperCase()) + '</strong></a> (<strong style="color: ' + color + ';">' +
 				Text.escapeHTML(targetName) + '</strong>)';
 		}
 
