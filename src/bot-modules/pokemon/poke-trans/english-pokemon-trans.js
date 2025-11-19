@@ -893,6 +893,7 @@ exports.translations.items = {
 	"starminite": "Starminite",
 	"victreebelite": "Victreebelite",
 	"zygardite": "Zygardite",
+	"prettyfeather": "Pretty Feather",
 };
 
 /* Battle Moves */
@@ -1853,6 +1854,7 @@ exports.translations.moves = {
 	"thunderclap": "Thunderclap",
 	"upperhand": "Upper Hand",
 	"polarflare": "Polar Flare",
+	"nihillight": "Nihil Light",
 };
 
 /* Natures */

@@ -893,6 +893,7 @@ exports.translations.items = {
 	"starminite": "Starmita",
 	"victreebelite": "Victreebelita",
 	"zygardite": "Zygardita",
+	"prettyfeather": "Pluma bella",
 };
 
 /* Battle Moves */
@@ -1853,6 +1854,7 @@ exports.translations.moves = {
 	"thunderclap": "Relámpago Súbito",
 	"upperhand": "Palma Rauda",
 	"polarflare": "", // CAP
+	"nihillight": "Luz devastadora",
 };
 
 /* Natures */
