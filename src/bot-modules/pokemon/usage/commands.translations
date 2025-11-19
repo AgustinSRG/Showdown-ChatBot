@@ -49,6 +49,10 @@ $allteams = Almost in every team
 
 $topuse = Most used Pokemon
 
+$usagesuggestion = If you want more details, use
+
+$poke = Pokemon
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
@@ -93,3 +97,7 @@ $teams = equipos
 $allteams = Prácticamente en todos los equipos
 
 $topuse = Pokemon más frecuentes
+
+$usagesuggestion = Si desea más detalles, use
+
+$poke = Pokemon

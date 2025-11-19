@@ -1,8 +1,9 @@
 /**
  * Commands file
  *
- * usage: gets usage for a pokemon and a tier (via Smogon)
- * usagedate: gets usage for moves, itema... (via Smogon)
+ * usage: gets usage for a Pokemon and a tier (via Smogon)
+ * usagedata: gets usage for moves, items... (via Smogon)
+ * usagetop: gets the list of top used Pokemon (via Smogon)
  */
 
 'use strict';
@@ -11,7 +12,6 @@ const Path = require('path');
 
 const Text = Tools('text');
 const Chat = Tools('chat');
-const LineSplitter = Tools('line-splitter');
 const Cache = Tools('cache').BufferCache;
 
 const UsageFailureCache = new Cache(20, 2 * 60 * 60 * 1000);
@@ -128,6 +128,69 @@ function getFractionAproximation(usage) {
 	}
 
 	return inversed;
+}
+
+function getPsPokeIcon(name) {
+	name = Text.toId(name);
+
+	if (name === "other" || name === "nothing") {
+		return "";
+	}
+
+	return '<psicon pokemon="' + Text.escapeHTML(name) + '"/> ';
+}
+
+function getPsItemIcon(name) {
+	name = Text.toId(name);
+
+	if (name === "other" || name === "nothing") {
+		return "";
+	}
+
+	return '<psicon item="' + Text.escapeHTML(name) + '"/> ';
+}
+
+function getPsTypeIcon(name) {
+	const id = Text.toId(name);
+
+	if (id === "other" || id === "nothing") {
+		return "";
+	}
+
+	name = (name || "").trim();
+
+	return '<img src="https://play.pokemonshowdown.com/sprites/types/' +
+		Text.escapeHTML(name) + '.png" alt="' + Text.escapeHTML(name) + '" height="14" width="32"> ';
+}
+
+function getPsCategoryIcon(name) {
+	name = (name || "").trim();
+
+	return '<img src="https://play.pokemonshowdown.com/sprites/categories/' +
+		Text.escapeHTML(name) + '.png" alt="' + Text.escapeHTML(name) + '" height="14" width="32"> ';
+}
+
+function getMoveIcons(name, App) {
+	const id = Text.toId(name);
+	const movedex = App.data.getMoves();
+
+	const move = movedex[id];
+
+	if (!move) {
+		return "";
+	}
+
+	let res = '';
+
+	if (move.type) {
+		res += getPsTypeIcon(move.type + "");
+	}
+
+	if (move.category) {
+		res += getPsCategoryIcon(move.category + "");
+	}
+
+	return res;
 }
 
 const Low_Ladder_RD = 0;
@@ -320,12 +383,14 @@ module.exports = {
 							this.mlt('pokeerr2') + " " + tierName(tier, App) +
 							' | ' + Chat.bold(dataResAux.name) + ", #" + dataResAux.pos + " " + this.mlt('in') +
 							" " + Chat.bold(tierName(tier, App)) + " (" + this.mlt(ladder) + ", __" + ladderType + " RD__). " + this.mlt('pokeusage') + ": " + Chat.bold(dataResAux.usage) + "" +
-							(dataResAux.fraction ? (dataResAux.fraction > 1 ? (" (" + this.mlt("aprox") + " 1 " + this.mlt("of") + " " + dataResAux.fraction + " " + this.mlt("teams") + ")") : (" (" + this.mlt("allteams") + ")")) : ""), 'usage');
+							(dataResAux.fraction ? (dataResAux.fraction > 1 ? (" (" + this.mlt("aprox") + " 1 " + this.mlt("of") + " " + dataResAux.fraction + " " + this.mlt("teams") + ")") : (" (" + this.mlt("allteams") + ")")) : "") +
+							". " + this.mlt("usagesuggestion") + " " + Chat.code(this.token + 'usagedata ' + dataResAux.name + ", " + tierName(tier, App) + (ladder !== 'high' ? (", " + ladder) : "")), 'usage');
 					}
 				}
 				this.restrictReply(Chat.bold(dataRes.name) + ", #" + dataRes.pos + " " + this.mlt('in') +
 					" " + Chat.bold(tierName(tier, App)) + " (" + this.mlt(ladder) + ", __" + ladderType + " RD__). " + this.mlt('pokeusage') + ": " + Chat.bold(dataRes.usage) + "" +
-					(dataRes.fraction ? (dataRes.fraction > 1 ? (" (" + this.mlt("aprox") + " 1 " + this.mlt("of") + " " + dataRes.fraction + " " + this.mlt("teams") + ")") : (" (" + this.mlt("allteams") + ")")) : ""), 'usage');
+					(dataRes.fraction ? (dataRes.fraction > 1 ? (" (" + this.mlt("aprox") + " 1 " + this.mlt("of") + " " + dataRes.fraction + " " + this.mlt("teams") + ")") : (" (" + this.mlt("allteams") + ")")) : "") +
+					". " + this.mlt("usagesuggestion") + " " + Chat.code(this.token + 'usagedata ' + dataRes.name + ", " + tierName(tier, App) + (ladder !== 'high' ? (", " + ladder) : "")), 'usage');
 			}.bind(this), UsageFailureCache);
 		}.bind(this));
 	},
@@ -398,7 +463,8 @@ module.exports = {
 					}
 				}
 				const topPokes = [];
-				for (let i = 5; i < lines.length && i < 10; i++) {
+
+				for (let i = 5; i < lines.length && i < 15; i++) {
 					let line = lines[i].split("|");
 					if (line.length < 7) continue;
 
@@ -406,38 +472,62 @@ module.exports = {
 					let name = line[2].trim();
 					let usage = line[3].trim();
 
-					topPokes.push(Chat.italics("#" + pos) + " " + Chat.bold(name) + " (" + usage + ")");
+					topPokes.push({
+						pos,
+						name,
+						usage,
+					});
 				}
 
-				let spl = new LineSplitter(App.config.bot.maxMessageLength);
-				spl.add(
-					this.mlt('topuse') + " " + this.mlt('in') +
-					" " + Chat.bold(tierName(tier, App)) + " (" + this.mlt(ladder) + ", __" + ladderType + " RD__): " +
-					topPokes.join(", ") + " | "
-				);
-				spl.add(url);
-				this.restrictReply(spl.getLines(), 'usage');
+				let html = '';
+
+				html += '<div style="overflow: auto; height: 180px; width: 100%;">';
+
+				html += '<p style="margin: 4px 0;">' + Text.escapeHTML(this.mlt('topuse')) + " " + Text.escapeHTML(this.mlt('in')) +
+					" <b>" + Text.escapeHTML(tierName(tier, App)) + "</b> (" +
+					Text.escapeHTML(this.mlt(ladder)) + ", <i>" + Text.escapeHTML(ladderType) + ' RD</i>):</p>';
+
+				html += '<table border="1" cellspacing="0" cellpadding="3">';
+
+				html += '<tr><th>#</th><th>' + Text.escapeHTML(this.mlt('poke')) + '</th><th>' + Text.escapeHTML(this.mlt('pokeusage')) + '</th></tr>';
+
+				for (let poke of topPokes) {
+					html += '<tr>';
+
+					html += '<td><b>' + Text.escapeHTML(poke.pos) + '</b></td>';
+
+					html += '<td>' + getPsPokeIcon(poke.name) + '<b>' + Text.escapeHTML(poke.name) + '</b></td>';
+
+					html += '<td>' + Text.escapeHTML(poke.usage) + '</td>';
+
+					html += '</tr>';
+				}
+
+				html += '</table>';
+
+				html += '<p><b>' + this.mlt('source') + ': </b><a href="' + Text.escapeHTML(url) + '">' + Text.escapeHTML(url) + '</a> | <a href="' + USAGE_FAQ_URL + '">FAQ</a></p>';
+
+				html += '</div>';
+
+				const textAlternative = "!code " + this.mlt('topuse') + " " + this.mlt('in') +
+					" " + tierName(tier, App) + " (" + this.mlt(ladder) + ", " + ladderType + " RD):\n\n" +
+					topPokes.map(p => "#" + p.pos + " " + p.name + " (" + p.usage + ")").join("\n") +
+					"\n\n" + url;
+
+				this.htmlRestrictReply(html, 'usage', textAlternative);
 			}.bind(this), UsageFailureCache);
 		}.bind(this));
 	},
 
+	ud: "usagedata",
+	uc: "usagedata",
 	usagecard: "usagedata",
 	usagedata: function (App) {
 		this.setLangFile(Lang_File);
 
-		let canHTML = true;
-
-		if (this.getRoomType(this.room) !== 'chat' || this.isGroupChat(this.room)) {
-			canHTML = false;
-		}
-
-		if (!this.can('usagedata', this.room)) {
-			canHTML = false;
-		}
-
-		if (!botCanHtml(this.room, App)) {
-			canHTML = false;
-		}
+		let canUseHtmlInRoom = this.getRoomType(this.room) === 'chat' &&
+			!this.isGroupChat(this.room) && this.can('usagedata', this.room) &&
+			botCanHtml(this.room, App);
 
 		getUsageLink(App, function (link) {
 			if (!link) {
@@ -598,10 +688,7 @@ module.exports = {
 					}
 
 					let detailsHTML = '<p>' + Text.escapeHTML(this.mlt('nodetails')) + '</p>';
-
-					if (!canHTML) {
-						detailsHTML = this.mlt('nodetails');
-					}
+					let detailsText = this.mlt('nodetails');
 
 					let pokeData = null, chosen = false;
 
@@ -617,6 +704,15 @@ module.exports = {
 
 						if (chosen) {
 							const htmlData = {
+								"abilities": "",
+								"items": "",
+								"moves": "",
+								"spreads": "",
+								"teammates": "",
+								"teratypes": "",
+							};
+
+							const textData = {
 								"abilities": "",
 								"items": "",
 								"moves": "",
@@ -664,11 +760,25 @@ module.exports = {
 											percent = auxRes.pop();
 											auxRes = auxRes.join(" ");
 
-											if (canHTML) {
-												htmlData[htmlKey] += ("<li><b>" + Text.escapeHTML(auxRes) + "</b> (" + Text.escapeHTML(percent) + ")</li>");
-											} else {
-												htmlData[htmlKey] += (" - " + auxRes + " (" + percent + ")\n");
+											let icon = "";
+
+											switch (htmlKey) {
+												case "moves":
+													icon = getMoveIcons(auxRes, App);
+													break;
+												case "items":
+													icon = getPsItemIcon(auxRes);
+													break;
+												case "teammates":
+													icon = getPsPokeIcon(auxRes);
+													break;
+												case "teratypes":
+													icon = getPsTypeIcon(auxRes);
+													break;
 											}
+
+											htmlData[htmlKey] += ("<li>" + icon + "<b>" + Text.escapeHTML(auxRes) + "</b> (" + Text.escapeHTML(percent) + ")</li>");
+											textData[htmlKey] += (" - " + auxRes + " (" + percent + ")\n");
 										}
 										i++;
 									}
@@ -681,29 +791,33 @@ module.exports = {
 									continue;
 								}
 
-								if (canHTML) {
-									detailsHTML += '<details>' +
-										'<summary style="font-size: 14px"><strong>' + Text.escapeHTML(this.mlt(key)) + '</strong></summary>' +
-										'<ul>' + htmlData[key] + '</ul>' +
-										'</details>';
-								} else {
-									detailsHTML += this.mlt(key) + ':\n\n' + htmlData[key] + "\n";
-								}
+								detailsHTML += '<details>' +
+									'<summary style="font-size: 14px"><strong>' + Text.escapeHTML(this.mlt(key)) + '</strong></summary>' +
+									'<ul>' + htmlData[key] + '</ul>' +
+									'</details>';
+								detailsText += this.mlt(key) + ':\n\n' + textData[key] + "\n";
 							}
 						}
 					}
 
-					if (canHTML) {
-						// Build html box
-						let html = '<table>' +
+					// Build html box
+
+					let usageBaseLineHtml = '<b>#' +
+						Text.escapeHTML(dataRes.pos + "") + "</b> " + Text.escapeHTML(this.mlt('in')) +
+						" <b>" + Text.escapeHTML(tierName(tier, App)) + "</b>. " +
+						"(" + Text.escapeHTML(this.mlt(ladder)) + ", <i>" + Text.escapeHTML(ladderType + "") + " RD</i>) | " +
+						Text.escapeHTML(this.mlt('pokeusage')) + ": <b>" + Text.escapeHTML(dataRes.usage) + "</b>" +
+						(dataRes.fraction ? (dataRes.fraction > 1 ? (" (" + Text.escapeHTML(this.mlt("aprox")) + " 1 " + Text.escapeHTML(this.mlt("of")) + " " + Text.escapeHTML(dataRes.fraction + "") + " " + Text.escapeHTML(this.mlt("teams")) + ")") : (" (" + Text.escapeHTML(this.mlt("allteams")) + ")")) : "");
+
+
+					let html;
+
+					if (canUseHtmlInRoom) {
+						html = '<table>' +
 							// First row
 							'<tr><td style="text-align:center; border-right: solid 1px black; padding: 12px;"><b>' + Text.escapeHTML(dataRes.name) + '</b></td>' +
-							'<td style="padding: 12px;"><b>#' +
-							Text.escapeHTML(dataRes.pos + "") + "</b> " + Text.escapeHTML(this.mlt('in')) +
-							" <b>" + Text.escapeHTML(tierName(tier, App)) + "</b>. " +
-							"(" + Text.escapeHTML(this.mlt(ladder)) + ", <i>" + Text.escapeHTML(ladderType + "") + " RD</i>) | " +
-							Text.escapeHTML(this.mlt('pokeusage')) + ": <b>" + Text.escapeHTML(dataRes.usage) + "</b>" +
-							(dataRes.fraction ? (dataRes.fraction > 1 ? (" (" + Text.escapeHTML(this.mlt("aprox")) + " 1 " + Text.escapeHTML(this.mlt("of")) + " " + Text.escapeHTML(dataRes.fraction + "") + " " + Text.escapeHTML(this.mlt("teams")) + ")") : (" (" + Text.escapeHTML(this.mlt("allteams")) + ")")) : "") +
+							'<td style="padding: 12px;">' +
+							usageBaseLineHtml +
 							'</td></tr>' +
 							// Second row
 							'<tr>' +
@@ -716,16 +830,27 @@ module.exports = {
 							'</td>' +
 							'</tr>' +
 							'</table>';
-						this.send("/addhtmlbox " + html, this.room);
 					} else {
-						let txt = dataRes.name + ", #" + dataRes.pos + " " + this.mlt('in') +
-							" " + tierName(tier, App) + " (" + this.mlt(ladder) + ", " + ladderType + " RD). " + this.mlt('pokeusage') + ": " + dataRes.usage + "" +
-							(dataRes.fraction ? (dataRes.fraction > 1 ? (" (" + this.mlt("aprox") + " 1 " + this.mlt("of") + " " + dataRes.fraction + " " + this.mlt("teams") + ")") : (" (" + this.mlt("allteams") + ")")) : "");
-
-						txt += "\n\n" + detailsHTML;
-
-						this.restrictReply("!code " + txt, 'usagedata');
+						// Minified version for private messages
+						html = '<div style="overflow: auto; height: 180px; width: 100%;">' +
+							'<p>' +
+							getPsPokeIcon(dataRes.name) +
+							'<b>' + Text.escapeHTML(dataRes.name) + '</b>, ' +
+							usageBaseLineHtml +
+							'</p>' +
+							detailsHTML +
+							'<p><b>' + this.mlt('source') + ': </b><a href="' + Text.escapeHTML(link) + '">' + Text.escapeHTML(link) + '</a> | <a href="' + USAGE_FAQ_URL + '">FAQ</a></p>' +
+							'</div>';
 					}
+
+					// Text alternative
+					let txt = "!code " + dataRes.name + ", #" + dataRes.pos + " " + this.mlt('in') +
+						" " + tierName(tier, App) + " (" + this.mlt(ladder) + ", " + ladderType + " RD). " +
+						this.mlt('pokeusage') + ": " + dataRes.usage + "" +
+						(dataRes.fraction ? (dataRes.fraction > 1 ? (" (" + this.mlt("aprox") + " 1 " + this.mlt("of") + " " + dataRes.fraction + " " + this.mlt("teams") + ")") : (" (" + this.mlt("allteams") + ")")) : "") +
+						"\n\n" + detailsText;
+
+					this.htmlRestrictReply(html, "usagedata", txt);
 				}.bind(this), UsageFailureCache); // End fetch usage data
 			}.bind(this), UsageFailureCache); // End fetch usage
 		}.bind(this));
