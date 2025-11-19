@@ -3,6 +3,7 @@
  *
  * exec: Runs a command
  * wall: Runs a command in wall context
+ * nohtml: Runs a command in a no-html context
  * execdyn: Run a dynamic command (ignores static commnads)
  */
 
@@ -18,7 +19,7 @@ const Lang_File = Path.resolve(__dirname, 'exec-cmd.translations');
 module.exports = {
 	"exec": function () {
 		this.setLangFile(Lang_File);
-		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
+		if (!this.arg) return this.errorReply(this.usage({ desc: this.usageTrans('command') }));
 		let spl = this.arg.split(' ');
 		this.cmd = Text.toCmdid(spl.shift());
 		this.arg = spl.join(' ');
@@ -34,7 +35,7 @@ module.exports = {
 
 	"wall": function () {
 		this.setLangFile(Lang_File);
-		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
+		if (!this.arg) return this.errorReply(this.usage({ desc: this.usageTrans('command') }));
 		let spl = this.arg.split(' ');
 		this.cmd = Text.toCmdid(spl.shift());
 		this.arg = spl.join(' ');
@@ -49,9 +50,26 @@ module.exports = {
 		}
 	},
 
+	"nohtml": function () {
+		this.setLangFile(Lang_File);
+		if (!this.arg) return this.errorReply(this.usage({ desc: this.usageTrans('command') }));
+		let spl = this.arg.split(' ');
+		this.cmd = Text.toCmdid(spl.shift());
+		this.arg = spl.join(' ');
+		this.args = this.arg.split(',');
+		this.noHtml = true;
+		if (!this.parser.exec(this)) {
+			if (!this.parser.execDyn(this)) {
+				let exactCmd = this.parser.searchCommand(this.cmd);
+				this.errorReply(this.mlt(0) + ' ' + Chat.italics(this.cmd) + ' ' + this.mlt(1) + '.' +
+					(exactCmd ? (' ' + this.mlt(2) + ' ' + Chat.italics(exactCmd) + '?') : '') + " " + this.mlt(3) + " " + Chat.code(this.token + "help") + " " + this.mlt(4) + ".");
+			}
+		}
+	},
+
 	"execdyn": function () {
 		this.setLangFile(Lang_File);
-		if (!this.arg) return this.errorReply(this.usage({desc: this.usageTrans('command')}));
+		if (!this.arg) return this.errorReply(this.usage({ desc: this.usageTrans('command') }));
 		let spl = this.arg.split(' ');
 		this.cmd = Text.toCmdid(spl.shift());
 		this.arg = spl.join(' ');

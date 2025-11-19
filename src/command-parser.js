@@ -805,6 +805,7 @@ class CommandContext {
 		this.wall = !!replyWithWall;
 		this.originalMessage = originalMessage;
 		this.isShortcut = false;
+		this.noHtml = false;
 
 		/* Room type */
 		if (room === null) {
@@ -939,7 +940,7 @@ class CommandContext {
 
 		const roomData = this.parser.bot.rooms[this.room];
 
-		if (!roomData || roomData.type !== 'chat' || this.isGroupChat(this.room)) {
+		if (!roomData || roomData.type !== 'chat' || this.isGroupChat(this.room) || this.noHtml) {
 			if (textAlternative) {
 				return this.reply(textAlternative);
 			}
@@ -985,7 +986,7 @@ class CommandContext {
 
 		const canHtml = roomData.users[botUserId] && this.parser.equalOrHigherGroup({ group: roomData.users[botUserId] }, 'bot');
 
-		if (!canHtml) {
+		if (!canHtml || this.noHtml) {
 			if (textAlternative) {
 				return this.reply(textAlternative);
 			}
@@ -997,6 +998,10 @@ class CommandContext {
 	}
 
 	htmlPrivateReply(html, textAlternative) {
+		if (this.noHtml && textAlternative) {
+			return this.pmReply(textAlternative);
+		}
+
 		const botUserId = Text.toId(this.parser.bot.getBotNick());
 
 		if (this.room) {
