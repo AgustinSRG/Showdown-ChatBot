@@ -1003,12 +1003,13 @@ class CommandContext {
 		}
 
 		const botUserId = Text.toId(this.parser.bot.getBotNick());
+		const by = this.byIdent.id;
 
 		if (this.room) {
 			const roomData = this.parser.bot.rooms[this.room];
 
 			if (roomData && roomData.type === 'chat' && !this.isGroupChat(this.room)) {
-				const canHtml = roomData.users[botUserId] && this.parser.equalOrHigherGroup({ group: roomData.users[botUserId] }, 'bot');
+				const canHtml = roomData.users[botUserId] && roomData.users[by] && this.parser.equalOrHigherGroup({ group: roomData.users[botUserId] }, 'bot');
 
 				if (canHtml) {
 					return this.send("/pminfobox " + this.byIdent.id + ", " + html, this.room);
@@ -1027,7 +1028,7 @@ class CommandContext {
 				continue;
 			}
 
-			const canHtml = roomData.users[botUserId] && this.parser.equalOrHigherGroup({ group: roomData.users[botUserId] }, 'bot');
+			const canHtml = roomData.users[botUserId] && roomData.users[by] && this.parser.equalOrHigherGroup({ group: roomData.users[botUserId] }, 'bot');
 
 			if (canHtml) {
 				return this.send("/pminfobox " + this.byIdent.id + ", " + html, room);
