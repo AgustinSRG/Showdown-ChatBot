@@ -95,7 +95,7 @@ module.exports = {
 			html += '<div style="text-align: center; padding-bottom: 6px;"><b class="username" style="color: ' + Text.escapeHTML(data.color) + ';">' + Text.escapeHTML(username) + '</b></div>';
 
 			// Avatar
-			html += '<div style="text-align: center;"><img width="80" height="80" class="pixelated" style="vertical-align:middle" src="' + Text.escapeHTML(resolveAvatar(App, data.avatar)) + '"></div>';
+			html += '<div style="text-align: center;"><img width="80" height="80" class="pixelated" style="vertical-align: middle;" src="' + Text.escapeHTML(resolveAvatar(App, data.avatar)) + '"></div>';
 
 			// Badges
 			if (data.badges && data.badges.length > 0) {
