@@ -31,7 +31,6 @@ exports.setup = function (App) {
 			context.arg = context.cmd;
 			context.cmd = 'randcmd';
 			App.parser.exec(context);
-			App.parser.monitor.count(context.byIdent.id);
 			return true;
 		}
 	});

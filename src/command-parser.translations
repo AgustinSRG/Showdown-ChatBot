@@ -12,6 +12,13 @@ $0 = Access denied. You need the permission ${PERM} to use this command.
 # Deprecated
 $deprecated = This command is deprecated, use the server command ``#CMD`` instead.
 
+# Not found
+$nf0 = Command
+$nf1 = not found
+$nf2 = Maybe you mean
+$nf3 = Type
+$nf4 = for help
+
 # Usage
 $3 = Usage
 
@@ -21,6 +28,7 @@ $5 = Options for command
 
 $nochat = This command is only available for chat rooms
 $nobot = Bot requires rank of bot or higher to use this feature
+$nohtmlallowed = I cannot perform this command because I lack the necessary permissions to respond with HTML
 
 %spanish
 
@@ -29,6 +37,13 @@ $0 = Acceso Denegado. Necesitas el permiso ${PERM} para usar este comando.
 
 # Deprecated
 $deprecated = Este comando está obsoleto, use el siguiente comando del servidor en su lugar: ``#CMD``.
+
+# Not found
+$nf0 = El Comando
+$nf1 = no existe
+$nf2 = ¿Quizás quisiste decir
+$nf3 = Usa
+$nf4 = para ver la lista de comandos
 
 # Usage
 $3 = Uso del Comando
@@ -39,3 +54,4 @@ $5 = Opciones para el comando
 
 $nochat = Este comando solo está disponible para las salas de chat
 $nobot = Necesito rango de bot o superior para poder usar esta funcionalidad
+$nohtmlallowed = No puedo ejecutar este comando porque no poseo los permisos necesarios para producir una respuesta HTML

@@ -449,45 +449,56 @@ class CommandParser {
 
 		context.isShortcut = !!isShortcut;
 
-		/* Exec Command */
+		if (this.run(context) && !isShortcut && !this.data.exceptions[userid]) {
+			this.markPrivateCommand(userid, room);
+			this.monitor.count(userid);
+		}
+	}
 
+	/**
+	 * Runs a command
+	 * @param {CommandContext} context
+	 * @returns {boolean} true if the command was executed, false otherwise
+	 */
+	run(context) {
 		if (this.execTriggers('before', context)) return; /* Trigger interrupted the command */
 
-		if (this.data.antimixtoken) {
+		if (this.data.antimixtoken && !context.room) {
 			if (context.originalMessage.charAt(1) in { "/": 1, "!": 1 }) {
-				return; // Avoid mixing server and bot command tokens
+				return false; // Avoid mixing server and bot command tokens
 			}
 		}
 
 		if (this.data.antimultitoken) {
 			if ((/[^_a-z0-9-]/i).test(context.originalMessage.charAt(context.token.length))) {
-				return; // Avoid running commands with multiple tokens
+				return false; // Avoid running commands with multiple tokens
 			}
 		}
 
 		try {
 			if (!this.exec(context)) { /* Static commands have preference */
 				if (this.execDyn(context)) {
-					this.monitor.count(userid);
-					if (!this.data.exceptions[userid]) this.markPrivateCommand(userid, room);
+					return true;
 				} else {
 					if (!this.execTriggers('after', context)) {
-						if (Text.toId(cmd)) {
-							context.cmd = "exec";
-							context.arg = cmd;
-							context.args = [cmd];
-							this.exec(context);
-							this.monitor.count(userid);
+						if (context.cmd) {
+							context.replyCommandNotFound();
+							return true;
 						}
+					} else {
+						return true;
 					}
+
+					return false;
 				}
 			} else {
-				this.monitor.count(userid);
-				if (!this.data.exceptions[userid]) this.markPrivateCommand(userid, room);
+				return true;
 			}
 		} catch (err) {
+			console.error(err);
 			this.app.log("[COMMAND CRASH] " + err.code + ":" + err.message + " | " + context.toString() + "\n" + err.stack);
 			context.errorReply("The command crashed: " + err.code + " (" + err.message + ")");
+			return false;
 		}
 	}
 
@@ -1039,7 +1050,7 @@ class CommandContext {
 			return this.pmReply(textAlternative);
 		}
 
-		return this.errorReply(this.parser.app.multilang.mlt(Lang_File, this.lang, "nobot"));
+		return this.errorReply(this.parser.app.multilang.mlt(Lang_File, this.lang, "nohtmlallowed"));
 	}
 
 	/**
@@ -1066,6 +1077,23 @@ class CommandContext {
 	 */
 	replyAccessDenied(perm) {
 		return this.pmReply(this.parser.app.multilang.mlt(Lang_File, this.lang, 0, { perm: Chat.italics(perm) }));
+	}
+
+	/**
+	 * Replies indicating the current command was not found
+	 */
+	replyCommandNotFound() {
+		const cmd = this.cmd;
+
+		const exactCmd = this.parser.searchCommand(cmd);
+
+		return this.errorReply(
+			this.parser.app.multilang.mlt(Lang_File, this.lang, 'nf0') + ' ' +
+			Chat.italics(cmd) + ' ' + this.parser.app.multilang.mlt(Lang_File, this.lang, 'nf1') + '.' +
+			(exactCmd ? (' ' + this.parser.app.multilang.mlt(Lang_File, this.lang, 'nf2') + ' ' + Chat.italics(exactCmd) + '?') : '') + " " +
+			this.parser.app.multilang.mlt(Lang_File, this.lang, 'nf3') + " " + Chat.code(this.token + "help") + " " +
+			this.parser.app.multilang.mlt(Lang_File, this.lang, 'nf4') + "."
+		);
 	}
 
 	/**
