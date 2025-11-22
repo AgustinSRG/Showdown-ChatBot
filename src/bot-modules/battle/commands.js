@@ -240,10 +240,11 @@ module.exports = {
 
 	evalbattle: function (App) {
 		this.setLangFile(Lang_File);
-		if (!App.config.debug) return;
-		if (App.env.staticmode) return;
-		if (!this.isExcepted()) return;
+		if (!this.parser.app.config.debug) return this.errorReply(this.mlt('noeval'));
+		if (this.parser.app.env.staticmode) return this.errorReply(this.mlt('noeval'));
+		if (!this.isExcepted()) return this.errorReply(this.mlt('evaldenied'));
 		if (!this.arg) return this.errorReply(this.usage({ desc: 'script' }));
+		if (!App.jsInject) return this.errorReply("[Javascript injection is disabled]");
 		if (App.modules.battle.system.BattleBot.battles[this.room]) {
 			try {
 				const result = App.modules.battle.system.BattleBot.battles[this.room].evalBattle(this.arg);

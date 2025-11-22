@@ -22,6 +22,9 @@ $11 = Connection Time
 $12 = The command is not in the whitelist
 $13 = The provided message is not a server command
 
+$noeval = This command is only available in debug mode.
+$evaldenied = Access denied.
+
 %spanish
 
 $0 = Comandos actualizados
@@ -41,3 +44,6 @@ $11 = Tiempo de Conexión
 
 $12 = El comando especificado no está permitido
 $13 = El mensaje especificado no contiene un comando del servidor válido
+
+$noeval = Este comando solo está disponible en modo depuración.
+$evaldenied = Acceso denegado.

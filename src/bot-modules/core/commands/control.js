@@ -226,9 +226,10 @@ module.exports = {
 	},
 
 	"eval": function (App) {
-		if (!this.parser.app.config.debug) return;
-		if (this.parser.app.env.staticmode) return;
-		if (!this.isExcepted()) return;
+		this.setLangFile(Lang_File);
+		if (!this.parser.app.config.debug) return this.errorReply(this.mlt('noeval'));
+		if (this.parser.app.env.staticmode) return this.errorReply(this.mlt('noeval'));
+		if (!this.isExcepted()) return this.errorReply(this.mlt('evaldenied'));
 		if (!this.arg) return this.errorReply(this.usage({ desc: 'script' }));
 		if (!App.jsInject) return this.errorReply("[Javascript injection is disabled]");
 		try {

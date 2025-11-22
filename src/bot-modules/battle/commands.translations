@@ -43,6 +43,9 @@ $nochat = This command is only available for chat rooms
 
 $notour = There is no tournament in this room
 
+$noeval = This command is only available in debug mode.
+$evaldenied = Access denied.
+
 %spanish
 
 $0 = El formato
@@ -83,3 +86,6 @@ $17 = Ya se están buscando batallas en la ladder
 $18 = para detener la búsqueda
 
 $19 = No se están buscando batallas en la ladder
+
+$noeval = Este comando solo está disponible en modo depuración.
+$evaldenied = Acceso denegado.
