@@ -631,7 +631,7 @@ exports.setup = function (Data) {
 				case "defog":
 				case "tidyup":
 					if (battle.gen < 6) {
-					// Defog does not work before gen 6
+						// Defog does not work before gen 6
 						res.unviable.push(decisions[i]);
 						continue;
 					}
@@ -649,7 +649,7 @@ exports.setup = function (Data) {
 					}
 					continue;
 				case "courtchange":
-					if (selfCanSwitch(battle) && countHazards(conditionsA.side) > countHazards(conditionsB.side)) {
+					if (selfCanSwitch(battle) && countHazards(conditionsA.side, true) > countHazards(conditionsB.side, true)) {
 						res.viable.push(decisions[i]);
 					} else {
 						res.unviable.push(decisions[i]);
