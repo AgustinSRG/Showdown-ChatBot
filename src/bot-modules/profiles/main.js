@@ -92,6 +92,10 @@ exports.setup = function (App) {
 		ProfilesModule.data.badges = Object.create(null);
 	}
 
+	if (!ProfilesModule.data.profileSettings) {
+		ProfilesModule.data.profileSettings = Object.create(null);
+	}
+
 	ProfilesModule.customGroups = new Map();
 
 	ProfilesModule.customColors = Object.create(null);
@@ -326,6 +330,8 @@ exports.setup = function (App) {
 	ProfilesModule.getUserProfileInfo = function (user, callback) {
 		user = Text.toId(user);
 
+		const profileSettings = this.data.profileSettings[user] || {};
+
 		const result = {
 			id: user,
 			name: user,
@@ -341,6 +347,9 @@ exports.setup = function (App) {
 			badges: Object.values(this.data.badges).filter(badge => {
 				return badge.holders && badge.holders[user];
 			}),
+			backgroundType: profileSettings.backgroundType || null,
+			backgroundValue: profileSettings.backgroundValue || null,
+			textColor: profileSettings.textColor || null,
 		};
 
 		let userDetailsFetched = false;
