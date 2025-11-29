@@ -54,7 +54,6 @@ exports.summon = {
 	},
 
 	summon: function (game) {
-		// Handle "&summon guess <pokemon>" syntax during active game
 		if (this.arg) {
 			let args = this.arg.split(' ');
 			if (args[0] && args[0].toLowerCase() === 'guess' && args.length > 1) {
