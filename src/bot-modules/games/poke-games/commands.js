@@ -3,6 +3,7 @@
  *
  * pokeanagrams: creates a game of Poke-Anagrams
  * pokehangman: creates a game of Poke-Hangman
+ * summon: creates a game of Summon
  */
 
 'use strict';
@@ -97,5 +98,40 @@ module.exports = {
 		}
 		let word = PokeRand.random();
 		this.send("/hangman create " + word.word + ", " + word.clue, this.room);
+	},
+
+	summon: function (App) {
+		this.setLangFile(Lang_File);
+		if (this.getRoomType(this.room) !== 'chat') return this.errorReply(this.mlt('nochat'));
+		const Summon = App.modules.games.system.templates['poke-games'].summon;
+		const PokeRand = App.modules.games.system.templates['poke-games'].pokerand;
+		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
+
+		let args = this.args;
+		let rounds = parseInt(args[0] || "3");
+		let maxGuesses = parseInt(args[1] || "10");
+		let roundTime = parseInt(args[2] || "60");
+
+		if (isNaN(rounds) || rounds < 1 || rounds > 20) {
+			return this.errorReply(this.mlt('invalidrounds'));
+		}
+		if (isNaN(maxGuesses) || maxGuesses < 1 || maxGuesses > 50) {
+			return this.errorReply(this.mlt('invalidguesses'));
+		}
+		if (isNaN(roundTime) || roundTime < 10 || roundTime > 300) {
+			return this.errorReply(this.mlt('invalidtime'));
+		}
+
+		try {
+			PokeRand.getData();
+		} catch (err) {
+			App.reportCrash(err);
+			return this.errorReply(this.mlt(2));
+		}
+
+		let summonGame = new Summon(this.room, rounds, maxGuesses, roundTime * 1000);
+		if (!App.modules.games.system.createGame(this.room, summonGame, trigger.summon)) {
+			return this.errorReply(this.mlt(1));
+		}
 	},
 };

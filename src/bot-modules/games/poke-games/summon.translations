@@ -1,0 +1,69 @@
+# Translations File
+
+@ games-summon
+
+%english
+
+$start = A new Summon game has started!
+$rounds = There will be {rounds} round(s).
+$time = You have {time} seconds to submit your guess.
+$maxguesses = Maximum {max} guesses per round.
+$howto = Use {cmd} to guess.
+
+$roundstart = Round {round}/{total} begins!
+$guessprompt = A hidden Pokemon has been selected. Submit your guess!
+
+$guessreceived = {player} guessed {pokemon}!
+$invalidpokemon = {player}, "{pokemon}" is not a valid Pokemon name.
+$alreadyguessed = {player}, you have already submitted a guess this round.
+
+$reveal = The hidden Pokemon was:
+$types = Types
+$roundresults = Round results:
+$nopoints = No one scored any points this round.
+
+$exact = Exact match! +4
+$typematch = Type match +{pts}
+$bstmatch = BST match +2
+$evomatch = Evolution line match +3
+
+$gameend = The Summon game has ended!
+$nowinners = No one scored any points, so there are no winners.
+$winner = Congratulations to {name} for winning with {points} points!
+$tie = It's a tie at {points} points between {names}!
+
+$and = and
+$error = An error occurred. Please try again later.
+
+%spanish
+
+$start = ¡Se ha iniciado un nuevo juego de Summon!
+$rounds = Habrá {rounds} ronda(s).
+$time = Tienes {time} segundos para enviar tu respuesta.
+$maxguesses = Máximo {max} respuestas por ronda.
+$howto = Usa {cmd} para adivinar.
+
+$roundstart = ¡Comienza la ronda {round}/{total}!
+$guessprompt = Se ha seleccionado un Pokemon oculto. ¡Envía tu respuesta!
+
+$guessreceived = ¡{player} adivinó {pokemon}!
+$invalidpokemon = {player}, "{pokemon}" no es un nombre de Pokemon válido.
+$alreadyguessed = {player}, ya has enviado una respuesta esta ronda.
+
+$reveal = El Pokemon oculto era:
+$types = Tipos
+$roundresults = Resultados de la ronda:
+$nopoints = Nadie puntuó esta ronda.
+
+$exact = ¡Coincidencia exacta! +4
+$typematch = Coincidencia de tipo +{pts}
+$bstmatch = Coincidencia de BST +2
+$evomatch = Coincidencia de línea evolutiva +3
+
+$gameend = ¡El juego de Summon ha terminado!
+$nowinners = Nadie puntuó, por lo que no hay ganadores.
+$winner = ¡Felicidades a {name} por ganar con {points} puntos!
+$tie = ¡Empate a {points} puntos entre {names}!
+
+$and = y
+$error = Se ha producido un error. Inténtalo de nuevo más tarde.

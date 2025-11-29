@@ -46,3 +46,16 @@ exports.hangman = {
 		game.system.end();
 	},
 };
+
+exports.summon = {
+	g: "guess",
+	guess: function (game) {
+		game.system.guess(this.by, this.arg);
+	},
+
+	end: "endsummon",
+	endsummon: function (game) {
+		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
+		game.system.end();
+	},
+};

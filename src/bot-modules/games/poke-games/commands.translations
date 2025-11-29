@@ -16,6 +16,10 @@ $maxpoints = max points
 $anstime = seconds to answer
 $maxfails = max fails
 
+$invalidrounds = Invalid number of rounds (must be 1-20)
+$invalidguesses = Invalid max guesses (must be 1-50)
+$invalidtime = Invalid round time (must be 10-300 seconds)
+
 %spanish
 
 $nochat = Este comando solo está disponible para las salas de chat
@@ -29,3 +33,7 @@ $games = rondas
 $maxpoints = puntos máximos
 $anstime = segundos para responder
 $maxfails = fallos máximos
+
+$invalidrounds = Número de rondas no válido (debe ser 1-20)
+$invalidguesses = Máximo de respuestas no válido (debe ser 1-50)
+$invalidtime = Tiempo de ronda no válido (debe ser 10-300 segundos)
