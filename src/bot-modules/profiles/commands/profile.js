@@ -4,6 +4,10 @@
  * userprofile: Displays the profile of an user
  * setuserprofileimage: Sets the profile image
  * deleteuserprofileimage: Deletes the profile image
+ * setprofilebg: Sets the profile background (color or image)
+ * clearprofilebg: Clears the profile background
+ * setprofiletextcolor: Sets the profile text color
+ * clearprofiletextcolor: Clears the profile text color
  */
 
 'use strict';
@@ -25,6 +29,35 @@ const MAX_IMG_HEIGHT = 128;
 
 const BADGE_IMG_WIDTH = 16;
 const BADGE_IMG_HEIGHT = 16;
+
+const MAX_USERNAME_LENGTH = 18;
+
+/**
+ * Validate if a string is a valid hex color code
+ * Supports both 3-character (#RGB) and 6-character (#RRGGBB) formats
+ */
+function isValidHexColor(value) {
+	return /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(value);
+}
+
+/**
+ * Validate if a string is a valid image URL
+ * Checks for https protocol and common image extensions
+ */
+function isValidImageUrl(value) {
+	try {
+		const url = new URL(value);
+		if (url.protocol !== 'https:') {
+			return false;
+		}
+		// Check for common image extensions (excluding SVG for security reasons)
+		const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
+		const pathname = url.pathname.toLowerCase();
+		return imageExtensions.some(ext => pathname.endsWith(ext));
+	} catch (ex) {
+		return false;
+	}
+}
 
 function resolveAvatar(App, avatar) {
 	avatar = avatar + "";
@@ -59,7 +92,7 @@ module.exports = {
 		const caller = Text.toId(this.by);
 
 		let target = Text.toId(this.arg) || Text.toId(this.by);
-		if (!target || target.length > 18) {
+		if (!target || target.length > MAX_USERNAME_LENGTH) {
 			return this.errorReply(this.mlt('inv'));
 		}
 
@@ -80,15 +113,41 @@ module.exports = {
 
 			let html = '';
 
-			// Create HTML profile
+			// Build background style
+			let backgroundStyle = '';
+			if (data.backgroundType === 'image' && data.backgroundValue) {
+				// Re-validate URL at render time for security
+				if (isValidImageUrl(data.backgroundValue)) {
+					// URL encode special characters for safe CSS context
+					const safeUrl = encodeURI(data.backgroundValue + "");
+					backgroundStyle = "background-image: url('" + Text.escapeHTML(safeUrl) + "'); background-size: cover; background-position: center;";
+				}
+			} else if (data.backgroundType === 'color' && data.backgroundValue) {
+				// Re-validate color at render time for security
+				if (isValidHexColor(data.backgroundValue)) {
+					backgroundStyle = "background-color: " + Text.escapeHTML(data.backgroundValue) + ";";
+				}
+			}
 
-			html += '<table cellspacing="0" cellpadding="3" style="min-width:100%;">';
+			// Build text color style
+			let textColorStyle = '';
+			if (data.textColor) {
+				// Re-validate color at render time for security
+				if (isValidHexColor(data.textColor)) {
+					textColorStyle = "color: " + Text.escapeHTML(data.textColor) + ";";
+				}
+			}
+
+			// Create HTML profile
+			// Using min-height:150px to ensure proper height, and border-collapse for proper border rendering
+			html += '<table cellspacing="0" cellpadding="3" style="min-width:100%; min-height:150px; border-collapse: collapse;' + backgroundStyle + '">';
 
 			html += '<tr>';
 
 
 			// Start of avatar section
-			html += '<td style="width: 80px; text-align: center; border-right: solid 1px black; padding: 12px;">';
+			// Fixed: Using border-right with full height by ensuring table has proper height
+			html += '<td style="width: 80px; text-align: center; border-right: solid 1px black; padding: 12px; vertical-align: top;' + textColorStyle + '">';
 
 			// Username
 			const username = data.online ? data.name : data.regName;
@@ -118,7 +177,7 @@ module.exports = {
 			html += '</td>';
 
 			// Start of info section
-			html += '<td>';
+			html += '<td style="vertical-align: top;' + textColorStyle + '">';
 
 			// Username (info section)
 			html += '<p style="margin: 4px 0"><u>' + this.mlt("name") + ':</u> <b class="username" style="color: ' + Text.escapeHTML(data.color) + ';">' + Text.escapeHTML(username) + '</b></p>';
@@ -259,7 +318,7 @@ module.exports = {
 
 			user = Text.toId(this.args[0]);
 
-			if (!user || user.length > 18) {
+			if (!user || user.length > MAX_USERNAME_LENGTH) {
 				return this.errorReply(this.mlt('inv'));
 			}
 		} else if (this.args.length === 3) {
@@ -311,7 +370,7 @@ module.exports = {
 
 			user = Text.toId(this.args[0]);
 
-			if (!user || user.length > 18) {
+			if (!user || user.length > MAX_USERNAME_LENGTH) {
 				return this.errorReply(this.mlt('inv'));
 			}
 		} else {
@@ -330,5 +389,176 @@ module.exports = {
 		this.addToSecurityLog();
 
 		this.reply(this.mlt("profileimagedeleted"));
+	},
+
+	setbg: "setprofilebg",
+	setprofilebg: function (App) {
+		this.setLangFile(Lang_File);
+
+		let user = Text.toId(this.by);
+		let value = this.arg;
+
+		// Check if admin is setting for another user
+		if (this.args.length >= 2) {
+			const targetUser = Text.toId(this.args[0]);
+
+			// If first arg looks like a user (alphanumeric, reasonable length)
+			if (targetUser && targetUser.length <= MAX_USERNAME_LENGTH && !/^#|^https?:\/\//i.test(this.args[0])) {
+				if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
+				user = targetUser;
+				value = this.args.slice(1).join(',').trim();
+			}
+		}
+
+		if (!value) {
+			return this.errorReply(this.mlt('bgusage'));
+		}
+
+		value = value.trim();
+
+		const Mod = App.modules.profiles.system;
+
+		// Initialize profileSettings if needed
+		if (!Mod.data.profileSettings[user]) {
+			Mod.data.profileSettings[user] = {};
+		}
+
+		// Check if it's a hex color code
+		if (isValidHexColor(value)) {
+			Mod.data.profileSettings[user].backgroundType = 'color';
+			Mod.data.profileSettings[user].backgroundValue = value;
+			Mod.db.write();
+			this.addToSecurityLog();
+			this.reply(this.mlt("bgcolorset") + ": " + value);
+			return;
+		}
+
+		// Check if it's a valid image URL
+		if (isValidImageUrl(value)) {
+			Mod.data.profileSettings[user].backgroundType = 'image';
+			Mod.data.profileSettings[user].backgroundValue = value;
+			Mod.db.write();
+			this.addToSecurityLog();
+			this.reply(this.mlt("bgimageset") + ": " + value);
+			return;
+		}
+
+		// Invalid input
+		return this.errorReply(this.mlt('invalidbg'));
+	},
+
+	clearbg: "clearprofilebg",
+	clearprofilebg: function (App) {
+		this.setLangFile(Lang_File);
+
+		let user = Text.toId(this.by);
+
+		if (this.arg) {
+			if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
+
+			user = Text.toId(this.arg);
+
+			if (!user || user.length > MAX_USERNAME_LENGTH) {
+				return this.errorReply(this.mlt('inv'));
+			}
+		}
+
+		const Mod = App.modules.profiles.system;
+
+		if (!Mod.data.profileSettings[user] || (!Mod.data.profileSettings[user].backgroundType && !Mod.data.profileSettings[user].backgroundValue)) {
+			return this.errorReply(this.mlt('nobg'));
+		}
+
+		delete Mod.data.profileSettings[user].backgroundType;
+		delete Mod.data.profileSettings[user].backgroundValue;
+
+		// Clean up empty settings object
+		if (Object.keys(Mod.data.profileSettings[user]).length === 0) {
+			delete Mod.data.profileSettings[user];
+		}
+
+		Mod.db.write();
+		this.addToSecurityLog();
+
+		this.reply(this.mlt("bgcleared"));
+	},
+
+	settextcolor: "setprofiletextcolor",
+	setprofiletextcolor: function (App) {
+		this.setLangFile(Lang_File);
+
+		let user = Text.toId(this.by);
+		let value = this.arg;
+
+		// Check if admin is setting for another user
+		if (this.args.length >= 2) {
+			const targetUser = Text.toId(this.args[0]);
+
+			// If first arg looks like a user (alphanumeric, reasonable length) and second is a color
+			if (targetUser && targetUser.length <= MAX_USERNAME_LENGTH && /^#/.test(this.args[1])) {
+				if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
+				user = targetUser;
+				value = this.args[1].trim();
+			}
+		}
+
+		if (!value) {
+			return this.errorReply(this.mlt('textcolorusage'));
+		}
+
+		value = value.trim();
+
+		// Validate hex color
+		if (!isValidHexColor(value)) {
+			return this.errorReply(this.mlt('invalidtextcolor'));
+		}
+
+		const Mod = App.modules.profiles.system;
+
+		// Initialize profileSettings if needed
+		if (!Mod.data.profileSettings[user]) {
+			Mod.data.profileSettings[user] = {};
+		}
+
+		Mod.data.profileSettings[user].textColor = value;
+		Mod.db.write();
+		this.addToSecurityLog();
+
+		this.reply(this.mlt("textcolorset") + ": " + value);
+	},
+
+	cleartextcolor: "clearprofiletextcolor",
+	clearprofiletextcolor: function (App) {
+		this.setLangFile(Lang_File);
+
+		let user = Text.toId(this.by);
+
+		if (this.arg) {
+			if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
+
+			user = Text.toId(this.arg);
+
+			if (!user || user.length > MAX_USERNAME_LENGTH) {
+				return this.errorReply(this.mlt('inv'));
+			}
+		}
+
+		const Mod = App.modules.profiles.system;
+
+		if (!Mod.data.profileSettings[user] || !Mod.data.profileSettings[user].textColor) {
+			return this.errorReply(this.mlt('notextcolor'));
+		}
+
+		delete Mod.data.profileSettings[user].textColor;
+
+		// Clean up empty settings object
+		if (Object.keys(Mod.data.profileSettings[user]).length === 0) {
+			delete Mod.data.profileSettings[user];
+		}
+
+		Mod.db.write();
+		this.addToSecurityLog();
+
+		this.reply(this.mlt("textcolorcleared"));
 	},
 };
