@@ -53,6 +53,16 @@ exports.summon = {
 		game.system.guess(this.by, this.arg);
 	},
 
+	summon: function (game) {
+		// Handle "&summon guess <pokemon>" syntax during active game
+		if (this.arg) {
+			let args = this.arg.split(' ');
+			if (args[0] && args[0].toLowerCase() === 'guess' && args.length > 1) {
+				game.system.guess(this.by, args.slice(1).join(' '));
+			}
+		}
+	},
+
 	end: "endsummon",
 	endsummon: function (game) {
 		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
