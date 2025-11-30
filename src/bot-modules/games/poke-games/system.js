@@ -11,5 +11,6 @@ exports.setup = function (App) {
 		pokerand: require(Path.resolve(__dirname, 'pokerand.js')).setup(App),
 		anagrams: require(Path.resolve(__dirname, 'poke-anagrams.js')).setup(App),
 		hangman: require(Path.resolve(__dirname, 'poke-hangman.js')).setup(App),
+		summon: require(Path.resolve(__dirname, 'summon.js')).setup(App),
 	};
 };
