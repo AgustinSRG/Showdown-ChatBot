@@ -24,11 +24,6 @@ const Chat = Tools('chat');
 
 const Lang_File = Path.resolve(__dirname, 'summon.translations');
 
-/**
- * Calculate Base Stat Total for a Pokemon
- * @param {Object} pokemon - Pokemon data object
- * @returns {number} - Total of all base stats
- */
 function calculateBST(pokemon) {
 	if (!pokemon || !pokemon.baseStats) return 0;
 	const stats = pokemon.baseStats;
@@ -36,18 +31,11 @@ function calculateBST(pokemon) {
 		   (stats.spa || 0) + (stats.spd || 0) + (stats.spe || 0);
 }
 
-/**
- * Get all Pokemon in the same evolution line
- * @param {string} pokeId - Pokemon ID
- * @param {Object} Pokedex - Pokedex data
- * @returns {Set<string>} - Set of Pokemon IDs in the same evolution line
- */
 function getEvolutionLine(pokeId, Pokedex) {
 	const evolutionLine = new Set();
 	const pokemon = Pokedex[pokeId];
 	if (!pokemon) return evolutionLine;
 
-	// Find the base form (go up the prevo chain)
 	let baseId = pokeId;
 	let current = pokemon;
 	while (current && current.prevo) {
@@ -60,7 +48,6 @@ function getEvolutionLine(pokeId, Pokedex) {
 		}
 	}
 
-	// Now traverse down from base form
 	const queue = [baseId];
 	while (queue.length > 0) {
 		const currentId = queue.shift();
@@ -81,12 +68,6 @@ function getEvolutionLine(pokeId, Pokedex) {
 	return evolutionLine;
 }
 
-/**
- * Count matching types between two Pokemon
- * @param {Array<string>} types1 - Types of first Pokemon
- * @param {Array<string>} types2 - Types of second Pokemon
- * @returns {number} - Number of matching types (0, 1, or 2)
- */
 function countMatchingTypes(types1, types2) {
 	if (!types1 || !types2) return 0;
 	let matches = 0;
@@ -119,7 +100,7 @@ exports.setup = function (App) {
 
 			this.currentRound = 0;
 			this.guessCount = 0;
-			this.guesses = Object.create(null); // Store guesses by playerId
+			this.guesses = Object.create(null);
 			this.points = Object.create(null);
 			this.names = Object.create(null);
 			this.timer = null;
@@ -161,10 +142,9 @@ exports.setup = function (App) {
 			}
 
 			let txt = Chat.bold(this.mlt('start')) + " ";
-			txt += this.mlt('rounds', {rounds: this.rounds}) + " ";
-			txt += this.mlt('time', {time: Math.floor(this.roundTime / 1000)}) + " ";
-			txt += this.mlt('maxguesses', {max: this.maxGuesses}) + " ";
-			txt += this.mlt('howto', {cmd: Chat.code((App.config.parser.tokens[0] || "") + "summon guess <pokemon>")});
+			txt += this.mlt('therefor') + " " + this.rounds + " " + this.mlt('rounds') + ". ";
+			txt += this.mlt('youhave') + " " + Math.floor(this.roundTime / 1000) + " " + this.mlt('seconds') + " " + this.mlt('toguess') + ". ";
+			txt += this.mlt('maximum') + " " + this.maxGuesses + " " + this.mlt('guessesperround') + ". ";
 			this.send(txt);
 
 			this.status = 'start';
@@ -183,10 +163,8 @@ exports.setup = function (App) {
 				return this.end();
 			}
 
-			// Select a random Pokemon (only base forms, no megas, etc.)
 			const pokeArr = Object.keys(this.Pokedex).filter(id => {
 				const poke = this.Pokedex[id];
-				// Filter out special forms, megas, etc.
 				return poke && poke.num > 0 && !poke.forme && !poke.baseSpecies;
 			});
 
@@ -207,8 +185,9 @@ exports.setup = function (App) {
 
 			this.status = 'guessing';
 
-			let txt = Chat.bold(this.mlt('roundstart', {round: this.currentRound, total: this.rounds})) + " ";
-			txt += this.mlt('guessprompt');
+			let txt = Chat.bold(this.mlt('roundword') + " " + this.currentRound + "/" + this.rounds + " " + this.mlt('begins')) + " ";
+			txt += this.mlt('guessprompt') + " ";
+			txt += this.mlt('useword') + " " + Chat.code((App.config.parser.tokens[0] || "") + "summon guess [pokemon]") + " " + this.mlt('tosubmit');
 			this.send(txt);
 
 			this.timer = setTimeout(this.timeout.bind(this), this.roundTime);
@@ -225,15 +204,13 @@ exports.setup = function (App) {
 			const ident = Text.parseUserIdent(user);
 			const guessId = Text.toId(pokemonName);
 
-			// Check if Pokemon exists
 			if (!this.Pokedex[guessId]) {
-				this.send(this.mlt('invalidpokemon', {player: Chat.bold(ident.name), pokemon: pokemonName}));
+				this.send(Chat.bold(ident.name) + ", \"" + pokemonName + "\" " + this.mlt('invalidpokemon'));
 				return;
 			}
 
-			// Check if player already guessed
 			if (this.guesses[ident.id]) {
-				this.send(this.mlt('alreadyguessed', {player: Chat.bold(ident.name)}));
+				this.send(Chat.bold(ident.name) + ", " + this.mlt('alreadyguessed'));
 				return;
 			}
 
@@ -244,9 +221,8 @@ exports.setup = function (App) {
 			};
 			this.guessCount++;
 
-			this.send(this.mlt('guessreceived', {player: Chat.bold(ident.name), pokemon: this.Pokedex[guessId].name}));
+			this.send(Chat.bold(ident.name) + " " + this.mlt('guessed') + " " + Chat.italics(this.Pokedex[guessId].name) + "!");
 
-			// Check if max guesses reached
 			if (this.guessCount >= this.maxGuesses) {
 				clearTimeout(this.timer);
 				this.timer = null;
@@ -255,7 +231,6 @@ exports.setup = function (App) {
 		}
 
 		calculateScore(guessId, guessPokemon) {
-			// Exact match = 4 points (no other scoring)
 			if (guessId === this.hiddenPokemonId) {
 				return {total: 4, exact: true, type: 0, bst: 0, evo: 0};
 			}
@@ -265,7 +240,6 @@ exports.setup = function (App) {
 			let bstPoints = 0;
 			let evoPoints = 0;
 
-			// Type matching
 			const matchingTypes = countMatchingTypes(
 				guessPokemon.types || [],
 				this.hiddenPokemon.types || []
@@ -277,14 +251,12 @@ exports.setup = function (App) {
 			}
 			score += typePoints;
 
-			// BST matching
 			const guessBST = calculateBST(guessPokemon);
 			if (guessBST === this.hiddenBST) {
 				bstPoints = 2;
 				score += bstPoints;
 			}
 
-			// Evolution line matching
 			if (this.hiddenEvolutionLine.has(guessId)) {
 				evoPoints = 3;
 				score += evoPoints;
@@ -302,7 +274,6 @@ exports.setup = function (App) {
 			txt += "BST: " + this.hiddenBST + ")";
 			this.send(txt);
 
-			// Calculate and announce scores
 			let roundResults = [];
 			for (const playerId in this.guesses) {
 				const guess = this.guesses[playerId];
@@ -330,7 +301,6 @@ exports.setup = function (App) {
 			}
 
 			if (roundResults.length > 0) {
-				// Sort by points descending
 				roundResults.sort((a, b) => b.points - a.points);
 				let resultTxt = this.mlt('roundresults') + " ";
 				resultTxt += roundResults.map(r =>
@@ -341,7 +311,6 @@ exports.setup = function (App) {
 				this.send(this.mlt('nopoints'));
 			}
 
-			// Continue to next round or end
 			if (this.currentRound < this.rounds) {
 				this.wait();
 			} else {

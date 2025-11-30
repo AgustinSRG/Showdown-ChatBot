@@ -56,8 +56,12 @@ exports.summon = {
 	summon: function (game) {
 		if (this.arg) {
 			let args = this.arg.split(' ');
-			if (args[0] && args[0].toLowerCase() === 'guess' && args.length > 1) {
+			let subCmd = args[0] ? args[0].toLowerCase() : '';
+			if (subCmd === 'guess' && args.length > 1) {
 				game.system.guess(this.by, args.slice(1).join(' '));
+			} else if (subCmd === 'end') {
+				if (!this.can('games', this.room)) return this.replyAccessDenied('games');
+				game.system.end();
 			}
 		}
 	},

@@ -1,21 +1,27 @@
-# Translations File
+﻿# Translations File
 
 @ games-summon
 
 %english
 
 $start = A new Summon game has started!
-$rounds = There will be {{rounds}} round(s).
-$time = You have {{time}} seconds to submit your guess.
-$maxguesses = Maximum {{max}} guesses per round.
-$howto = Use {{cmd}} to guess.
+$therefor = There will be
+$rounds = round(s)
+$youhave = You have
+$seconds = seconds
+$toguess = to guess.
+$maximum = Maximum
+$guessesperround = guesses per round.
 
-$roundstart = Round {{round}}/{{total}} begins!
-$guessprompt = A hidden Pokemon has been selected. Submit your guess!
+$roundword = Round
+$begins = begins!
+$guessprompt = A hidden Pokemon has been selected.
+$useword = Use
+$tosubmit = to submit.
 
-$guessreceived = {{player}} guessed {{pokemon}}!
-$invalidpokemon = {{player}}, "{{pokemon}}" is not a valid Pokemon name.
-$alreadyguessed = {{player}}, you have already submitted a guess this round.
+$guessed = guessed
+$invalidpokemon = is not a valid Pokemon name.
+$alreadyguessed = you have already submitted a guess this round.
 
 $reveal = The hidden Pokemon was:
 $types = Types
@@ -38,17 +44,23 @@ $error = An error occurred. Please try again later.
 %spanish
 
 $start = ¡Se ha iniciado un nuevo juego de Summon!
-$rounds = Habrá {{rounds}} ronda(s).
-$time = Tienes {{time}} segundos para enviar tu respuesta.
-$maxguesses = Máximo {{max}} respuestas por ronda.
-$howto = Usa {{cmd}} para adivinar.
+$therefor = Habrá
+$rounds = ronda(s)
+$youhave = Tienes
+$seconds = segundos
+$toguess = para adivinar.
+$maximum = Máximo
+$guessesperround = respuestas por ronda.
 
-$roundstart = ¡Comienza la ronda {{round}}/{{total}}!
-$guessprompt = Se ha seleccionado un Pokemon oculto. ¡Envía tu respuesta!
+$roundword = Ronda
+$begins = ¡comienza!
+$guessprompt = Se ha seleccionado un Pokemon oculto.
+$useword = Usa
+$tosubmit = para enviar.
 
-$guessreceived = ¡{{player}} adivinó {{pokemon}}!
-$invalidpokemon = {{player}}, "{{pokemon}}" no es un nombre de Pokemon válido.
-$alreadyguessed = {{player}}, ya has enviado una respuesta esta ronda.
+$guessed = adivinó
+$invalidpokemon = no es un nombre de Pokemon válido.
+$alreadyguessed = ya has enviado una respuesta esta ronda.
 
 $reveal = El Pokemon oculto era:
 $types = Tipos
