@@ -78,7 +78,7 @@ function resolveAvatar(App, avatar) {
 		const server = App.config.bot.server;
 		const port = App.config.bot.port;
 
-		return "https://" + server + ":" + port + "/avatars/" + encodeURIComponent(avatar).replace(/%3F/g, '?');
+		return "https://" + server +":" + port + "/avatars/" + encodeURIComponent(avatar).replace(/%3F/g, '?');
 	}
 
 	return "https://play.pokemonshowdown.com/sprites/trainers/" + avatar + ".png";
@@ -397,6 +397,7 @@ module.exports = {
 
 		let user = Text.toId(this.by);
 		let value = this.arg;
+		let isSettingForOther = false;
 
 		// Check if admin is setting for another user
 		if (this.args.length >= 2) {
@@ -407,7 +408,13 @@ module.exports = {
 				if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
 				user = targetUser;
 				value = this.args.slice(1).join(',').trim();
+				isSettingForOther = true;
 			}
+		}
+
+		// Check permission for setting own profile background
+		if (!isSettingForOther) {
+			if (!this.can('profilesettings', this.room)) return this.replyAccessDenied('profilesettings');
 		}
 
 		if (!value) {
@@ -452,6 +459,7 @@ module.exports = {
 		this.setLangFile(Lang_File);
 
 		let user = Text.toId(this.by);
+		let isClearingForOther = false;
 
 		if (this.arg) {
 			if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
@@ -461,6 +469,12 @@ module.exports = {
 			if (!user || user.length > MAX_USERNAME_LENGTH) {
 				return this.errorReply(this.mlt('inv'));
 			}
+			isClearingForOther = true;
+		}
+
+		// Check permission for clearing own profile background
+		if (!isClearingForOther) {
+			if (!this.can('profilesettings', this.room)) return this.replyAccessDenied('profilesettings');
 		}
 
 		const Mod = App.modules.profiles.system;
@@ -489,6 +503,7 @@ module.exports = {
 
 		let user = Text.toId(this.by);
 		let value = this.arg;
+		let isSettingForOther = false;
 
 		// Check if admin is setting for another user
 		if (this.args.length >= 2) {
@@ -499,7 +514,13 @@ module.exports = {
 				if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
 				user = targetUser;
 				value = this.args[1].trim();
+				isSettingForOther = true;
 			}
+		}
+
+		// Check permission for setting own profile text color
+		if (!isSettingForOther) {
+			if (!this.can('profilesettings', this.room)) return this.replyAccessDenied('profilesettings');
 		}
 
 		if (!value) {
@@ -532,6 +553,7 @@ module.exports = {
 		this.setLangFile(Lang_File);
 
 		let user = Text.toId(this.by);
+		let isClearingForOther = false;
 
 		if (this.arg) {
 			if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
@@ -541,6 +563,12 @@ module.exports = {
 			if (!user || user.length > MAX_USERNAME_LENGTH) {
 				return this.errorReply(this.mlt('inv'));
 			}
+			isClearingForOther = true;
+		}
+
+		// Check permission for clearing own profile text color
+		if (!isClearingForOther) {
+			if (!this.can('profilesettings', this.room)) return this.replyAccessDenied('profilesettings');
 		}
 
 		const Mod = App.modules.profiles.system;

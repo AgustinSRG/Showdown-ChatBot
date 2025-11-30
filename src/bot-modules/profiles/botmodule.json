@@ -18,6 +18,9 @@
 		"profileimage": {
 			"group": "driver"
 		},
+		"profilesettings": {
+			"group": "driver"
+		},
 		"profileadmin": {
 			"group": "admin"
 		},
