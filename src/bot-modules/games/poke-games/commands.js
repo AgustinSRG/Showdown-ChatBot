@@ -107,7 +107,12 @@ module.exports = {
 		const PokeRand = App.modules.games.system.templates['poke-games'].pokerand;
 		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
 
-		let args = this.args;
+		if (!this.arg) {
+			return this.errorReply(this.usage({desc: this.mlt('summonrounds'), optional: true},
+				{desc: this.mlt('summonguesses'), optional: true}, {desc: this.mlt('summontime'), optional: true}));
+		}
+
+		let args = this.args.map(arg => arg.trim());
 		let rounds = parseInt(args[0] || "3");
 		let maxGuesses = parseInt(args[1] || "10");
 		let roundTime = parseInt(args[2] || "60");

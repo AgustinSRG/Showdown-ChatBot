@@ -274,6 +274,8 @@ exports.setup = function (App) {
 			txt += "BST: " + this.hiddenBST + ")";
 			this.send(txt);
 
+			this.send("!dt " + this.hiddenPokemon.name);
+
 			let roundResults = [];
 			for (const playerId in this.guesses) {
 				const guess = this.guesses[playerId];
