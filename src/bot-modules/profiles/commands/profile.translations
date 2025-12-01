@@ -68,10 +68,11 @@ $profileimageset = Successfully changed the profile image
 $noprofileimage = No profile image is set
 $profileimagedeleted = Successfully deleted the profile image
 
-$bgusage = Please provide an image URL or hex color code (e.g., #FF5733 or https://example.com/image.png)
+$color = Color
+$invalidbgcolor = Invalid background color or image
 $bgcolorset = Your profile background has been set to color
 $bgimageset = Your profile background has been set to image
-$invalidbg = Invalid input. Please provide a valid hex color code (e.g., #FF5733) or an image URL (HTTPS with .png, .jpg, .jpeg, .gif, .webp extension)
+$invalidbg = Please provide a valid hex color code (e.g., #FF5733) or an image URL (HTTPS)
 $nobg = No profile background is set
 $bgcleared = Your profile background has been cleared
 
@@ -147,15 +148,16 @@ $profileimageset = La imagen personalizada para el perfil ha sido establecida
 $noprofileimage = No hay ninguna imagen personalizada para el perfil
 $profileimagedeleted =  La imagen personalizada para el perfil ha sido eliminada
 
-$bgusage = Por favor proporcione una URL de imagen o un código de color hex (ej: #FF5733 o https://ejemplo.com/imagen.png)
+$color = Color
+$invalidbgcolor = Color o imagen no válido
 $bgcolorset = El fondo de su perfil ha sido establecido al color
 $bgimageset = El fondo de su perfil ha sido establecido a la imagen
-$invalidbg = Entrada no válida. Por favor proporcione un código de color hex válido (ej: #FF5733) o una URL de imagen (HTTPS con extensión .png, .jpg, .jpeg, .gif, .webp)
+$invalidbg = Por favor proporcione un código de color hexadecimal válido (ej: #FF5733) o una URL de imagen (HTTPS)
 $nobg = No hay fondo de perfil establecido
 $bgcleared = El fondo de su perfil ha sido eliminado
 
 $textcolorusage = Por favor proporcione un código de color hex (ej: #FF5733)
 $textcolorset = El color del texto de su perfil ha sido establecido a
-$invalidtextcolor = Código de color hex no válido. Por favor proporcione un color hex válido (ej: #FF5733 o #FFF)
+$invalidtextcolor = Código de color hex no válido. Por favor proporcione un color hexadecimal válido (ej: #FF5733 o #FFF)
 $notextcolor = No hay color de texto de perfil establecido
 $textcolorcleared = El color del texto de su perfil ha sido eliminado
