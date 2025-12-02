@@ -15,9 +15,6 @@
 		"profile": {
 			"group": "voice"
 		},
-		"profileimage": {
-			"group": "driver"
-		},
 		"profilesettings": {
 			"group": "driver"
 		},

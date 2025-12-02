@@ -295,15 +295,19 @@ module.exports = {
 		if (this.args.length === 4) {
 			argOffset = 1;
 
-			if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
-
 			user = Text.toId(this.args[0]);
 
 			if (!user || user.length > MAX_USERNAME_LENGTH) {
 				return this.errorReply(this.mlt('inv'));
 			}
+
+			if (user !== this.byIdent.id) {
+				if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
+			} else {
+				if (!this.can('profilesettings', this.room)) return this.replyAccessDenied('profilesettings');
+			}
 		} else if (this.args.length === 3) {
-			if (!this.can('profileimage', this.room)) return this.replyAccessDenied('profileimage');
+			if (!this.can('profilesettings', this.room)) return this.replyAccessDenied('profilesettings');
 		} else {
 			return this.errorReply(this.usage({ desc: this.usageTrans('user'), optional: true }, { desc: this.mlt("imageurl") }, { desc: this.mlt("imagewidth") }, { desc: this.mlt("imageheight") }));
 		}
@@ -347,15 +351,19 @@ module.exports = {
 		let user = Text.toId(this.by);
 
 		if (this.arg) {
-			if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
-
 			user = Text.toId(this.args[0]);
 
 			if (!user || user.length > MAX_USERNAME_LENGTH) {
 				return this.errorReply(this.mlt('inv'));
 			}
+
+			if (user !== this.byIdent.id) {
+				if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
+			} else {
+				if (!this.can('profilesettings', this.room)) return this.replyAccessDenied('profilesettings');
+			}
 		} else {
-			if (!this.can('profileimage', this.room)) return this.replyAccessDenied('profileimage');
+			if (!this.can('profilesettings', this.room)) return this.replyAccessDenied('profilesettings');
 		}
 
 		const Mod = App.modules.profiles.system;
@@ -381,8 +389,6 @@ module.exports = {
 		let isSettingForOther = false;
 
 		if (this.args.length === 2) {
-			if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
-
 			user = Text.toId(this.args[0]);
 
 			if (!user || user.length > MAX_USERNAME_LENGTH) {
@@ -390,7 +396,11 @@ module.exports = {
 			}
 
 			bgValue = this.args.slice(1).join(',').trim();
-			isSettingForOther = true;
+
+			if (user !== this.byIdent.id) {
+				if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
+				isSettingForOther = true;
+			}
 		} else if (this.args.length !== 1) {
 			return this.errorReply(this.usage({ desc: this.usageTrans('user'), optional: true }, { desc: this.mlt("imageurl") + " | " + this.mlt("color") }));
 		}
@@ -441,15 +451,16 @@ module.exports = {
 		let isClearingForOther = false;
 
 		if (this.arg) {
-			if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
-
 			user = Text.toId(this.arg);
 
 			if (!user || user.length > MAX_USERNAME_LENGTH) {
 				return this.errorReply(this.mlt('inv'));
 			}
 
-			isClearingForOther = true;
+			if (user !== this.byIdent.id) {
+				if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
+				isClearingForOther = true;
+			}
 		}
 
 		if (!isClearingForOther) {
@@ -485,8 +496,6 @@ module.exports = {
 
 		// Check if admin is setting for another user
 		if (this.args.length === 2) {
-			if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
-
 			user = Text.toId(this.args[0]);
 
 			if (!user || user.length > MAX_USERNAME_LENGTH) {
@@ -494,7 +503,11 @@ module.exports = {
 			}
 
 			value = this.args[1].trim();
-			isSettingForOther = true;
+
+			if (user !== this.byIdent.id) {
+				if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
+				isSettingForOther = true;
+			}
 		} else if (this.args.length !== 1) {
 			return this.errorReply(this.usage({ desc: this.usageTrans('user'), optional: true }, { desc: this.mlt("color") }));
 		}
@@ -531,15 +544,16 @@ module.exports = {
 		let isClearingForOther = false;
 
 		if (this.arg) {
-			if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
-
 			user = Text.toId(this.arg);
 
 			if (!user || user.length > MAX_USERNAME_LENGTH) {
 				return this.errorReply(this.mlt('inv'));
 			}
 
-			isClearingForOther = true;
+			if (user !== this.byIdent.id) {
+				if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
+				isClearingForOther = true;
+			}
 		}
 
 		if (!isClearingForOther) {
