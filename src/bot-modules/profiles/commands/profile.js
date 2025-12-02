@@ -4,6 +4,10 @@
  * userprofile: Displays the profile of an user
  * setuserprofileimage: Sets the profile image
  * deleteuserprofileimage: Deletes the profile image
+ * setprofilebackground: Sets the profile background (color or image)
+ * clearprofilebackground: Clears the profile background
+ * setprofiletextcolor: Sets the profile text color
+ * clearprofiletextcolor: Clears the profile text color
  */
 
 'use strict';
@@ -25,6 +29,16 @@ const MAX_IMG_HEIGHT = 128;
 
 const BADGE_IMG_WIDTH = 16;
 const BADGE_IMG_HEIGHT = 16;
+
+const MAX_USERNAME_LENGTH = 18;
+
+/**
+ * Validate if a string is a valid hex color code
+ * Supports both 3-character (#RGB) and 6-character (#RRGGBB) formats
+ */
+function isValidHexColor(value) {
+	return /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(value);
+}
 
 function resolveAvatar(App, avatar) {
 	avatar = avatar + "";
@@ -59,7 +73,7 @@ module.exports = {
 		const caller = Text.toId(this.by);
 
 		let target = Text.toId(this.arg) || Text.toId(this.by);
-		if (!target || target.length > 18) {
+		if (!target || target.length > MAX_USERNAME_LENGTH) {
 			return this.errorReply(this.mlt('inv'));
 		}
 
@@ -80,15 +94,41 @@ module.exports = {
 
 			let html = '';
 
-			// Create HTML profile
+			// Build background style
+			let backgroundStyle = '';
+			if (data.backgroundType === 'image' && data.backgroundValue) {
+				// Re-validate URL at render time for security
+				if (Text.validateHttpsURL(data.backgroundValue)) {
+					// URL encode special characters for safe CSS context
+					const safeUrl = encodeURI(data.backgroundValue + "");
+					backgroundStyle = "background-image: url('" + Text.escapeHTML(safeUrl) + "'); background-size: cover; background-position: center;";
+				}
+			} else if (data.backgroundType === 'color' && data.backgroundValue) {
+				// Re-validate color at render time for security
+				if (isValidHexColor(data.backgroundValue)) {
+					backgroundStyle = "background-color: " + Text.escapeHTML(data.backgroundValue) + ";";
+				}
+			}
 
-			html += '<table cellspacing="0" cellpadding="3" style="min-width:100%;">';
+			// Build text color style
+			let textColorStyle = '';
+			let borderColor = '#7799BB';
+			if (data.textColor) {
+				// Re-validate color at render time for security
+				if (isValidHexColor(data.textColor)) {
+					textColorStyle = "color: " + Text.escapeHTML(data.textColor) + ";";
+					borderColor = Text.escapeHTML(data.textColor);
+				}
+			}
+
+			// Create HTML profile
+			html += '<table cellspacing="0" cellpadding="3" style="min-width:100%; min-height:150px; border-collapse: collapse;' + backgroundStyle + '">';
 
 			html += '<tr>';
 
 
 			// Start of avatar section
-			html += '<td style="width: 80px; text-align: center; border-right: solid 1px black; padding: 12px;">';
+			html += '<td style="width: 80px; text-align: center; border-right: solid 1px ' + borderColor + '; padding: 12px;' + textColorStyle + '">';
 
 			// Username
 			const username = data.online ? data.name : data.regName;
@@ -118,7 +158,7 @@ module.exports = {
 			html += '</td>';
 
 			// Start of info section
-			html += '<td>';
+			html += '<td style="' + textColorStyle + '">';
 
 			// Username (info section)
 			html += '<p style="margin: 4px 0"><u>' + this.mlt("name") + ':</u> <b class="username" style="color: ' + Text.escapeHTML(data.color) + ';">' + Text.escapeHTML(username) + '</b></p>';
@@ -255,15 +295,19 @@ module.exports = {
 		if (this.args.length === 4) {
 			argOffset = 1;
 
-			if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
-
 			user = Text.toId(this.args[0]);
 
-			if (!user || user.length > 18) {
+			if (!user || user.length > MAX_USERNAME_LENGTH) {
 				return this.errorReply(this.mlt('inv'));
 			}
+
+			if (user !== this.byIdent.id) {
+				if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
+			} else {
+				if (!this.can('profilesettings', this.room)) return this.replyAccessDenied('profilesettings');
+			}
 		} else if (this.args.length === 3) {
-			if (!this.can('profileimage', this.room)) return this.replyAccessDenied('profileimage');
+			if (!this.can('profilesettings', this.room)) return this.replyAccessDenied('profilesettings');
 		} else {
 			return this.errorReply(this.usage({ desc: this.usageTrans('user'), optional: true }, { desc: this.mlt("imageurl") }, { desc: this.mlt("imagewidth") }, { desc: this.mlt("imageheight") }));
 		}
@@ -297,7 +341,7 @@ module.exports = {
 		Mod.db.write();
 		this.addToSecurityLog();
 
-		this.reply(this.mlt("profileimageset"));
+		this.restrictReply(this.mlt("profileimageset"), 'info');
 	},
 
 	deleteprofileimage: "deleteuserprofileimage",
@@ -307,15 +351,19 @@ module.exports = {
 		let user = Text.toId(this.by);
 
 		if (this.arg) {
-			if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
-
 			user = Text.toId(this.args[0]);
 
-			if (!user || user.length > 18) {
+			if (!user || user.length > MAX_USERNAME_LENGTH) {
 				return this.errorReply(this.mlt('inv'));
 			}
+
+			if (user !== this.byIdent.id) {
+				if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
+			} else {
+				if (!this.can('profilesettings', this.room)) return this.replyAccessDenied('profilesettings');
+			}
 		} else {
-			if (!this.can('profileimage', this.room)) return this.replyAccessDenied('profileimage');
+			if (!this.can('profilesettings', this.room)) return this.replyAccessDenied('profilesettings');
 		}
 
 		const Mod = App.modules.profiles.system;
@@ -329,6 +377,204 @@ module.exports = {
 		Mod.db.write();
 		this.addToSecurityLog();
 
-		this.reply(this.mlt("profileimagedeleted"));
+		this.restrictReply(this.mlt("profileimagedeleted"), 'info');
+	},
+
+	setprofilebg: "setprofilebackground",
+	setprofilebackground: function (App) {
+		this.setLangFile(Lang_File);
+
+		let user = Text.toId(this.by);
+		let bgValue = this.arg.trim();
+		let isSettingForOther = false;
+
+		if (this.args.length === 2) {
+			user = Text.toId(this.args[0]);
+
+			if (!user || user.length > MAX_USERNAME_LENGTH) {
+				return this.errorReply(this.mlt('inv'));
+			}
+
+			bgValue = this.args.slice(1).join(',').trim();
+
+			if (user !== this.byIdent.id) {
+				if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
+				isSettingForOther = true;
+			}
+		} else if (this.args.length !== 1) {
+			return this.errorReply(this.usage({ desc: this.usageTrans('user'), optional: true }, { desc: this.mlt("imageurl") + " | " + this.mlt("color") }));
+		}
+
+		if (!isSettingForOther) {
+			if (!this.can('profilesettings', this.room)) return this.replyAccessDenied('profilesettings');
+		}
+
+		if (!bgValue) {
+			return this.errorReply(this.usage({ desc: this.usageTrans('user'), optional: true }, { desc: this.mlt("imageurl") + " | " + this.mlt("color") }));
+		}
+
+		let backgroundType;
+		let successMsg;
+
+		if (isValidHexColor(bgValue)) {
+			backgroundType = "color";
+			successMsg = this.mlt("bgcolorset");
+		} else if (Text.validateHttpsURL(bgValue)) {
+			successMsg = this.mlt("bgimageset");
+			backgroundType = "image";
+		} else {
+			return this.errorReply(this.mlt('invalidbg'));
+		}
+
+		bgValue = bgValue.trim();
+
+		const Mod = App.modules.profiles.system;
+
+		if (!Mod.data.profileSettings[user]) {
+			Mod.data.profileSettings[user] = {};
+		}
+
+		Mod.data.profileSettings[user].backgroundType = backgroundType;
+		Mod.data.profileSettings[user].backgroundValue = bgValue;
+		Mod.db.write();
+
+		this.addToSecurityLog();
+
+		this.restrictReply(successMsg + ": " + bgValue, 'info');
+	},
+
+	clearprofilebg: "clearprofilebackground",
+	clearprofilebackground: function (App) {
+		this.setLangFile(Lang_File);
+
+		let user = Text.toId(this.by);
+		let isClearingForOther = false;
+
+		if (this.arg) {
+			user = Text.toId(this.arg);
+
+			if (!user || user.length > MAX_USERNAME_LENGTH) {
+				return this.errorReply(this.mlt('inv'));
+			}
+
+			if (user !== this.byIdent.id) {
+				if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
+				isClearingForOther = true;
+			}
+		}
+
+		if (!isClearingForOther) {
+			if (!this.can('profilesettings', this.room)) return this.replyAccessDenied('profilesettings');
+		}
+
+		const Mod = App.modules.profiles.system;
+
+		if (!Mod.data.profileSettings[user] || (!Mod.data.profileSettings[user].backgroundType && !Mod.data.profileSettings[user].backgroundValue)) {
+			return this.errorReply(this.mlt('nobg'));
+		}
+
+		delete Mod.data.profileSettings[user].backgroundType;
+		delete Mod.data.profileSettings[user].backgroundValue;
+
+		if (Object.keys(Mod.data.profileSettings[user]).length === 0) {
+			delete Mod.data.profileSettings[user];
+		}
+
+		Mod.db.write();
+		this.addToSecurityLog();
+
+		this.restrictReply(this.mlt("bgcleared"), 'info');
+	},
+
+	settextcolor: "setprofiletextcolor",
+	setprofiletextcolor: function (App) {
+		this.setLangFile(Lang_File);
+
+		let user = Text.toId(this.by);
+		let value = this.arg;
+		let isSettingForOther = false;
+
+		// Check if admin is setting for another user
+		if (this.args.length === 2) {
+			user = Text.toId(this.args[0]);
+
+			if (!user || user.length > MAX_USERNAME_LENGTH) {
+				return this.errorReply(this.mlt('inv'));
+			}
+
+			value = this.args[1].trim();
+
+			if (user !== this.byIdent.id) {
+				if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
+				isSettingForOther = true;
+			}
+		} else if (this.args.length !== 1) {
+			return this.errorReply(this.usage({ desc: this.usageTrans('user'), optional: true }, { desc: this.mlt("color") }));
+		}
+
+		if (!isSettingForOther) {
+			if (!this.can('profilesettings', this.room)) return this.replyAccessDenied('profilesettings');
+		}
+
+		value = value.trim();
+
+		if (!value || !isValidHexColor(value)) {
+			return this.errorReply(this.mlt('invalidtextcolor'));
+		}
+
+		const Mod = App.modules.profiles.system;
+
+		if (!Mod.data.profileSettings[user]) {
+			Mod.data.profileSettings[user] = {};
+		}
+
+		Mod.data.profileSettings[user].textColor = value;
+		Mod.db.write();
+
+		this.addToSecurityLog();
+
+		this.restrictReply(this.mlt("textcolorset") + ": " + value, 'info');
+	},
+
+	cleartextcolor: "clearprofiletextcolor",
+	clearprofiletextcolor: function (App) {
+		this.setLangFile(Lang_File);
+
+		let user = Text.toId(this.by);
+		let isClearingForOther = false;
+
+		if (this.arg) {
+			user = Text.toId(this.arg);
+
+			if (!user || user.length > MAX_USERNAME_LENGTH) {
+				return this.errorReply(this.mlt('inv'));
+			}
+
+			if (user !== this.byIdent.id) {
+				if (!this.can('profileadmin', this.room)) return this.replyAccessDenied('profileadmin');
+				isClearingForOther = true;
+			}
+		}
+
+		if (!isClearingForOther) {
+			if (!this.can('profilesettings', this.room)) return this.replyAccessDenied('profilesettings');
+		}
+
+		const Mod = App.modules.profiles.system;
+
+		if (!Mod.data.profileSettings[user] || !Mod.data.profileSettings[user].textColor) {
+			return this.errorReply(this.mlt('notextcolor'));
+		}
+
+		delete Mod.data.profileSettings[user].textColor;
+
+		if (Object.keys(Mod.data.profileSettings[user]).length === 0) {
+			delete Mod.data.profileSettings[user];
+		}
+
+		Mod.db.write();
+		this.addToSecurityLog();
+
+		this.restrictReply(this.mlt("textcolorcleared"), 'info');
 	},
 };
