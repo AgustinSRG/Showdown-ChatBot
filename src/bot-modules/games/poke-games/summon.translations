@@ -9,9 +9,9 @@ $therefor = There will be
 $rounds = round(s)
 $youhave = You have
 $seconds = seconds
-$toguess = to guess.
+$toguess = to guess
 $maximum = Maximum
-$guessesperround = guesses per round.
+$guessesperround = guesses per round
 
 $roundword = Round
 $begins = begins!
@@ -29,14 +29,14 @@ $roundresults = Round results:
 $nopoints = No one scored any points this round.
 
 $exact = Exact match! +4
-$typematch = Type match +{{pts}}
+$typematch = Type match +${PTS}
 $bstmatch = BST match +2
 $evomatch = Evolution line match +3
 
 $gameend = The Summon game has ended!
 $nowinners = No one scored any points, so there are no winners.
-$winner = Congratulations to {{name}} for winning with {{points}} points!
-$tie = It's a tie at {{points}} points between {{names}}!
+$winner = Congratulations to ${NAME} for winning with ${POINTS} points!
+$tie = It's a tie at ${POINTS} points between ${NAMES}
 
 $and = and
 $error = An error occurred. Please try again later.
@@ -48,17 +48,17 @@ $therefor = Habrá
 $rounds = ronda(s)
 $youhave = Tienes
 $seconds = segundos
-$toguess = para adivinar.
+$toguess = para adivinar
 $maximum = Máximo
-$guessesperround = respuestas por ronda.
+$guessesperround = respuestas por ronda
 
 $roundword = Ronda
 $begins = ¡comienza!
 $guessprompt = Se ha seleccionado un Pokemon oculto.
 $useword = Usa
-$tosubmit = para enviar.
+$tosubmit = para adivinar.
 
-$guessed = adivinó
+$guessed = eligió
 $invalidpokemon = no es un nombre de Pokemon válido.
 $alreadyguessed = ya has enviado una respuesta esta ronda.
 
@@ -68,14 +68,14 @@ $roundresults = Resultados de la ronda:
 $nopoints = Nadie puntuó esta ronda.
 
 $exact = ¡Coincidencia exacta! +4
-$typematch = Coincidencia de tipo +{{pts}}
+$typematch = Coincidencia de tipo +${PTS}
 $bstmatch = Coincidencia de BST +2
 $evomatch = Coincidencia de línea evolutiva +3
 
 $gameend = ¡El juego de Summon ha terminado!
 $nowinners = Nadie puntuó, por lo que no hay ganadores.
-$winner = ¡Felicidades a {{name}} por ganar con {{points}} puntos!
-$tie = ¡Empate a {{points}} puntos entre {{names}}!
+$winner = ¡Felicidades a ${NAME} por ganar con ${POINTS} puntos!
+$tie = ¡Empate a ${POINTS} puntos entre ${NAMES}!
 
 $and = y
 $error = Se ha producido un error. Inténtalo de nuevo más tarde.

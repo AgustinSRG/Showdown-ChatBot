@@ -28,7 +28,7 @@ function calculateBST(pokemon) {
 	if (!pokemon || !pokemon.baseStats) return 0;
 	const stats = pokemon.baseStats;
 	return (stats.hp || 0) + (stats.atk || 0) + (stats.def || 0) +
-		   (stats.spa || 0) + (stats.spd || 0) + (stats.spe || 0);
+		(stats.spa || 0) + (stats.spd || 0) + (stats.spe || 0);
 }
 
 function getEvolutionLine(pokeId, Pokedex) {
@@ -176,6 +176,7 @@ exports.setup = function (App) {
 
 			const randomIndex = Math.floor(Math.random() * pokeArr.length);
 			this.hiddenPokemonId = pokeArr[randomIndex];
+			console.log(this.hiddenPokemonId);
 			this.hiddenPokemon = this.Pokedex[this.hiddenPokemonId];
 			this.hiddenBST = calculateBST(this.hiddenPokemon);
 			this.hiddenEvolutionLine = getEvolutionLine(this.hiddenPokemonId, this.Pokedex);
@@ -232,7 +233,7 @@ exports.setup = function (App) {
 
 		calculateScore(guessId, guessPokemon) {
 			if (guessId === this.hiddenPokemonId) {
-				return {total: 4, exact: true, type: 0, bst: 0, evo: 0};
+				return { total: 4, exact: true, type: 0, bst: 0, evo: 0 };
 			}
 
 			let score = 0;
@@ -262,7 +263,7 @@ exports.setup = function (App) {
 				score += evoPoints;
 			}
 
-			return {total: score, exact: false, type: typePoints, bst: bstPoints, evo: evoPoints};
+			return { total: score, exact: false, type: typePoints, bst: bstPoints, evo: evoPoints };
 		}
 
 		revealAndScore() {
@@ -290,7 +291,7 @@ exports.setup = function (App) {
 					if (scoreInfo.exact) {
 						breakdown.push(this.mlt('exact'));
 					} else {
-						if (scoreInfo.type > 0) breakdown.push(this.mlt('typematch', {pts: scoreInfo.type}));
+						if (scoreInfo.type > 0) breakdown.push(this.mlt('typematch', { pts: scoreInfo.type }));
 						if (scoreInfo.bst > 0) breakdown.push(this.mlt('bstmatch'));
 						if (scoreInfo.evo > 0) breakdown.push(this.mlt('evomatch'));
 					}
@@ -348,10 +349,10 @@ exports.setup = function (App) {
 			let txt = Chat.bold(this.mlt('gameend')) + " ";
 			switch (t.type) {
 				case 'win':
-					txt += this.mlt('winner', {name: t.text, points: points});
+					txt += this.mlt('winner', { name: t.text, points: points });
 					break;
 				case 'tie':
-					txt += this.mlt('tie', {names: t.text, points: points});
+					txt += this.mlt('tie', { names: t.text, points: points });
 					break;
 			}
 
