@@ -46,3 +46,29 @@ exports.hangman = {
 		game.system.end();
 	},
 };
+
+exports.summon = {
+	g: "guess",
+	guess: function (game) {
+		game.system.guess(this.by, this.arg);
+	},
+
+	summon: function (game) {
+		if (this.arg) {
+			let args = this.arg.split(' ');
+			let subCmd = args[0] ? args[0].toLowerCase() : '';
+			if (subCmd === 'guess' && args.length > 1) {
+				game.system.guess(this.by, args.slice(1).join(' '));
+			} else if (subCmd === 'end') {
+				if (!this.can('games', this.room)) return this.replyAccessDenied('games');
+				game.system.end();
+			}
+		}
+	},
+
+	end: "endsummon",
+	endsummon: function (game) {
+		if (!this.can('games', this.room)) return this.replyAccessDenied('games');
+		game.system.end();
+	},
+};
