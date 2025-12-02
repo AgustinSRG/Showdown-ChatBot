@@ -176,7 +176,6 @@ exports.setup = function (App) {
 
 			const randomIndex = Math.floor(Math.random() * pokeArr.length);
 			this.hiddenPokemonId = pokeArr[randomIndex];
-			console.log(this.hiddenPokemonId);
 			this.hiddenPokemon = this.Pokedex[this.hiddenPokemonId];
 			this.hiddenBST = calculateBST(this.hiddenPokemon);
 			this.hiddenEvolutionLine = getEvolutionLine(this.hiddenPokemonId, this.Pokedex);
