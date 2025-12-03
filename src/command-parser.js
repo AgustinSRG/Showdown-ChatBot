@@ -13,7 +13,7 @@
 const Max_Cmd_Flood = 30;
 const Flood_Interval = 45 * 1000;
 const Help_Msg_Interval = 2 * 60 * 1000;
-const Command_Wait_Interval = 1500;
+const Command_Wait_Interval = 1000;
 const Command_Reply_Wait_Interval = 10 * 1000;
 const Flood_Ban_Duration = 60 * 60 * 1000;
 
