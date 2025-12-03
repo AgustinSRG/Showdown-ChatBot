@@ -786,6 +786,7 @@ module.exports = {
 							}
 
 							detailsHTML = '';
+							detailsText = '';
 							for (let key of ['abilities', 'items', 'moves', 'spreads', 'teratypes', 'teammates']) {
 								if (!htmlData[key]) {
 									continue;
