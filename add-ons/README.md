@@ -26,17 +26,18 @@ Index:
 
 **Added commands**:
 
-| Command syntax      | Description                                          |
-| ------------------- | ---------------------------------------------------- |
-| `.ask <question>`   | Ask the AI a question and receive a response         |
+| Command syntax    | Description                                  |
+| ----------------- | -------------------------------------------- |
+| `.ask <question>` | Ask the AI a question and receive a response |
 
 **Configuration**: Open the `ai-ask.js` file and edit the constants at the top before installing:
 
 - `AI_PROVIDER`: The AI provider to use (`'openai'`, `'gemini'`, or `'claude'`)
 - `AI_API_KEY`: Your API key for the selected provider
-- `ROOMS`: List of rooms where the command is enabled (or `[]` for all rooms)
+- `DEFAULT_ALLOWED_GROUP`: Group allowed to use the command by default. Can be a symbol or a group name, including `excepted` (for excepted users) and `user` (for all users). You can change this permission on specific rooms using the `set ask, <group>` command.
 
 **API Keys**:
+
 - OpenAI: https://platform.openai.com/api-keys
 - Gemini: https://makersuite.google.com/app/apikey
 - Claude: https://console.anthropic.com/settings/keys

@@ -4,15 +4,15 @@
 // Make sure to change the following constants:
 // - AI_PROVIDER: 'openai', 'gemini', or 'claude'
 // - AI_API_KEY: Your API key (get from provider's website)
-// - ROOMS: List of rooms, or [] for all rooms
+// - DEFAULT_ALLOWED_GROUP: Group allowed to use the command by default. Can be a symbol or a group name.
 
 'use strict';
 
 const AI_PROVIDER = 'gemini';
 const AI_API_KEY = '';
-const ROOMS = [];
+const DEFAULT_ALLOWED_GROUP = 'admin';
+
 const MAX_MESSAGE_LENGTH = 1000;
-const PERMISSION_REQUIRED = '';
 const CHAT_HISTORY_LINES = 15;
 const USER_MEMORY_LIMIT = 5;
 const MEMORY_EXPIRY_HOURS = 24;
@@ -312,12 +312,8 @@ exports.setup = function (App) {
 		commandsOverwrite: true,
 		commands: {
 			"ask": function () {
-				if (ROOMS.length > 0 && this.room && ROOMS.indexOf(this.room) < 0) {
-					return this.errorReply('This command is not available in this room.');
-				}
-
-				if (PERMISSION_REQUIRED && !this.can(PERMISSION_REQUIRED, this.room)) {
-					return this.replyAccessDenied(PERMISSION_REQUIRED);
+				if (!this.can("ask", this.room)) {
+					return this.replyAccessDenied("ask");
 				}
 
 				const question = this.arg.trim();
@@ -335,8 +331,6 @@ exports.setup = function (App) {
 				}
 
 				const room = this.room;
-				const isPM = this.isPM;
-				const byIdent = this.byIdent;
 				const userId = Text.parseUserIdent(this.by).id;
 
 				// Build enhanced context with chat history and user memory
@@ -344,13 +338,9 @@ exports.setup = function (App) {
 
 				askAI(question, context, (response, error) => {
 					if (error) {
+						App.reportCrash(error);
 						App.log('[AI-ASK] Error occurred while processing AI request');
-						if (isPM) {
-							App.bot.pm(byIdent.id, 'Sorry, I could not get a response from the AI. Please try again later.');
-						} else {
-							App.bot.sendTo(room, Text.stripCommands('Sorry, I could not get a response from the AI. Please try again later.'));
-						}
-						return;
+						return this.errorReply('Sorry, I could not get a response from the AI. Please try again later.');
 					}
 
 					const aiResponse = truncateResponse(response, MAX_MESSAGE_LENGTH);
@@ -358,18 +348,16 @@ exports.setup = function (App) {
 					// Store in user memory for future reference
 					addUserMemory(userId, room, question, aiResponse);
 
-					if (isPM) {
-						App.bot.pm(byIdent.id, Text.stripCommands(aiResponse));
-					} else {
-						App.bot.sendTo(room, Text.stripCommands(aiResponse));
-					}
+					const finalResponse = Text.stripCommands(aiResponse);
+
+					this.restrictReply((finalResponse.length > App.config.bot.maxMessageLength ? "!code " : "") + finalResponse, "ask");
 				});
 			},
 		},
 
-		commandPermissions: PERMISSION_REQUIRED ? {
-			"ask": { group: PERMISSION_REQUIRED },
-		} : {},
+		commandPermissions: {
+			"ask": { group: DEFAULT_ALLOWED_GROUP },
+		},
 	});
 
 	// Cleanup function
