@@ -4,8 +4,10 @@
 
 'use strict';
 
+const Path = require('path');
 const Text = Tools('text');
 const BattleTypeChart = Tools('typechart');
+const SpriteTools = require(Path.resolve(__dirname, "sprites.js"));
 
 const BattleStatIDs = {
 	HP: 'hp',
@@ -400,6 +402,22 @@ exports.setup = function (App) {
 		let pokes = [];
 		for (let i = 0; i < team.length; i++) {
 			pokes.push(team[i].species);
+		}
+		if (!pokes.length) return '(empty)';
+		return pokes.join(', ');
+	};
+
+	/**
+	 * Gets team HTML overview (pokemon names and icons)
+	 * @param {String} buf - Packed team
+	 * @returns {String} List of pokemon
+	 */
+	TeamsTools.teamOverviewHTML = function (buf) {
+		let team = fastUnpackTeam(buf);
+		if (!team) return '(empty)';
+		let pokes = [];
+		for (let i = 0; i < team.length; i++) {
+			pokes.push(SpriteTools.getPokemonIconAndName(team[i].species, App));
 		}
 		if (!pokes.length) return '(empty)';
 		return pokes.join(', ');

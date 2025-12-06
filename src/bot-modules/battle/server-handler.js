@@ -378,7 +378,7 @@ exports.setup = function (App) {
 				id: Text.escapeHTML(id),
 				name: Text.escapeHTML(teams[id].name || id),
 				format: Text.escapeHTML(formatName),
-				pokemon: Text.escapeHTML(Teams.teamOverview(teams[id].packed)),
+				pokemon: Teams.teamOverviewHTML(teams[id].packed),
 			});
 		}
 

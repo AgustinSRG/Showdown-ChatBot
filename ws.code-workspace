@@ -8,7 +8,11 @@
     "files.exclude": {
       "node_modules/**": true
     },
-    "cSpell.words": ["pastebin", "Pastebin"],
+    "cSpell.words": [
+		"pastebin",
+		"Pastebin",
+		"pokedex"
+	],
     "editor.indentSize": "tabSize",
     "editor.tabSize": 4,
     "editor.detectIndentation": false,
