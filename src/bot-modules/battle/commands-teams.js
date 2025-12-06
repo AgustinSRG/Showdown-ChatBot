@@ -214,7 +214,7 @@ module.exports = {
 	listteams: function (App) {
 		this.setLangFile(Lang_File);
 
-		if (!this.can('teams', this.room)) return this.replyAccessDenied('teams');
+		if (!this.can('teams', this.room) && !this.can('viewteams', this.room)) return this.replyAccessDenied('viewteams');
 
 		const mod = App.modules.battle.system;
 
@@ -276,14 +276,14 @@ module.exports = {
 
 		html += '</div>';
 
-		this.htmlRestrictReply(html, "teams", code);
+		this.htmlRestrictReply(html, "info", code);
 	},
 
 	team: "getteam",
 	getteam: function (App) {
 		this.setLangFile(Lang_File);
 
-		if (!this.can('teams', this.room)) return this.replyAccessDenied('teams');
+		if (!this.can('teams', this.room) && !this.can('viewteams', this.room)) return this.replyAccessDenied('viewteams');
 
 		const canCode = this.getRoomType(this.room) === 'chat' && botCanUseCode(this.room, App);
 

@@ -1,38 +1,41 @@
 {
-  "id": "battle",
-  "name": "Battle",
-  "main": "main.js",
-  "commands": [
-    "commands.js",
-    "commands-teams.js",
-    "poke-battle/commands.js"
-  ],
-  "permissions": {
-    "chall": {
-      "group": "admin"
-    },
-    "searchbattle": {
-      "group": "admin"
-    },
-    "jointour": {
-      "group": "mod"
-    },
-    "pokebattle": {
-      "group": "mod"
-    },
-    "teams": {
-      "excepted": true
-    }
-  },
-  "handlers": [
-    "server-handler.js"
-  ],
-  "langfiles": [
-    "./commands.translations",
-    "./commands-teams.translations",
-    "./ladder.translations",
-    "./poke-battle/poke-battle.translations",
-    "./poke-battle/commands.translations"
-  ],
-  "description": "Automated battle bot for ladder, challenges and tournaments"
+	"id": "battle",
+	"name": "Battle",
+	"main": "main.js",
+	"commands": [
+		"commands.js",
+		"commands-teams.js",
+		"poke-battle/commands.js"
+	],
+	"permissions": {
+		"chall": {
+			"group": "admin"
+		},
+		"searchbattle": {
+			"group": "admin"
+		},
+		"jointour": {
+			"group": "mod"
+		},
+		"pokebattle": {
+			"group": "mod"
+		},
+		"teams": {
+			"excepted": true
+		},
+		"viewteams": {
+			"group": "admin"
+		}
+	},
+	"handlers": [
+		"server-handler.js"
+	],
+	"langfiles": [
+		"./commands.translations",
+		"./commands-teams.translations",
+		"./ladder.translations",
+		"./poke-battle/poke-battle.translations",
+		"./poke-battle/commands.translations"
+	],
+	"description": "Automated battle bot for ladder, challenges and tournaments"
 }
