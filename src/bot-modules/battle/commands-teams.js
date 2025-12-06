@@ -209,12 +209,12 @@ module.exports = {
 		this.reply(this.mlt(15) + ' ' + App.server.getControlPanelLink('/temp/' + key));
 	},
 
+	teams: "listteams",
+	getteams: "listteams",
 	listteams: function (App) {
 		this.setLangFile(Lang_File);
 
 		if (!this.can('teams', this.room)) return this.replyAccessDenied('teams');
-
-		const canCode = this.getRoomType(this.room) === 'chat' && botCanUseCode(this.room, App);
 
 		const mod = App.modules.battle.system;
 
@@ -251,13 +251,35 @@ module.exports = {
 			return "  - " + t.name + ": " + Teams.teamOverview(t.packed);
 		}).join("\n");
 
-		if (canCode) {
-			this.replyCommand(code);
-		} else {
-			this.pmReply(code);
-		}
+		let html = '';
+
+		html += '<div style="overflow: auto; max-height: 300px; width: 100%;">';
+
+		html += '<p>' + Text.escapeHTML(this.mlt(14)) + " " + Text.escapeHTML(formatName) + ':</p>';
+
+		html += '<table border="1" cellspacing="0" cellpadding="3" style="min-width:100%;">';
+
+		html += '<tr>';
+		html += '<th>' + Text.escapeHTML(this.mlt("teamname")) + '</th>';
+		html += '<th>' + Text.escapeHTML(this.mlt("pokemon")) + '</th>';
+		html += '</tr>';
+
+		teams.forEach(t => {
+			const exportedTeam = Teams.exportTeam(t.packed);
+			html += '<tr>';
+			html += '<td><b>' + Text.escapeHTML(t.name) + '</b></td>';
+			html += '<td><details><summary>' + Teams.teamOverviewShowdownHTML(t.packed) + '</summary><pre>' + Text.escapeHTML(exportedTeam) + '</pre></details></td>';
+			html += '</tr>';
+		});
+
+		html += '</table>';
+
+		html += '</div>';
+
+		this.htmlRestrictReply(html, "teams", code);
 	},
 
+	team: "getteam",
 	getteam: function (App) {
 		this.setLangFile(Lang_File);
 

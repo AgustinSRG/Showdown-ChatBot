@@ -424,6 +424,22 @@ exports.setup = function (App) {
 	};
 
 	/**
+	 * Gets team HTML overview (pokemon names and icons)
+	 * @param {String} buf - Packed team
+	 * @returns {String} List of pokemon
+	 */
+	TeamsTools.teamOverviewShowdownHTML = function (buf) {
+		let team = fastUnpackTeam(buf);
+		if (!team) return '(empty)';
+		let pokes = [];
+		for (let i = 0; i < team.length; i++) {
+			pokes.push(SpriteTools.getPokemonIconAndNameForShowdown(team[i].species, App));
+		}
+		if (!pokes.length) return '(empty)';
+		return pokes.join(', ');
+	};
+
+	/**
 	 * Transforms a JSON team to exportable format
 	 * @param {Object} team - JSON team
 	 * @returns {String} - Exportable team

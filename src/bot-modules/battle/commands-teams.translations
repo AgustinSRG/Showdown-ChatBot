@@ -34,6 +34,9 @@ $15 = Teams available for the bot:
 
 $16 = No available teams for format:
 
+$teamname = Team Name
+$pokemon = Pokemon
+
 %spanish
 
 $0 = Nombre del equipo
@@ -60,8 +63,11 @@ $12 = Equipo eliminado:
 
 $13 = No poseo equipos para jugar en ningún formato.
 
-$14 = Equipos para el formato:
+$14 = Equipos disponibles para el formato:
 
 $15 = Equipos disponibles del bot:
 
 $16 = No poseo equipos para jugar en el formato:
+
+$teamname = Nombre del equipo
+$pokemon = Pokemon

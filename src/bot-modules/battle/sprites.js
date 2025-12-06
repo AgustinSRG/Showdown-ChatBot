@@ -497,6 +497,11 @@ function getPiconSpan(num) {
 	return `<span class="picon" style="background:transparent url(${POKE_SPRITES_URL}sprites/pokemonicons-sheet.png?v19) no-repeat scroll -${left}px -${top}px"></span>`;
 }
 
+function getPsPokeIcon(name) {
+	name = Text.toId(name);
+	return '<psicon pokemon="' + Text.escapeHTML(name) + '"/> ';
+}
+
 exports.getPokemonIconAndName = function (poke, App) {
 	poke = Text.toId(poke);
 
@@ -523,4 +528,24 @@ exports.getPokemonIconAndName = function (poke, App) {
 	let name = pokedex[poke].species || pokedex[poke].name || poke;
 
 	return getPiconSpan(num) + "&nbsp;" + Text.escapeHTML(name);
+};
+
+exports.getPokemonIconAndNameForShowdown = function (poke, App) {
+	poke = Text.toId(poke);
+
+	let pokedex;
+	try {
+		pokedex = App.data.getPokedex();
+	} catch (err) {
+		App.reportCrash(err);
+		return getPsPokeIcon('notfound') + "&nbsp;" + poke;
+	}
+
+	if (!pokedex[poke]) {
+		return getPsPokeIcon('notfound') + "&nbsp;" + poke;
+	}
+
+	let name = pokedex[poke].species || pokedex[poke].name || poke;
+
+	return getPsPokeIcon(poke) + "&nbsp;" + Text.escapeHTML(name);
 };
