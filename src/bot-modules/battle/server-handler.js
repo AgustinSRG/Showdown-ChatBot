@@ -364,7 +364,7 @@ exports.setup = function (App) {
 		let submenu = [];
 		let formats = Object.create(null);
 		let selectedFormat = Text.toId(context.get.format);
-		submenu.push('<a class="submenu-option' + (!selectedFormat ? '-selected' : '') + '" href="./">All&nbsp;Teams</a>');
+		submenu.push('<a class="new-team-option submenu-option' + (!selectedFormat ? '-selected' : '') + '" href="./">[New&nbsp;Team]</a>');
 		htmlVars.teams = '';
 		let teams = mod.TeamBuilder.dynTeams;
 		for (let id of Object.keys(teams)) {
@@ -373,7 +373,7 @@ exports.setup = function (App) {
 			if (!formats[teams[id].format]) {
 				formats[teams[id].format] = true;
 			}
-			if (selectedFormat && selectedFormat !== teams[id].format) continue;
+			if (!selectedFormat || selectedFormat !== teams[id].format) continue;
 			htmlVars.teams += teamsItemTemplate.make({
 				id: Text.escapeHTML(id),
 				name: Text.escapeHTML(teams[id].name || id),
@@ -384,18 +384,27 @@ exports.setup = function (App) {
 
 		const sortedFormats = Object.keys(formats).sort();
 
+		let chosenFormat = "";
+
 		for (let format of sortedFormats) {
 			let formatName = format;
 			if (App.bot.formats[formatName]) formatName = App.bot.formats[formatName].name;
-			submenu.push('<a class="submenu-option' + (selectedFormat === format ? '-selected' : '') +
-				'" href="./?format=' + format + '">' + formatName + '</a>');
+
+			if (selectedFormat === format) {
+				chosenFormat = " - " + Text.escapeHTML(formatName);
+			}
+
+			submenu.push('<a class="teams-format-option submenu-option' + (selectedFormat === format ? '-selected' : '') +
+				'" href="./?format=' + format + '" data-format="' + format + '" title="' + Text.escapeHTML(formatName) +
+				'">' + Text.escapeHTML(formatName) + '</a>');
 		}
 
 		if (!htmlVars.teams) {
-			htmlVars.teams = "<p><i>(No battle teams)</i></p>";
+			htmlVars.teams = "";
 		}
 
-		htmlVars.menu = submenu.join('&nbsp;| ');
+		htmlVars.menu = submenu.join('');
+		htmlVars.selected_format = chosenFormat;
 
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
