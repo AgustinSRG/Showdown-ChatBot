@@ -18,12 +18,6 @@ const HTTPS = require('https');
 
 const Lang_File = Path.resolve(__dirname, 'commands-teams.translations');
 
-function botCanUseCode(room, App) {
-	let roomData = App.bot.rooms[room];
-	let botid = Text.toId(App.bot.getBotNick());
-	return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'voice'));
-}
-
 function parseAliases(format, App) {
 	if (!format) return '';
 	format = Text.toId(format);
@@ -253,7 +247,7 @@ module.exports = {
 
 		let html = '';
 
-		html += '<div style="overflow: auto; max-height: 300px; width: 100%;">';
+		html += '<div style="overflow: auto; width: 100%;">';
 
 		html += '<p>' + Text.escapeHTML(this.mlt(14)) + " " + Text.escapeHTML(formatName) + ':</p>';
 
@@ -268,7 +262,7 @@ module.exports = {
 			const exportedTeam = Teams.exportTeam(t.packed);
 			html += '<tr>';
 			html += '<td><b>' + Text.escapeHTML(t.name) + '</b></td>';
-			html += '<td><details><summary>' + Teams.teamOverviewShowdownHTML(t.packed) + '</summary><pre>' + Text.escapeHTML(exportedTeam) + '</pre></details></td>';
+			html += '<td><details><summary>' + Teams.teamOverviewShowdownHTML(t.packed) + '</summary><pre>' + Text.escapeHTML(exportedTeam).replace(/\n/g, "<br>") + '</pre></details></td>';
 			html += '</tr>';
 		});
 
@@ -285,8 +279,6 @@ module.exports = {
 
 		if (!this.can('teams', this.room) && !this.can('viewteams', this.room)) return this.replyAccessDenied('viewteams');
 
-		const canCode = this.getRoomType(this.room) === 'chat' && botCanUseCode(this.room, App);
-
 		let mod = App.modules.battle.system;
 		const Teams = mod.TeamBuilder.tools;
 
@@ -296,6 +288,7 @@ module.exports = {
 		if (!teamId) {
 			return this.errorReply(this.usage({ desc: this.mlt(0) }));
 		}
+
 		if (!mod.TeamBuilder.dynTeams[teamId]) {
 			return this.errorReply(this.mlt(11) + " " + Chat.italics(teamName));
 		}
@@ -307,12 +300,19 @@ module.exports = {
 
 		const exportedTeam = Teams.exportTeam(mod.TeamBuilder.dynTeams[teamId].packed);
 
+		let html = '';
+
+		html += '<div style="overflow: auto; width: 100%;">';
+
+		html += '<p>' + this.mlt('teamname') + ': <b>' + Text.escapeHTML(realTeamName) + '</b></p>';
+		html += '<p>' + this.mlt(1) + ': ' + Text.escapeHTML(formatName) + '</p>';
+
+		html += '<details><summary>' + Teams.teamOverviewShowdownHTML(mod.TeamBuilder.dynTeams[teamId].packed) + '</summary><pre>' + Text.escapeHTML(exportedTeam).replace(/\n/g, "<br>") + '</pre></details>';
+
+		html += '</div>';
+
 		const code = "!code " + realTeamName + " - " + formatName + "\n\n" + exportedTeam;
 
-		if (canCode) {
-			this.replyCommand(code);
-		} else {
-			this.pmReply(code);
-		}
+		this.htmlRestrictReply(html, "info", code);
 	},
 };
