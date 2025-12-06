@@ -7,6 +7,7 @@ The add-ons are sorted alphabetically.
 Index:
 
 - [Official Add-ons for Showdown-ChatBot](#official-add-ons-for-showdown-chatbot)
+  - [AI Ask add-on](#ai-ask-add-on)
   - [Automated promotion to voice](#automated-promotion-to-voice)
   - [Automated response add-on](#automated-response-add-on)
   - [Battle spectate add-on](#battle-spectate-add-on)
@@ -16,6 +17,29 @@ Index:
   - [YouTube link recognition add-on](#youtube-link-recognition-add-on)
 
 ---
+
+## AI Ask add-on
+
+**Description**: This add-on adds an `.ask` command that allows users to ask questions and receive AI-powered responses. It supports OpenAI (GPT), Google Gemini, and Anthropic Claude. The bot reads recent chat messages and remembers previous conversations with each user for context-aware responses.
+
+**Add-on file**: [ai-ask](./ai-ask.js)
+
+**Added commands**:
+
+| Command syntax      | Description                                          |
+| ------------------- | ---------------------------------------------------- |
+| `.ask <question>`   | Ask the AI a question and receive a response         |
+
+**Configuration**: Open the `ai-ask.js` file and edit the constants at the top before installing:
+
+- `AI_PROVIDER`: The AI provider to use (`'openai'`, `'gemini'`, or `'claude'`)
+- `AI_API_KEY`: Your API key for the selected provider
+- `ROOMS`: List of rooms where the command is enabled (or `[]` for all rooms)
+
+**API Keys**:
+- OpenAI: https://platform.openai.com/api-keys
+- Gemini: https://makersuite.google.com/app/apikey
+- Claude: https://console.anthropic.com/settings/keys
 
 ## Automated promotion to voice
 
