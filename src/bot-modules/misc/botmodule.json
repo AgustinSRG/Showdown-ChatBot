@@ -15,13 +15,14 @@
 		"randpoke": {
 			"group": "voice"
 		},
-		"link": {
-			"group": "mod"
+		"wikipedia": {
+			"group": "voice"
 		}
 	},
 	"langfiles": [
 		"./commands/fun.translations",
-		"./commands/randomanswer.translations"
+		"./commands/randomanswer.translations",
+		"./commands/wiki.translations"
 	],
 	"description": "Misc Commands Plugins"
 }

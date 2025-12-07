@@ -1,0 +1,29 @@
+# Translations file
+
+@ misc-wiki
+
+%english
+
+$topic = Topic
+$lang = Language
+
+$busy = Currently downloading the data, try again in a few seconds
+
+$unavaillang = Unavailable language
+$availlangs = Available languages
+
+$errfind = Could not find the Wikipedia page
+$notfound = Page not found
+
+%spanish
+
+$topic = Tema
+$lang = Idioma
+
+$busy = Ahora mismo estoy descargando los datos, inténtalo de nuevo en unos segundos
+
+$unavaillang = Idioma no disponible
+$availlangs = Idiomas disponibles
+
+$errfind = No se pudo encontrar la página en Wikipedia
+$notfound = Página no encontrada
