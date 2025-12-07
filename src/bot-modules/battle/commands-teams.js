@@ -57,6 +57,112 @@ function wget(url, callback) {
 	});
 }
 
+function parseTeamLinkPokePast(link) {
+	let linkRegex = /^https:\/\/pokepast\.es\/([a-f0-9]+)/;
+	let linkRes = linkRegex.exec(link);
+
+	if (!linkRes) {
+		return null;
+	}
+
+	return {
+		service: "pokepast",
+		id: linkRes[1],
+	};
+}
+
+function parseTeamLinkPokemonShowdown(link) {
+	let linkRegex1 = /^https:\/\/psim\.us\/t\/([0-9]+)/;
+
+	let linkRes = linkRegex1.exec(link);
+
+	if (!linkRes) {
+		let linkRegex2 = /^https:\/\/teams\.pokemonshowdown\.com\/view\/([0-9]+)/;
+
+		linkRes = linkRegex2.exec(link);
+
+		if (!linkRes) {
+			return null;
+		}
+	}
+
+	return {
+		service: "psim",
+		id: linkRes[1],
+	};
+}
+
+function parseTeamLink(link) {
+	const parseFuncs = [
+		parseTeamLinkPokePast,
+		parseTeamLinkPokemonShowdown,
+	];
+
+	for (const fn of parseFuncs) {
+		const parsed = fn(link);
+		if (parsed) {
+			return parsed;
+		}
+	}
+
+	return null;
+}
+
+const INVALID_TEAM_FORMAT_ERROR_MESSAGE = "Invalid team format";
+
+function fetchTeamPokePast(Teams, teamId, callback) {
+	wget("https://pokepast.es/" + encodeURIComponent(teamId) + "/raw", function (data, err) {
+		if (err) {
+			return callback(null, err);
+		}
+
+		let packed;
+
+		try {
+			let team = Teams.teamToJSON(data);
+			packed = Teams.packTeam(team);
+		} catch (ex) {
+			return callback(null, new Error(INVALID_TEAM_FORMAT_ERROR_MESSAGE));
+		}
+
+		return callback(packed);
+	});
+}
+
+function fetchTeamPokemonShowdown(Teams, teamId, callback) {
+	wget("https://teams.pokemonshowdown.com/api/getteam?teamid=" + encodeURIComponent(teamId) + "&full=1", function (data, err) {
+		if (err) {
+			return callback(null, err);
+		}
+
+		let packed;
+
+		try {
+			let team = JSON.parse(data.substring(1).trim()).team;
+			if (!team) {
+				return callback(null, new Error("Team not found"));
+			}
+			team = Teams.fastUnpackTeam(team + "");
+			packed = Teams.packTeam(team);
+		} catch (ex) {
+			return callback(null, new Error(INVALID_TEAM_FORMAT_ERROR_MESSAGE));
+		}
+
+		return callback(packed);
+	});
+}
+
+function fetchTeam(Teams, parsedLink, callback) {
+	switch (parsedLink.service) {
+		case "pokepast":
+			return fetchTeamPokePast(Teams, parsedLink.id, callback);
+		case "psim":
+			return fetchTeamPokemonShowdown(Teams, parsedLink.id, callback);
+		default:
+			return callback(null, new Error("Unsupported service"));
+	}
+}
+
 module.exports = {
 	addteam: function (App) {
 		this.setLangFile(Lang_File);
@@ -93,24 +199,23 @@ module.exports = {
 		}
 
 		let link = (this.args[2] + "").toLowerCase().trim();
-		let linkRegex = /^https:\/\/pokepast\.es\/([a-f0-9]+)/;
-		let linkRes = linkRegex.exec(link);
 
-		if (!linkRes) {
+		let parsedLink = parseTeamLink(link);
+
+		if (!parsedLink) {
 			return this.errorReply(this.mlt(6));
 		}
 
-		wget("https://pokepast.es/" + linkRes[1] + "/raw", function (data, err) {
+		fetchTeam(Teams, parsedLink, (packed, err) => {
 			if (err) {
-				return this.errorReply(this.mlt(7) + " " + err.message);
+				if (err.message === INVALID_TEAM_FORMAT_ERROR_MESSAGE) {
+					return this.errorReply(this.mlt(8));
+				} else {
+					return this.errorReply(this.mlt(7) + " " + err.message);
+				}
 			}
 
-			let packed;
-
-			try {
-				let team = Teams.teamToJSON(data);
-				packed = Teams.packTeam(team);
-			} catch (ex) {
+			if (!packed) {
 				return this.errorReply(this.mlt(8));
 			}
 
@@ -125,7 +230,14 @@ module.exports = {
 
 			this.reply(this.mlt(9) + " " + Chat.italics(teamName) + " " + this.mlt(10) + " " + Chat.italics(formatName));
 			this.addToSecurityLog();
-		}.bind(this));
+
+			// Display the added team
+
+			this.cmd = 'getteam';
+			this.arg = teamId;
+			this.args = [teamId];
+			this.parser.exec(this);
+		});
 	},
 
 	deleteteam: function (App) {

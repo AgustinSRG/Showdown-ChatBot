@@ -6,14 +6,14 @@
 
 $0 = Team name
 $1 = Format
-$2 = PokePast Link
+$2 = Team Link
 
 $3 = The format
 $4 = does not exist or is not available
 
 $5 = I already have a team with the same name, please choose another one.
 
-$6 = The link to PokePast is invalid
+$6 = The link to the team is invalid
 
 $7 = Could not obtain the team from the link. Error:
 
@@ -41,14 +41,14 @@ $pokemon = Pokemon
 
 $0 = Nombre del equipo
 $1 = Formato
-$2 = Link a PokePast
+$2 = Link del equipo
 
 $3 = El formato
 $4 = no existe o no está disponible
 
 $5 = Ya tengo un equipo con el mismo nombre, por favor elija otro.
 
-$6 = El enlace a PokePast no es correcto
+$6 = El enlace del equipo no es correcto
 
 $7 = No se pudo obtener el equipo desde el enlace. Error:
 
