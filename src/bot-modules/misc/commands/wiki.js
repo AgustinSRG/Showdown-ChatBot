@@ -215,7 +215,7 @@ module.exports = {
 		}
 
 		let canUseHtmlInRoom = this.getRoomType(this.room) === 'chat' &&
-			!this.isGroupChat(this.room) && this.can('usagedata', this.room) &&
+			!this.isGroupChat(this.room) && this.can('wikipedia', this.room) &&
 			botCanHtml(this.room, App);
 
 		if (markDownload(this.byIdent.id)) return this.errorReply(this.mlt('busy'));
