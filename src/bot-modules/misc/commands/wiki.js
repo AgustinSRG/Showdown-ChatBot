@@ -270,7 +270,7 @@ module.exports = {
 				html += '<tr>';
 
 				if (image) {
-					html += '<td style="padding: 8px;">';
+					html += '<td style="padding: 8px; width: ' + image.width + 'px;">';
 					html += '<img src="' + Text.escapeHTML(image.url) + '" width="' + Text.escapeHTML(image.width) + '" height="' + Text.escapeHTML(image.height) + '">';
 					html += '</td>';
 				}
