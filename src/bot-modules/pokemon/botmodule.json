@@ -1,25 +1,33 @@
 {
-  "id": "pokemon",
-  "name": "Pokemon",
-  "main": "main.js",
-  "handlers": [
-    "server-handler.js"
-  ],
-  "commands": [
-    "poke-trans/commands.js",
-	"poke-data/commands.js",
-	"usage/commands.js"
-  ],
-  "permissions": {
-	"pokemon": {"group": "voice"},
-	"translate": {"group": "driver"},
-	"usage": {"group": "voice"},
-	"usagedata": {"group": "driver"}
-  },
-  "langfiles": [
-    "./poke-data/commands.translations",
-	"./poke-trans/commands.translations",
-	"./usage/commands.translations"
-  ],
-  "description": "Pokemon help commands"
+	"id": "pokemon",
+	"name": "Pokemon",
+	"main": "main.js",
+	"handlers": [
+		"server-handler.js"
+	],
+	"commands": [
+		"poke-trans/commands.js",
+		"poke-data/commands.js",
+		"usage/commands.js"
+	],
+	"permissions": {
+		"pokemon": {
+			"group": "voice"
+		},
+		"translate": {
+			"group": "voice"
+		},
+		"usage": {
+			"group": "voice"
+		},
+		"usagedata": {
+			"group": "voice"
+		}
+	},
+	"langfiles": [
+		"./poke-data/commands.translations",
+		"./poke-trans/commands.translations",
+		"./usage/commands.translations"
+	],
+	"description": "Pokemon help commands"
 }

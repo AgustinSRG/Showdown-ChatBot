@@ -1,34 +1,34 @@
 {
-  "id": "tourcmd",
-  "name": "Tour Command",
-  "main": "main.js",
-  "commands": [
-    "commands.js"
-  ],
-  "handlers": [
-    "server-handler.js"
-  ],
-  "permissions": {
-    "tour": {
-      "group": "mod"
-    },
-    "tourlog": {
-      "group": "driver"
-    },
-    "tourpollset": {
-      "excepted": true
-    },
-    "tourcustomformat": {
-      "excepted": true
-    },
-    "tourformatalias": {
-      "excepted": true
-    }
-  },
-  "langfiles": [
-    "./commands.translations",
-    "./tournaments.translations",
-    "./errors.translations"
-  ],
-  "description": "A single command to make a tour, start it and set the autodq"
+	"id": "tourcmd",
+	"name": "Tour Command",
+	"main": "main.js",
+	"commands": [
+		"commands.js"
+	],
+	"handlers": [
+		"server-handler.js"
+	],
+	"permissions": {
+		"tour": {
+			"group": "mod"
+		},
+		"tourlog": {
+			"group": "voice"
+		},
+		"tourpollset": {
+			"excepted": true
+		},
+		"tourcustomformat": {
+			"excepted": true
+		},
+		"tourformatalias": {
+			"excepted": true
+		}
+	},
+	"langfiles": [
+		"./commands.translations",
+		"./tournaments.translations",
+		"./errors.translations"
+	],
+	"description": "A single command to make a tour, start it and set the autodq"
 }

@@ -10,7 +10,7 @@
 	],
 	"permissions": {
 		"ldbcustomrank": {
-			"group": "driver"
+			"group": "voice"
 		},
 		"ldbcustomofficial": {
 			"group": "driver"

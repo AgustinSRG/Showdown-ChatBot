@@ -1,26 +1,26 @@
 {
-  "id": "tourleaderboards",
-  "name": "Tour Leaderboards",
-  "main": "main.js",
-  "commands": [
-    "commands.js"
-  ],
-  "handlers": [
-    "server-handler.js"
-  ],
-  "permissions": {
-    "tourofficial": {
-      "group": "mod"
-    },
-    "toursrank": {
-      "group": "driver"
-    },
-    "tourldbconfig": {
-      "excepted": true
-    }
-  },
-  "langfiles": [
-    "./commands.translations"
-  ],
-  "description": "Tournament leaderboards for chat rooms"
+	"id": "tourleaderboards",
+	"name": "Tour Leaderboards",
+	"main": "main.js",
+	"commands": [
+		"commands.js"
+	],
+	"handlers": [
+		"server-handler.js"
+	],
+	"permissions": {
+		"tourofficial": {
+			"group": "mod"
+		},
+		"toursrank": {
+			"group": "voice"
+		},
+		"tourldbconfig": {
+			"excepted": true
+		}
+	},
+	"langfiles": [
+		"./commands.translations"
+	],
+	"description": "Tournament leaderboards for chat rooms"
 }
