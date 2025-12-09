@@ -111,7 +111,7 @@ function isValidHttpsUrl(url) {
 
 function getWikiSummary(locale, title, pageId, callback) {
 	const url = 'https://' + locale +
-		'.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages&pithumbsize=100&format=json&explaintext=&exintro=&titles=' +
+		'.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages&pithumbsize=100&format=json&explaintext=&exintro=&exsentences=10&titles=' +
 		encodeURIComponent(title);
 
 	wget(url, function (data, err) {
