@@ -260,8 +260,23 @@ module.exports = {
 				return this.errorReply(this.mlt('error'));
 			}
 			if (!this.arg) {
-				return this.errorReply(this.usage({ desc: 'pokemon' }, { desc: 'tier', optional: true }, { desc: 'ladder (top|high|mid|low)', optional: true }));
+				return this.restrictReply(
+					this.mlt('stats') + ": " + link +
+					" | " +
+					this.usage({ desc: 'pokemon' }, { desc: 'tier', optional: true }, { desc: 'ladder (top|high|mid|low)', optional: true }),
+					'usage'
+				);
 			}
+
+			if (this.args.length === 1 || (this.args.length === 2 && Valid_ladder_Types.includes(getLadderType(Text.toId(this.args[1]))))) {
+				const possibleTier = parseAliases(this.args[0], App);
+				if (App.bot.formats[possibleTier]) {
+					this.cmd = "usagetop";
+					this.parser.exec(this);
+					return;
+				}
+			}
+
 			let poke = "garchomp", searchIndex = -1;
 			let tier = App.config.modules.pokemon.gtier || parseAliases('ou', App);
 			let ladder = 'high';
@@ -814,16 +829,16 @@ module.exports = {
 					let html;
 
 					if (canUseHtmlInRoom) {
-						html = '<table>' +
+						html = '<table style="border-collapse: collapse;">' +
 							// First row
-							'<tr><td style="text-align:center; border-right: solid 1px black; padding: 12px;"><b>' + Text.escapeHTML(dataRes.name) + '</b></td>' +
+							'<tr><td style="text-align:center; border-right: solid 1px #7799BB; padding: 12px;"><b>' + Text.escapeHTML(dataRes.name) + '</b></td>' +
 							'<td style="padding: 12px;">' +
 							usageBaseLineHtml +
 							'</td></tr>' +
 							// Second row
 							'<tr>' +
 							// Image
-							'<td style="text-align:center; border-right: solid 1px black; padding: 12px;"><img src="https://play.pokemonshowdown.com/sprites/gen5/' + toSpriteId(dataRes.name) + '.png" height="96" width="96" alt="' + Text.escapeHTML(dataRes.name) + '"></td>' +
+							'<td style="text-align:center; border-right: solid 1px #7799BB; padding: 12px;"><img src="https://play.pokemonshowdown.com/sprites/gen5/' + toSpriteId(dataRes.name) + '.png" height="96" width="96" alt="' + Text.escapeHTML(dataRes.name) + '"></td>' +
 							// Details
 							'<td style="padding: 12px;">' +
 							detailsHTML +
