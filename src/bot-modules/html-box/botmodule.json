@@ -1,18 +1,20 @@
 {
-  "id": "htmlbox",
-  "name": "HtmlBox Commands",
-  "main": "main.js",
-  "commands": [
-    "commands.js"
-  ],
-  "permissions": {
-	"htmlboxcmd": {"group": "mod"}
-  },
-  "handlers": [
-    "server-handler.js"
-  ],
-  "langfiles": [
-    "./commands.translations"
-  ],
-  "description": "Special subcommands using /htmlbox showdown feature"
+	"id": "htmlbox",
+	"name": "HtmlBox Commands",
+	"main": "main.js",
+	"commands": [
+		"commands.js"
+	],
+	"permissions": {
+		"htmlboxcmd": {
+			"group": "voice"
+		}
+	},
+	"handlers": [
+		"server-handler.js"
+	],
+	"langfiles": [
+		"./commands.translations"
+	],
+	"description": "Special subcommands using /htmlbox showdown feature"
 }
