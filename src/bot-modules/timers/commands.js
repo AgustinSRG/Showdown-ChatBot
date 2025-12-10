@@ -419,7 +419,8 @@ module.exports = {
 		}
 
 		if (this.getRoomType(room) !== 'chat') {
-			return this.errorReply(this.mlt('nochat'));
+			return this.errorReply(this.mlt('nochat') + " | " +
+				this.usage({ desc: this.usageTrans('room') }, { desc: this.mlt(10) }));
 		}
 
 		const Mod = App.modules.timers.system;
