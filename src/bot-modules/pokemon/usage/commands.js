@@ -22,12 +22,6 @@ const USAGE_FAQ_URL = "https://www.smogon.com/forums/threads/gen-9-smogon-univer
 
 /* Usage utils */
 
-function botCanHtml(room, App) {
-	let roomData = App.bot.rooms[room];
-	let botid = Text.toId(App.bot.getBotNick());
-	return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'bot'));
-}
-
 function toSpriteId(str) {
 	const id = ('' + str).replace(/[^a-zA-Z0-9-]+/g, '').toLowerCase();
 	const parts = id.split("-");
@@ -539,11 +533,6 @@ module.exports = {
 	usagecard: "usagedata",
 	usagedata: function (App) {
 		this.setLangFile(Lang_File);
-
-		let canUseHtmlInRoom = this.getRoomType(this.room) === 'chat' &&
-			!this.isGroupChat(this.room) && this.can('usagedata', this.room) &&
-			botCanHtml(this.room, App);
-
 		getUsageLink(App, function (link) {
 			if (!link) {
 				return this.errorReply(this.mlt('error'));
@@ -828,7 +817,7 @@ module.exports = {
 
 					let html;
 
-					if (canUseHtmlInRoom) {
+					if (this.canUseHtmlInRoom('usagedata')) {
 						html = '<table style="border-collapse: collapse;">' +
 							// First row
 							'<tr><td style="text-align:center; border-right: solid 1px #7799BB; padding: 12px;"><b>' + Text.escapeHTML(dataRes.name) + '</b></td>' +

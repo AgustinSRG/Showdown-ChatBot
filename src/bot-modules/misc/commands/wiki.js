@@ -161,12 +161,6 @@ function getWikiSummary(locale, title, pageId, callback) {
 	});
 }
 
-function botCanHtml(room, App) {
-	let roomData = App.bot.rooms[room];
-	let botid = Text.toId(App.bot.getBotNick());
-	return (roomData && roomData.users[botid] && App.parser.equalOrHigherGroup({ group: roomData.users[botid] }, 'bot'));
-}
-
 const downloadingFlag = Object.create(null);
 
 function markDownload(user, b) {
@@ -214,9 +208,7 @@ module.exports = {
 			return this.errorReply(this.mlt('unavaillang') + ". " + this.mlt('availlangs') + ": " + Available_Languages.join(", "));
 		}
 
-		let canUseHtmlInRoom = this.getRoomType(this.room) === 'chat' &&
-			!this.isGroupChat(this.room) && this.can('wikipedia', this.room) &&
-			botCanHtml(this.room, App);
+		let canUseHtmlInRoom = this.canUseHtmlInRoom('wikipedia');
 
 		if (markDownload(this.byIdent.id)) return this.errorReply(this.mlt('busy'));
 

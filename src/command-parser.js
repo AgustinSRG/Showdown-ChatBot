@@ -940,6 +940,23 @@ class CommandContext {
 		return room && room.substring(0, 10) === "groupchat-";
 	}
 
+	canUseHtmlInRoom(perm) {
+		if (!this.room || this.getRoomType(this.room) !== 'chat' || this.isGroupChat(this.room)) {
+			return false;
+		}
+
+		if (!this.can(perm, this.room)) {
+			return false;
+		}
+
+		const botUserId = Text.toId(this.parser.bot.getBotNick());
+		const roomData = this.parser.bot.rooms[this.room];
+
+		const canHtml = roomData && roomData.users[botUserId] && this.parser.equalOrHigherGroup({ group: roomData.users[botUserId] }, 'bot');
+
+		return canHtml;
+	}
+
 	htmlRestrictReply(html, perm, textAlternative) {
 		if (!this.room) {
 			return this.htmlPrivateReply(html, textAlternative);
