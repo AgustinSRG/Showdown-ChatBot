@@ -463,7 +463,7 @@ class CommandParser {
 	run(context) {
 		if (this.execTriggers('before', context)) return; /* Trigger interrupted the command */
 
-		if (this.data.antimixtoken && !context.room) {
+		if (this.data.antimixtoken && context.room) {
 			if (context.originalMessage.charAt(1) in { "/": 1, "!": 1 }) {
 				return false; // Avoid mixing server and bot command tokens
 			}
