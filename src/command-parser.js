@@ -177,13 +177,19 @@ class CommandParser {
 	 */
 	addCommands(cmds) {
 		for (let k in cmds) {
+			const id = Text.toCmdId(k);
+
+			if (!id) {
+				continue;
+			}
+
 			switch (typeof cmds[k]) {
 				case 'function':
-					this.commands[k] = new Command(k, cmds[k]);
+					this.commands[id] = new Command(id, cmds[k]);
 					break;
 				case 'string':
-					if (!this.data.aliases[k]) {
-						this.data.aliases[k] = cmds[k];
+					if (!this.data.aliases[id]) {
+						this.data.aliases[id] = cmds[k];
 					}
 					break;
 			}
@@ -196,15 +202,21 @@ class CommandParser {
 	 */
 	removeCommands(cmds) {
 		for (let k in cmds) {
+			const id = Text.toCmdId(k);
+
+			if (!id) {
+				continue;
+			}
+
 			switch (typeof cmds[k]) {
 				case 'function':
-					if (this.commands[k] && this.commands[k].func === cmds[k]) {
-						delete this.commands[k];
+					if (this.commands[id] && this.commands[id].func === cmds[k]) {
+						delete this.commands[id];
 					}
 					break;
 				case 'string':
-					if (this.data.aliases[k] && this.data.aliases[k] === cmds[k]) {
-						delete this.data.aliases[k];
+					if (this.data.aliases[id] && this.data.aliases[id] === cmds[k]) {
+						delete this.data.aliases[id];
 					}
 					break;
 			}

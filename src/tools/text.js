@@ -31,7 +31,7 @@ exports.toRoomid = exports.toRoomId = function (str) {
  */
 exports.toCmdid = exports.toCmdId = function (str) {
 	if (!str) return '';
-	return ('' + str).replace(/[^_a-zA-Z0-9-]+/g, '').toLowerCase();
+	return ('' + str).replace(/[^a-zA-Z0-9]+/g, '').toLowerCase();
 };
 
 /**
