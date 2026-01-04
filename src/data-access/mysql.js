@@ -88,7 +88,7 @@ class DataAccessManager {
 			}
 		}
 		if (!file) {
-			throw new Error("The file with name \"" + filename + "\" does not exists");
+			throw new Error("The file with name \"" + filename + "\" does not exist");
 		} else {
 			let data = '';
 			file = file.sort((a, b) => {

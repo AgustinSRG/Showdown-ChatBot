@@ -258,7 +258,7 @@ exports.setup = function (App) {
 					let la = room.lastIndexOf("-");
 
 					if (la < 0) {
-						ws.send("a" + JSON.stringify(["|popup|The battle you requested does not exists"]));
+					ws.send("a" + JSON.stringify(["|"|popup|The battle you requested does not exist"]));
 						ws.close(); // Not found
 						return;
 					}
