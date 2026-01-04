@@ -826,7 +826,7 @@ module.exports = {
 						if (!this.can('ldbcustomconfig', this.room)) return this.replyAccessDenied('ldbcustomconfig');
 					}
 
-					if (Config[leaderboardsId].room && Config[leaderboardsId].room !== room) {
+					if (Config[leaderboardsId].room && Config[leaderboardsId].room !== room && !this.can('ldbcustomconfig', this.room)) {
 						return this.errorReply(this.mlt(44) + " " + Chat.bold(Config[leaderboardsId].name || leaderboardsId) + " " + this.mlt(46) + " <<" + Config[leaderboardsId].room + ">>");
 					}
 
