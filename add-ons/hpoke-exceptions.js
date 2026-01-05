@@ -38,7 +38,7 @@ exports.setup = function (App) {
 					}
 					App.saveConfig();
 					App.logServerAction(context.user.id, "Changed hpoke exceptions.");
-					ok = "Hashpoke exceptions saved sucessfully.";
+					ok = "Hashpoke exceptions saved successfully.";
 				}
 
 				let exceptions = [];
