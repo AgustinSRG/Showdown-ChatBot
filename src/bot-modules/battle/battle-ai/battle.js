@@ -726,7 +726,18 @@ exports.setup = function (App, CustomModules, ExternalService) {
 			pokeA.helpers = Object.create(null);
 			if (forceMega && (p.canMegaEvo || (this.request.active && this.request.active[sideId] && this.request.active[sideId].canMegaEvo))) {
 				if (pokeA.item.megaStone) {
-					pokeA.template = BattleData.getPokemon(pokeA.item.megaStone, this.gen);
+					let megaSpecies = pokeA.item.megaStone;
+
+					if (typeof megaSpecies === "object") {
+						const baseSpecies = pokeA.template.baseSpecies || pokeA.template.name || "";
+						if (typeof megaSpecies[baseSpecies] === "string") {
+							megaSpecies = megaSpecies[baseSpecies];
+						} else {
+							megaSpecies = Object.values(megaSpecies)[0] || "";
+						}
+					}
+
+					pokeA.template = BattleData.getPokemon(megaSpecies, this.gen);
 					pokeA.species = pokeA.template.species;
 					pokeA.ability = BattleData.getAbility(pokeA.template.abilities[0]);
 				}
