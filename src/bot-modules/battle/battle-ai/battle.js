@@ -339,7 +339,7 @@ exports.setup = function (App, CustomModules, ExternalService) {
 				poke = sourcePoke || "???";
 			}
 
-			if (!Config.otherMessages[type] || !Array.isArray(Config.otherMessages[type])) return;
+			if (!Config.otherMessages[type] || !Array.isArray(Config.otherMessages[type]) || Config.otherMessages[type].length === 0) return;
 
 			const chosenMsg = Config.otherMessages[type][Math.floor(Math.random() * Config.otherMessages[type].length)];
 
