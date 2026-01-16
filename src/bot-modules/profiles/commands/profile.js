@@ -158,7 +158,7 @@ module.exports = {
 			html += '</td>';
 
 			// Start of info section
-			html += '<td style="vertical-align: top; ' + textColorStyle + '">';
+			html += '<td style="vertical-align: middle; ' + textColorStyle + '">';
 
 			// Username (info section)
 			html += '<p style="margin: 4px 0"><u>' + this.mlt("name") + ':</u> <b class="username" style="color: ' + Text.escapeHTML(data.color) + ';">' + Text.escapeHTML(username) + '</b></p>';
