@@ -128,7 +128,7 @@ module.exports = {
 
 
 			// Start of avatar section
-			html += '<td style="width: 80px; text-align: center; border-right: solid 1px ' + borderColor + '; padding: 12px;' + textColorStyle + '">';
+			html += '<td style="width: 80px; text-align: center; border-right: solid 1px ' + borderColor + '; padding: 12px; vertical-align: top;' + textColorStyle + '">';
 
 			// Username
 			const username = data.online ? data.name : data.regName;
@@ -158,7 +158,7 @@ module.exports = {
 			html += '</td>';
 
 			// Start of info section
-			html += '<td style="' + textColorStyle + '">';
+			html += '<td style="vertical-align: top; ' + textColorStyle + '">';
 
 			// Username (info section)
 			html += '<p style="margin: 4px 0"><u>' + this.mlt("name") + ':</u> <b class="username" style="color: ' + Text.escapeHTML(data.color) + ';">' + Text.escapeHTML(username) + '</b></p>';
