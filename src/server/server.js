@@ -925,6 +925,9 @@ class RequestContext {
 		if (!options.package) {
 			options.package = this.server.app.env.package;
 		}
+		if (!options.footerHtml) {
+			options.footerHtml = this.server.app.config.footerhtml;
+		}
 		options.theme = this.theme;
 		let html = PageMaker.generate(body, loginData, this.menu, options);
 		this.headers['Content-Type'] = 'text/html; charset=utf-8';

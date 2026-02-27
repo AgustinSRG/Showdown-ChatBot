@@ -47,8 +47,19 @@
 	<p><input type="checkbox" name="useproxy" value="true" ${USEPROXY} />&nbsp;Check this option if you are using a
 		reverse proxy (like NGINX) for your control panel.</p>
 
-	<p><textarea id="textareamainhtml" name="mainhtml" style="width: 100%; max-width: 80ch;" rows="4"
-			placeholder="Custom HTML for main page. Leave this blank for default page.">${MAINHTML}</textarea></p>
+	<p>
+		<strong>Custom HTML for the main page.</strong> (Leave this blank for default page):
+		<br>
+		<textarea id="textareamainhtml" name="mainhtml" style="width: 100%; max-width: 80ch;" rows="4"
+			placeholder="&lt;h2&gt;Pokemon Showdown ChatBot - Control Panel&lt;/h2&gt;">${MAINHTML}</textarea>
+	</p>
+
+	<p>
+		<strong>Custom HTML for the footer.</strong> (Leave this blank for default):
+		<br>
+		<textarea id="textareamainhtml" name="footerhtml" style="width: 100%; max-width: 80ch;" rows="4"
+			placeholder="&lt;i&gt;This is a Pokemon Showdown Bot for Node JS&lt;i&gt;">${FOOTERHTML}</textarea>
+	</p>
 
 	<h3>Message sending settings</h3>
 

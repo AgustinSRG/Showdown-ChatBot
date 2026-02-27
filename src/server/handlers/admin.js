@@ -96,6 +96,7 @@ exports.setup = function (App) {
 				App.config.disableuserdata = !!context.post.disableuserdata;
 				App.config.autoremoveuserdata = !!context.post.rmuserdata;
 				App.config.mainhtml = (context.post.mainhtml || '').trim();
+				App.config.footerhtml = (context.post.footerhtml || '').trim();
 				const changedConnectionMonitorConfig = App.config.connmonitor.checktime !== connectionMonitorCheckTime;
 				App.config.connmonitor.checktime = connectionMonitorCheckTime;
 				App.saveConfig();
@@ -131,6 +132,7 @@ exports.setup = function (App) {
 		htmlVars.disableuserdata = (App.config.disableuserdata ? 'checked="checked"' : '');
 		htmlVars.rmuserdata = (App.config.autoremoveuserdata ? 'checked="checked"' : '');
 		htmlVars.mainhtml = Text.escapeHTML(App.config.mainhtml || '');
+		htmlVars.footerhtml = Text.escapeHTML(App.config.footerhtml || '');
 		htmlVars.reconnectdelay = Text.escapeHTML(Math.floor(App.config.bot.retrydelay / 1000));
 		htmlVars.conmonitorchecktime = Text.escapeHTML(App.config.connmonitor.checktime);
 

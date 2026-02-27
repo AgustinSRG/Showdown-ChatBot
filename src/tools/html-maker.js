@@ -181,9 +181,14 @@ exports.generate = function (body, loginData, menu, options) {
 	buf += body;
 	buf += "</div></div>";
 
-	if (options.package) {
-		buf += '<div align="center" class="maindiv">';
-		buf += '<div align="center" class="copyright">';
+	/* Footer */
+
+	buf += '<div align="center" class="maindiv">';
+	buf += '<div align="center" class="copyright">';
+
+	if (options.footerHtml) {
+		buf += options.footerHtml;
+	} else if (options.package) {
 		buf += "<i>This is a Pokemon Showdown Bot for Node JS - ";
 		buf +=
 			'<a href="' +
@@ -192,13 +197,20 @@ exports.generate = function (body, loginData, menu, options) {
 			"</a> v" +
 			options.package.version;
 		buf += "</i>";
-		buf += ' - Theme: <select class="theme-select" value="">';
-		buf += '<option value="">Device</option>';
-		buf += '<option value="d">Dark</option>';
-		buf += '<option value="l">Light</option>';
-		buf += "</select>";
-		buf += "</div></div>";
+	} else {
+		buf += "<i>This is a Pokemon Showdown Bot for Node JS</i>";
 	}
+
+	buf += ' - Theme: <select class="theme-select" value="">';
+	buf += '<option value="">Device</option>';
+	buf += '<option value="d">Dark</option>';
+	buf += '<option value="l">Light</option>';
+	buf += "</select>";
+
+	buf += "</div></div>";
+
+	/* End of HTML body */
+
 	buf += "</div></body>";
 	buf += "</html>";
 	return buf;
