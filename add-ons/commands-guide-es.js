@@ -254,14 +254,14 @@ class CommandsGuide {
 		});
 	}
 
-	getBotMessageCommand(command) {
+	getBotMessageCommand(command, room) {
 		const botId = Text.toId(this.app.bot.getBotNick());
 		const botToken = this.app.config.parser.tokens[0] || '.';
 
-		return '/msg ' + botId + ', /botmsg ' + botId + ', ' + botToken + command;
+		return '/msg ' + botId + ', /msgroom ' + room + ', /botmsg ' + botId + ', ' + botToken + command;
 	}
 
-	generateHelpPage(sectionIndex, pageIndex) {
+	generateHelpPage(sectionIndex, pageIndex, room) {
 		let html = '<div style="padding: 0.5rem;">';
 
 		// Title
@@ -274,7 +274,7 @@ class CommandsGuide {
 			html += '<b>' + Text.escapeHTML(this.app.bot.getBotNick().substring(1)) + ' - Guía de comandos</b>&nbsp;';
 		}
 
-		html += '<button class="button" name="send" value="' + Text.escapeHTML(this.getBotMessageCommand("help close")) + '">Cerrar guía</button>';
+		html += '<button class="button" name="send" value="' + Text.escapeHTML(this.getBotMessageCommand("help !,close", room)) + '">Cerrar guía</button>';
 
 		html += '</div>';
 
@@ -292,7 +292,7 @@ class CommandsGuide {
 			if (i > 0) {
 				html += '&nbsp;';
 			}
-			html += '<button class="button' + (i === sectionIndex ? ' disabled' : '') + '"' + (i === sectionIndex ? ' disabled style="border-color: #ffffff;"' : '') + ' name="send" value="' + Text.escapeHTML(this.getBotMessageCommand("help " + i)) + '">' + Text.escapeHTML(sections[i].name) + '</button>';
+			html += '<button class="button' + (i === sectionIndex ? ' disabled' : '') + '"' + (i === sectionIndex ? ' disabled style="border-color: #ffffff;"' : '') + ' name="send" value="' + Text.escapeHTML(this.getBotMessageCommand("help !," + i, room)) + '">' + Text.escapeHTML(sections[i].name) + '</button>';
 		}
 
 		html += '</div>';
@@ -326,7 +326,7 @@ class CommandsGuide {
 				if (i > 0) {
 					html += '&nbsp;';
 				}
-				html += '<button class="button' + (i === pageIndex ? ' disabled' : '') + '"' + (i === pageIndex ? ' disabled style="border-color: #ffffff;"' : '') + ' name="send" value="' + Text.escapeHTML(this.getBotMessageCommand("help " + sectionIndex + ', ' + i)) + '">' + (i + 1) + '</button>';
+				html += '<button class="button' + (i === pageIndex ? ' disabled' : '') + '"' + (i === pageIndex ? ' disabled style="border-color: #ffffff;"' : '') + ' name="send" value="' + Text.escapeHTML(this.getBotMessageCommand("help !," + sectionIndex + ', ' + i, room)) + '">' + (i + 1) + '</button>';
 			}
 
 			html += '</p>';
@@ -353,6 +353,53 @@ class CommandsGuide {
 		html += '</div>';
 
 		return html;
+	}
+
+	findCommand(cmd) {
+		const aliasTarget = this.app.parser.data.aliases[cmd];
+
+		const sections = this.data.sections || [];
+
+		const entries = [];
+
+		for (const section of sections) {
+			const commands = section.commands || [];
+
+			for (const command of commands) {
+				const commandId = Text.toCmdId((command.syntax || "").split(" ")[0] || "");
+
+				if (commandId === cmd || (aliasTarget && commandId === aliasTarget)) {
+					entries.push(command);
+				}
+			}
+		}
+
+		return entries;
+	}
+
+	renderCommandsHtml(commands) {
+		let html = "";
+
+		for (const cmd of commands) {
+			html += '<p>';
+
+			html += '<code>' + Text.escapeHTML(cmd.syntax) + '</code> - ';
+
+			html += cmd.description.join('<br />');
+
+			html += '</p>';
+		}
+
+		return html;
+	}
+
+	renderCommandsText(commands) {
+		return "!code " + commands.map(cmd => {
+			return cmd.syntax + "\n" +
+				cmd.description.join("\n")
+					.replace(/<\/?((i)|(b)|(a))>/g, "")
+					.replace(/<a href=.+>/g, "");
+		}).join("\n\n");
 	}
 
 	save() {
@@ -495,24 +542,35 @@ exports.setup = function (App) {
 					}
 				}
 
-				if (!roomWithBotRank) {
-					return this.pmReply("Guía de comandos: https://github.com/AgustinSRG/Showdown-ChatBot/wiki/Commands-List-(Spanish)---Lista-de-Comandos");
-				}
+				if (this.args[0] === "!" || !this.arg) {
+					if (!roomWithBotRank) {
+						return this.pmReply("Guía de comandos: https://github.com/AgustinSRG/Showdown-ChatBot/wiki/Commands-List-(Spanish)---Lista-de-Comandos");
+					}
 
-				if (this.args[0] === "close") {
-					this.send('/closehtmlpage ' + this.byIdent.id + ', ' + pageId, roomWithBotRank);
-					return;
-				}
+					if (this.args[1] === "close") {
+						this.send('/closehtmlpage ' + this.byIdent.id + ', ' + pageId, roomWithBotRank);
+						return;
+					}
 
-				const sectionIndex = Math.min(commandsGuide.data.sections.length - 1, Math.max(0, parseInt(this.args[0] || "0") || 0));
-				const sectionPage = Math.max(0, parseInt(this.args[1] || "0") || 0);
+					const sectionIndex = Math.min(commandsGuide.data.sections.length - 1, Math.max(0, parseInt(this.args[1] || "0") || 0));
+					const sectionPage = Math.max(0, parseInt(this.args[2] || "0") || 0);
 
-				const html = commandsGuide.generateHelpPage(sectionIndex, sectionPage);
+					const html = commandsGuide.generateHelpPage(sectionIndex, sectionPage, roomWithBotRank);
 
-				if (html) {
-					this.send('/sendhtmlpage ' + this.byIdent.id + ', ' + pageId + ', ' + html, roomWithBotRank);
+					if (html) {
+						this.send('/sendhtmlpage ' + this.byIdent.id + ', ' + pageId + ', ' + html, roomWithBotRank);
+					} else {
+						this.pmReply("La guía de comandos se encuentra vacía. Por favor, contacte con un administrador del bot para que la configure.");
+					}
 				} else {
-					this.pmReply("La guía de comandos se encuentra vacía. Por favor, contacte con un administrador del bot para que la configure.");
+					const commandId = Text.toCmdId(this.arg);
+					const commandEntries = commandsGuide.findCommand(commandId);
+
+					if (commandEntries.length === 0) {
+						return this.pmReply("No se pudo encontrar ninguna documentación acerca del comando " + Chat.code(commandId || this.arg) + ". Intente usar " + Chat.code(this.token + this.cmd) + " sin argumentos para mostrar la lista completa de comandos.");
+					}
+
+					this.htmlPrivateReply(commandsGuide.renderCommandsHtml(commandEntries), commandsGuide.renderCommandsText(commandEntries));
 				}
 			},
 		},
