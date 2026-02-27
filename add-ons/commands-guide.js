@@ -3,17 +3,17 @@
 // WARNING: Version 2.16.1 or greater required!
 // ------------------------------------
 // This addon turns the help command into an interactive guide.
-// Note: The bot needs the global bot rank in the server for this to work
-// Note: The bot requires to be in the lobby room for this to work
+// Note: The bot needs the bot rank in the server for this to work
+// Note: The user who uses the command must be in the same room as the bot having the rank (unless it is a global bot)
 // This add-on also adds a control panel section 'Commands Guide' to configure the guide.
 
 'use strict';
 
+// Set this to true if your bot is a global bot
+const IS_GLOBAL_BOT = false;
+
 // Max number of commands per page
 const MAX_COMMANDS_PER_PAGE = 10;
-
-// Name of the lobby room
-const LOBBY_ROOM = "lobby";
 
 // URL to download the official guide
 const COMMANDS_GUIDE_DEFAULT_SOURCE = "https://raw.githubusercontent.com/wiki/AgustinSRG/Showdown-ChatBot/Commands-List.md";
@@ -438,7 +438,7 @@ exports.setup = function (App) {
 		html += '<textarea name="data" style="width: 100%; max-width: 100ch;" rows="30">';
 		html += Text.escapeHTML(commandsGuide.serializeCommandGuideConfig());
 		html += '</textarea>';
-		html += '<p><input type="checkbox" name="autoupdate"' + (commandsGuide.data.autoUpdate ? ' checked="checked"' : '') + ' />&nbsp;Automatically update guide every 24 hours (note: this will overwrite your previously guide, keep disabled for a custom guide).</p>';
+		html += '<p><input type="checkbox" name="autoupdate"' + (commandsGuide.data.autoUpdate ? ' checked="checked"' : '') + ' />&nbsp;Automatically update guide every 24 hours (note: this will overwrite your previous guide, keep disabled for a custom guide).</p>';
 		html += '<p><input type="submit" name="save" value="Save Changes" /></p>';
 		html += '</form>';
 
@@ -463,8 +463,33 @@ exports.setup = function (App) {
 				const botId = Text.toId(App.bot.getBotNick());
 				const pageId = botId + "-commandsguide";
 
+				const botGroup = this.parser.app.config.parser['bot'] || "*";
+
+				let roomWithBotRank = IS_GLOBAL_BOT ? "lobby" : "";
+
+				for (let room of Object.keys(this.parser.bot.rooms)) {
+					let roomData = this.parser.bot.rooms[room];
+
+					if (roomData.type !== 'chat') {
+						continue;
+					}
+
+					if (this.isGroupChat(room)) {
+						continue;
+					}
+
+					if (IS_GLOBAL_BOT || (roomData.users[botId] && roomData.users[this.byIdent.id] && roomData.users[botId].charAt(0) === botGroup)) {
+						roomWithBotRank = room;
+						break;
+					}
+				}
+
+				if (!roomWithBotRank) {
+					return this.pmReply("Commands guide: https://github.com/AgustinSRG/Showdown-ChatBot/wiki/Commands-List");
+				}
+
 				if (this.args[0] === "close") {
-					this.send('/closehtmlpage ' + this.byIdent.id + ', ' + pageId, LOBBY_ROOM);
+					this.send('/closehtmlpage ' + this.byIdent.id + ', ' + pageId, roomWithBotRank);
 					return;
 				}
 
@@ -474,9 +499,9 @@ exports.setup = function (App) {
 				const html = commandsGuide.generateHelpPage(sectionIndex, sectionPage);
 
 				if (html) {
-					this.send('/sendhtmlpage ' + this.byIdent.id + ', ' + pageId + ', ' + html, LOBBY_ROOM);
+					this.send('/sendhtmlpage ' + this.byIdent.id + ', ' + pageId + ', ' + html, roomWithBotRank);
 				} else {
-					this.pmReply("The current commands guide is empty. Please contact the bot's administrador in order to configure it.");
+					this.pmReply("The current commands guide is empty. Please contact the bot's administrator in order to configure it.");
 				}
 			},
 		},

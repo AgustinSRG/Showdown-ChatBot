@@ -82,8 +82,7 @@ You can optionally change the value of `Promotion_Command`, in order to change t
 
 **Restrictions**:
 
-- The bot requires the rank of **global bot** in order to be able to use the `/sendhtmlpage` server command.
-- The bot must be present in the `Lobby` room of the server.
+- The bot requires the rank of **bot** in a room, and the user must also be in that room, in order for the `/sendhtmlpage` server command to work.
 - Showdown-ChatBot version must be equal or greater than `2.16.1`.
 
 **Configuration**: You can configure the commands guide by accessing the `Commands Guide` section of the control panel.
