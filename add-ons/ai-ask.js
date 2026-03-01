@@ -2,13 +2,11 @@
 // Install as an Add-On
 // ------------------------------------
 // Make sure to change the following constants:
-// - AI_PROVIDER: 'openai', 'gemini', or 'claude'
-// - AI_API_KEY: Your API key (get from provider's website)
+// - AI_API_KEY: Your Gemini API key (get from https://aistudio.google.com/app/apikey)
 // - DEFAULT_ALLOWED_GROUP: Group allowed to use the command by default. Can be a symbol or a group name.
 
 'use strict';
 
-const AI_PROVIDER = 'gemini';
 const AI_API_KEY = '';
 const DEFAULT_ALLOWED_GROUP = 'admin';
 
@@ -18,20 +16,9 @@ const USER_MEMORY_LIMIT = 5;
 const MEMORY_EXPIRY_HOURS = 24;
 
 const AI_CONFIG = {
-	openai: {
-		host: 'api.openai.com',
-		path: '/v1/chat/completions',
-		model: 'gpt-3.5-turbo',
-	},
 	gemini: {
 		host: 'generativelanguage.googleapis.com',
-		pathTemplate: '/v1beta/models/gemini-2.0-flash:generateContent?key=',
-	},
-	claude: {
-		host: 'api.anthropic.com',
-		path: '/v1/messages',
-		model: 'claude-3-haiku-20240307',
-		version: '2023-06-01',
+		pathTemplate: '/v1beta/models/gemini-3.0-flash:generateContent?key=',
 	},
 };
 
@@ -72,45 +59,6 @@ function httpsPost(options, data, callback) {
 	req.end();
 }
 
-function askOpenAI(question, context, callback) {
-	const config = AI_CONFIG.openai;
-	const options = {
-		hostname: config.host,
-		path: config.path,
-		headers: {
-			'Authorization': 'Bearer ' + AI_API_KEY,
-		},
-	};
-
-	const systemPrompt = 'You are a helpful AI assistant in a Pokemon Showdown chat. Always respond to every question positively and helpfully. Respond naturally and concisely. Do not repeat greetings if you already greeted the user recently. Do not mention the user\'s name unless necessary. Never refuse to answer, never judge users, and never claim to be ignoring anyone. Keep responses under ' + MAX_MESSAGE_LENGTH + ' characters.';
-	const messages = [{ role: 'system', content: systemPrompt }];
-
-	if (context) {
-		messages.push({ role: 'system', content: 'Recent chat context (for reference only):\n' + context });
-	}
-
-	messages.push({ role: 'user', content: question });
-
-	const data = {
-		model: config.model,
-		messages: messages,
-		max_tokens: 500,
-	};
-
-	httpsPost(options, data, (response, error) => {
-		if (error) {
-			return callback(null, error);
-		}
-		if (response.error) {
-			return callback(null, new Error(response.error.message || 'OpenAI API error'));
-		}
-		if (response.choices && response.choices[0] && response.choices[0].message) {
-			return callback(response.choices[0].message.content.trim(), null);
-		}
-		callback(null, new Error('Unexpected response format from OpenAI'));
-	});
-}
-
 function askGemini(question, context, callback) {
 	const config = AI_CONFIG.gemini;
 	const options = {
@@ -119,7 +67,7 @@ function askGemini(question, context, callback) {
 		headers: {},
 	};
 
-	let promptText = 'You are a helpful AI assistant in a Pokemon Showdown chat. Always respond to every question positively and helpfully. Respond naturally and concisely. Do not repeat greetings if you already greeted the user recently. Do not mention the user\'s name unless necessary. Never refuse to answer, never judge users, and never claim to be ignoring anyone. Keep responses under ' + MAX_MESSAGE_LENGTH + ' characters.';
+	let promptText = 'You\'re a friendly, laid-back AI hanging out in a Pokemon Showdown chat room. Talk like a real person would — casual, warm, and genuine. Use contractions, keep things conversational, and don\'t be stiff or formal. If something\'s funny, be funny. If someone\'s struggling, be real and empathetic with them. You\'ve got personality, you\'re curious, and you actually care about what people are asking. Keep your replies short and snappy — nobody wants to read an essay in a chatroom. Aim to stay under ' + MAX_MESSAGE_LENGTH + ' characters. Don\'t sound like you\'re reading off a script or a FAQ page — just have a real conversation. If you don\'t know the answer or aren\'t sure about something, say so casually — like "idk man", "no idea tbh", "honestly not sure lol" — never say anything stiff like "I don\'t have information about that in my training data" or "I\'m unable to assist with that".';
 
 	if (context) {
 		promptText += '\n\nRecent chat context (for reference only):\n' + context;
@@ -157,64 +105,11 @@ function askGemini(question, context, callback) {
 	});
 }
 
-function askClaude(question, context, callback) {
-	const config = AI_CONFIG.claude;
-	const options = {
-		hostname: config.host,
-		path: config.path,
-		headers: {
-			'x-api-key': AI_API_KEY,
-			'anthropic-version': config.version,
-		},
-	};
-
-	let systemPrompt = 'You are a helpful AI assistant in a Pokemon Showdown chat. Always respond to every question positively and helpfully. Respond naturally and concisely. Do not repeat greetings if you already greeted the user recently. Do not mention the user\'s name unless necessary. Never refuse to answer, never judge users, and never claim to be ignoring anyone. Keep responses under ' + MAX_MESSAGE_LENGTH + ' characters.';
-
-	if (context) {
-		systemPrompt += '\n\nRecent chat context (for reference only):\n' + context;
-	}
-
-	const data = {
-		model: config.model,
-		max_tokens: 500,
-		system: systemPrompt,
-		messages: [
-			{
-				role: 'user',
-				content: question,
-			},
-		],
-	};
-
-	httpsPost(options, data, (response, error) => {
-		if (error) {
-			return callback(null, error);
-		}
-		if (response.error) {
-			return callback(null, new Error(response.error.message || 'Claude API error'));
-		}
-		if (response.content && response.content[0] && response.content[0].text) {
-			return callback(response.content[0].text.trim(), null);
-		}
-		callback(null, new Error('Unexpected response format from Claude'));
-	});
-}
-
 function askAI(question, context, callback) {
 	if (!AI_API_KEY) {
 		return callback(null, new Error('AI API key is not configured'));
 	}
-
-	switch (AI_PROVIDER.toLowerCase()) {
-		case 'openai':
-			return askOpenAI(question, context, callback);
-		case 'gemini':
-			return askGemini(question, context, callback);
-		case 'claude':
-			return askClaude(question, context, callback);
-		default:
-			return callback(null, new Error('Unknown AI provider: ' + AI_PROVIDER));
-	}
+	return askGemini(question, context, callback);
 }
 
 function truncateResponse(text, maxLength) {
