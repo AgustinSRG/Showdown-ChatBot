@@ -309,6 +309,15 @@ exports.setup = function (App) {
 			return serveTeam(context, parts);
 		}
 
+		let submenu = new SubMenu("Battle&nbsp;Teams", parts, context, [
+			{ id: 'list', title: 'Teams&nbsp;List', url: '/teams/', handler: teamsListHandler },
+			{ id: 'import', title: 'Export&nbsp;/&nbsp;Import&nbsp;', url: '/teams/import/', handler: teamsImportHandler },
+		], 'list');
+
+		return submenu.run();
+	});
+
+	function teamsListHandler(context, html) {
 		let mod = App.modules.battle.system;
 		const Teams = mod.TeamBuilder.tools;
 
@@ -364,7 +373,7 @@ exports.setup = function (App) {
 		let submenu = [];
 		let formats = Object.create(null);
 		let selectedFormat = Text.toId(context.get.format);
-		submenu.push('<a class="new-team-option submenu-option' + (!selectedFormat ? '-selected' : '') + '" href="./">[New&nbsp;Team]</a>');
+		submenu.push('<a class="new-team-option submenu-option' + (!selectedFormat ? '-selected' : '') + '" href="/teams/list/">[New&nbsp;Team]</a>');
 		htmlVars.teams = '';
 		let teams = mod.TeamBuilder.dynTeams;
 		for (let id of Object.keys(teams)) {
@@ -395,7 +404,7 @@ exports.setup = function (App) {
 			}
 
 			submenu.push('<a class="teams-format-option submenu-option' + (selectedFormat === format ? '-selected' : '') +
-				'" href="./?format=' + format + '" data-format="' + format + '" title="' + Text.escapeHTML(formatName) +
+				'" href="/teams/list/?format=' + format + '" data-format="' + format + '" title="' + Text.escapeHTML(formatName) +
 				'">' + Text.escapeHTML(formatName) + '</a>');
 		}
 
@@ -409,8 +418,131 @@ exports.setup = function (App) {
 		htmlVars.request_result = (ok ? 'ok-msg' : (error ? 'error-msg' : ''));
 		htmlVars.request_msg = (ok ? ok : (error || ""));
 
-		context.endWithWebPage(teamsMainTemplate.make(htmlVars), { title: "Bot Teams - Showdown ChatBot" });
-	});
+		context.endWithWebPage(html + teamsMainTemplate.make(htmlVars), { title: "Bot Teams - Showdown ChatBot" });
+	}
+
+	function importTeamsList(Teams, list) {
+		const teams = [];
+
+		const lines = list.split("\n");
+
+		let currentTeamName = "";
+		let currentTeamFormat = "";
+		let buf = [];
+
+		for (const line of lines) {
+			const lineTrim = line.trim();
+
+			if (lineTrim.startsWith("=== ") && lineTrim.endsWith(" ===")) {
+				// New team starts
+
+				if (buf.length > 0) {
+					if (currentTeamName && currentTeamFormat) {
+						const team = Teams.teamToJSON(buf.join("\n"));
+
+						teams.push({
+							id: Text.toId(currentTeamName),
+							name: currentTeamName,
+							format: currentTeamFormat,
+							packed: Teams.packTeam(team),
+						});
+					}
+				}
+
+				const parts = (line.split("===")[1] || "").split("]");
+				currentTeamFormat = Text.toId(parts[0] || "");
+				currentTeamName = parts.slice(1).join("]").trim();
+
+				buf = [];
+			} else {
+				buf.push(line);
+			}
+		}
+
+		if (buf.length > 0) {
+			if (currentTeamName && currentTeamFormat) {
+				const team = Teams.teamToJSON(buf.join("\n"));
+
+				teams.push({
+					id: Text.toId(currentTeamName),
+					name: currentTeamName,
+					format: currentTeamFormat,
+					packed: Teams.packTeam(team),
+				});
+			}
+		}
+
+		return teams;
+	}
+
+	function teamsImportHandler(context, html) {
+		let mod = App.modules.battle.system;
+		const Teams = mod.TeamBuilder.tools;
+
+		let ok = null;
+		let error = null;
+		if (context.post.save) {
+			let newTeams = null;
+
+			try {
+				newTeams = importTeamsList(Teams, context.post.data);
+			} catch (err) {
+				error = err.message;
+			}
+
+			if (newTeams && !error) {
+				let teams = mod.TeamBuilder.dynTeams;
+
+				for (let id of Object.keys(teams)) {
+					delete teams[id];
+				}
+
+				for (const team of newTeams) {
+					teams[team.id] = {
+						name: team.name,
+						format: team.format,
+						packed: team.packed,
+					};
+				}
+
+				mod.TeamBuilder.saveTeams();
+				mod.TeamBuilder.mergeTeams();
+				App.logServerAction(context.user.id, "Imported teams list");
+				ok = 'Teams list imported successfully successfully';
+			}
+		}
+
+		html += '<h2>Import / Export all teams</h2>';
+		html += '<p>This uses the same format of the <a href="https://play.pokemonshowdown.com/teambuilder" target="_blank" rel="noopener noreferrer">Pokemon Showdown Team Builder</a>.</p>';
+		html += '<form method="post" action="">';
+		html += '<textarea name="data" style="width: 100%; max-width: 100ch;" rows="30">';
+
+		const teams = mod.TeamBuilder.dynTeams;
+
+		const teamsExported = Object.keys(teams).map(id => {
+			const formatName = Text.toId(teams[id].format);
+			const teamName = teams[id].name || id;
+
+			const exportable = Teams.exportTeam(teams[id].packed);
+
+			return "=== [" + formatName + "] " + teamName + " ===" + "\n\n" + exportable;
+		}).join("\n\n");
+
+		html += Text.escapeHTML(teamsExported);
+
+		html += '</textarea>';
+		html += '<p><input type="submit" name="save" value="Save Changes" /></p>';
+		html += '</form>';
+		html += '<p>';
+		if (ok) {
+			html += '<span class="ok-msg">' + ok + '</span>';
+		} else if (error) {
+			html += '<span class="error-msg">' + error + '</span>';
+		}
+		html += '</p>';
+
+		context.endWithWebPage(html, { title: "Import Bot Teams - Showdown ChatBot" });
+	}
 
 	/* Auxiliar functions */
 	function getLadderFormatsMenu() {
