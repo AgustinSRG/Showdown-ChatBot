@@ -268,7 +268,8 @@ exports.setup = function (App) {
 
 		htmlVars.global_chart = getPermissionChart('global-room', 'Global Configuration');
 		htmlVars.rooms_charts = '';
-		for (let r in App.parser.data.roompermissions) {
+		const sortedRooms = Object.keys(App.parser.data.roompermissions).sort();
+		for (let r of sortedRooms) {
 			htmlVars.rooms_charts += '<hr />';
 			htmlVars.rooms_charts += getPermissionChart(r, 'Room: ' + r);
 		}
@@ -438,7 +439,10 @@ exports.setup = function (App) {
 		html += '<table border="1">';
 		html += '<tr><td width="200px"><div align="center"><strong>Permission</strong></div></td> ' +
 			'<td width="200px"><div align="center"><strong>Min Rank Required </strong></div></td></tr>';
-		for (let i in App.parser.modPermissions) {
+
+		const sortedPermissions = Object.keys(App.parser.modPermissions).sort();
+
+		for (let i of sortedPermissions) {
 			html += '<tr>';
 			html += '<td>' + i + '</td>';
 			let rank = App.parser.modPermissions[i].group ? App.parser.modPermissions[i].group : 'excepted';
