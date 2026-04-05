@@ -677,6 +677,7 @@ module.exports = {
 					if (err2) {
 						data2 = "";
 					}
+					data2 = data2.split("\n").map(l => l.trim()).join("\n");
 					let hasDetailedData = true;
 					if (data2.indexOf("+----------------------------------------+") === -1) {
 						if (!err2 && !App.data.cache.has(urlDetails)) {
@@ -697,7 +698,7 @@ module.exports = {
 					let pokeData = null, chosen = false;
 
 					if (hasDetailedData) {
-						let pokes = data2.split(' +----------------------------------------+ \n +----------------------------------------+ ');
+						let pokes = data2.split('+----------------------------------------+\n+----------------------------------------+');
 						for (let i = 0; i < pokes.length; i++) {
 							pokeData = pokes[i].split("\n");
 
