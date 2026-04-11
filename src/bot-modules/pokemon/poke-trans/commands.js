@@ -136,7 +136,7 @@ module.exports = {
 				const latResults = [];
 
 				for (let i = 0; i < latTranslations.length; i++) {
-					if (normalize(latTranslations[0].from) !== normalize(latTranslations[i].from)) continue;
+					if (normalize(translations[0].from) !== normalize(latTranslations[i].from)) continue;
 					if (i !== 0 && latTranslations[i].type === "legacy" && latTranslations[i].to === latTranslations[0].to) {
 						continue;
 					}
@@ -169,7 +169,7 @@ module.exports = {
 				const latResults = [];
 
 				for (let i = 0; i < latTranslations.length; i++) {
-					if (normalize(latTranslations[0].from) !== normalize(latTranslations[i].from)) continue;
+					if (normalize(translations[0].from) !== normalize(latTranslations[i].from)) continue;
 					if (i !== 0 && latTranslations[i].type === "legacy" && latTranslations[i].to === latTranslations[0].to) {
 						continue;
 					}
