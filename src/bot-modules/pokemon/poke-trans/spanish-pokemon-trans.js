@@ -324,7 +324,7 @@ exports.translations.abilities = {
 	"teraformzero": "Teraformación 0",
 	"terashell": "Teracaparazón",
 	"terashift": "Teracambio",
-	"dragonize": "Piel Dracónica",
+	"dragonize": "Piel Dragontina",
 	"megasol": "Megasolar",
 	"piercingdrill": "Turbotaladro",
 	"spicyspray": "Salpicante",
