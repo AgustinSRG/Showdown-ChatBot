@@ -162,6 +162,39 @@ module.exports = {
 					return;
 				}
 			}
+		} else if (from === "es" && to === "en") {
+			let latTranslations = getTranslations("lat", "en", translations[0].from);
+
+			if (latTranslations && latTranslations.length > 0) {
+				const latResults = [];
+
+				for (let i = 0; i < latTranslations.length; i++) {
+					if (normalize(latTranslations[0].from) !== normalize(latTranslations[i].from)) continue;
+					if (i !== 0 && latTranslations[i].type === "legacy" && latTranslations[i].to === latTranslations[0].to) {
+						continue;
+					}
+
+					let translatedWord;
+
+					if (typeof latTranslations[i].to === "string") {
+						translatedWord = latTranslations[i].to;
+					} else {
+						translatedWord = latTranslations[i].to[0];
+					}
+
+					if (resultsWords.has(translatedWord)) {
+						continue;
+					}
+
+					latResults.push(Chat.bold(translatedWord) + " (" +
+						(this.mlt(latTranslations[i].type) || latTranslations[i].type) + ")");
+				}
+
+				if (latResults.length > 0) {
+					this.restrictReply(text + results.join(', ') + " | " + this.mlt("lat") + " - " + this.mlt("en") + ": " + latResults.join(", "), "translate");
+					return;
+				}
+			}
 		}
 
 		this.restrictReply(text + results.join(', '), "translate");
