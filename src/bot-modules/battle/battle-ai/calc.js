@@ -347,7 +347,8 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			else moveType = "Normal";
 			break;
 		case "weatherball":
-			if (gconditions.weather === "primordialsea" || gconditions.weather === "raindance") moveType = "Water";
+			if (!pokeAIgnoredAbility && pokeA.ability && pokeA.ability.id === 'megasol') moveType = "Fire";
+			else if (gconditions.weather === "primordialsea" || gconditions.weather === "raindance") moveType = "Water";
 			else if (gconditions.weather === "desolateland" || gconditions.weather === "sunnyday") moveType = "Fire";
 			else if (gconditions.weather === "sandstorm") moveType = "Rock";
 			else if (gconditions.weather === "hail") moveType = "Ice";
@@ -397,6 +398,9 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 				break;
 			case "refrigerate":
 				if (moveType === "Normal") moveType = "Ice";
+				break;
+			case "dragonize":
+				if (moveType === "Normal") moveType = "Dragon";
 				break;
 			case "blaze":
 				if (moveType === "Fire" && pokeA.hp <= (100 / 3)) atk = Math.floor(atk * 1.5);
@@ -669,6 +673,11 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 				bp = 100;
 			}
 			break;
+		case "weatherball":
+			if (moveType !== "Normal" && gen > 3) {
+				bp *= 2;
+			}
+			break;
 	}
 
 	if (move.isMax && (!move.isMaxModified || move.basePower === 0) && !conditionsA.volatiles['dynamax']) {
@@ -724,7 +733,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 		case "solarbeam":
 		case "solarblade":
 			if (gconditions.weather === "primordialsea" || gconditions.weather === "raindance" || gconditions.weather === "sandstorm" || gconditions.weather === "hail") bp = Math.floor(bp * 0.25);
-			if (gconditions.weather !== "desolateland" && gconditions.weather !== "sunnyday" && (!pokeA.item || pokeA.item.id !== "powerherb")) bp = Math.floor(bp * 0.5);
+			if (gconditions.weather !== "desolateland" && gconditions.weather !== "sunnyday" && (!pokeA.item || pokeA.item.id !== "powerherb") && (pokeAIgnoredAbility || !pokeA.ability || pokeA.ability.id !== "megasol")) bp = Math.floor(bp * 0.5);
 			break;
 		case "electroshot":
 			if (gconditions.weather !== "primordialsea" && gconditions.weather !== "raindance" && (!pokeA.item || pokeA.item.id !== "powerherb")) bp = Math.floor(bp * 0.5);
@@ -759,7 +768,8 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			case "aerilate":
 			case "pixilate":
 			case "refrigerate":
-				if (move.type === "Normal") bp = Math.floor(bp * 1.3);
+			case "dragonize":
+				if (move.type === "Normal") bp = Math.floor(bp * (gen > 6 ? 1.2 : 1.3));
 				break;
 			case "flareboost":
 				if (cat === "Special" && pokeA.status === "brn") bp = Math.floor(bp * 1.5);
