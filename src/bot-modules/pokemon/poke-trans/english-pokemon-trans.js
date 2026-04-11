@@ -324,6 +324,10 @@ exports.translations.abilities = {
 	"teraformzero": "Teraform Zero",
 	"terashell": "Tera Shell",
 	"terashift": "Tera Shift",
+	"dragonize": "Dragonize",
+	"megasol": "Mega Sol",
+	"piercingdrill": "Piercing Drill",
+	"spicyspray": "Spicy Spray",
 };
 
 /* Battle Items */
@@ -3429,6 +3433,7 @@ exports.translations.pokemon = {
 	"tatsugiridroopymega": "Tatsugiri-Droopy-Mega",
 	"tatsugiristretchymega": "Tatsugiri-Stretchy-Mega",
 	"baxcaliburmega": "Baxcalibur-Mega",
+	"flox": "Flox",
 };
 
 /* Legacy Translation */

@@ -324,6 +324,10 @@ exports.translations.abilities = {
 	"teraformzero": "Teraformación 0",
 	"terashell": "Teracaparazón",
 	"terashift": "Teracambio",
+	"dragonize": "Piel Dracónica",
+	"megasol": "Megasolar",
+	"piercingdrill": "Turbotaladro",
+	"spicyspray": "Salpicante",
 };
 
 /* Battle Items */
@@ -3429,6 +3433,7 @@ exports.translations.pokemon = {
 	"tatsugiridroopymega": "Mega-Tatsugiri (Forma lánguida)",
 	"tatsugiristretchymega": "Mega-Tatsugiri (Forma recta)",
 	"baxcaliburmega": "Mega-Baxcalibur",
+	"flox": "", //CAP
 };
 
 /* Legacy Translation */
