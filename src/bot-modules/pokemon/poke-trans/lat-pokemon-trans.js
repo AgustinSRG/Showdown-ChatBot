@@ -951,7 +951,7 @@ exports.translations.moves = {
 	"aurasphere": "Aura Esfera", // LATINO
 	"aurorabeam": "Rayo Aurora",
 	"autotomize": "Aligerar",
-	"avalanche": "Avalancha", // LATINO
+	"avalanche": "Alud", // LATINO
 	"babydolleyes": "Ojitos Tiernos",
 	"barrage": "Presa", // LATINO
 	"barrier": "Barrera",
