@@ -14,6 +14,7 @@ Index:
   - [Commands guide add-on](#commands-guide-add-on)
   - [HashPoke command exceptions](#hashpoke-command-exceptions)
   - [Pastebin add-on](#pastebin-add-on)
+  - [PokéPast Team Viewer add-on](#poképast-team-viewer-add-on)
   - [YouTube link recognition add-on](#youtube-link-recognition-add-on)
 
 ---
@@ -145,6 +146,28 @@ Animal||Cat,Dog,Rabbit,Chicken,Cow,Pig,Sheep
 // Name of the permission required for the commands
 const PERMISSION_REQUIRED = "randadmin";
 ```
+
+## PokéPast Team Viewer add-on
+
+**Description**: Fetches a team from [pokepast.es](https://pokepast.es) and displays each Pokémon as a styled card directly in chat — with sprites, item icons, ability, nature, EVs, IVs, Tera type, and moves. Supports nicknames, shiny sprites, and all forme names. A plain-text fallback command is included for bots without the `*` rank.
+
+**Add-on file**: [pokepast-viewer](./pokepast-viewer.js)
+
+**Added commands**:
+
+| Command syntax | Description |
+| --- | --- |
+| `.pokepast <url>` | Renders the team as an HTML card display in the room (requires bot `*` rank) |
+| `.pokepasttext <url>` | Renders the team as plain text (no special rank needed) |
+
+Aliases for `.pokepast`: `.pp`, `.team`, `.pokepaste`
+
+**Requirements**:
+
+- `.pokepast` uses `/addhtmlbox`, which requires the bot account to have the `*` (bot) rank in the room.
+- If your bot doesn't have that rank, use `.pokepasttext` instead — it works for any rank.
+
+**Permissions**: Both commands are available to all users by default (`user` group). You can restrict them via the control panel.
 
 ## YouTube link recognition add-on
 
