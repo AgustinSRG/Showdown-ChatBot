@@ -14,6 +14,7 @@ Index:
   - [Commands guide add-on](#commands-guide-add-on)
   - [HashPoke command exceptions](#hashpoke-command-exceptions)
   - [Pastebin add-on](#pastebin-add-on)
+  - [Scheduled Announcements add-on](#scheduled-announcements-add-on)
   - [YouTube link recognition add-on](#youtube-link-recognition-add-on)
 
 ---
@@ -145,6 +146,38 @@ Animal||Cat,Dog,Rabbit,Chicken,Cow,Pig,Sheep
 // Name of the permission required for the commands
 const PERMISSION_REQUIRED = "randadmin";
 ```
+
+## Scheduled Announcements add-on
+
+**Description**: This add-on lets you schedule recurring announcements that fire at a specific wall-clock time each day or on a specific day of the week. Unlike the built-in repeat command (which counts down from the moment it is set), scheduled announcements survive bot restarts because they are based on real-world day and time. Each room can have its own timezone, and each event can optionally send an early warning message a few minutes before it fires. Configuration is available both through chat commands and the control panel.
+
+**Add-on file**: [scheduled-announcements](./scheduled-announcements.js)
+
+**Added commands**:
+
+| Command syntax | Description |
+| --- | --- |
+| `.sched` | List all scheduled announcements for the current room |
+| `.sched next` | Show the next upcoming announcement and when it fires |
+| `.sched add, <name>, <day/daily>, <HH:MM>, <message>` | Add a new scheduled announcement (mod+) |
+| `.sched remove, <name>` | Remove a scheduled announcement by name (mod+) |
+| `.sched timezone, <timezone>` | Set the room timezone used for scheduling (mod+) |
+
+Aliases: `.schedule`, `.events`
+
+**Scheduling**:
+
+- `<day>` can be a full day name (`Monday`, `Tuesday`, etc.), its three-letter abbreviation (`Mon`, `Tue`, etc.), a numeric index (`0` = Sunday … `6` = Saturday), or `daily` to fire every day.
+- `<HH:MM>` uses 24-hour format. Time is interpreted in the room's configured timezone (default: UTC).
+
+**Control panel**: A new section named **Scheduled Announcements** is added to the control panel. From there you can add events (including an optional early warning offset in minutes) and delete existing ones for any room.
+
+**Permissions**:
+
+| Permission | Default group | Purpose |
+| --- | --- | --- |
+| `schedadmin` | mod | Use add / remove / timezone chat commands |
+| `schedannounce` | mod | Access the control panel section |
 
 ## YouTube link recognition add-on
 
