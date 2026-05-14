@@ -170,8 +170,6 @@ Aliases: `.schedule`, `.events`
 - `<day>` can be a full day name (`Monday`, `Tuesday`, etc.), its three-letter abbreviation (`Mon`, `Tue`, etc.), a numeric index (`0` = Sunday … `6` = Saturday), or `daily` to fire every day.
 - `<HH:MM>` uses 24-hour format. Time is interpreted in the room's configured timezone (default: UTC).
 
-**Control panel**: A new section named **Scheduled Announcements** is added to the control panel. From there you can add events (including an optional early warning offset in minutes) and delete existing ones for any room.
-
 **Permissions**:
 
 | Permission | Default group | Purpose |
