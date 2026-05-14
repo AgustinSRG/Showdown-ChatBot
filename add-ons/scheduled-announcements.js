@@ -5,11 +5,11 @@
 // specific time each day or on a specific day of the week.
 //
 // Added commands:
-//   .sched                              - List upcoming events for this room
-//   .sched next                         - Show the next event and when it fires
+//   .sched                               - List upcoming events for this room
+//   .sched next                          - Show the next event and when it fires
 //   .sched add, <name>, <day>, <HH:MM>, <message>
 //   .sched remove, <name>
-//   .sched timezone, <timezone>         - Set room timezone (default: UTC)
+//   .sched timezone, <timezone>          - Set room timezone (default: UTC)
 //
 // Control panel section: "Scheduled Announcements"
 //   Full add / delete UI with Early Warning support (fires N minutes before).
@@ -26,7 +26,6 @@ const DataBase = Tools('json-db');
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const SHORT_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-// How often to check for due events (ms). Aligned to next full minute on start.
 const CHECK_INTERVAL = 60 * 1000;
 
 exports.setup = function (App) {
@@ -34,7 +33,6 @@ exports.setup = function (App) {
 	const data = db.data;
 	if (!data.rooms) data.rooms = {};
 
-	// Prevent double-firing within the same minute: eventKey → "YYYY-MM-DD HH:MM"
 	const lastFired = Object.create(null);
 
 	let checkTimer = null;
@@ -55,7 +53,6 @@ exports.setup = function (App) {
 		return data.rooms[room];
 	}
 
-	// Returns current time info in the given IANA timezone.
 	function getNowInTimezone(tz) {
 		const now = new Date();
 		let parts;
@@ -75,7 +72,6 @@ exports.setup = function (App) {
 				parts[p.type] = p.value;
 			}
 		} catch (e) {
-			// Fallback to UTC on invalid timezone
 			const fmt = new Intl.DateTimeFormat('en-US', {
 				timeZone: 'UTC',
 				hour12: false,
@@ -92,16 +88,15 @@ exports.setup = function (App) {
 			}
 		}
 		let hour = parseInt(parts.hour);
-		if (hour === 24) hour = 0; // Some engines return 24 for midnight
+		if (hour === 24) hour = 0; 
 		return {
-			dayOfWeek: DAYS.indexOf(parts.weekday), // 0 = Sunday
+			dayOfWeek: DAYS.indexOf(parts.weekday), 
 			hour: hour,
 			minute: parseInt(parts.minute),
 			dateStr: parts.year + '-' + parts.month + '-' + parts.day,
 		};
 	}
 
-	// Returns a human-readable string for when the event next fires.
 	function getNextOccurrence(event, timezone) {
 		const now = getNowInTimezone(timezone || 'UTC');
 		const [evH, evM] = event.time.split(':').map(Number);
@@ -109,7 +104,6 @@ exports.setup = function (App) {
 		const evTotalMin = evH * 60 + evM;
 
 		if (event.day === -1) {
-			// Daily
 			if (nowTotalMin < evTotalMin) {
 				return 'today at ' + event.time;
 			} else {
@@ -129,7 +123,6 @@ exports.setup = function (App) {
 		}
 	}
 
-	// Returns minutes until the event fires (always positive, wraps around week/day).
 	function minutesUntil(event, timezone) {
 		const now = getNowInTimezone(timezone || 'UTC');
 		const [evH, evM] = event.time.split(':').map(Number);
@@ -158,7 +151,6 @@ exports.setup = function (App) {
 			for (const event of (roomConfig.events || [])) {
 				const [evH, evM] = event.time.split(':').map(Number);
 
-				// --- Main event fire ---
 				const isEventDay = event.day === -1 || event.day === now.dayOfWeek;
 				const isEventTime = isEventDay && now.hour === evH && now.minute === evM;
 				const mainKey = room + ':' + event.id + ':main';
@@ -170,7 +162,6 @@ exports.setup = function (App) {
 					}
 				}
 
-				// --- Early warning fire ---
 				if (event.earlyWarning && event.earlyWarning > 0) {
 					const totalMinutesNow = now.hour * 60 + now.minute;
 					const totalMinutesEvent = evH * 60 + evM;
@@ -192,7 +183,6 @@ exports.setup = function (App) {
 
 	function startTimer() {
 		stopTimer();
-		// Align first check to the top of the next minute so we don't miss or double-fire.
 		const now = new Date();
 		const msUntilNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds() + 500;
 		alignTimer = setTimeout(function () {
@@ -213,7 +203,6 @@ exports.setup = function (App) {
 		}
 	}
 
-	// --- Argument helpers ---
 
 	function parseDay(str) {
 		str = (str + '').toLowerCase().trim();
@@ -223,7 +212,7 @@ exports.setup = function (App) {
 		}
 		const n = parseInt(str);
 		if (!isNaN(n) && n >= 0 && n <= 6) return n;
-		return null; // invalid
+		return null; 
 	}
 
 	function isValidTime(str) {
@@ -237,7 +226,6 @@ exports.setup = function (App) {
 		return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
 	}
 
-	// --- Control panel HTML ---
 
 	function renderControlPanel(context, ok, error) {
 		let html = '';
@@ -249,7 +237,6 @@ exports.setup = function (App) {
 		if (ok) html += '<p><span class="ok-msg">' + Text.escapeHTML(ok) + '</span></p>';
 		if (error) html += '<p><span class="error-msg">' + Text.escapeHTML(error) + '</span></p>';
 
-		// --- Add new event form ---
 		html += '<h3>Add New Event</h3>';
 		html += '<form method="post" action="">';
 		html += '<table border="0" cellpadding="5" style="max-width:700px;">';
@@ -285,7 +272,6 @@ exports.setup = function (App) {
 		html += '<p><input type="submit" name="add_event" value="Add Event" /></p>';
 		html += '</form>';
 
-		// --- Existing events table ---
 		html += '<h3>Current Scheduled Events</h3>';
 
 		let hasAny = false;
@@ -337,8 +323,6 @@ exports.setup = function (App) {
 		context.endWithWebPage(html, { title: 'Scheduled Announcements - Showdown ChatBot' });
 	}
 
-	// --- Install ---
-
 	return Tools('add-on').forApp(App).install({
 		commands: {
 			'schedule': 'sched',
@@ -347,7 +331,6 @@ exports.setup = function (App) {
 				const room = this.room;
 				const sub = Text.toId(this.args[0] || '');
 
-				// .sched  or  .sched list  — show this room's events
 				if (!sub || sub === 'list') {
 					const rc = data.rooms[room];
 					if (!rc || !rc.events || rc.events.length === 0) {
@@ -366,7 +349,6 @@ exports.setup = function (App) {
 					return this.restrictReply(lines.join('\n'), 'sched');
 				}
 
-				// .sched next  — show the soonest upcoming event
 				if (sub === 'next') {
 					const rc = data.rooms[room];
 					if (!rc || !rc.events || rc.events.length === 0) {
@@ -385,10 +367,8 @@ exports.setup = function (App) {
 					return this.reply('Next announcement: ' + soonest.name + ' — ' + next);
 				}
 
-				// Everything below requires staff permission
 				if (!this.can('schedadmin', room)) return this.replyAccessDenied('schedadmin');
 
-				// .sched add, <name>, <day>, <HH:MM>, <message>
 				if (sub === 'add') {
 					if (this.args.length < 5) {
 						return this.errorReply('Usage: ' + this.token + 'sched add, <name>, <day/daily>, <HH:MM>, <message>');
@@ -416,7 +396,6 @@ exports.setup = function (App) {
 					return this.reply('Scheduled "' + name + '" added — fires ' + dayLabel + ' at ' + normalizeTime(timeStr) + '.');
 				}
 
-				// .sched remove, <name>
 				if (sub === 'remove' || sub === 'delete' || sub === 'del' || sub === 'rm') {
 					const name = this.args.slice(1).join(',').trim();
 					if (!name) return this.errorReply('Usage: ' + this.token + 'sched remove, <name>');
@@ -429,12 +408,11 @@ exports.setup = function (App) {
 					return this.reply('Scheduled event "' + name + '" removed.');
 				}
 
-				// .sched timezone, <tz>
 				if (sub === 'timezone' || sub === 'tz') {
 					const tz = this.args.slice(1).join(',').trim();
 					if (!tz) return this.errorReply('Usage: ' + this.token + 'sched timezone, <IANA timezone>');
 					try {
-						getNowInTimezone(tz); // validate
+						getNowInTimezone(tz); 
 						const rc = getRoomConfig(room);
 						rc.timezone = tz;
 						saveData();
