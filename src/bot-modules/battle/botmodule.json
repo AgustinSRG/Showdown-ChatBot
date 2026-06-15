@@ -14,6 +14,9 @@
 		"searchbattle": {
 			"group": "admin"
 		},
+		"battlecontrol": {
+			"group": "admin"
+		},
 		"jointour": {
 			"group": "mod"
 		},

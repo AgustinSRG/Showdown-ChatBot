@@ -46,6 +46,14 @@ $notour = There is no tournament in this room
 $noeval = This command is only available in debug mode.
 $evaldenied = Access denied.
 
+$battle = Battle
+$battlenotfound = Battle not found
+
+$battlelist = Active battles
+$battlelistempty = Currently there are no active battles
+
+$forfeited = Forfeited battle
+
 %spanish
 
 $0 = El formato
@@ -89,3 +97,11 @@ $19 = No se están buscando batallas en la ladder
 
 $noeval = Este comando solo está disponible en modo depuración.
 $evaldenied = Acceso denegado.
+
+$battle = Batalla
+$battlenotfound = Batalla no encontrada
+
+$battlelist = Batallas en curso
+$battlelistempty = Actualmente no hay ninguna batalla en curso
+
+$forfeited = Batalla abandonada

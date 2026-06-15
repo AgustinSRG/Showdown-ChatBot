@@ -16,6 +16,7 @@
 const Path = require('path');
 const Text = Tools('text');
 const Chat = Tools('chat');
+const LineSplitter = Tools('line-splitter');
 
 const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
@@ -35,6 +36,61 @@ function parseAliases(format, App) {
 }
 
 module.exports = {
+	battlelist: function (App) {
+		this.setLangFile(Lang_File);
+		if (!this.can('battlecontrol', this.room)) return this.replyAccessDenied('battlecontrol');
+
+		const battles = [];
+
+		for (let r in App.bot.rooms) {
+			if (App.bot.rooms[r].type === 'battle') {
+				battles.push(App.bot.rooms[r].id);
+			}
+		}
+
+		if (battles.length === 0) {
+			return this.reply(this.mlt("battlelistempty"));
+		}
+
+		let spl = new LineSplitter(App.config.bot.maxMessageLength);
+
+		spl.add(this.mlt("battlelist") + ":");
+
+		for (let i = 0; i < battles.length; i++) {
+			spl.add(" <<" + battles[i] + ">>" + (i < (battles.length - 1) ? ',' : ''));
+		}
+
+		return this.reply(spl.getLines());
+	},
+
+	forfeit: function (App) {
+		this.setLangFile(Lang_File);
+		if (!this.can('battlecontrol', this.room)) return this.replyAccessDenied('battlecontrol');
+
+		let room = this.arg.split("/").pop();
+
+		if (!room && this.room && this.getRoomType(this.room) === "battle") {
+			room = this.room;
+		}
+
+		if (!room) {
+			return this.errorReply(this.usage({ desc: this.mlt("battle") }));
+		}
+
+		if (this.getRoomType(room) !== "battle") {
+			return this.errorReply(this.mlt('battlenotfound') + ": " + Chat.code(room));
+		}
+
+		App.bot.sendTo(room, '/forfeit');
+		App.bot.sendTo("", "/noreply /leave " + room);
+
+		App.logCommandAction(this);
+
+		if (room !== this.room) {
+			this.reply(this.mlt("forfeited") + ": <<" + room + ">>");
+		}
+	},
+
 	chall: "challenge",
 	challenge: function (App) {
 		this.setLangFile(Lang_File);
