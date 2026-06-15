@@ -45,6 +45,7 @@ exports.setup = function (App, BattleData) {
 
 		turn: function (args, kwargs, isIntro) {
 			this.turn = parseInt(args[1]) || 0;
+			this.turnSwitchCount = 0;
 			if (!isIntro) {
 				this.checkTimer();
 			}
@@ -225,6 +226,16 @@ exports.setup = function (App, BattleData) {
 		drag: "switch",
 		"replace": "switch",
 		"switch": function (args, kwargs) {
+			this.turnSwitchCount++;
+
+			if (this.turnSwitchCount > 16) {
+				if (!this.infiniteTurnExploitCooldown || Date.now() - this.infiniteTurnExploitCooldown > 5000) {
+					this.debug(this.id + "->Forfeit (Infinite turn exploit detected)");
+					this.send("/forfeit");
+					this.infiniteTurnExploitCooldown = Date.now();
+				}
+			}
+
 			let spl = args[1].split(": ");
 			let p = spl[0].substr(0, 2);
 			let slot = this.parseSlot(spl[0].substr(2, 1));

@@ -81,6 +81,8 @@ exports.setup = function (App, CustomModules, ExternalService) {
 				bp: 50,
 			};
 			this.leaveForbidden = false;
+
+			this.turnSwitchCount = 0;
 		}
 
 		send(data) {
@@ -371,6 +373,11 @@ exports.setup = function (App, CustomModules, ExternalService) {
 			this.debug(this.id + "->MakeDecision");
 			if (Config.maxTurns && this.turn > Config.maxTurns) {
 				this.debug(this.id + "->Forfeit (Turns limit reached)");
+				this.send("/forfeit");
+				return;
+			}
+			if (this.turnSwitchCount > 16) {
+				this.debug(this.id + "->Forfeit (Infinite turn exploit detected)");
 				this.send("/forfeit");
 				return;
 			}
