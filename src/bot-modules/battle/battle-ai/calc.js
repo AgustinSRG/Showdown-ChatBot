@@ -810,6 +810,12 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 			case "strongjaw":
 				if (move.flags && move.flags['bite']) bp = Math.floor(bp * 1.5);
 				break;
+			case "steelyspirit":
+				if (moveType === 'Steel') bp = Math.floor(bp * 1.5);
+				break;
+			case "firemane":
+				if (moveType === 'Fire') atk = Math.floor(atk * 1.5);
+				break;
 		}
 	}
 
