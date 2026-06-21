@@ -328,6 +328,8 @@ exports.translations.abilities = {
 	"megasol": "Mega Sol",
 	"piercingdrill": "Piercing Drill",
 	"spicyspray": "Spicy Spray",
+	"eelevate": "Eelevate",
+	"firemane": "Fire Mane",
 };
 
 /* Battle Items */
@@ -3434,6 +3436,7 @@ exports.translations.pokemon = {
 	"tatsugiristretchymega": "Tatsugiri-Stretchy-Mega",
 	"baxcaliburmega": "Baxcalibur-Mega",
 	"flox": "Flox",
+	"obliteryx": "Obliteryx",
 };
 
 /* Legacy Translation */
