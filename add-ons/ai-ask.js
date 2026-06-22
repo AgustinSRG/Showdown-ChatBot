@@ -157,7 +157,7 @@ function askOllama(question, context, callback) {
 				if (parsed.response) {
 					return callback(parsed.response.trim(), null);
 				}
-				callback(null, new Error('Unexpected response format from Ollama'));
+				return callback(null, new Error('Unexpected response format from Ollama'));
 			} catch (e) {
 				return callback(null, new Error('Failed to parse response: ' + e.message));
 			}
