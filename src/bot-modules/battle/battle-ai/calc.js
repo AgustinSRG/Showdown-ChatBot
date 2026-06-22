@@ -42,6 +42,7 @@ class Pokemon {
 	isGrounded() {
 		if (this.template.types.indexOf("Flying") >= 0) return false;
 		if (this.ability && this.ability.id === "levitate") return false;
+		if (this.ability && this.ability.id === "eelevate") return false;
 		if (this.item && this.item.id === "airballoon") return false;
 		return true;
 	}
@@ -185,7 +186,7 @@ exports.getHazardsDamage = function (poke, conditions, gen, inverse) {
 		dmg += (100 / 8) * typechart.getMultipleEff("Rock", poke.template.types, gen, inverse);
 	}
 	if (side["spikes"]) {
-		if (typechart.getMultipleEff("Ground", poke.template.types, gen, inverse) !== 0 && (gen < 3 || !poke.ability || poke.ability.id !== "levitate")) {
+		if (typechart.getMultipleEff("Ground", poke.template.types, gen, inverse) !== 0 && poke.isGrounded()) {
 			dmg += (100 / 24) * (side["spikes"] || 1);
 		}
 	}
@@ -500,6 +501,7 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 				if (moveType === "Fire") inmune = true;
 				break;
 			case "levitate":
+			case "eelevate":
 				if (moveType === "Ground" && !noLevitation) inmune = true;
 				break;
 			case "lightningrod":
@@ -809,6 +811,12 @@ exports.calculate = function (pokeA, pokeB, move, conditionsA, conditionsB, gcon
 				break;
 			case "strongjaw":
 				if (move.flags && move.flags['bite']) bp = Math.floor(bp * 1.5);
+				break;
+			case "steelyspirit":
+				if (moveType === 'Steel') bp = Math.floor(bp * 1.5);
+				break;
+			case "firemane":
+				if (moveType === 'Fire') atk = Math.floor(atk * 1.5);
 				break;
 		}
 	}

@@ -200,9 +200,9 @@ exports.translations.abilities = {
 	"wonderguard": "Superguarda",
 	"wonderskin": "Piel Milagro",
 	"zenmode": "Modo Daruma",
-	"mountaineer": "", //CAP
-	"rebound": "", //CAP
-	"persistent": "", //CAP
+	"mountaineer": "", // CAP
+	"rebound": "", // CAP
+	"persistent": "", // CAP
 	"battery": "Batería",
 	"battlebond": "Fuerte Afecto",
 	"beastboost": "Ultraimpulso",
@@ -328,6 +328,8 @@ exports.translations.abilities = {
 	"megasol": "Megasolar",
 	"piercingdrill": "Turbotaladro",
 	"spicyspray": "Salpicante",
+	"eelevate": "Impulso Anguila",
+	"firemane": "Crin de Fuego",
 };
 
 /* Battle Items */
@@ -1559,9 +1561,9 @@ exports.translations.moves = {
 	"yawn": "Bostezo",
 	"zapcannon": "Electrocañón",
 	"zenheadbutt": "Cabezazo Zen",
-	"paleowave": "", //CAP
-	"shadowstrike": "", //CAP
-	"magikarpsrevenge": "", //CAP
+	"paleowave": "", // CAP
+	"shadowstrike": "", // CAP
+	"magikarpsrevenge": "", // CAP
 	"10000000voltthunderbolt": "Gigarrayo Fulminante",
 	"accelerock": "Roca Veloz",
 	"aciddownpour": "Diluvio Corrosivo",
@@ -3305,7 +3307,7 @@ exports.translations.pokemon = {
 	"taurospaldeaaqua": "Tauros de Paldea (Variedad acuática)",
 	"walkingwake": "Ondulagua",
 	"ironleaves": "Ferroverdor",
-	"saharascal": "", //CAP
+	"saharascal": "", // CAP
 	"greninjabond": "Greninja (Vínculo)",
 	"ursalunabloodmoon": "Ursaluna (Luna Carmesí)",
 	"dipplin": "Dipplin",
@@ -3337,7 +3339,7 @@ exports.translations.pokemon = {
 	"terapagosterastal": "Terapagos (Forma Teracristal)",
 	"terapagosstellar": "Terapagos (Forma Astral)",
 	"pecharunt": "Pecharunt",
-	"cresceidon": "", //CAP
+	"cresceidon": "", // CAP
 	"burmysandy": "Burmy (Arena)",
 	"burmytrash": "Burmy (Basura)",
 	"shelloseast": "Shellos (Este)",
@@ -3433,7 +3435,8 @@ exports.translations.pokemon = {
 	"tatsugiridroopymega": "Mega-Tatsugiri (Forma lánguida)",
 	"tatsugiristretchymega": "Mega-Tatsugiri (Forma recta)",
 	"baxcaliburmega": "Mega-Baxcalibur",
-	"flox": "", //CAP
+	"flox": "", // CAP
+	"obliteryx": "", // CAP
 };
 
 /* Legacy Translation */
