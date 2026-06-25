@@ -4,9 +4,13 @@
 
 'use strict';
 
-const ACTION_INTERVAL = 2000;
+const Path = require("path");
 
 const Text = Tools('text');
+
+const CustomRules = require(Path.resolve(__dirname, 'custom-rules.js'));
+
+const ACTION_INTERVAL = 2000;
 
 exports.setup = function (App) {
 	const TournamentsManager = Object.create(null);
@@ -128,8 +132,16 @@ exports.setup = function (App) {
 		}
 	};
 
-	TournamentsManager.handleTourWithCustomRules = function (room) {
+	TournamentsManager.handleTourWithCustomRules = function (room, rules) {
 		if (!tourData[room]) return;
+
+		const customRules = CustomRules.parseCustomRules(rules);
+
+		if (CustomRules.customRulesAreSafe(customRules)) {
+			tourData[room].mustLeave = false;
+			tourData[room].hasCustomRules = false;
+			return;
+		}
 
 		tourData[room].hasCustomRules = true;
 

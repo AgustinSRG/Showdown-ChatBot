@@ -87,7 +87,11 @@ exports.setup = function (App) {
 				break;
 			case 'raw':
 				if ((spl[1] + "").startsWith('<div class="infobox infobox-limited">This tournament includes:')) {
-					TourManager.handleTourWithCustomRules(room);
+					const rules = (spl[1].split(":").slice(1).join(":").split("</div>")[0] || "")
+						.split("<br />").map(line => (line.split("</b> -")[1] || "").trim())
+						.join(",");
+
+					TourManager.handleTourWithCustomRules(room, rules);
 				}
 				break;
 			case 'tournament':

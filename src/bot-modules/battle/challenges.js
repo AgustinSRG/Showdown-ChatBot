@@ -8,6 +8,8 @@ const Path = require('path');
 const Text = Tools('text');
 const Chat = Tools('chat');
 
+const CustomRules = require(Path.resolve(__dirname, 'custom-rules.js'));
+
 const Lang_File = Path.resolve(__dirname, 'commands.translations');
 
 exports.setup = function (App) {
@@ -113,7 +115,9 @@ exports.setup = function (App) {
 			const challData = message.substr("/challenge".length);
 			if (challData) {
 				const format = Text.toId((challData.split("|")[0] + "").split("@@@")[0]);
-				const hasCustomRules = !!((challData.split("|")[0] + "").split("@@@")[1]);
+				const customRules = CustomRules.parseCustomRules((challData.split("|")[0] + "").split("@@@")[1] || "");
+				const hasCustomRules = customRules.length > 0;
+				const customRulesAreSafe = CustomRules.customRulesAreSafe(customRules);
 				let nBattles = mod.BattleBot.countActiveBattles();
 
 				let cmds = [];
@@ -124,7 +128,7 @@ exports.setup = function (App) {
 						App.bot.sendTo('', cmds);
 						return;
 					}
-					if (hasCustomRules && App.bot.formats[format].team && !canUseCustomRules(from)) {
+					if (hasCustomRules && !customRulesAreSafe && App.bot.formats[format].team && !canUseCustomRules(from)) {
 						cmds.push('/reject ' + from);
 						cmds.push('/pm ' + from + "," + App.multilang.mlt(Lang_File, getLanguage("default"), "customrules") + ': ' + Chat.italics(App.bot.formats[format].name));
 						App.bot.sendTo('', cmds);
