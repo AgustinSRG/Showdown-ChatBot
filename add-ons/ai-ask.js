@@ -78,9 +78,9 @@ function askGemini(question, context, callback) {
 		return callback(null, new Error('AI model is not configured. Please set model in AI_CONFIG.gemini.model.'));
 	}
 
-	const path = model.startsWith('tunedModels/') || model.startsWith('models/') || model.includes('/')
-		? '/v1beta/' + model + ':generateContent?key=' + AI_API_KEY
-		: '/v1beta/models/' + model + ':generateContent?key=' + AI_API_KEY;
+	const path = model.startsWith('tunedModels/') || model.startsWith('models/') || model.includes('/') ?
+		'/v1beta/' + model + ':generateContent?key=' + AI_API_KEY :
+		'/v1beta/models/' + model + ':generateContent?key=' + AI_API_KEY;
 
 	const host = (config.host || 'generativelanguage.googleapis.com').replace(/^https?:\/\//i, '').replace(/\/+$/, '');
 
