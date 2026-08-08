@@ -72,15 +72,19 @@ function httpsPost(options, data, callback) {
 
 function askGemini(question, context, callback) {
 	const config = AI_CONFIG.gemini;
-	const model = (config.model || '').trim().replace(/^models\//i, '');
+	const model = (config.model || '').trim();
 
 	if (!model) {
 		return callback(null, new Error('AI model is not configured. Please set model in AI_CONFIG.gemini.model.'));
 	}
 
+	const path = model.startsWith('tunedModels/') || model.startsWith('models/') || model.includes('/')
+		? '/v1beta/' + model + ':generateContent?key=' + AI_API_KEY
+		: '/v1beta/models/' + model + ':generateContent?key=' + AI_API_KEY;
+
 	const options = {
 		hostname: config.host,
-		path: '/v1beta/models/' + model + ':generateContent?key=' + AI_API_KEY,
+		path: path,
 		headers: {},
 	};
 
