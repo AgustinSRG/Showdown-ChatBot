@@ -67,22 +67,30 @@ class JSONDataBase {
 		this.file = file;
 		this.writePending = false;
 		this.writing = false;
+		this.writeCallbacks = [];
 		this.events = new EventsManager();
 		this.load(loadErrorLogFn);
 	}
 
 	write(callback) {
+		if (callback && typeof callback === "function") {
+			this.writeCallbacks.push(callback);
+		}
 		let data = JSON.stringify(this.data);
 		data = encrypt(data, this.algo, this.password);
 		let finishWriting = function () {
 			this.writing = false;
 			this.events.emit('write');
+			let cbs = this.writeCallbacks;
+			this.writeCallbacks = [];
 			if (this.writePending) {
 				this.writePending = false;
 				this.write();
 			}
-			if (callback && typeof callback === "function") {
-				return callback();
+			for (let handlerFn of cbs) {
+				try {
+					handlerFn();
+				} catch (ex) {}
 			}
 		}.bind(this);
 		if (this.writing) {
