@@ -20,12 +20,12 @@ const AI_CONFIG = {
 	provider: 'gemini',
 	gemini: {
 		host: 'generativelanguage.googleapis.com',
-		pathTemplate: '/v1beta/models/gemini-3.5-flash:generateContent?key=',
+		model: '',
 	},
 	ollama: {
 		host: '127.0.0.1',
 		port: 11434,
-		model: 'llama4',
+		model: '',
 		useHttps: false,
 	},
 };
@@ -50,6 +50,9 @@ function httpsPost(options, data, callback) {
 			responseData += chunk;
 		});
 		res.on('end', () => {
+			if (res.statusCode < 200 || res.statusCode >= 300) {
+				return callback(null, new Error('HTTP ' + res.statusCode + ': ' + responseData.substring(0, 200)));
+			}
 			try {
 				const parsed = JSON.parse(responseData);
 				return callback(parsed, null);
@@ -69,9 +72,15 @@ function httpsPost(options, data, callback) {
 
 function askGemini(question, context, callback) {
 	const config = AI_CONFIG.gemini;
+	const model = (config.model || '').trim().replace(/^models\//i, '');
+
+	if (!model) {
+		return callback(null, new Error('AI model is not configured. Please set model in AI_CONFIG.gemini.model.'));
+	}
+
 	const options = {
 		hostname: config.host,
-		path: config.pathTemplate + AI_API_KEY,
+		path: '/v1beta/models/' + model + ':generateContent?key=' + AI_API_KEY,
 		headers: {},
 	};
 
@@ -116,6 +125,11 @@ function askGemini(question, context, callback) {
 function askOllama(question, context, callback) {
 	const config = AI_CONFIG.ollama;
 	const client = config.useHttps ? Https : Http;
+	const model = (config.model || '').trim();
+
+	if (!model) {
+		return callback(null, new Error('AI model is not configured. Please set model in AI_CONFIG.ollama.model.'));
+	}
 
 	let promptText = 'You\'re a friendly, laid-back AI hanging out in a Pokemon Showdown chat room. Talk like a real person would — casual, warm, and genuine. Use contractions, keep things conversational, and don\'t be stiff or formal. If something\'s funny, be funny. If someone\'s struggling, be real and empathetic with them. You\'ve got personality, you\'re curious, and you actually care about what people are asking. Keep your replies short and snappy — nobody wants to read an essay in a chatroom. Aim to stay under ' + MAX_MESSAGE_LENGTH + ' characters. Don\'t sound like you\'re reading off a script or a FAQ page — just have a real conversation. If you don\'t know the answer or aren\'t sure about something, say so casually — like "idk man", "no idea tbh", "honestly not sure lol" — never say anything stiff like "I don\'t have information about that in my training data" or "I\'m unable to assist with that".';
 
@@ -126,7 +140,7 @@ function askOllama(question, context, callback) {
 	promptText += '\n\nUser: ' + question;
 
 	const data = {
-		model: config.model,
+		model: model,
 		prompt: promptText,
 		stream: false,
 	};
@@ -149,6 +163,9 @@ function askOllama(question, context, callback) {
 			responseData += chunk;
 		});
 		res.on('end', () => {
+			if (res.statusCode < 200 || res.statusCode >= 300) {
+				return callback(null, new Error('HTTP ' + res.statusCode + ': ' + responseData.substring(0, 200)));
+			}
 			try {
 				const parsed = JSON.parse(responseData);
 				if (parsed.error) {
@@ -173,7 +190,7 @@ function askOllama(question, context, callback) {
 }
 
 function askAI(question, context, callback) {
-	if (AI_CONFIG.provider === 'ollama') {
+	if (AI_CONFIG.provider === 'ollama' || AI_CONFIG.provider === 'self-hosted') {
 		return askOllama(question, context, callback);
 	}
 	return askGemini(question, context, callback);
@@ -287,7 +304,7 @@ exports.setup = function (App) {
 					return this.errorReply('Your question is too long. Please keep it under 500 characters.');
 				}
 
-				if (!AI_API_KEY && AI_CONFIG.provider !== 'ollama') {
+				if (!AI_API_KEY && (AI_CONFIG.provider !== 'ollama' && AI_CONFIG.provider !== 'self-hosted')) {
 					return this.errorReply('AI API key is not configured. Please configure the add-on before use.');
 				}
 
