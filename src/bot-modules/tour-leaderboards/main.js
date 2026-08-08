@@ -87,7 +87,7 @@ exports.setup = function (App) {
 				}
 				rank = (points.winner * ladder[room][u][1]) + (points.finalist * ladder[room][u][2]) +
 					(points.semifinalist * ladder[room][u][3]) + (points.battle * ladder[room][u][4]);
-				if (config.useratio) {
+				if (config.useratio && ladder[room][u][5] > 0) {
 					rank = rank * (ladder[room][u][4] / ladder[room][u][5]);
 				}
 				top.push(ladder[room][u].concat([rank]));
