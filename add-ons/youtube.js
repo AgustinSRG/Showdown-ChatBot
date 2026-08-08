@@ -18,7 +18,7 @@ const Youtube_API_Path = "/youtube/v3/videos?id=%s&key=" + Youtube_API_Key + "&f
 
 const Util = require('util');
 const Https = require('https');
-const Text = Tools('text.js');
+const Text = Tools('text');
 
 exports.setup = function (App) {
 	return Tools('add-on').forApp(App).install({
@@ -82,9 +82,13 @@ function getLinkId(msg) {
 	for (let i = 0; i < msg.length; i++) {
 		if ((/youtu\.be/i).test(msg[i])) {
 			let temp = msg[i].split('/');
-			return temp[temp.length - 1];
+			let rawId = temp[temp.length - 1];
+			return rawId.split('?')[0].split('&')[0];
 		} else if ((/youtube\.com/i).test(msg[i])) {
-			return msg[i].substring(msg[i].indexOf("=") + 1).replace(".", "");
+			let match = msg[i].match(/[?&]v=([a-zA-Z0-9_-]{11})/);
+			if (match) return match[1];
+			match = msg[i].match(/youtube\.com\/(?:embed|v|shorts)\/([a-zA-Z0-9_-]{11})/);
+			if (match) return match[1];
 		}
 	}
 }
