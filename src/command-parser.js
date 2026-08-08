@@ -1210,10 +1210,16 @@ class CommandContext {
 	parseArguments() {
 		let parsedArgs = Object.create(null);
 		for (let i = 0; i < this.args.length; i++) {
-			let spl = this.args[i].split('=');
-			let id = Text.toId(spl[0]);
-			let val = (spl[1] || "").trim();
-			parsedArgs[id] = val || true;
+			let arg = this.args[i];
+			let eqIndex = arg.indexOf('=');
+			if (eqIndex === -1) {
+				let id = Text.toId(arg);
+				if (id) parsedArgs[id] = true;
+			} else {
+				let id = Text.toId(arg.substring(0, eqIndex));
+				let val = arg.substring(eqIndex + 1).trim();
+				if (id) parsedArgs[id] = val || true;
+			}
 		}
 		return parsedArgs;
 	}
