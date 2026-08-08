@@ -705,6 +705,7 @@ class Bot {
 			case 'noinit':
 				switch (splittedLine[1]) {
 					case "rename":
+						if (!this.rooms[room]) break;
 						this.rooms[room].id = Text.toRoomid(splittedLine[2]);
 						this.rooms[room].title = splittedLine[3] || "";
 						this.rooms[this.rooms[room].id] = this.rooms[room];
