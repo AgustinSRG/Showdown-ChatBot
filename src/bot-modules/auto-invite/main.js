@@ -49,7 +49,10 @@ exports.setup = function (App) {
 				let usersList;
 				for (let i = 0; i < parts.length - 1; i += 2) {
 					usersList = parts[i + 1].split("||||")[0].split(',');
-					if (parts[i].indexOf("(") > -1) rank = parts[i].substr(parts[i].indexOf("(") + 1, 1);
+					let openParenIndex = parts[i].indexOf("(");
+					if (openParenIndex >= 0 && openParenIndex + 1 < parts[i].length) {
+						rank = parts[i].charAt(openParenIndex + 1);
+					}
 					for (let f = 0; f < usersList.length; f++) {
 						auth[Text.toId(usersList[f])] = rank;
 					}
