@@ -366,7 +366,7 @@ exports.setup = function (App) {
 	}
 
 	function announceTournamentFinal(room, link) {
-		if (botCanWall) {
+		if (botCanWall(room)) {
 			App.bot.sendTo(room, "/wall " + App.multilang.mlt(Lang_File, getLanguage(room), 'final', { battle: link }));
 		} else {
 			App.bot.sendTo(room, App.multilang.mlt(Lang_File, getLanguage(room), 'final', { battle: link }));
@@ -385,7 +385,7 @@ exports.setup = function (App) {
 			}
 		}
 
-		if (botCanWall) {
+		if (botCanWall(room)) {
 			App.bot.sendTo(room, "/wall " + App.multilang.mlt(Lang_File, getLanguage(room), 'winner', { winners: text }));
 		} else {
 			App.bot.sendTo(room, App.multilang.mlt(Lang_File, getLanguage(room), 'winner', { winners: text }));
