@@ -243,7 +243,7 @@ module.exports = {
 			getWikiSummary(lang, title, pageId, (pageInfo, err) => {
 				markDownload(this.byIdent.id, false);
 
-				if (errFindPage) {
+				if (err) {
 					return this.errorReply(this.mlt('errfind') + ": " + err.message);
 				}
 
