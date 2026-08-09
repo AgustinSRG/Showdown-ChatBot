@@ -40,7 +40,7 @@ function searchInLanguage(lang, word, keys) {
 				if (ld <= maxLd) {
 					results.push({type: keys[i], id: k, title: translationTemp, ld: ld});
 				}
-			} else if (typeof translationTemp === "object" && typeof translationTemp.length) {
+			} else if (Array.isArray(translationTemp)) {
 				for (let j = 0; j < translationTemp.length; j++) {
 					ld = Text.levenshtein(word, normalize(translationTemp[j]), maxLd);
 					if (ld <= maxLd) {
