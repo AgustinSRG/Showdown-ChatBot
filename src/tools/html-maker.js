@@ -6,6 +6,7 @@
 "use strict";
 
 const Util = require("util");
+const Text = Tools("text");
 
 /**
  * Wraps HTML
@@ -105,12 +106,12 @@ exports.generate = function (body, loginData, menu, options) {
 		/* Logout form */
 		buf +=
 			'<div style=" margin-bottom:8px;"><strong><big>' +
-			loginData.name +
+			Text.escapeHTML(loginData.name) +
 			"</big></strong></div>";
 		if (loginData.group) {
 			buf +=
 				'<div style=" margin-bottom:8px;"><strong><i>(' +
-				loginData.group +
+				Text.escapeHTML(loginData.group) +
 				")</i></strong></div>";
 		}
 		buf +=
@@ -125,7 +126,7 @@ exports.generate = function (body, loginData, menu, options) {
 			'<form class="loginform" method="POST" action="">' +
 			'<div style="margin-bottom:5px;"><strong>User:</strong>&nbsp;' +
 			'<input type="text" name="user" value="' +
-			(loginData.invalid || "") +
+			Text.escapeHTML(loginData.invalid || "") +
 			'" /></div>' +
 			'<div style="margin-bottom:2px;"><strong>Pass:</strong>&nbsp;' +
 			'<input id="login_password_input" type="password" name="password" /></div>' +
