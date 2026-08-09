@@ -278,13 +278,13 @@ class DataManager {
 		}
 		wget(Showdown_Data[this.cur].url, function (data, err) {
 			if (err) {
-				this.events.emit('msg', "Error: Failed to download " + Showdown_Data[this.cur].url + " | (" + err.code + ") " + err.messaage);
+				this.events.emit('msg', "Error: Failed to download " + Showdown_Data[this.cur].url + " | (" + err.code + ") " + err.message);
 				this.nextDownload();
 				return;
 			}
 			FileSystem.writeFile(Path.resolve(this.path, Showdown_Data[this.cur].file), data, function (err2) {
 				if (err2) {
-					this.events.emit('msg', "Error (" + err2.code + ") " + err2.messaage);
+					this.events.emit('msg', "Error (" + err2.code + ") " + err2.message);
 				} else {
 					Data_Cache.delete(Showdown_Data[this.cur].file);
 					this.events.emit('msg', "Updated data file " + Showdown_Data[this.cur].file + " from " + Showdown_Data[this.cur].url);
