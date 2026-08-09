@@ -34,10 +34,22 @@ function encrypt(text, algorithm, password) {
  */
 function decrypt(text, algorithm, password) {
 	if (text.indexOf(":") === -1) {
-		let decipher = Crypto.createDecipher(algorithm, password);
-		let data = decipher.update(text, 'hex', 'utf8');
-		data += decipher.final('utf8');
-		return data;
+		try {
+			if (typeof Crypto.createDecipher === 'function') {
+				let decipher = Crypto.createDecipher(algorithm, password);
+				let data = decipher.update(text, 'hex', 'utf8');
+				data += decipher.final('utf8');
+				return data;
+			}
+			const hash = Crypto.createHash('md5');
+			hash.update(password);
+			let decipher = Crypto.createDecipheriv(algorithm, hash.digest(), Buffer.alloc(0));
+			let data = decipher.update(text, 'hex', 'utf8');
+			data += decipher.final('utf8');
+			return data;
+		} catch (e) {
+			return "";
+		}
 	} else {
 		const parts = text.split(":");
 		const iv = Buffer.from(parts[0], 'hex');
