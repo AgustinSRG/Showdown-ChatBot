@@ -109,10 +109,10 @@ exports.setup = function (App) {
 			}
 			updates[repo][requestNumber] = now;
 			let message = "";
-			message += "[<font color='FF00FF'>" + repo + "</font>] ";
-			message += "<font color='909090'>" + result.sender.login + "</font> ";
-			message += action + " pull request <a href=\"" + url + "\">#" + requestNumber + "</a>: ";
-			message += result.pull_request.title;
+			message += "[<font color='FF00FF'>" + Text.escapeHTML(repo) + "</font>] ";
+			message += "<font color='909090'>" + Text.escapeHTML(result.sender.login) + "</font> ";
+			message += Text.escapeHTML(action) + " pull request <a href=\"" + Text.escapeHTML(url) + "\">#" + Text.escapeHTML(requestNumber) + "</a>: ";
+			message += Text.escapeHTML(result.pull_request.title);
 			report(message);
 		});
 	}
