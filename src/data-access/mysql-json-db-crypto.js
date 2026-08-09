@@ -15,7 +15,7 @@ const EventsManager = Tools('events');
  * @returns {String} Encrypted text
  */
 function encrypt(text, algorithm, password) {
-	const iv = Buffer.from(Crypto.randomBytes(32));
+	const iv = Buffer.from(Crypto.randomBytes(16));
 	const hash = Crypto.createHash('sha256');
 	hash.update(password);
 	let cipher = Crypto.createCipheriv(algorithm, hash.digest(), iv);
