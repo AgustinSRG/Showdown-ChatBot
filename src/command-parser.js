@@ -769,18 +769,21 @@ class DynamicCommand {
 			case "string":
 				this.sendReply(conf || "", context);
 				break;
-			case "object":
+			case "object": {
+				let originalArg = context.arg;
 				let spaceIndex = context.arg.indexOf(" ");
 				let arg;
 				if (spaceIndex === -1) {
 					arg = Text.toCmdid(context.arg);
 				} else {
 					arg = Text.toCmdid(context.arg.substr(0, spaceIndex));
-					context.arg = context.arg.substr(spaceIndex + 1);
 				}
 				let cmd = context.cmd;
 				context.cmd += " " + arg;
-				if (conf[arg]) {
+				if (Object.prototype.hasOwnProperty.call(conf, arg)) {
+					if (spaceIndex !== -1) {
+						context.arg = context.arg.substr(spaceIndex + 1);
+					}
 					this.execNext(conf[arg], context);
 				} else if (Object.keys(conf).length > 1) {
 					let spl = new LineSplitter(context.parser.app.config.bot.maxMessageLength);
@@ -793,9 +796,11 @@ class DynamicCommand {
 					context.errorReply(spl.getLines());
 				} else if (Object.keys(conf).length === 1) {
 					arg = Object.keys(conf)[0];
+					context.arg = originalArg;
 					this.execNext(conf[arg], context);
 				}
 				break;
+			}
 		}
 	}
 }
