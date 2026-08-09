@@ -17,10 +17,17 @@ const Hastebin_Request_Options = {hostname: "hastebin.com", method: "POST", path
 exports.upload = function (data, callback) {
 	if (typeof callback !== "function") throw new Error("callback must be a function");
 	let request = Https.request(Hastebin_Request_Options, response => {
+		let resStr = '';
 		response.on('data', chunk => {
+			resStr += chunk;
+		});
+		response.on('end', () => {
 			try {
-				let key = JSON.parseNoPrototype(chunk.toString())['key'];
-				return callback(Util.format('https://hastebin.com/%s', key));
+				let json = JSON.parseNoPrototype(resStr);
+				if (json && json.key) {
+					return callback(Util.format('https://hastebin.com/%s', json.key));
+				}
+				return callback(null, new Error("Invalid response format"));
 			} catch (err) {
 				return callback(null, err);
 			}
