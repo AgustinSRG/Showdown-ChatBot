@@ -281,6 +281,11 @@ exports.setup = function (App) {
 		const roomId = Text.toId(room);
 		const cooldownKey = roomId + "|" + id;
 		const now = Date.now();
+		roomCooldowns.forEach((timestamp, key) => {
+			if ((now - timestamp) >= COOLDOWN_MS * 2) {
+				roomCooldowns.delete(key);
+			}
+		});
 		const prev = roomCooldowns.get(cooldownKey) || 0;
 		if ((now - prev) < COOLDOWN_MS) return;
 		roomCooldowns.set(cooldownKey, now);

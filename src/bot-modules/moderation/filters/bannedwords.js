@@ -26,12 +26,12 @@ exports.parse = function (context) {
 		if (!strict && !nonicks) {
 			hasWord = (msgLow.indexOf(word) >= 0);
 		} else if (strict && !nonicks) {
-			let regex = new RegExp("[^a-z0-9A-Z]" + word.replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&") + "[^a-z0-9A-Z]", 'g');
+			let regex = new RegExp("[^a-z0-9A-Z]" + word.replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&") + "[^a-z0-9A-Z]");
 			hasWord = !!regex.test(" " + msgLow + " ");
 		} else if (!strict && nonicks) {
 			hasWord = (msgAltLow.indexOf(word) >= 0);
 		} else if (strict && nonicks) {
-			let regex = new RegExp("[^a-z0-9A-Z]" + word.replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&") + "[^a-z0-9A-Z]", 'g');
+			let regex = new RegExp("[^a-z0-9A-Z]" + word.replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&") + "[^a-z0-9A-Z]");
 			hasWord = !!regex.test(" " + msgAltLow + " ");
 		}
 
