@@ -83,12 +83,42 @@ class DataAccessManager {
 	}
 
 	restoreBackup(directories, files) {
-		for (let dir of directories) {
-			checkDir(Path.resolve(this.path, dir));
+		const rootPath = Path.resolve(this.path);
+
+		if (!Array.isArray(directories) || !Array.isArray(files)) {
+			throw new Error("Invalid backup structure: directories and files must be arrays.");
 		}
 
+		const validatedDirs = [];
+		for (let dir of directories) {
+			if (typeof dir !== "string") {
+				throw new Error("Invalid directory entry in backup: non-string value");
+			}
+			const resolvedDir = Path.resolve(rootPath, dir);
+			if (resolvedDir !== rootPath && !resolvedDir.startsWith(rootPath + Path.sep)) {
+				throw new Error("Directory traversal detected in backup path: " + dir);
+			}
+			validatedDirs.push(resolvedDir);
+		}
+
+		const validatedFiles = [];
 		for (let file of files) {
-			FileSystem.writeFileSync(Path.resolve(this.path, file.file), file.content);
+			if (!file || typeof file.file !== "string" || typeof file.content !== "string") {
+				throw new Error("Invalid file entry in backup: missing file path or content");
+			}
+			const resolvedFile = Path.resolve(rootPath, file.file);
+			if (!resolvedFile.startsWith(rootPath + Path.sep)) {
+				throw new Error("File traversal detected in backup path: " + file.file);
+			}
+			validatedFiles.push({ path: resolvedFile, content: file.content });
+		}
+
+		for (let resolvedDir of validatedDirs) {
+			checkDir(resolvedDir);
+		}
+
+		for (let item of validatedFiles) {
+			FileSystem.writeFileSync(item.path, item.content);
 		}
 	}
 }
