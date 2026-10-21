@@ -627,8 +627,7 @@ class Server {
 			/* Favicon.ico */
 			context.endWithStaticFile(Path.resolve(__dirname, '../../favicon.ico'), 31536000);
 		} else if (context.url.pathname === "/showdown/info" || context.url.pathname === "/info") {
-			context.headers["Access-Control-Allow-Origin"] = context.request.headers['Origin'] || context.request.headers['origin'] || "*";
-			context.headers["Access-Control-Allow-Credentials"] = "true";
+			context.headers["Access-Control-Allow-Origin"] = "*";
 			context.endWithJSON({
 				cookie_needed: false,
 				entropy: 1858301765,
@@ -769,7 +768,16 @@ class RequestContext {
 		}
 		this.menu = [];
 		this.ip = (ip || request.connection.remoteAddress);
-		this.headers = { 'X-XSS-Protection': 0 };
+		this.headers = {
+			'X-Content-Type-Options': 'nosniff',
+			'X-Frame-Options': 'SAMEORIGIN',
+			'Referrer-Policy': 'strict-origin-when-cross-origin',
+			'X-XSS-Protection': '0',
+			'Content-Security-Policy': "default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' ws: wss:; frame-ancestors 'self';",
+		};
+		if (server.httpsOptions && server.httpsOptions.port) {
+			this.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains';
+		}
 		this.invalidLogin = false;
 		this.get = Object.create(null);
 		this.post = Object.create(null);
