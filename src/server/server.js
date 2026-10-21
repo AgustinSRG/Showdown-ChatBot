@@ -87,6 +87,20 @@ function decrypt(text, algorithm, password) {
 }
 
 /**
+ * Generates a URL-safe random token
+ * @param {Number} [bytes]
+ * @returns {String}
+ */
+function randomToken(bytes) {
+	const ENC = {
+		'+': '-',
+		'/': '_',
+		'=': '.',
+	};
+	return Crypto.randomBytes(bytes || 32).toString("base64").replace(/[+/=]/g, m => ENC[m]);
+}
+
+/**
  * Turns search params into object
  * @param {URLSearchParams} params parsed params
  */
@@ -400,18 +414,13 @@ class Server {
 	 * @returns {String} token
 	 */
 	makeToken(userid) {
-		const ENC = {
-			'+': '-',
-			'/': '_',
-			'=': '.'
-		};
 		let token;
 		do {
-			token = Crypto.randomBytes(32).toString("base64").replace(/[+/=]/g, m => ENC[m]);
+			token = randomToken(32);
 		} while (this.tokens[token]);
 		let csrfToken;
 		do {
-			csrfToken = Crypto.randomBytes(32).toString("base64").replace(/[+/=]/g, m => ENC[m]);
+			csrfToken = randomToken(32);
 		} while (csrfToken === token);
 		this.tokens[token] = {
 			date: Date.now(),
@@ -458,6 +467,21 @@ class Server {
 	}
 
 	/**
+	 * Verifies whether the submitted CSRF token matches the session
+	 * @param {string} submitted - Submitted CSRF token
+	 * @param {string} sessionToken - Active session token
+	 * @param {Object} tokenObject - Active token data object
+	 * @returns {Boolean}
+	 */
+	verifyCsrfToken(submitted, sessionToken, tokenObject) {
+		if (!submitted) return false;
+		if (tokenObject && tokenObject.csrf && secureCompare(submitted, tokenObject.csrf)) {
+			return true;
+		}
+		return secureCompare(submitted, sessionToken);
+	}
+
+	/**
 	 * Generates the login data for the context
 	 * @param {RequestContext} context
 	 */
@@ -476,9 +500,7 @@ class Server {
 			} else {
 				if ((context.request.method + "").toUpperCase() !== "GET") {
 					let submittedCsrf = context.request.headers["x-csrf-token"] || context.post["x-csrf-token"];
-					let validCsrf = (existingToken.csrf && secureCompare(submittedCsrf || "", existingToken.csrf)) ||
-						secureCompare(submittedCsrf || "", sessionCookie);
-					if (!validCsrf) {
+					if (!this.verifyCsrfToken(submittedCsrf, sessionCookie, existingToken)) {
 						this.app.log('[CSRF BLOCKED] Invalid CSRF token for user: ' + existingToken.user + ' | IP: ' + context.ip);
 						context.endWithError(403, "Forbidden", "Invalid or missing CSRF token.");
 						return false;
@@ -915,15 +937,11 @@ class RequestContext {
 		if (this.server.httpsOptions && this.server.httpsOptions.port) {
 			cookie += '; Secure';
 		}
-		let existing = this.headers['Set-Cookie'];
-		if (existing) {
-			if (Array.isArray(existing)) {
-				existing.push(cookie);
-			} else {
-				this.headers['Set-Cookie'] = [existing, cookie];
-			}
-		} else {
+		const existing = this.headers['Set-Cookie'];
+		if (!existing) {
 			this.headers['Set-Cookie'] = cookie;
+		} else {
+			this.headers['Set-Cookie'] = Array.isArray(existing) ? existing.concat(cookie) : [existing, cookie];
 		}
 	}
 
