@@ -50,23 +50,6 @@ function secureCompare(a, b) {
 }
 
 /**
- * Encrypts a text
- * @param {String} text
- * @param {String} algorithm
- * @param {String} password
- * @returns {String} Encrypted text
- */
-function encrypt(text, algorithm, password) {
-	const iv = Buffer.from(Crypto.randomBytes(16));
-	const hash = Crypto.createHash('sha256');
-	hash.update(password);
-	let cipher = Crypto.createCipheriv(algorithm, hash.digest(), iv);
-	let crypted = cipher.update(text, 'utf8', 'hex');
-	crypted += cipher.final('hex');
-	return iv.toString("hex") + ":" + crypted;
-}
-
-/**
  * Decrypts a text
  * @param {String} text - Encrypted text
  * @param {String} algorithm
@@ -499,6 +482,11 @@ class Server {
 			}
 			user = Text.toId(user);
 			if (this.users[user] && this.checkPassword(this.users[user].password, pass)) {
+				if (!this.users[user].password || this.users[user].password.algo !== 'scrypt') {
+					this.users[user].password = this.encryptPassword(pass);
+					this.userdb.write();
+					this.app.log('[SECURITY] Upgraded password hash to scrypt for user: ' + user);
+				}
 				this.app.log('[LOGIN] Userid: ' + user + ' | IP: ' + context.ip);
 				token = this.makeToken(user);
 				context.setCookie('usertoken=' + token + ';');
@@ -519,13 +507,24 @@ class Server {
 	 * @returns {Boolean}
 	 */
 	checkPassword(pass, str) {
-		if (typeof pass === "object") {
-			return secureCompare(
-				decrypt(pass.hash, pass.encrypted || Encrypt_Algo, str),
-				this.privatekey
-			);
+		if (typeof pass === "object" && pass !== null) {
+			if (pass.algo === "scrypt" && pass.salt && pass.hash) {
+				try {
+					const hash = Crypto.scryptSync(str, pass.salt, 64, { N: 16384, r: 8, p: 1 }).toString('hex');
+					return secureCompare(hash, pass.hash);
+				} catch (ex) {
+					return false;
+				}
+			}
+			if (pass.hash) {
+				return secureCompare(
+					decrypt(pass.hash, pass.encrypted || Encrypt_Algo, str),
+					this.privatekey
+				);
+			}
+			return false;
 		} else if (typeof pass === "string") {
-			return (str === pass);
+			return secureCompare(str, pass);
 		} else {
 			return false;
 		}
@@ -533,12 +532,15 @@ class Server {
 
 	/**
 	 * @param {String} str - Password
-	 * @returns {Object} Encrypted password
+	 * @returns {Object} Encrypted/hashed password
 	 */
 	encryptPassword(str) {
+		const salt = Crypto.randomBytes(16).toString('hex');
+		const hash = Crypto.scryptSync(str, salt, 64, { N: 16384, r: 8, p: 1 }).toString('hex');
 		return {
-			encrypted: Encrypt_Algo,
-			hash: encrypt(this.privatekey, Encrypt_Algo, str),
+			algo: 'scrypt',
+			salt: salt,
+			hash: hash,
 		};
 	}
 
