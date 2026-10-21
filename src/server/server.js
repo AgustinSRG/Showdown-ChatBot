@@ -409,10 +409,15 @@ class Server {
 		do {
 			token = Crypto.randomBytes(32).toString("base64").replace(/[+/=]/g, m => ENC[m]);
 		} while (this.tokens[token]);
+		let csrfToken;
+		do {
+			csrfToken = Crypto.randomBytes(32).toString("base64").replace(/[+/=]/g, m => ENC[m]);
+		} while (csrfToken === token);
 		this.tokens[token] = {
 			date: Date.now(),
 			duration: Token_Max_Duration,
 			user: userid,
+			csrf: csrfToken,
 		};
 		return token;
 	}
@@ -457,17 +462,31 @@ class Server {
 	 * @param {RequestContext} context
 	 */
 	applyLogin(context) {
-		let token = ((context.request.method + "").toUpperCase() === "GET") ? context.cookies['usertoken'] : (context.request.headers["x-csrf-token"] || context.post["x-csrf-token"]);
+		let sessionCookie = context.cookies['usertoken'];
 		let user = context.post.user;
 		let pass = context.post.password;
 		this.sweepTokens();
-		let existingToken = this.getToken(token);
+		let existingToken = this.getToken(sessionCookie);
 		if (existingToken) {
 			if (context.post.logout) {
 				this.app.log('[LOGOUT] Userid: ' + existingToken.user + ' | IP: ' + context.ip);
-				delete this.tokens[token];
-				context.setCookie('usertoken=;');
+				delete this.tokens[sessionCookie];
+				context.setCookie('usertoken=; Max-Age=0;', true);
+				context.setCookie('csrftoken=; Max-Age=0;', false);
 			} else {
+				if ((context.request.method + "").toUpperCase() !== "GET") {
+					let submittedCsrf = context.request.headers["x-csrf-token"] || context.post["x-csrf-token"];
+					let validCsrf = (existingToken.csrf && secureCompare(submittedCsrf || "", existingToken.csrf)) ||
+						secureCompare(submittedCsrf || "", sessionCookie);
+					if (!validCsrf) {
+						this.app.log('[CSRF BLOCKED] Invalid CSRF token for user: ' + existingToken.user + ' | IP: ' + context.ip);
+						context.endWithError(403, "Forbidden", "Invalid or missing CSRF token.");
+						return false;
+					}
+				}
+				if (existingToken.csrf && (!context.cookies['csrftoken'] || !secureCompare(context.cookies['csrftoken'], existingToken.csrf))) {
+					context.setCookie('csrftoken=' + existingToken.csrf + ';', false);
+				}
 				user = existingToken.user;
 				if (this.users[user]) {
 					user = new User(this.users[user]);
@@ -488,8 +507,12 @@ class Server {
 					this.app.log('[SECURITY] Upgraded password hash to scrypt for user: ' + user);
 				}
 				this.app.log('[LOGIN] Userid: ' + user + ' | IP: ' + context.ip);
-				token = this.makeToken(user);
-				context.setCookie('usertoken=' + token + ';');
+				let token = this.makeToken(user);
+				let tokObj = this.tokens[token];
+				context.setCookie('usertoken=' + token + ';', true);
+				if (tokObj && tokObj.csrf) {
+					context.setCookie('csrftoken=' + tokObj.csrf + ';', false);
+				}
 				user = new User(this.users[user]);
 				context.setUser(user);
 			} else {
@@ -878,9 +901,30 @@ class RequestContext {
 	/**
 	 * Set the cookie in the headers
 	 * @param {String} txt - Cookie query string
+	 * @param {Boolean} [httpOnly] - Set HttpOnly flag
 	 */
-	setCookie(txt) {
-		this.headers['Set-Cookie'] = txt + ' Path=/';
+	setCookie(txt, httpOnly) {
+		let cookie = (txt || "").trim();
+		if (cookie.length && !cookie.endsWith(';')) {
+			cookie += ';';
+		}
+		cookie += ' Path=/; SameSite=Lax';
+		if (httpOnly) {
+			cookie += '; HttpOnly';
+		}
+		if (this.server.httpsOptions && this.server.httpsOptions.port) {
+			cookie += '; Secure';
+		}
+		let existing = this.headers['Set-Cookie'];
+		if (existing) {
+			if (Array.isArray(existing)) {
+				existing.push(cookie);
+			} else {
+				this.headers['Set-Cookie'] = [existing, cookie];
+			}
+		} else {
+			this.headers['Set-Cookie'] = cookie;
+		}
 	}
 
 	/**
