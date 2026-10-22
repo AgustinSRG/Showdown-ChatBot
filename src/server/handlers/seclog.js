@@ -24,7 +24,18 @@ exports.setup = function (App) {
 			context.endWithError('403', 'Forbidden', 'You have not permission to access this path!');
 			return;
 		}
-		context.endWithStaticFile(Path.resolve(App.logger.path, file));
+		const logPattern = /^[a-zA-Z0-9_-]+_[0-9]{4}_[0-9]{2}_[0-9]{2}\.log$/;
+		if (!logPattern.test(file)) {
+			context.endWithError('400', 'Bad Request', 'Invalid log file name!');
+			return;
+		}
+		const rootPath = Path.resolve(App.logger.path);
+		const resolvedFile = Path.resolve(rootPath, file);
+		if (!resolvedFile.startsWith(rootPath + Path.sep)) {
+			context.endWithError('403', 'Forbidden', 'You have not permission to access this path!');
+			return;
+		}
+		context.endWithStaticFile(resolvedFile);
 	}
 
 	App.server.setHandler('seclog', (context, parts) => {

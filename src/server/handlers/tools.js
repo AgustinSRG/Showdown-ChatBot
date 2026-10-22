@@ -343,8 +343,16 @@ exports.setup = function (App) {
 						}
 						if (!error) {
 							let signature = "$BACKUP$NATIVE$ENCRYPTED$";
-							if (backup.signature.substr(0, signature.length) === signature) {
-								App.dam.restoreBackup(backup.directories, backup.files);
+							if (backup.signature.substr(0, signature.length) !== signature) {
+								error = "Invalid backup file: Invalid signature.";
+							} else {
+								try {
+									App.dam.restoreBackup(backup.directories, backup.files);
+								} catch (err) {
+									error = "Invalid backup file: " + Text.escapeHTML(err.message);
+								}
+							}
+							if (!error) {
 								App.logServerAction(context.user.id, 'Restore Backup | ' + backup.signature +
 									" | " + (new Date(backup.time)).toString());
 								App.logServerAction(context.user.id, 'Exit due to backup restore.');
@@ -355,8 +363,6 @@ exports.setup = function (App) {
 								context.response.end(buf);
 								console.log("Backup Completed | Exit via server, By: " + context.user.id);
 								process.exit(0);
-							} else {
-								error = "Invalid backup file: Invalid signature.";
 							}
 						}
 					}

@@ -34,7 +34,7 @@ exports.setup = function (App) {
 				check(newPass, "You must specify a password");
 				check(newPass === newPass2, "The passwords do not match.");
 			} catch (err) {
-				error = err.message();
+				error = err.message;
 			}
 
 			if (!error) {

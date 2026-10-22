@@ -12,7 +12,7 @@ exports.setup = function (App) {
 	App.server.setHandler('static', (context, parts) => {
 		if (parts.length && parts[0]) {
 			let file = Path.resolve(staticDir, parts.shift().split('?')[0]);
-			if (!file.startsWith(staticDir)) {
+			if (!file.startsWith(staticDir + Path.sep) && file !== staticDir) {
 				return context.endWithError('403', 'Forbidden', 'You have not permission to access this path!');
 			}
 			context.endWithStaticFile(file, 31536000);

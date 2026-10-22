@@ -15,6 +15,7 @@ const Flood_Interval = 30 * 1000;
 const Lock_Max_Duration = 24 * 60 * 60 * 1000;
 const Token_Max_Duration = 24 * 60 * 60 * 1000;
 const Encrypt_Algo = "aes-256-ctr";
+const Safe_Methods = { 'GET': 1, 'HEAD': 1, 'OPTIONS': 1 };
 const Max_Trusted_Body_Request_Size = 25 * 1024 * 1024;
 const Max_Untrusted_Body_Size = 2 * 1024;
 const Max_Login_Flood = 5;
@@ -101,6 +102,20 @@ function decrypt(text, algorithm, password) {
 		data += decipher.final('utf8');
 		return data;
 	}
+}
+
+/**
+ * Generates a URL-safe random token
+ * @param {Number} [bytes]
+ * @returns {String}
+ */
+function randomToken(bytes) {
+	const ENC = {
+		'+': '-',
+		'/': '_',
+		'=': '.',
+	};
+	return Crypto.randomBytes(bytes || 32).toString("base64").replace(/[+/=]/g, m => ENC[m]);
 }
 
 /**
@@ -417,19 +432,15 @@ class Server {
 	 * @returns {String} token
 	 */
 	makeToken(userid) {
-		const ENC = {
-			'+': '-',
-			'/': '_',
-			'=': '.'
-		};
 		let token;
 		do {
-			token = Crypto.randomBytes(32).toString("base64").replace(/[+/=]/g, m => ENC[m]);
+			token = randomToken(32);
 		} while (this.tokens[token]);
 		this.tokens[token] = {
 			date: Date.now(),
 			duration: Token_Max_Duration,
 			user: userid,
+			csrf: randomToken(32),
 		};
 		return token;
 	}
@@ -470,21 +481,44 @@ class Server {
 	}
 
 	/**
+	 * Verifies whether the submitted CSRF token matches the session
+	 * @param {string} submitted - Submitted CSRF token
+	 * @param {Object} tokenObject - Active token data object
+	 * @returns {Boolean}
+	 */
+	verifyCsrfToken(submitted, tokenObject) {
+		if (!submitted || !tokenObject || !tokenObject.csrf) return false;
+		return secureCompare(submitted, tokenObject.csrf);
+	}
+
+	/**
 	 * Generates the login data for the context
 	 * @param {RequestContext} context
 	 */
 	applyLogin(context) {
-		let token = ((context.request.method + "").toUpperCase() === "GET") ? context.cookies['usertoken'] : (context.request.headers["x-csrf-token"] || context.post["x-csrf-token"]);
+		let sessionCookie = context.cookies['usertoken'];
 		let user = context.post.user;
 		let pass = context.post.password;
 		this.sweepTokens();
-		let existingToken = this.getToken(token);
+		let existingToken = this.getToken(sessionCookie);
 		if (existingToken) {
+			if (!((context.request.method + "").toUpperCase() in Safe_Methods)) {
+				let submittedCsrf = context.request.headers["x-csrf-token"] || context.post["x-csrf-token"];
+				if (!this.verifyCsrfToken(submittedCsrf, existingToken)) {
+					this.app.log('[CSRF BLOCKED] Invalid CSRF token for user: ' + existingToken.user + ' | IP: ' + context.ip);
+					context.endWithError(403, "Forbidden", "Invalid or missing CSRF token.");
+					return false;
+				}
+			}
 			if (context.post.logout) {
 				this.app.log('[LOGOUT] Userid: ' + existingToken.user + ' | IP: ' + context.ip);
-				delete this.tokens[token];
-				context.setCookie('usertoken=;');
+				delete this.tokens[sessionCookie];
+				context.setCookie('usertoken=; Max-Age=0;', true);
+				context.setCookie('csrftoken=; Max-Age=0;', false);
 			} else {
+				if (existingToken.csrf && (!context.cookies['csrftoken'] || !secureCompare(context.cookies['csrftoken'], existingToken.csrf))) {
+					context.setCookie('csrftoken=' + existingToken.csrf + ';', false);
+				}
 				user = existingToken.user;
 				if (this.users[user]) {
 					user = new User(this.users[user]);
@@ -500,8 +534,12 @@ class Server {
 			user = Text.toId(user);
 			if (this.users[user] && this.checkPassword(this.users[user].password, pass)) {
 				this.app.log('[LOGIN] Userid: ' + user + ' | IP: ' + context.ip);
-				token = this.makeToken(user);
-				context.setCookie('usertoken=' + token + ';');
+				let token = this.makeToken(user);
+				let tokObj = this.tokens[token];
+				context.setCookie('usertoken=' + token + ';', true);
+				if (tokObj && tokObj.csrf) {
+					context.setCookie('csrftoken=' + tokObj.csrf + ';', false);
+				}
 				user = new User(this.users[user]);
 				context.setUser(user);
 			} else {
@@ -519,13 +557,13 @@ class Server {
 	 * @returns {Boolean}
 	 */
 	checkPassword(pass, str) {
-		if (typeof pass === "object") {
+		if (typeof pass === "object" && pass !== null) {
 			return secureCompare(
 				decrypt(pass.hash, pass.encrypted || Encrypt_Algo, str),
 				this.privatekey
 			);
 		} else if (typeof pass === "string") {
-			return (str === pass);
+			return secureCompare(str, pass);
 		} else {
 			return false;
 		}
@@ -553,6 +591,21 @@ class Server {
 			ip = request.headers['x-forwarded-for'].split(',')[0];
 		}
 		return ip || "";
+	}
+
+	/**
+	 * Checks if the request was made over HTTPS
+	 * @param {ClientRequest} request
+	 * @returns {Boolean}
+	 */
+	isSecureRequest(request) {
+		if (request.socket && request.socket.encrypted) {
+			return true;
+		}
+		if (this.app.config.useproxy && request.headers['x-forwarded-proto']) {
+			return request.headers['x-forwarded-proto'].split(',')[0].trim().toLowerCase() === "https";
+		}
+		return false;
 	}
 
 	/**
@@ -625,8 +678,7 @@ class Server {
 			/* Favicon.ico */
 			context.endWithStaticFile(Path.resolve(__dirname, '../../favicon.ico'), 31536000);
 		} else if (context.url.pathname === "/showdown/info" || context.url.pathname === "/info") {
-			context.headers["Access-Control-Allow-Origin"] = context.request.headers['Origin'] || context.request.headers['origin'] || "*";
-			context.headers["Access-Control-Allow-Credentials"] = "true";
+			context.headers["Access-Control-Allow-Origin"] = "*";
 			context.endWithJSON({
 				cookie_needed: false,
 				entropy: 1858301765,
@@ -767,7 +819,16 @@ class RequestContext {
 		}
 		this.menu = [];
 		this.ip = (ip || request.connection.remoteAddress);
-		this.headers = { 'X-XSS-Protection': 0 };
+		this.headers = {
+			'X-Content-Type-Options': 'nosniff',
+			'X-Frame-Options': 'SAMEORIGIN',
+			'Referrer-Policy': 'strict-origin-when-cross-origin',
+			'X-XSS-Protection': '0',
+		};
+		this.secure = server.isSecureRequest(request);
+		if (this.secure) {
+			this.headers['Strict-Transport-Security'] = 'max-age=31536000';
+		}
 		this.invalidLogin = false;
 		this.get = Object.create(null);
 		this.post = Object.create(null);
@@ -868,9 +929,26 @@ class RequestContext {
 	/**
 	 * Set the cookie in the headers
 	 * @param {String} txt - Cookie query string
+	 * @param {Boolean} [httpOnly] - Set HttpOnly flag
 	 */
-	setCookie(txt) {
-		this.headers['Set-Cookie'] = txt + ' Path=/';
+	setCookie(txt, httpOnly) {
+		let cookie = (txt || "").trim();
+		if (cookie.length && !cookie.endsWith(';')) {
+			cookie += ';';
+		}
+		cookie += ' Path=/; SameSite=Lax';
+		if (httpOnly) {
+			cookie += '; HttpOnly';
+		}
+		if (this.secure) {
+			cookie += '; Secure';
+		}
+		const existing = this.headers['Set-Cookie'];
+		if (!existing) {
+			this.headers['Set-Cookie'] = cookie;
+		} else {
+			this.headers['Set-Cookie'] = Array.isArray(existing) ? existing.concat(cookie) : [existing, cookie];
+		}
 	}
 
 	/**

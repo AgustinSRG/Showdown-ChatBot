@@ -65,7 +65,7 @@ exports.setup = function (App) {
 		for (let file in App.addons) {
 			htmlVars.addons_list += addonItemTemplate.make({
 				file: Text.escapeHTML(file),
-				desc: (App.addons[file].desc ? ('<p>' + Text.escapeHtml(App.addons[file].desc) + '</p>') : ""),
+				desc: (App.addons[file].desc ? ('<p>' + Text.escapeHTML(App.addons[file].desc) + '</p>') : ""),
 			});
 		}
 
