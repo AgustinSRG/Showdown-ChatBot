@@ -51,6 +51,23 @@ function secureCompare(a, b) {
 }
 
 /**
+ * Encrypts a text
+ * @param {String} text
+ * @param {String} algorithm
+ * @param {String} password
+ * @returns {String} Encrypted text
+ */
+function encrypt(text, algorithm, password) {
+	const iv = Buffer.from(Crypto.randomBytes(16));
+	const hash = Crypto.createHash('sha256');
+	hash.update(password);
+	let cipher = Crypto.createCipheriv(algorithm, hash.digest(), iv);
+	let crypted = cipher.update(text, 'utf8', 'hex');
+	crypted += cipher.final('hex');
+	return iv.toString("hex") + ":" + crypted;
+}
+
+/**
  * Decrypts a text
  * @param {String} text - Encrypted text
  * @param {String} algorithm
@@ -85,16 +102,6 @@ function decrypt(text, algorithm, password) {
 		data += decipher.final('utf8');
 		return data;
 	}
-}
-
-/**
- * Hashes a password with a salt (SHA-256)
- * @param {String} password
- * @param {String} salt
- * @returns {String} Hex digest
- */
-function hashPassword(password, salt) {
-	return Crypto.createHash('sha256').update(salt + password, 'utf8').digest('hex');
 }
 
 /**
@@ -526,11 +533,6 @@ class Server {
 			}
 			user = Text.toId(user);
 			if (this.users[user] && this.checkPassword(this.users[user].password, pass)) {
-				if (!this.users[user].password || this.users[user].password.algo !== 'sha256') {
-					this.users[user].password = this.encryptPassword(pass);
-					this.userdb.write();
-					this.app.log('[SECURITY] Upgraded password hash to sha256 for user: ' + user);
-				}
 				this.app.log('[LOGIN] Userid: ' + user + ' | IP: ' + context.ip);
 				let token = this.makeToken(user);
 				let tokObj = this.tokens[token];
@@ -556,21 +558,10 @@ class Server {
 	 */
 	checkPassword(pass, str) {
 		if (typeof pass === "object" && pass !== null) {
-			if (pass.algo === "sha256" && pass.salt && pass.hash) {
-				if (typeof str !== "string") return false;
-				try {
-					return secureCompare(hashPassword(str, pass.salt), pass.hash);
-				} catch (ex) {
-					return false;
-				}
-			}
-			if (pass.hash) {
-				return secureCompare(
-					decrypt(pass.hash, pass.encrypted || Encrypt_Algo, str),
-					this.privatekey
-				);
-			}
-			return false;
+			return secureCompare(
+				decrypt(pass.hash, pass.encrypted || Encrypt_Algo, str),
+				this.privatekey
+			);
 		} else if (typeof pass === "string") {
 			return secureCompare(str, pass);
 		} else {
@@ -580,14 +571,12 @@ class Server {
 
 	/**
 	 * @param {String} str - Password
-	 * @returns {Object} Encrypted/hashed password
+	 * @returns {Object} Encrypted password
 	 */
 	encryptPassword(str) {
-		const salt = Crypto.randomBytes(16).toString('hex');
 		return {
-			algo: 'sha256',
-			salt: salt,
-			hash: hashPassword(str, salt),
+			encrypted: Encrypt_Algo,
+			hash: encrypt(this.privatekey, Encrypt_Algo, str),
 		};
 	}
 
