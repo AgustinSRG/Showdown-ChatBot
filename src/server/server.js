@@ -495,20 +495,20 @@ class Server {
 		this.sweepTokens();
 		let existingToken = this.getToken(sessionCookie);
 		if (existingToken) {
+			if (!((context.request.method + "").toUpperCase() in Safe_Methods)) {
+				let submittedCsrf = context.request.headers["x-csrf-token"] || context.post["x-csrf-token"];
+				if (!this.verifyCsrfToken(submittedCsrf, existingToken)) {
+					this.app.log('[CSRF BLOCKED] Invalid CSRF token for user: ' + existingToken.user + ' | IP: ' + context.ip);
+					context.endWithError(403, "Forbidden", "Invalid or missing CSRF token.");
+					return false;
+				}
+			}
 			if (context.post.logout) {
 				this.app.log('[LOGOUT] Userid: ' + existingToken.user + ' | IP: ' + context.ip);
 				delete this.tokens[sessionCookie];
 				context.setCookie('usertoken=; Max-Age=0;', true);
 				context.setCookie('csrftoken=; Max-Age=0;', false);
 			} else {
-				if (!((context.request.method + "").toUpperCase() in Safe_Methods)) {
-					let submittedCsrf = context.request.headers["x-csrf-token"] || context.post["x-csrf-token"];
-					if (!this.verifyCsrfToken(submittedCsrf, existingToken)) {
-						this.app.log('[CSRF BLOCKED] Invalid CSRF token for user: ' + existingToken.user + ' | IP: ' + context.ip);
-						context.endWithError(403, "Forbidden", "Invalid or missing CSRF token.");
-						return false;
-					}
-				}
 				if (existingToken.csrf && (!context.cookies['csrftoken'] || !secureCompare(context.cookies['csrftoken'], existingToken.csrf))) {
 					context.setCookie('csrftoken=' + existingToken.csrf + ';', false);
 				}
@@ -602,6 +602,21 @@ class Server {
 			ip = request.headers['x-forwarded-for'].split(',')[0];
 		}
 		return ip || "";
+	}
+
+	/**
+	 * Checks if the request was made over HTTPS
+	 * @param {ClientRequest} request
+	 * @returns {Boolean}
+	 */
+	isSecureRequest(request) {
+		if (request.socket && request.socket.encrypted) {
+			return true;
+		}
+		if (this.app.config.useproxy && request.headers['x-forwarded-proto']) {
+			return request.headers['x-forwarded-proto'].split(',')[0].trim().toLowerCase() === "https";
+		}
+		return false;
 	}
 
 	/**
@@ -821,7 +836,7 @@ class RequestContext {
 			'Referrer-Policy': 'strict-origin-when-cross-origin',
 			'X-XSS-Protection': '0',
 		};
-		this.secure = !!(request.socket && request.socket.encrypted);
+		this.secure = server.isSecureRequest(request);
 		if (this.secure) {
 			this.headers['Strict-Transport-Security'] = 'max-age=31536000';
 		}
