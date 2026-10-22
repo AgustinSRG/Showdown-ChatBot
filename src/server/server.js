@@ -685,8 +685,6 @@ class Server {
 			/* Main page */
 			context.setMenu(this.getMenu(context));
 			if (this.app.config.mainhtml) {
-				/* Custom main page may load external resources */
-				delete context.headers['Content-Security-Policy'];
 				context.endWithWebPage(this.app.config.mainhtml, { title: "Showdown ChatBot - Control Panel" });
 			} else {
 				FileSystem.readFile(Path.resolve(__dirname, 'main.html'), (error, data) => {
@@ -822,7 +820,6 @@ class RequestContext {
 			'X-Frame-Options': 'SAMEORIGIN',
 			'Referrer-Policy': 'strict-origin-when-cross-origin',
 			'X-XSS-Protection': '0',
-			'Content-Security-Policy': "default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' ws: wss:; frame-ancestors 'self';",
 		};
 		this.secure = !!(request.socket && request.socket.encrypted);
 		if (this.secure) {
