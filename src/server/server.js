@@ -15,6 +15,7 @@ const Flood_Interval = 30 * 1000;
 const Lock_Max_Duration = 24 * 60 * 60 * 1000;
 const Token_Max_Duration = 24 * 60 * 60 * 1000;
 const Encrypt_Algo = "aes-256-ctr";
+const Safe_Methods = { 'GET': 1, 'HEAD': 1, 'OPTIONS': 1 };
 const Max_Trusted_Body_Request_Size = 25 * 1024 * 1024;
 const Max_Untrusted_Body_Size = 2 * 1024;
 const Max_Login_Flood = 5;
@@ -84,6 +85,16 @@ function decrypt(text, algorithm, password) {
 		data += decipher.final('utf8');
 		return data;
 	}
+}
+
+/**
+ * Hashes a password with a salt (SHA-256)
+ * @param {String} password
+ * @param {String} salt
+ * @returns {String} Hex digest
+ */
+function hashPassword(password, salt) {
+	return Crypto.createHash('sha256').update(salt + password, 'utf8').digest('hex');
 }
 
 /**
@@ -418,15 +429,11 @@ class Server {
 		do {
 			token = randomToken(32);
 		} while (this.tokens[token]);
-		let csrfToken;
-		do {
-			csrfToken = randomToken(32);
-		} while (csrfToken === token);
 		this.tokens[token] = {
 			date: Date.now(),
 			duration: Token_Max_Duration,
 			user: userid,
-			csrf: csrfToken,
+			csrf: randomToken(32),
 		};
 		return token;
 	}
@@ -469,16 +476,12 @@ class Server {
 	/**
 	 * Verifies whether the submitted CSRF token matches the session
 	 * @param {string} submitted - Submitted CSRF token
-	 * @param {string} sessionToken - Active session token
 	 * @param {Object} tokenObject - Active token data object
 	 * @returns {Boolean}
 	 */
-	verifyCsrfToken(submitted, sessionToken, tokenObject) {
-		if (!submitted) return false;
-		if (tokenObject && tokenObject.csrf && secureCompare(submitted, tokenObject.csrf)) {
-			return true;
-		}
-		return secureCompare(submitted, sessionToken);
+	verifyCsrfToken(submitted, tokenObject) {
+		if (!submitted || !tokenObject || !tokenObject.csrf) return false;
+		return secureCompare(submitted, tokenObject.csrf);
 	}
 
 	/**
@@ -498,9 +501,9 @@ class Server {
 				context.setCookie('usertoken=; Max-Age=0;', true);
 				context.setCookie('csrftoken=; Max-Age=0;', false);
 			} else {
-				if ((context.request.method + "").toUpperCase() !== "GET") {
+				if (!((context.request.method + "").toUpperCase() in Safe_Methods)) {
 					let submittedCsrf = context.request.headers["x-csrf-token"] || context.post["x-csrf-token"];
-					if (!this.verifyCsrfToken(submittedCsrf, sessionCookie, existingToken)) {
+					if (!this.verifyCsrfToken(submittedCsrf, existingToken)) {
 						this.app.log('[CSRF BLOCKED] Invalid CSRF token for user: ' + existingToken.user + ' | IP: ' + context.ip);
 						context.endWithError(403, "Forbidden", "Invalid or missing CSRF token.");
 						return false;
@@ -523,10 +526,10 @@ class Server {
 			}
 			user = Text.toId(user);
 			if (this.users[user] && this.checkPassword(this.users[user].password, pass)) {
-				if (!this.users[user].password || this.users[user].password.algo !== 'scrypt') {
+				if (!this.users[user].password || this.users[user].password.algo !== 'sha256') {
 					this.users[user].password = this.encryptPassword(pass);
 					this.userdb.write();
-					this.app.log('[SECURITY] Upgraded password hash to scrypt for user: ' + user);
+					this.app.log('[SECURITY] Upgraded password hash to sha256 for user: ' + user);
 				}
 				this.app.log('[LOGIN] Userid: ' + user + ' | IP: ' + context.ip);
 				let token = this.makeToken(user);
@@ -553,10 +556,10 @@ class Server {
 	 */
 	checkPassword(pass, str) {
 		if (typeof pass === "object" && pass !== null) {
-			if (pass.algo === "scrypt" && pass.salt && pass.hash) {
+			if (pass.algo === "sha256" && pass.salt && pass.hash) {
+				if (typeof str !== "string") return false;
 				try {
-					const hash = Crypto.scryptSync(str, pass.salt, 64, { N: 16384, r: 8, p: 1 }).toString('hex');
-					return secureCompare(hash, pass.hash);
+					return secureCompare(hashPassword(str, pass.salt), pass.hash);
 				} catch (ex) {
 					return false;
 				}
@@ -581,11 +584,10 @@ class Server {
 	 */
 	encryptPassword(str) {
 		const salt = Crypto.randomBytes(16).toString('hex');
-		const hash = Crypto.scryptSync(str, salt, 64, { N: 16384, r: 8, p: 1 }).toString('hex');
 		return {
-			algo: 'scrypt',
+			algo: 'sha256',
 			salt: salt,
-			hash: hash,
+			hash: hashPassword(str, salt),
 		};
 	}
 
@@ -683,6 +685,8 @@ class Server {
 			/* Main page */
 			context.setMenu(this.getMenu(context));
 			if (this.app.config.mainhtml) {
+				/* Custom main page may load external resources */
+				delete context.headers['Content-Security-Policy'];
 				context.endWithWebPage(this.app.config.mainhtml, { title: "Showdown ChatBot - Control Panel" });
 			} else {
 				FileSystem.readFile(Path.resolve(__dirname, 'main.html'), (error, data) => {
@@ -820,8 +824,9 @@ class RequestContext {
 			'X-XSS-Protection': '0',
 			'Content-Security-Policy': "default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' ws: wss:; frame-ancestors 'self';",
 		};
-		if (server.httpsOptions && server.httpsOptions.port) {
-			this.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains';
+		this.secure = !!(request.socket && request.socket.encrypted);
+		if (this.secure) {
+			this.headers['Strict-Transport-Security'] = 'max-age=31536000';
 		}
 		this.invalidLogin = false;
 		this.get = Object.create(null);
@@ -934,7 +939,7 @@ class RequestContext {
 		if (httpOnly) {
 			cookie += '; HttpOnly';
 		}
-		if (this.server.httpsOptions && this.server.httpsOptions.port) {
+		if (this.secure) {
 			cookie += '; Secure';
 		}
 		const existing = this.headers['Set-Cookie'];

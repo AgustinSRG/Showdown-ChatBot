@@ -26,7 +26,7 @@ function updateForms() {
       var input = document.createElement("input");
       input.type = "hidden";
       input.name = "x-csrf-token";
-      input.value = getCookie("csrftoken") || getCookie("usertoken") || "";
+      input.value = getCookie("csrftoken") || "";
       form.appendChild(input);
     }
 
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (window.$) {
     $(document).bind("ajaxSend", function (elm, xhr, s) {
       if (s.type != "GET") {
-        xhr.setRequestHeader("x-csrf-token", getCookie("csrftoken") || getCookie("usertoken") || "");
+        xhr.setRequestHeader("x-csrf-token", getCookie("csrftoken") || "");
       }
     });
   }
