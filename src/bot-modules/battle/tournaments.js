@@ -50,6 +50,19 @@ exports.setup = function (App) {
 
 	setInterval(TournamentsManager.check.bind(TournamentsManager), 2000);
 
+	function getTourTeamCommand(room) {
+		const mod = App.modules.battle.system;
+		const format = Text.toId(tourData[room].teambuilderFormat || tourData[room].format);
+		const team = mod.TeamBuilder.getTeam(format);
+		if (team) {
+			return '/utm ' + team;
+		}
+		if (App.bot.formats[format] && !App.bot.formats[format].team) {
+			return '/utm null';
+		}
+		return null;
+	}
+
 	TournamentsManager.checkChallenges = function (room) {
 		let mod = App.modules.battle.system;
 		let cmds = [];
@@ -73,6 +86,9 @@ exports.setup = function (App) {
 			}
 		}
 		if (tourData[room].isJoined && tourData[room].isStarted) {
+			if (!tourData[room].challenged && !tourData[room].challenging) {
+				delete TournamentsManager.lastChallenged[room];
+			}
 			if (tourData[room].challenges && tourData[room].challenges.length) {
 				if (canSendCommands(room)) {
 					const lastChallenges = JSON.stringify(tourData[room].challenges);
@@ -80,48 +96,34 @@ exports.setup = function (App) {
 						tourData[room].isJoined = false;
 						return App.bot.sendTo(room, ['/tour leave']);
 					}
-					let format = Text.toId(tourData[room].teambuilderFormat || tourData[room].format);
-					let team = mod.TeamBuilder.getTeam(format);
-					if (team) {
-						cmds.push('/utm ' + team);
+					const teamCmd = getTourTeamCommand(room);
+					if (teamCmd) {
 						for (let i = 0; i < tourData[room].challenges.length; i++) {
+							cmds.push(teamCmd);
 							cmds.push('/tour challenge ' + tourData[room].challenges[i]);
 						}
 					} else {
-						if (App.bot.formats[format] && !App.bot.formats[format].team) {
-							for (let i = 0; i < tourData[room].challenges.length; i++) {
-								cmds.push('/utm null');
-								cmds.push('/tour challenge ' + tourData[room].challenges[i]);
-							}
-						} else {
-							// No team (deleted?)
-							tourData[room].isJoined = false;
-							cmds.push('/tour leave');
-						}
+						// No team (deleted?)
+						tourData[room].isJoined = false;
+						cmds.push('/tour leave');
 					}
 					TournamentsManager.lastChallenges[room] = lastChallenges;
 				}
-			} else if (tourData[room].challenged) {
+			} else if (tourData[room].challenged && !tourData[room].challenging) {
 				if (canSendCommands(room)) {
 					const lastChallenged = JSON.stringify(tourData[room].challenged);
 					if (TournamentsManager.lastChallenged[room] === lastChallenged && Date.now() - TournamentsManager.lastRejection < 5000) {
 						tourData[room].isJoined = false;
 						return App.bot.sendTo(room, ['/tour leave']);
 					}
-					let format = Text.toId(tourData[room].teambuilderFormat || tourData[room].format);
-					let team = mod.TeamBuilder.getTeam(format);
-					if (team) {
-						cmds.push('/utm ' + team);
-						cmds.push('/tour acceptchallenge');
+					const teamCmd = getTourTeamCommand(room);
+					if (teamCmd) {
+						cmds.push(teamCmd);
+						cmds.push('/tour ready');
 					} else {
-						if (App.bot.formats[format] && !App.bot.formats[format].team) {
-							cmds.push('/utm null');
-							cmds.push('/tour acceptchallenge');
-						} else {
-							// No team (deleted?)
-							tourData[room].isJoined = false;
-							cmds.push('/tour leave');
-						}
+						// No team (deleted?)
+						tourData[room].isJoined = false;
+						cmds.push('/tour leave');
 					}
 					TournamentsManager.lastChallenged[room] = lastChallenged;
 				}
