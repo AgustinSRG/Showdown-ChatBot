@@ -20,9 +20,9 @@ $4 = Shortcut commands list
 $5 = A shortcut can only contain 5 commands max
 $6 = Shortcut command created
 $7 = Shortcut command removed
-$10 = Alias set
-$11 = Alias not found
-$12 = Alias was removed
+$8 = Alias set
+$9 = Alias not found
+$10 = Alias was removed
 
 
 %spanish
