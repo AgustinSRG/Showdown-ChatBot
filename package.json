@@ -25,7 +25,7 @@
 	},
 	"optionalDependencies": {
 		"githubhook": "1.9.3",
-		"mysql": "2.18.1"
+		"mysql2": "3.24.6"
 	},
 	"description": "Bot for Pokemon Showdown",
 	"homepage": "https://github.com/AgustinSRG/Showdown-ChatBot",

@@ -6,15 +6,15 @@
 'use strict';
 
 try {
-	require('mysql');
+	require('mysql2');
 } catch (ex) {
-	require("child_process").spawnSync('npm', ['install', 'mysql'], { stdio: 'inherit' });
+	require("child_process").spawnSync('npm', ['install', 'mysql2'], { stdio: 'inherit' });
 }
 
 const Table_Name = "SHOWDOWN_CHATBOT_CONFIG";
 const Table_Create_Sentence = "CREATE TABLE " + Table_Name + " (file varchar(64), id int, block int, data varchar(1024));";
 
-const MYSQL = require('mysql');
+const MYSQL = require('mysql2');
 const Path = require('path');
 const DataBase = require(Path.resolve(__dirname, 'mysql-json-db.js'));
 const CryptoDataBase = require(Path.resolve(__dirname, 'mysql-json-db-crypto.js'));
