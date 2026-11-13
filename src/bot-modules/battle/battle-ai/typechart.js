@@ -32,7 +32,7 @@ exports.getEffectiveness = function (typeA, typeB, gen) {
 	}
 };
 
-exports.gen9 = exports.gen8 = exports.gen7 = exports.gen6 = {
+exports.gen8 = exports.gen7 = exports.gen6 = {
 	"Bug": {
 		"Bug": 0,
 		"Dark": 0,
@@ -395,6 +395,15 @@ exports.gen9 = exports.gen8 = exports.gen7 = exports.gen6 = {
 	},
 };
 
+
+exports.gen9 = Object.create(null);
+for (let defType in exports.gen8) {
+	exports.gen9[defType] = Object.assign(Object.create(null), exports.gen8[defType], { "Stellar": 0 });
+}
+exports.gen9["Stellar"] = Object.create(null);
+for (let atkType in exports.gen9) {
+	exports.gen9["Stellar"][atkType] = 0;
+}
 exports.gen5 = exports.gen4 = exports.gen3 = exports.gen2 = {
 	"Bug": {
 		"Bug": 0,
