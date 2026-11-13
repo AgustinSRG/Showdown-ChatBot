@@ -20,7 +20,6 @@
 		"@asanrom/showdown-chatbot-codemirror": "1.0.2",
 		"busboy": "1.6.0",
 		"json5": "2.2.3",
-		"sockjs-client": "1.6.1",
 		"websocket": "1.0.34"
 	},
 	"optionalDependencies": {

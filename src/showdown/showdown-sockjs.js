@@ -21,7 +21,7 @@
 const Text = Tools('text');
 const Events = Tools('events');
 const Util = require('util');
-const SockJS = require('sockjs-client');
+const WebSocket = require('websocket').w3cwebsocket;
 const Https = require('https');
 
 const Default_Room = "lobby"; // If the server sends a message without specifying the room
@@ -141,7 +141,7 @@ class Bot {
 	 * @returns {String} The websocket url to connect
 	 */
 	getConnectionUrl() {
-		return Util.format("%s://%s:%d/showdown/", this.secure ? "https" : "http", this.server, this.port);
+		return Util.format("%s://%s:%d/showdown/websocket", this.secure ? "wss" : "ws", this.server, this.port);
 	}
 
 	/**
@@ -224,7 +224,7 @@ class Bot {
 		if (this.status.connected || this.socket) return;
 		this.closed = false;
 		this.reset();
-		this.socket = new SockJS(this.getConnectionUrl());
+		this.socket = new WebSocket(this.getConnectionUrl());
 		this.socket.onerror = function () {
 			this.connecting = false;
 			this.reset();
