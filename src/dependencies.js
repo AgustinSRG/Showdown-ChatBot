@@ -11,7 +11,7 @@
 /* Dependencies */
 
 try {
-	require('sockjs-client');
+	require('websocket');
 	require('busboy');
 } catch (e) {
 	console.log('Installing dependencies...');
