@@ -27,6 +27,6 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
 
-      - run: npm install
+      - run: npm ci --prefer-offline --no-audit --no-fund
 
       - run: npm test
