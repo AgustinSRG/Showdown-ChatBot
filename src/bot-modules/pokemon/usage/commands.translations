@@ -55,6 +55,8 @@ $poke = Pokemon
 
 %spanish
 
+$error = Se ha producido un error, inténtalo de nuevo más tarde
+
 $nochat = Este comando solo está disponible para las salas de chat
 $nobot = Necesito rango de bot o superior para poder usar esta funcionalidad
 

@@ -16,7 +16,7 @@ $turn1 =
 $turn2 = 's turn!
 $helpturn1 = Use
 $helpturn2 = to obtain new cards and
-$helpturn3  to terminate your turn (you have a max of
+$helpturn3 = to terminate your turn (you have a max of
 $helpturn4 = seconds)
 $hand1 = 
 $hand2 = 's Hand
