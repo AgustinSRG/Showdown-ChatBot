@@ -1,19 +1,10 @@
 /**
- * Pokemon Showdown Basic Bot
- * Author: Agustin San Roman (C) Copyright 2016
+ * Showdown ChatBot Connection Handler
+ * Showdown ChatBot is distributed under the terms of the MIT License
+ * (https://github.com/AgustinSRG/Showdown-ChatBot/blob/master/LICENSE)
  *
- * This library is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * This file handles the connector to the server,
+ * including sending/receiving messages, basic parsing and account login
  */
 
 'use strict';

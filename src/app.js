@@ -220,7 +220,7 @@ class ChatBotApp {
 		this.dam.logErrorFunction = this.reportDamError.bind(this);
 
 		/* Create the bot */
-		const ShowdownBot = require(Path.resolve(__dirname, 'showdown/showdown-sockjs.js')).Bot;
+		const ShowdownBot = require(Path.resolve(__dirname, 'showdown/showdown-bot.js')).Bot;
 
 		this.bot = new ShowdownBot(
 			this.config.bot.server,
