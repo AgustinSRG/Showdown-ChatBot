@@ -145,9 +145,14 @@ class Bot {
 	}
 
 	/**
+	 * @param {String} [action] - Optional API action name ('login' | 'getassertion')
 	 * @returns {String} The login server url
 	 */
-	getLoginUrl() {
+	getLoginUrl(action) {
+		if (action && this.loginUrl.serverId === Default_Server_Id) {
+			return Util.format("https://%s/api/%s",
+				encodeURIComponent(this.loginUrl.loginServer), encodeURIComponent(action));
+		}
 		return Util.format("https://%s/~~%s/action.php",
 			encodeURIComponent(this.loginUrl.loginServer), encodeURIComponent(this.loginUrl.serverId));
 	}
@@ -309,7 +314,8 @@ class Bot {
 		}
 
 		let data = "";
-		let url = new URL(this.getLoginUrl());
+		let action = pass ? "login" : "getassertion";
+		let url = new URL(this.getLoginUrl(action));
 		let requestOptions = {
 			hostname: url.hostname,
 			port: url.port,
@@ -317,19 +323,27 @@ class Bot {
 			agent: false,
 		};
 
+		let params = new URLSearchParams();
+		if (url.pathname.endsWith('/action.php')) {
+			params.set('act', action);
+		}
+
 		if (!pass) {
 			requestOptions.method = 'GET';
-			requestOptions.path += '?act=getassertion&userid=' +
-				Text.toId(nick) + '&challengekeyid=' + this.status.challstr.id +
-				'&challenge=' + this.status.challstr.str;
+			params.set('userid', Text.toId(nick));
+			params.set('challengekeyid', this.status.challstr.id);
+			params.set('challenge', this.status.challstr.str);
+			requestOptions.path += '?' + params.toString();
 		} else {
 			requestOptions.method = 'POST';
-			data = 'act=login&name=' + Text.toId(nick) + '&pass=' + pass +
-				'&challengekeyid=' + this.status.challstr.id + '&challenge=' +
-				this.status.challstr.str;
+			params.set('name', Text.toId(nick));
+			params.set('pass', pass);
+			params.set('challengekeyid', this.status.challstr.id);
+			params.set('challenge', this.status.challstr.str);
+			data = params.toString();
 			requestOptions.headers = {
 				'Content-Type': 'application/x-www-form-urlencoded',
-				'Content-Length': data.length,
+				'Content-Length': Buffer.byteLength(data),
 			};
 		}
 
@@ -340,8 +354,8 @@ class Bot {
 				str += chunk;
 			});
 			res.on('end', function () {
-				str = str.toLowerCase();
-				if (str === ';' || str.includes('wrong password')) {
+				const lower = str.toLowerCase();
+				if (str === ';' || lower.includes('wrong password')) {
 					this.events.emit('renamefailure', 'wrongpassword', nick, pass);
 					if (errorCallback && typeof errorCallback === "function") {
 						errorCallback("Wrong Password");
@@ -355,7 +369,7 @@ class Bot {
 					}
 					return;
 				}
-				if (str.includes('heavy load')) {
+				if (lower.includes('heavy load')) {
 					this.events.emit('renamefailure', 'heavyload', nick, pass);
 					if (errorCallback && typeof errorCallback === "function") {
 						errorCallback("Heavy Load");
@@ -363,11 +377,12 @@ class Bot {
 					return;
 				}
 				try {
-					str = JSON.parseNoPrototype(str.substr(1));
-					if (str.actionsuccess) {
-						str = str.assertion;
+					const jsonStr = str.startsWith(']') ? str.substr(1) : str;
+					const parsed = JSON.parseNoPrototype(jsonStr);
+					if (parsed.actionsuccess) {
+						str = parsed.assertion;
 					} else {
-						this.events.emit('renamefailure', 'unknown', nick, pass, JSON.stringify(str));
+						this.events.emit('renamefailure', 'unknown', nick, pass, JSON.stringify(parsed));
 						if (errorCallback && typeof errorCallback === "function") {
 							errorCallback("Unknown Error");
 						}
@@ -516,7 +531,7 @@ class Bot {
 		}
 
 		if (this.msgQueue.length > 0) {
-			const waitUntil = (this.sendingQueue.length > 0) ? (Date.now() - this.sendingQueue[0].et) : 0;
+			const waitUntil = (this.sendingQueue.length > 0) ? (this.sendingQueue[0].et - Date.now()) : 0;
 			if (waitUntil > 0) {
 				this.sendingQueueTimeout = setTimeout(function () {
 					this.sendingQueueTimeout = null;
